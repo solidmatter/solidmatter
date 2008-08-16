@@ -1,0 +1,176 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>TWINE Project: Custom Validator for Java</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<style type="text/css" media="screen">
+		<!--	
+ 		  @import url(style.css);
+		-->
+	</style> 
+</head>
+<body>
+
+
+<div id="header">
+<a href="http://twineproject.sourceforge.net" title="TWINE Project Home">TWINE Project</a>
+</div>
+
+
+<div id="nav">
+    <a href="../index.html">Home</a><br />
+    <a href="javahtml.html">HTML Validator for Java</a><br />
+    <a href="phphtml.html">HTML Validator for PHP</a><br />
+	Custom Validator for Java<br />    
+    <a href="php.html">Custom Validator for PHP</a><br />
+	<a href="http://sourceforge.net/project/showfiles.php?group_id=99065">Downloads</a><br />
+</div>
+
+
+<div id="main">
+
+<h1>Custom Validator for Java</h1>
+
+<p>
+The Custom Validator for Java is a Java class/Servlet filter designed to 
+submit a HTML interfaces of dynamic web applications to online validation services.
+</p>
+
+
+<h2>Usage</h2>
+
+<p>
+To use this class, you will need a Java Servlet container that supports
+the Servlet API version 2.3 or greater.
+</p>
+
+<ul>
+  <li>drop <b>validator.jar</b> in your web apps <b>lib</b> directory</li>
+  <li>copy the contents of one of the sample web.xml files 
+  into your web app's <b>WEB-INF/web.xml</b> file</li>
+</ul>
+
+<p>
+...and you are ready to go.  This will result in the current page being submitted to the W3C validation service and 
+the results displayed in a new window.  To configure the output and other 
+parameters of the validator filter, configure the class by modifying or adding
+<b>init-param</b> elements to the <b>filer</b> element in the <b>web.xml</b> file
+(see example below).  Configuration options include:
+</p>
+
+<table cellpadding="2" border="1">
+	<tr>
+		<th width="20%">method signature</th>
+		<th width="20%">default value</th>
+		<th width="60%">description</th>
+	</tr>
+	<tr>
+		<td>validatorUrl</td>
+		<td>http://validator.w3.org/check?<br/>uri=###URL###"</td>
+		<td>the URL of the validator to submit this page to; place the string '###URL###'
+		where the URL of the resource to be validated should go (as in the default)</td>
+	</tr>	
+	<tr>
+		<td>fileExtension</td>
+		<td>.validate.html</td>
+		<td>this is extension added to the script name when the HTTP request is written to disk</td>
+	</tr>	
+	<tr>
+		<td>buttonText</td>
+		<td>validate</td>
+		<td>this is the text which appears in the validate button</td>
+	</tr>
+	<tr>
+		<td>buttonMarker</td>
+		<td>[places marker at end of HTML &lt;body&gt; element]</td>
+		<td>this asks the validator to substitute a string in the target page with the
+		validation link, allowing you to avoid a sure-fire validation error 
+		(the validator drops the link at the end of the file by default) as well
+		as customize the display</td>
+	</tr>	
+	<tr>
+		<td>targetWindow</td>
+		<td>newWindow</td>
+		<td>the name of the window to direct validation results to; you may use the typical constants, '_blank', '_top', etc.</td>
+	</tr>	
+	<tr>
+		<td>windowOptions</td>
+		<td>scrollbars=yes,location=yes,<br/>menubar=yes,titlebar=yes,<br/>resizable=yes,width=600,<br/>height=450</td>
+		<td>these are the options to use IF opening a browser window to display the results</td>
+	</tr>	
+	<tr>
+		<td>workDir</td>
+		<td>[directory where JSP script was run]</td>
+		<td>the directory where static files should be written to disk</td>
+	</tr>	
+	<tr>
+		<td>workDirUrl</td>
+		<td>[web path to directory where JSP script was run]</td>
+		<td>the web server URL for the workDir; used to show the validation service where to access the static HTML files</td>
+	</tr>		
+</table>
+
+<p>
+A fuller configuration might look like:
+</p>
+
+<div class="code">
+    &lt;filter&gt; <br/>
+   &lt;filter-name&gt;ValidatorFilter&lt;/filter-name&gt; <br/>
+   &lt;filter-class&gt;org.twine.filter.ValidatorFilter&lt;/filter-class&gt; <br/> 
+   &lt;init-param&gt; <br/>
+      &lt;param-name&gt;validatorUrl&lt;/param-name&gt; <br/>
+      &lt;param-value&gt;http://validator.w3.org/check?uri=###URL###&lt;/param-value&gt; <br/>
+   &lt;/init-param&gt; <br/>
+   &lt;init-param&gt; <br/>
+      &lt;param-name&gt;buttonText&lt;/param-name&gt; <br/>
+      &lt;param-value&gt;[validate]&lt;/param-value&gt; <br/>
+   &lt;/init-param&gt;    <br/>
+   &lt;init-param&gt; <br/>
+      &lt;param-name&gt;buttonMarker&lt;/param-name&gt; <br/>
+      &lt;param-value&gt;###BUTTON###&lt;/param-value&gt; <br/>
+   &lt;/init-param&gt;    <br/>   
+   &lt;init-param&gt; <br/>
+      &lt;param-name&gt;fileExtension&lt;/param-name&gt; <br/>
+      &lt;param-value&gt;.validate.html&lt;/param-value&gt; <br/>
+   &lt;/init-param&gt;      <br/>
+   &lt;init-param&gt; <br/>
+      &lt;param-name&gt;targetWindow&lt;/param-name&gt; <br/>
+      &lt;param-value&gt;someWindow&lt;/param-value&gt; <br/>
+   &lt;/init-param&gt;   <br/>
+   &lt;init-param&gt; <br/>
+      &lt;param-name&gt;windowOptions&lt;/param-name&gt; <br/>
+      &lt;param-value&gt;scrollbars=yes,location=yes,menubar=yes,titlebar=yes,resizable=yes,width=600,height=500&lt;/param-value&gt; <br/>
+   &lt;/init-param&gt; <br/>
+  &lt;/filter&gt; <br/>
+  <br/>
+   &lt;filter-mapping&gt; <br/>
+      &lt;filter-name&gt;ValidatorFilter&lt;/filter-name&gt; <br/>
+      &lt;url-pattern&gt;/*.jsp&lt;/url-pattern&gt; <br/>
+   &lt;/filter-mapping&gt; <br/>
+   &lt;filter-mapping&gt; <br/>
+      &lt;filter-name&gt;ValidatorFilter&lt;/filter-name&gt; <br/>
+      &lt;url-pattern&gt;/*.do&lt;/url-pattern&gt; <br/>
+   &lt;/filter-mapping&gt; <br/>   
+   
+</div>
+
+<p>This asks the Validator class to...</p>
+
+<ul>
+  <li>set the validation service URL to 'http://validator.w3.org/check?uri=' (an accessibility validator)</li>
+  <li>set the button text to '[validate]'</li>
+  <li>substitute the text '###BUTTON###' in the source file with the validaton button</li>
+  <li>use the file extension '.validate.html' wen writing the request results to disk</li> 
+  <li>direct the output to the window 'someWindow'</li>
+  <li>use the parameters 'scrollbars=yes,location=yes' when opening the window</li>  
+  <li>finally, a filter-mapping of /* instructs the filter to intercept all
+  web application requests for requests ending in '.jsp' or '.do'</li>
+</ul>
+
+</div>
+
+</body>
+</html>

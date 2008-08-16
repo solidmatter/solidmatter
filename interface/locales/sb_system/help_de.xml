@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<help>
+	<about>
+		<head>An dieser Stelle erhalten sie die essentiellen Informationen über das Modul.</head>
+		<body>Normalerweise finden sich hier Angaben zu Version, dem/den Urheber/n des Moduls, wo man Unterstützung bei Problemen bekommt, wo die neueste Version zu finden ist und ggf. weitergehende Informationen.</body>
+	</about>
+	<config>
+		<head>Hier können sie die wichtigsten Einstellungen des Systems festlegen.</head>
+		<body>
+			Diese Einstellungen wirken sich auf die Site als Ganzes auf, haben also auch Auswirkungen auf die anderen Module.
+			Einerseits können sie diverse präsentationsspezifische Werte festlegen wie bspw. den Titel der Site, das zu verwendende Theme oder die Meta-Angaben (die von Suchmaschinen ausgewertet werden).
+			Weiterhin werden hier die Sicherheitseinstellungen vorgenommen, die den Zugriff auf die Site und diverse Funktionalitäten global regeln.
+			Zu guter Letzt lassen sich die Daten pflegen, die für den Mailverkehr des Systems mit den Benutzern benutzt werden.
+		</body>
+	</config>
+	<nickname_allowed_chars>
+		<head>Hier kann angegeben werden, welche Zeichen im Bildschirmnamem erlaubt sind.</head>
+		<body>Bitte beachten sie, dass eine Änderung dieser Einstellung keinen Einfluss auf bereits bestehende Bildschirmnamen nimmt, nur neue angelegte Benutzer sind davon betroffen.</body>
+	</nickname_allowed_chars>
+</help>

@@ -1,0 +1,125 @@
+PHP Content Repository, phpCR v0.1
+==================================
+
+PHP Code, API Documentation: Travis Swicegood, <travis@domain51.net>
+Copyright (c) 2004-2005, Domain51
+Released under the Apache License, Version 2.0
+
+You should receive a copy of the license with this package.  If you did not, you
+can download a copy of it from: 
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+This package is based on the Java Specification Requests (JSR) 170.  A full copy
+of the Java implementation of JSR-170, the Java Content Repository (JCR) is 
+available from:
+    http://www.jcp.org/en/jsr/detail?id=170
+
+Last Updated: $Id: README 98 2005-01-01 21:41:54Z tswicegood $
+
+    
+Table of Contents
+=================
+ # Licensing, Copyright
+ # Introduction
+ # What is phpCR?
+ # Specifications
+ # PHP Specifics
+ # Road Map
+ # Download Information
+ # Contact Information
+
+ 
+Introduction
+============
+The PHP Content Repository standard, or phpCR, provides a standard set of 
+interfaces for the developer to implement.  The manner of implementation has no
+effect, the developer is only bound to provide the following classes/methods to
+access the underlying data.  Any PHP program that stores data can implement this
+API.  Examples include:
+
+ * Filesystem
+ * Document repository
+ * Content Management System
+ * Blog
+ * Wiki
+ * Gallery
+ * Forum
+ * XML Document structures (see spec PDF for example)
+
+Of course, the underlying structure is left up to the developer's imagination
+and/or needs.
+
+
+What is phpCR?
+==============
+phpCR is a collection of interfaces[1] that provide a developer with a series
+of "contracts" by which he will implement his API.  This eases the process of
+integrating multiple solutions, as a new API the 3rd-party developer does not
+need to learn a new API in order to utilize new software.
+
+phpCR does *not* provide any implementation of the systems mentioned in the 
+introduction.  This package is intended only for those who program using PHP or
+are interested in using PHP interfaces for a learning process.
+
+[1] http://www.php.net/manual/en/language.oop5.interfaces.php
+
+
+Specifications
+==============
+
+For full information about the JSR-170 specification, see the file located at:
+    /spec/jsr170-0.12.pdf 
+in the archive.  If you did not receive this file, it can be downloaded from
+    https://svn.domain51.net/svn/NonOriginal/pr-jsr-170/spec/jsr170-0.12.pdf
+
+
+PHP Specifics
+=============
+Translation from one spoken language to another is rarely a scientific
+occurence.  Contrary to popular belief among mono-lingual individuals, there is
+a lot of room for interpetation.  Computer languages, while their translations
+are more specific, some interpetation is required on the part of the tranlsator.
+While phpCR is based primarly on the JCR, there are areas where things differ.
+
+During this first draft, every attempt has been made to stay as close to the 
+original JCR specification as possible.  If you feel something has been lost in
+the translation, please feel free to contact Travis Swicegood at the address 
+given in the Contact Information section.
+
+
+Roadmap
+=======
+v0.1: Initial release offering a straight translation of JSR-170, JCR.
+v0.2 - v0.5: Fix and updates to the API to make it more PHP compatible.
+v0.6 - v0.9: Finalization of code, add a PHP specifications document, add to 
+    existing API documentation.
+v1.0: Final release, full documentation, examples, etc.
+
+Beyond v1.0: Once phpCR has reached full maturity as a PHP library, the intent
+    is to explore adding it as part of the Standard PHP Library, or SPL.
+    See http://www.php.net/~helly/php/ext/spl/ for full information on SPL.
+
+
+Download Information
+====================
+The latest version of phpCR will always be available via Subversion at:
+    https://svn.domain51.net/svn/phpCR
+
+A SourceForge project page may be in the future.  
+
+Please note that the 'phpcr' project at SourceForge  and the 'php-170' project
+at ThinkForge are not related to this project.  As best as could be determined
+when this project was undertaken by Travis Swicegood, both projects were dead.
+
+
+Contact Information
+===================
+Questions regarding phpCR can be directed to:
+    Travis Swicegood, <travis@domain51.net>
+
+Travis Swicegood or Domain51 can not answer questions regarding specific 
+implements of phpCR.  If you are using a software package that has implemented
+phpCR and require support, we suggest you contact the developer of the specific
+application directly.
+

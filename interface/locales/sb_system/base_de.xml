@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system>
+	
+	<lang>Deutsch</lang>
+	
+	<formats>
+		<decimal_separator>,</decimal_separator>
+		<decimal_point>.</decimal_point>
+		<datetime_long>%a, %d. %b %Y, %H:%M:%S</datetime_long>
+		<datetime_middle>%d.%m.%Y, %H:%M:%S</datetime_middle>
+		<datetime_short>%d.%m.%y, %H:%M:%S</datetime_short>
+		<date_long>%a, %d. %b %Y</date_long>
+		<date_middle>%d.%m.%Y</date_middle>
+		<date_short>%d.%m.%y</date_short>
+	</formats>
+	
+	<general>
+		<apptitle>System</apptitle>
+		<actions>
+			<new>Neu</new>
+			<edit>Bearbeiten</edit>
+			<create>Erstellen</create>
+			<delete>Löschen</delete>
+			<save>Speichern</save>
+			<apply>Übernehmen</apply>
+			<accept>Akzeptieren</accept>
+			<accept_changes>Änderungen akzeptieren</accept_changes>
+			<submit>Übermitteln</submit>
+			<proceed>Weiter</proceed>
+			<ok>OK</ok>
+			<cancel>Abbrechen</cancel>
+			<export>Exportieren</export>
+			<import>Importieren</import>
+			<move_up>nach oben verschieben</move_up>
+			<move_down>nach unten verschieben</move_down>
+			<add>Hinzufügen</add>
+			<remove>Entfernen</remove>
+			<set_default>als Standard festlegen</set_default>
+			<set_favorite>als Favorit festlegen</set_favorite>
+			<empty>Entleeren</empty>
+			<view>Ansehen</view>
+			<clone>Klonen</clone>
+			<copy>Kopieren</copy>
+			<cut>Ausschneiden</cut>
+			<paste>Einfügen</paste>
+			<create_hardlink>Verknüpfung</create_hardlink>
+			<upload>Hochladen</upload>
+			<download>Herunterladen</download>
+			<activate>Aktivieren</activate>
+			<order_asc>aufsteigend sortieren</order_asc>
+			<order_desc>absteigend sortieren</order_desc>
+			<search>Suchen</search>
+			<find>Finden</find>
+			<filter>Filtern</filter>
+			<login>Einloggen</login>
+			<logout>Ausloggen</logout>
+			<refresh>Aktualisieren</refresh>
+		</actions>
+		<labels>
+			<id>ID</id>
+			<created_at>Erstellt am</created_at>
+			<created_by>Erstellt von</created_by>
+			<modified_at>Bearbeitet am</modified_at>
+			<modified_by>Bearbeitet von</modified_by>
+			<deleted_at>Gelöscht am</deleted_at>
+			<deleted_by>Gelöscht von</deleted_by>
+			<login>Login</login>
+			<password>Passwort</password>
+			<options>Optionen</options>
+			<image>Bild</image>
+			<graphic>Grafik</graphic>
+			<smilie>Smilie</smilie>
+			<ip>IP-Adresse</ip>
+			<email>eMail</email>
+			<abbr_number>Nr.</abbr_number>
+			<description>Beschreibung</description>
+			<details>Details</details>
+			<notes>Notizen</notes>
+			<title>Titel</title>
+			<properties>Eigenschaften</properties>
+			<name>Name</name>
+			<label>Bezeichnung</label>
+			<module>Modul</module>
+			<nickname>Online-Name</nickname>
+			<shortname>Kurzname</shortname>
+			<longname>Langname</longname>
+			<urlname>URL-Name</urlname>
+			<mimetype>Mime-Typ</mimetype>
+			<type>Typ</type>
+			<event>Ereignis</event>
+			<events>Ereignisse</events>
+			<filter>Filter</filter>
+			<comment>Kommentar</comment>
+			<comments>Kommentare</comments>
+			<user>Benutzer</user>
+			<users>Benutzer</users>
+			<username>Benutzername</username>
+			<group>Gruppe</group>
+			<groups>Gruppen</groups>
+			<upload_files>Dateien hochladen</upload_files>
+			<file>Datei</file>
+			<files>Dateien</files>
+			<tags>Tags</tags>
+			<search>
+				<title>Suche</title>
+				<search_for>Suchen nach</search_for>
+				<results>Suchergebnisse</results>
+			</search>
+			<options>
+				<ascending>aufsteigend</ascending>
+				<descending>absteigend</descending>
+				<compact_view>kompakte Ansicht</compact_view>
+				<detailed_view>detaillierte Ansicht</detailed_view>
+			</options>
+			<security>
+				<current_rights>Aktuelle Berechtigungen</current_rights>
+				<add_entities>Benutzer oder Gruppen hinzufügen</add_entities>
+				<inheritance>Vererbung</inheritance>
+				<inherit_rights>Berechtigungen von übergeordneten Objekten übernehmen</inherit_rights>
+				<bequeath_rights>Berechtigungen an untergeordnete Objekte vererben</bequeath_rights>
+			</security>
+		</labels>
+		<pagination>
+			<full>Seite {CURRENT} von {TOTAL}: {BROWSE}</full>
+			<page>Seite</page>
+			<first_page>zur ersten Seite</first_page>
+			<last_page>zur letzten Seite</last_page>
+			<next_page>zur nächsten Seite</next_page>
+			<previous_page>zur vorherigen Seite</previous_page>
+			<browse_forward>weiterblättern</browse_forward>
+			<browse_backwards>zurückblättern</browse_backwards>
+			<x_pages_forward>{PAGES} Seiten vor</x_pages_forward>
+			<x_pages_backward>{PAGES} Seiten zurück</x_pages_backward>
+		</pagination>
+		<texts>
+			<no_subobjects>Dieses Objekt hat keine anzeigbaren Unterobjekte</no_subobjects>
+			<no_comments>Keine Kommentare vorhanden</no_comments>
+			
+		</texts>
+	</general>
+	
+	<tags>
+		<edit_tag>Tag bearbeiten</edit_tag>
+		<tag>Tag</tag>
+		<popularity>Popularität</popularity>
+		<customweight>Manuelle Gewichtung</customweight>
+		<visibility>Sichtbarkeit</visibility>
+	</tags>
+	
+	<nodes>
+		<page>
+			<properties_pagetitle label="Seitentitel" />
+			<properties_additionaltitle label="Zusätzlicher Titel" />
+			<properties_keywords label="Schlüsselwörter" />
+			<properties_notes label="Notizen" />
+			<config_showinmenu label="Im Menü anzeigen" />
+			<config_active label="Publizieren" />
+			<display_template label="Template" />
+			<display_layout label="Layout" />
+		</page>
+		<site>
+			<config_defaultpage label="Startseite" />
+			<config_isclosed label="Seite ist geschlossen" />
+			<config_language label="Sprache" />
+			<config_notes label="Notizen" />
+			<config_boundtemplates label="verbundene Templates" />
+			<config_defaultlayout label="Standard-Layout" />
+			<config_defaulttemplate label="Standard-Template" />
+		</site>
+		<folder>
+			<security_requireauthorisation label="Login erforderlich" />
+			<config_types_allowed label="erlaubte Mimetypes" />
+			<config_listingallowed label="Auflistung erlaubt" />
+		</folder>
+		<image>
+			<config_filterstack label="optionaler Grafikfilter" />
+		</image>
+		<imagefilterstack>
+			<config_reverse label="Durchlaufrichtung umkehren" />
+		</imagefilterstack>
+		<imagefilter_resize>
+			<config_width label="Breite" />
+			<config_height label="Höhe" />
+			<config_mode label="Modus">
+				<keepaspect label="Seitenverhältnis beibehalten" />
+				<loseaspect label="Seitenverhältnis nicht beibehalten" />
+			</config_mode>
+			<config_direction label="Skalierungsrichtung">
+				<upsample label="nur hochskalieren" />
+				<downsample label="nur herunterskalieren" />
+				<both label="egal" />
+			</config_direction>
+		</imagefilter_resize>
+		<imagefilter_colorize>
+			<config_color label="Farbe" />
+			<config_strength label="Effektstärke" />
+		</imagefilter_colorize>
+		<imagefilter_crop>
+			<config_origin label="Positionierung">
+				<topleft label="oben links" />
+				<topcenter label="oben mittig" />
+				<topright label="oben rechts" />
+				<bottomleft label="unten links" />
+				<bottomcenter label="unten mittig" />
+				<bottomright label="unten rechts" />
+				<leftcenter label="links mittig" />
+				<rightcenter label="recht mittig" />
+				<center label="zentriert" />
+			</config_origin>
+			<config_width label="Breite" />
+			<config_height label="Höhe" />
+			<config_offsetx label="X-Offset" />
+			<config_offsety label="Y-Offset" />
+		</imagefilter_crop>
+		<imagefilter_greyscale>
+			<config_strength label="Effektstärke" />
+		</imagefilter_greyscale>
+		<imagefilter_lightness>
+			<config_brightness label="Helligkeit" />
+			<config_contrast label="Kontrast" />
+			<config_contrastfirst label="Kontrast zuerst ausführen" />
+		</imagefilter_lightness>
+		<imagefilter_negative>
+			<config_strength label="Effektstärke" />
+		</imagefilter_negative>
+		<imagefilter_roundededges>
+			<config_mode label="Modus" />
+			<config_radius label="Radius" />
+		</imagefilter_roundededges>
+		<layout>
+			<xsl_frontend label="Frontend-Code" />
+			<xsl_backend label="Backend-Code" />
+		</layout>
+		<template>
+			<xsl_frontend label="Frontend-Code" />
+			<xsl_backend label="Backend-Code" />
+		</template>
+		<tpl_menu>
+			<config_numlevels label="Anzahl Ebenen" />
+			<config_menuroot label="Menüwurzel" />
+		</tpl_menu>
+		<tpl_image>
+			<config_filterstack label="optionaler Grafikfilter" />
+			<config_allowlinking label="Verlinken erlauben" />
+		</tpl_image>
+		<user>
+			<properties_email label="eMail-Adresse" />
+			<properties_comment label="Kommentar" />
+			<config_hidestatus label="Onlinestatus verstecken" />
+			<security_stayloggedin label="Dauerhafter Login" />
+			<security_password label="Passwort" />
+			<security_activated label="aktiviert" />
+			<security_activationkey label="Aktivierungsschlüssel" />
+			<security_locked label="gesperrt" />
+			<security_failedlogins label="fehlgeschlagene Logins (aktuell)" />
+			<security_backendaccess label="Zugriff auf Backend erlaubt" />
+			<info_emailsent label="eMail verschickt" />
+			<info_successfullogins label="erfolgreiche Logins" />
+			<info_silentlogins label="stille Logins" />
+			<info_currentlogin label="aktueller Login" />
+			<info_lastlogin label="letzter Login" />
+			<info_totalfailedlogins label="fehlgeschlagene Logins" />
+			<info_activatedat label="Aktivierungsdatum" />
+		</user>
+		<usergroup>
+			<properties_description label="Beschreibung" />
+			<config_default label="Standardgruppe" />
+			<config_hidden label="versteckt" />
+		</usergroup>
+	</nodes>
+	
+	<views>
+		<view id="edit">Bearbeiten</view>
+		<view id="preview">Vorschau</view>
+		<view id="properties">Eigenschaften</view>
+		<view id="list">Liste</view>
+		<view id="security">Sicherheit</view>
+		<view id="thumbnails">Miniaturansicht</view>
+		<view id="upload">Upload</view>
+		<view id="information">Informationen</view>
+		<view id="overview">Übersicht</view>
+		<view id="debug">Debug</view>
+		<view id="welcome">Willkommen</view>
+		<view id="repair">Reparieren</view>
+		<view id="cache">Caches</view>
+		<view id="sysinfo">Systeminformationen</view>
+		<view id="nodetypes">Knotentypen</view>
+		<view id="repository">Repository</view>
+		<view id="tables">Tabellen</view>
+		<view id="status">Status</view>
+		<view id="tree">Baumstruktur</view>
+		<view id="session">Session</view>
+		<view id="system">System</view>
+		<view id="users">Benutzer</view>
+		<view id="authorisations">Berechtigungen</view>
+		<view id="scripts">Skripte</view>
+		<view id="tests">Tests</view>
+		<view id="events">Ereignisse</view>
+		<view id="administration">Administration</view>
+		<view id="manage">Verwalten</view>
+	</views>
+	
+	<nodetypes>
+		<type id="sb_system:root">Wurzel</type>
+		
+		<type id="sb_system:site">Website</type>
+		<type id="sb_system:page">Seite</type>
+		
+		
+		<type id="sb_system:templatemanager">Templatemanager</type>
+		<type id="sb_system:templategroup">Templategruppe</type>
+		<type id="sb_system:layout">Layout</type>
+		<type id="sb_system:template">Template</type>
+		<type id="sb_system:tpl_image">Bild</type>
+		<type id="sb_system:tpl_plaintext">Text</type>
+		<type id="sb_system:tpl_container">Container</type>
+		<type id="sb_system:tpl_richtext">Richtext</type>
+		<type id="sb_system:tpl_menu">Menü</type>
+		<type id="sb_system:tpl_script">Skript</type>
+		
+		<type id="sb_system:imageprocessing">Bildbearbeitung</type>
+		<!--<type id="sb_system:layoutgroup">Layoutgruppe</type>-->
+		
+		<type id="sb_system:filemanager">Dateimanager</type>
+		<type id="sb_system:folder">Ordner</type>
+		<type id="sb_system:image">Bild</type>
+		<type id="sb_system:asset">Datei</type>
+		<type id="sb_system:comment">Kommentar</type>
+		
+		<type id="sb_system:imagefilterstack">Filterblock</type>
+		<type id="sb_system:imagefilter_resize">Skalieren</type>
+		<type id="sb_system:imagefilter_crop">Beschneiden</type>
+		<type id="sb_system:imagefilter_colorize">Einfärben</type>
+		<type id="sb_system:imagefilter_negative">Negativ</type>
+		<type id="sb_system:imagefilter_lightness">Helligkeit/Kontrast</type>
+		<type id="sb_system:imagefilter_greyscale">Graustufen</type>
+		<type id="sb_system:imagefilter_roundededges">Ecken abrunden</type>
+		<type id="sb_system:imagefilter_merge">Verschmelzen</type>
+		
+		<type id="sb_system:preferences">Systemsteuerung</type>
+		
+		<type id="sb_system:useraccounts">Benutzer &amp; Gruppen</type>
+		<type id="sb_system:usergroup">Benutzergruppe</type>
+		<type id="sb_system:user">Benutzer</type>
+		
+		<type id="sb_system:modules">Module</type>
+		<type id="sb_system:module">Modul</type>
+		
+		<type id="sb_system:maintenance">Wartung</type>
+		<type id="sb_system:debug">Debug</type>
+		<type id="sb_system:logs">Logs</type>
+		
+		<type id="sb_system:reports">Auswertungen</type>
+		<type id="sb_system:reports_db">Datenbank</type>
+		<type id="sb_system:reports_structure">Struktur</type>
+		<type id="sb_system:registry">Registry</type>
+		<type id="sb_system:tags">Tags</type>
+		
+		<type id="sb_system:trashcan">Mülleimer</type>
+		
+	</nodetypes>
+	
+	<config>
+		<security>
+			<title>Sicherheitseinstellungen</title>
+			<login_required>Login erzwingen</login_required>
+			<use_captcha_login>Login mit Captcha-Code</use_captcha_login>
+			<registration_allowed>Benutzer-Registrierung erlauben</registration_allowed>
+			<use_captcha_registration>Registrierung mit Captcha-Code</use_captcha_registration>
+			<nickname_allowed_chars>Erlaubte Zeichen in Bildschirmnamen</nickname_allowed_chars>
+			<nickname_allow_space>Leerzeichen erlauben</nickname_allow_space>
+			<failed_logins_num_allowed>Anzahl erlaubter misslungener Loginversuche</failed_logins_num_allowed>
+			<failed_logins_locktime>Sperrzeit nach Erreichen in Min.</failed_logins_locktime>
+			<users_may_change_email>Benutzer dürfen eMail-Adresse ändern</users_may_change_email>
+			<stay_loggedin_allowed>Benutzer dürfen eingeloggt bleiben</stay_loggedin_allowed>
+			<log_ips>IP-Adressen speichern</log_ips>
+			<use_sessionip>IP in Session speichern &amp; überwachen</use_sessionip>
+			<ips_allowed_site>erlaubte IP-Bereiche (Site)</ips_allowed_site>
+			<ips_allowed_backend>erlaubte IP-Bereiche (Administration)</ips_allowed_backend>
+			<ips_denied_site>verweigerte IP-Bereiche (Site)</ips_denied_site>
+			<ips_denied_backend>verweigerte IP-Bereiche (Administration)</ips_denied_backend>
+		</security>
+		<mail>
+			<title>eMail-Einstellungen</title>
+			<sendmode>Sendemodus</sendmode>
+			<from_name>Absender (Name)</from_name>
+			<from_address>Absender (eMail-Adresse)</from_address>
+			<reply_address>Antwortadresse</reply_address>
+			<smtp_server>SMTP-Server</smtp_server>
+			<smtp_port>SMTP-Port</smtp_port>
+			<smtp_authentication>SMTP-Authentifizierung</smtp_authentication>
+			<smpt_login>SMTP-Login</smpt_login>
+			<smtp_password>SMTP-Passwort</smtp_password>
+		</mail>
+	</config>
+	
+	<authorisations>
+		<full>Vollzugriff</full>
+		<read>Lesen</read>
+		<write>Schreiben</write>
+		<special>Spezial</special>
+		<grant>Rechte vergeben</grant>
+		<list>Inhalt auflisten</list>
+		<delete_page>Seite(n) löschen</delete_page>
+		<edit_page>Seite(n) bearbeiten</edit_page>
+		<upload_files>Dateien hochladen</upload_files>
+		<publish>Publizieren</publish>
+		<rate>Bewertung abgeben</rate>
+		<comment>Kommentieren</comment>
+	</authorisations>
+	
+	<registry>
+		<label>Registry</label>
+	</registry>
+	
+	<formerrors>
+		<not_null>Dieses Feld ist erforderlich</not_null>
+		<string_too_short>Eingabe zu kurz</string_too_short>
+		<string_too_long>Eingabe zu lang</string_too_long>
+		<not_a_number>Dies ist keine Zahl</not_a_number>
+		<only_integer>Dies ist keine ganze Zahl</only_integer>
+		<too_many_decimals>Zu viele Nachkommastellen</too_many_decimals>
+		<not_in_range>Ausserhalb des gültigen Bereichs</not_in_range>
+		<no_hexcolor>Dies ist keine Farbe (Format: RRGGBB)</no_hexcolor>
+		<no_email>Dies ist keine eMail-Adresse</no_email>
+		<no_url>Dies ist keine URL</no_url>
+		<no_date>Dies ist kein gültiges Datum (Format: YYYY-MM-DD)</no_date>
+		<no_datetime>Dies ist kein gültiges Datum (Format: YYYY-MM-DD HH:MM:SS)</no_datetime>
+		<no_timeframe>Das erste Datum muss vor dem zweiten liegen</no_timeframe>
+		<no_domain>Dies ist keine Domäne</no_domain>
+		<no_ipaddress>Dies ist keine IP-Adresse</no_ipaddress>
+		<no_iprange>Dies ist kein IP-Adressbereich</no_iprange>
+		<no_ipranges>Dies sind keine IP-Adressbereiche</no_ipranges>
+		<not_identical>Keine Übereinstimmung, bitte überprüfen</not_identical>
+		<not_urlsafe>nicht URL-sicher, bitte nur a-z0-9._</not_urlsafe>
+		<no_siteformat>kein Site-Format, bitte nur a-z0-9._, in der Form "domäne::verzeichnis"</no_siteformat>
+		<upload_failure>Fehler beim Hochladen</upload_failure>
+		<file_too_big>Die Datei ist zu groß</file_too_big>
+		<file_is_wrong_type>Die Datei ist vom falschen Typ</file_is_wrong_type>
+		<image_too_big>Dieses Bild ist zu groß</image_too_big>
+		<invalid_chars>Diese Zeichen sind nicht erlaubt: </invalid_chars>
+		<only_alphanumeric>Bitte nur alphanumerische Zeichen sowie \'_\'</only_alphanumeric>
+		<no_trailing_underscore>Das erste Zeichen darf kein \'_\' sein</no_trailing_underscore>
+		<too_many_chosen>Es sind zu viele Optionen gewählt</too_many_chosen>
+		<no_space_allowed>Bitte keine Leerzeichen eingeben</no_space_allowed>
+		<wrong_format>Die Eingabe hat ein falsches Format</wrong_format>
+		<already_exists>Bereits vergeben</already_exists>
+		<user_does_not_exist>Der Benutzer existiert nicht</user_does_not_exist>
+		<wrong_password>Falsches Passwort</wrong_password>
+		<wrong_logindata>Login oder Passwort falsch</wrong_logindata>
+		<wrong_sequence>Die Zeichenfolge stimmt nicht überein</wrong_sequence>
+		<account_locked>Dieses Konto ist gesperrt</account_locked>
+		<account_inaktive>Dieses Konto ist nicht aktiviert</account_inaktive>
+		<account_temp_locked>Dieses Konto ist vorübergehend gesperrt</account_temp_locked>
+		<not_in_options>Der übermittelte Wert ist nicht in der Liste</not_in_options>
+		<wrong_nodetype>Falscher Typ ausgewählt</wrong_nodetype>
+	</formerrors>
+	
+</system>

@@ -1,0 +1,206 @@
+<?xml version="1.0" ?>
+<structure>
+	
+	<permissiontypes>
+		<full_access label="SYSTEM_PERMISSION_FULL_ACCESS" />
+		<create_nodes label="SYSTEM_PERMISSION_CREATE_NODES" />
+	</permissiontypes>
+	
+	<views>
+		<info action="view_info" />
+		<config action="edit_config" />
+		
+	</views>
+	
+	<nodetypes>
+		
+		<root label="SYSTEM_NODETYPE_ROOT" class="system.node.root">
+			<permissions>
+				<permission>full_access</permission>
+				<permission>create_nodes</permission>
+				<permission>list_nodes</permission>
+				<permission>edit_nodes</permission>
+				<permission>view_nodes</permission>
+			</permissions>
+			<views>
+				<view>info</view>
+			</views>
+			<display>
+				<debug>TRUE</debug>
+				<menu>TRUE</menu>
+				<list>FALSE</list>
+			</display>
+			<allows>
+				<node>applications</node>
+				<node create="TRUE">site</node>
+				<node create="TRUE">multimediamanager</node>
+				<node>system</node>
+			</allows>
+		</root>
+		
+		<site label="SYSTEM_NODETYPE_SITE" class="system.node.site">
+			<permissions>
+				<permission>full_access</permission>
+				<permission>create_nodes</permission>
+				<permission>list_nodes</permission>
+				<permission>edit_nodes</permission>
+				<permission>view_nodes</permission>
+			</permissions>
+			<views>
+				<view>info</view>
+				<view>config</view>
+			</views>
+			<display>
+				<debug>TRUE</debug>
+				<menu>TRUE</menu>
+				<list>TRUE</list>
+			</display>
+			<allows>
+				<node create="TRUE">page</node>
+			</allows>
+		</site>
+		<page label="SYSTEM_NODETYPE_PAGE" class="system.node.page">
+			<display>
+				<debug>TRUE</debug>
+				<menu>TRUE</menu>
+				<list>TRUE</list>
+			</display>
+			<allows>
+				<node>container</node>
+			</allows>
+		</page>
+		<container label="SYSTEM_NODETYPE_CONTAINER" class="system.node.container">
+			<display>
+				<debug>TRUE</debug>
+				<menu>FALSE</menu>
+				<list>FALSE</list>
+			</display>
+			<allows>
+				<node>container</node>
+				<node>text</node>
+				<node>string</node>
+				<node>image</node>
+				<node>imagelist</node>
+				<node>table</node>
+				<node></node>
+			</allows>
+		</container>
+		<text label="SYSTEM_NODETYPE_TEXT" class="system.node.text">
+			<display>
+				<debug>TRUE</debug>
+				<menu>FALSE</menu>
+				<list>FALSE</list>
+			</display>
+			<allows>
+				<node>link</node>
+			</allows>
+		</text>
+		<imagelist label="SYSTEM_NODETYPE_IMAGELIST" class="system.node.imagelist">
+			<display>
+				<debug>TRUE</debug>
+				<menu>FALSE</menu>
+				<list>FALSE</list>
+			</display>
+			<allows>
+				<node>imageinstance</node>
+			</allows>
+		</imagelist>
+		<imageinstance label="SYSTEM_NODETYPE_IMAGE" class="system.node.imageinstance">
+			<display>
+				<debug>TRUE</debug>
+				<menu>FALSE</menu>
+				<list>FALSE</list>
+			</display>
+			<allows>
+				<node>link</node>
+			</allows>
+		</imageinstance>
+		
+		<multimediamanager label="SYSTEM_NODETYPE_MULTIMEDIAMANAGER" class="system.node.multimediamanager">
+			<display>
+				<debug>TRUE</debug>
+				<menu>TRUE</menu>
+				<list>FALSE</list>
+			</display>
+			<allows>
+				<node create="TRUE">folder</node>
+			</allows>
+		</multimediamanager>
+		<folder label="SYSTEM_NODETYPE_FOLDER" class="system.node.folder">
+			<display>
+				<debug>TRUE</debug>
+				<menu>TRUE</menu>
+				<list>TRUE</list>
+			</display>
+			<allows>
+				<node create="TRUE">folder</node>
+				<node>image</node>
+				<node>asset</node>
+			</allows>
+		</folder>
+		<asset label="SYSTEM_NODETYPE_ASSET" class="system.node.asset">
+			<display>
+				<debug>TRUE</debug>
+				<menu>FALSE</menu>
+				<list>TRUE</list>
+			</display>
+			<allows>
+			</allows>
+		</asset>
+		
+		<applications label="SYSTEM_NODETYPE_APPLICATIONS" class="system.node.applications">
+			<display>
+				<debug>TRUE</debug>
+				<menu>TRUE</menu>
+				<list>TRUE</list>
+			</display>
+			<allows>
+				<node>application</node>
+			</allows>
+		</applications>
+		<application label="SYSTEM_NODETYPE_APPLICATION" class="system.node.application">
+			<display>
+				<debug>TRUE</debug>
+				<menu>TRUE</menu>
+				<list>TRUE</list>
+			</display>
+			<allows>
+				<node>configuration</node>
+				<node>extensions</node>
+			</allows>
+		</application>
+		<extensions label="SYSTEM_NODETYPE_EXTENSIONS" class="system.node.extensions">
+			<display>
+				<debug>TRUE</debug>
+				<menu>TRUE</menu>
+				<list>TRUE</list>
+			</display>
+			<allows>
+				<node>extension</node>
+			</allows>
+		</extensions>
+		<extension label="SYSTEM_NODETYPE_EXTENSIONS" class="system.node.extension">
+			<display>
+				<debug>TRUE</debug>
+				<menu>TRUE</menu>
+				<list>TRUE</list>
+			</display>
+			<allows>
+				<node>configuration</node>
+			</allows>
+		</extension>
+		<extension label="SYSTEM_NODETYPE_EXTENSIONS">
+			<display>
+				<debug>TRUE</debug>
+				<menu>TRUE</menu>
+				<list>TRUE</list>
+			</display>
+			<allows>
+				<node>configuration</node>
+			</allows>
+		</extension>
+	
+	</nodetypes>
+	
+	
+</structure>

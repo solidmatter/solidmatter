@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<about>
+	<overview>
+		<about_module>Über dieses Modul</about_module>
+		<about_solidmatter>Über solidMatter</about_solidbrickz>
+		<version>Version</version>
+		<author>Autor</author>
+		<authors>Autoren</authors>
+		<tester>Tester</tester>
+		<testers>Tester</testers>
+		<homepage>Homepage</homepage>
+		<feedback>Feedback</feedback>
+		<support>Support</support>
+		<manual>Handbuch</manual>
+		<thanks_to>Dank gebührt</thanks_to>
+		<module_uses>Dieses Modul nutzt</module_uses>
+		<solidbrickz_uses>solidBrickz nutzt</solidbrickz_uses>
+		<history>Historie</history>
+		<changes>Änderungen</changes>
+	</overview>
+	<information>
+		<info_general>Allgemeine Informationen</info_general>
+		<num_scripts>Anzahl Skripte</num_scripts>
+		<num_lines_of_code>Anzahl Codezeilen</num_lines_of_code>
+		<num_nodes></num_nodes>
+		<nodetypes></nodetypes>
+		<views></views>
+		<info_system>Systeminformationen</info_system>
+		<num_users>Anzahl Benutzer</num_users>
+		<num_users_locked>gesperrte Benutzer</num_users_locked>
+		<num_users_inactive>nicht aktivierte Benutzer</num_users_inactive>
+		<num_groups>Anzahl Gruppen</num_groups>
+	</information>
+</about>

@@ -1,0 +1,13 @@
+<?php
+
+class NodeManager {
+	
+	stat
+	
+	
+	
+
+
+}
+
+?>

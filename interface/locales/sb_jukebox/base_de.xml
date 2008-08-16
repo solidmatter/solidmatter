@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbJukebox>
+
+	<nodetypes>
+		<type id="sb_jukebox:jukebox">Jukebox</type>
+		<type id="sb_jukebox:playlist">Playlist</type>
+		<type id="sb_jukebox:album">Album</type>
+		<type id="sb_jukebox:artist">Künstler</type>
+		<type id="sb_jukebox:track">Titel</type>
+		<type id="sb_jukebox:tpl_mostheard">Jukebox: Populär</type>
+		<type id="sb_jukebox:tpl_favorites">Jukebox: Favoriten</type>
+		<type id="sb_jukebox:tpl_toprated">Jukebox: Charts</type>
+		<type id="sb_jukebox:tpl_nowplaying">Jukebox: On Air</type>
+	</nodetypes>
+	
+	<views>
+		<view id="library">Bibliothek</view>
+		<view id="albums">Alben</view>
+		<view id="artists">Künstler</view>
+		<view id="charts">Charts</view>
+		<view id="tags">Tags</view>
+		<view id="favorites">Favoriten</view>
+		<view id="playlists">Playlisten</view>
+		<view id="favorites">Favoriten</view>
+		<view id="details">Details</view>
+	</views>
+	
+	<nodes>
+		<jukebox>
+			<config_description>Beschreibung</config_description>
+			<config_sourcepath>Pfad zu den MP3-Files (auf dem Server)</config_sourcepath>
+			<config_userealpath>direkten Pfad nutzen</config_userealpath>
+			<config_realpath>direkter Pfad für Zugriff von außen</config_realpath>
+			<config_islocked>Jukebox gesperrt</config_islocked>
+			<config_relyonmp3year>Jahr aus MP3s erzwingen</config_relyonmp3year>
+		</jukebox>
+		<album>
+			<info_artist>Künstler</info_artist>
+			<info_cdsinset>Anzahl CDs</info_cdsinset>
+			<info_coverexists>Cover vorhanden</info_coverexists>
+			<info_coverfilename>Cover Dateiname</info_coverfilename>
+			<info_defects>Defekte</info_defects>
+			<info_relpath>rel. Pfad zur Jukebox</info_relpath>
+			<info_published>Erscheinungsjahr</info_published>
+			<info_type>Albumtyp</info_type>
+		</album>
+		<track>
+			<info_artist>Künstler</info_artist>
+			<info_index>Nummer</info_index>
+			<info_filename>Dateiname</info_filename>
+			<info_published>Erscheinungsjahr</info_published>
+			<info_playtime>Spieldauer</info_playtime>
+			<enc_playtime>Spieldauer (Sek.)</enc_playtime>
+			<enc_mode>Kodierung</enc_mode>
+			<enc_bitrate>Bitrate (kbit/s)</enc_bitrate>
+		</track>
+	</nodes>
+	
+	<authorisations>
+		<start_import>Import starten</start_import>
+		<clear_library>Bibliothek löschen</clear_library>
+		<add_playlists>Playlisten anlegen</add_playlists>
+		<add_tracks>Titel hinzufügen</add_tracks>
+	</authorisations>
+	
+	<labels>
+		<artist>Künstler</artist>
+		<artists>Künstler</artists>
+		<album>Album</album>
+		<albums>Alben</albums>
+		<published>veröffentlicht</published>
+		<title>Titel</title>
+		<tracks>Titel</tracks>
+		<playtime>Spielzeit</playtime>
+		<bitrate>Bitrate</bitrate>
+		<tracks_on_other_albums>Titel auf anderen Alben</tracks_on_other_albums>
+		<source_album>Quellalbum</source_album>
+		<latest_albums>Neueste Alben</latest_albums>
+		<now_playing>gerade abgespielt</now_playing>
+		<random_artists>Zufällige Künstler</random_artists>
+		<random_albums>Zufällige Alben</random_albums>
+		<artists_beginning_with>Künstler beginnend mit</artists_beginning_with>
+		<albums_beginning_with>Alben beginnend mit</albums_beginning_with>
+		<artists_containing>Künstler mit</artists_containing>
+		<albums_containing>Alben mit</albums_containing>
+		<pivot>Blickwinkel</pivot>
+		<top_artists>Top Künstler</top_artists>
+		<top_albums>Top Alben</top_albums>
+		<top_tracks>Top Titel</top_tracks>
+		<weighting>Gewichtung</weighting>
+		<all_tags>Alle Tags</all_tags>
+	</labels>
+	
+	<menu>
+		<library>Übersicht</library>
+		<albums>Alben</albums>
+		<artists>Künstler</artists>
+		<charts>Charts</charts>
+		<tags>Tags</tags>
+		<favorites>Favoriten</favorites>
+		<playlists>Playlisten</playlists>
+	</menu>
+	
+	<actions>
+		<play>abspielen</play>
+		<search_lyrics>Songtext suchen</search_lyrics>
+		<add_to_favorites>zu Fav.</add_to_favorites>
+		<add_to_playlist>zu Playl.</add_to_playlist>
+		<vote>bewerten</vote>
+		<expand>aufklappen</expand>
+		<collapse>zuklappen</collapse>
+	</actions>
+	
+</sbJukebox>

@@ -1,0 +1,88 @@
+
+
+# images -----------------------------------------------------------------------
+0		|string		|MM							|image/tiff
+0		|string		|II							|image/tiff
+0		|beshort	|0xffd8						|image/jpeg
+0		|string		|BM							|image/bmp
+0		|string		|\x89PNG					|image/x-png
+1		|string		|PNG						|image/x-png
+0		|string		|GIF8						|image/gif
+0		|string		|IIN1						|image/x-niff
+
+# movies -----------------------------------------------------------------------
+0		|belong		|0x000001b3					|video/mpeg
+0		|belong		|0x000001ba					|video/mpeg
+4		|string		|moov						|video/quicktime
+4		|string		|mdat						|video/quicktime
+
+# audio ------------------------------------------------------------------------
+0		|belong		|0x49443303					|audio/mpeg
+0		|beshort&0xfff0	|0xfff0					|audio/mpeg
+8		|string		|AIFF						|audio/x-aiff
+8		|string		|AIFC						|audio/x-aiff
+8		|string		|8SVX						|audio/x-aiff
+0		|string		|MThd						|audio/unknown
+0		|string		|CTMF						|audio/unknown
+0		|string		|SBI						|audio/unknown
+0		|string		|Creative\ Voice\ File		|audio/unknown
+0		|string		|RIFF						|audio/unknown
+#>8		|string		|WAVE						|audio/x-wav
+0		|string		|PSID						|audio/prs.sid
+
+# archives ---------------------------------------------------------------------
+0		|string		|Rar!						|application/x-rar
+0		|string		|SQSH						|application/data
+0		|string		|UC2\x1a					|application/data
+0		|string		|PK\003\004					|application/zip
+20		|lelong		|0xfdc4a7dc					|application/x-zoo
+0		|belong		|0x65ff0000					|application/x-ar
+0		|belong		|0x3c61723e					|application/x-ar
+0		|long		|0x213c6172					|application/x-ar
+0		|lelong		|0177555					|application/data
+0		|leshort	|0177555					|application/data
+0		|lelong		|0177545					|application/data
+0		|leshort	|0177545					|application/data
+0		|lelong		|0x39bed					|application/data
+0		|lelong		|0x39bee					|application/data
+
+# documents --------------------------------------------------------------------
+0		|string		|\376\067\000\043			|application/msword
+0		|string		|\333\245-\000\000\000		|application/msword
+0		|string		|%PDF-						|application/pdf
+0		|string		|PDF						|Macintosh PDF File (data)
+65		|string		|PDF						|Macintosh PDF File (rsrc + data)
+
+# HTML and the like ------------------------------------------------------------
+0		|string		|<!DOCTYPE\ HTML			|text/html
+0		|string		|<!doctype\ html			|text/html
+0		|string		|<HEAD						|text/html
+0		|string		|<head						|text/html
+0		|string		|<TITLE						|text/html
+0		|string		|<title						|text/html
+0		|string		|<html						|text/html
+0		|string		|<HTML						|text/html
+0		|string		|<!--						|text/html
+0		|string		|<h1						|text/html
+0		|string		|<H1						|text/html
+0		|string		|<?xml						|text/xml
+
+# executables ------------------------------------------------------------------
+0		|string		|MZ							|application/x-ms-dos-executable
+0		|string		|LZ							|MS-DOS executable (built-in)
+
+# NON_STANDARD!!! --------------------------------------------------------------
+0		|string		|Paint Shop Pro Image File	|custom/image/psp
+0		|string		|<?php						|custom/text/php
+0		|string		|ITSF						|custom/application/chm
+
+
+
+
+
+
+
+
+
+
+

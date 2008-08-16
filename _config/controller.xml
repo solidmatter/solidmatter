@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<config>
+	
+	<system_db>
+		<host>localhost</host>
+		<port>3306</port>
+		<user>solidmatter</user>
+		<pass>solidmatter</pass>
+		<schema>solidmatter</schema>
+		<charset>utf8</charset>
+		<log enabled="false" verbose="false">
+			<file>_logs/log_database_sys.txt</file>
+			<size>1024</size>
+		</log>
+	</system_db>
+	
+	<handlers>
+		<handler id="backend">
+			<library>sb.handler.request.backend</library>
+			<class>BackendRequestHandler</class>
+		</handler>
+		<handler id="frontend">
+			<library>sb.handler.request.frontend</library>
+			<class>FrontendRequestHandler</class>
+		</handler>
+		<handler id="application">
+			<library>sb.handler.request.application</library>
+			<class>ApplicationRequestHandler</class>
+		</handler>
+		<handler id="xsl">
+			<library>sb.handler.request.xsl</library>
+			<class>XSLRequestHandler</class>
+		</handler>
+		<handler id="jbaudiostream">
+			<library>sb.handler.request.audiostream</library>
+			<class>JBAudioStreamHandler</class>
+			<module>sb_jukebox</module>
+		</handler>
+	</handlers>
+	
+</config>

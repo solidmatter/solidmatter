@@ -1,0 +1,114 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>TWINE Project</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<style type="text/css" media="screen">
+		<!--	
+ 		  @import url(doc/style.css);
+		-->
+	</style> 
+</head>
+<body>
+
+<div id="header">
+<a href="http://twineproject.sourceforge.net" title="TWINE Project Home">TWINE Project</a>
+</div>
+
+
+<div id="nav">
+    Home<br />
+    <a href="doc/javahtml.html">HTML Validator for Java</a><br />
+    <a href="doc/phphtml.html">HTML Validator for PHP</a><br />
+	<a href="doc/java.html">Custom Validator for Java</a><br />    
+    <a href="doc/php.html">Custom Validator for PHP</a><br />
+	<a href="http://sourceforge.net/project/showfiles.php?group_id=99065">Downloads</a><br />	
+</div>
+
+<div id="main">
+
+<h1>TWINE: Toolkit for Web-Interface Evaluation</h1>
+
+
+<h2>Why this toolkit?</h2>
+
+<p>Ever had to validate the HTML produced by your web application against the 
+HTML DTD orcheck it for Web Accessibility issues? With static HTML files, 
+this is a snap: just include a link to a validation service like the 
+<a href="http://validator.w3.org">W3C's Markup Validation Service</a> and 
+fill in the URL.  There are even browser toolbars and other client-side 
+tools that can automatically submit pages to these services.</p>
+
+<p>But this is not possible with many web apps.  Two common problems are:</p>
+<ul>
+  <li>authentication and authorization code will block out non-authorized 
+  requests--<em>like the one coming from the validation service!</em></li> 
+  <li>the page is written by a script that requires an HTTP post 
+  (not a great development practice, but quite frequent)</li>
+</ul>
+
+<p>In this situation, your only option is to validate manually: a 
+repetitive series of "View Source" and "Save to file" operations 
+in your web browser, 
+followed by submitting these files to a validation service.  And 
+since your web application is <em>dynamic</em>, it is possible 
+that another version of this interface will still contain bad markup.
+</p>
+
+<p>This process needs to be easier.  How about just clicking a button?  
+That's what this toolkit is designed to allow you to do.</p>
+
+
+<h2>Who cares--just show me the software!</h2>
+
+<p>If you just want to get started, go to the 
+<a href="doc/javahtml.html">HTML Validator for Java</a>.
+It is very easy to use--just drop it in to your web app and modify 
+your web.xml configuration file.  It will report HTML validation problems
+on all your web interfaces. 
+
+<h2>More boring technical details please!</h2>
+
+<p>Basically, this toolkit works server-side to make it possible to validate dynamic resources in almost any situation.  To do this, it takes dynamic HTTP requests and writes them out as static
+HTML files that can be validated just like a hard-coded HTML page.  It does this by
+intercepting and buffering the <em>dynamic</em> output of your web app, writing the results to disk, then writing a link that will submit the <em>static</em> resource to the validation service.</p>
+
+<p>Check out a <a href="doc/diagram.html"target="newWindow" onclick="window.open(this.href,
+this.target, 'scrollbars=yes, resizable=yes,width=450,height=500,'); return
+true">diagram</a>.</p>
+
+
+<h2>Validation Services</h2>
+
+<p>
+By default these components submit the dynamic resource to the W3C HTML validation service at:
+<a href="http://validator.w3.org/">http://validator.w3.org/</a>.  There are many other validation 
+services out there, some free, some not.  A popular Web
+accessibiliy validation service is WAVE, and WAVE can validate your web interfaces against 
+US Section 508 and WCAG Guidelines.  WAVE can be found at: 
+<a href="http://www.wave.webaim.org">http://www.wave.webaim.org</a>.  
+</p>
+
+
+<h2>License</h2>
+
+<p>
+This software is distributed under the LGPL.  
+See <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a>.
+</p>
+
+<p>
+This software comes without warranty of any kind.  Use at your own risk.</p>
+
+<h2>Questions or suggestions</h2>
+
+<p>
+Please direct these to <a href="mailto:ehjansson@hotmail.com">ehjansson@hotmail.com</a>
+</p>
+
+</div>
+
+</body>
+</html>

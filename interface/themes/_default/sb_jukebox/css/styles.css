@@ -1,0 +1,541 @@
+
+/*----------------------------------------------------------------------------*/
+/* page styles
+/*----------------------------------------------------------------------------*/
+
+html {
+	background-color: #666;
+	font-family: Arial, Helvetica, Sans-Serif;
+	font-size: 12px;
+	padding: 0;
+	background: #311 url(../images/page_bg.png) repeat top left;
+}
+
+body {
+	/*padding: 20px;*/
+	margin: 0;
+	text-align: center;
+	background: url(../images/page_bg_ramp.png) repeat-x 4px 0;
+}
+
+div.body {
+	width: 990px;
+	margin-top: 20px;
+	margin: auto;
+	padding: 0;
+	border: 1px solid black;
+	text-align: left;
+}
+
+/*----------------------------------------------------------------------------*/
+/* login
+/*----------------------------------------------------------------------------*/
+
+div.login {
+	color: white;
+	padding-top: 200px;
+	height: 270px;
+	background: transparent url(../images/login_bar.png) repeat-x bottom left;
+	/*background-color: red;*/
+}
+div.logincontainer {
+	margin: auto;
+	height: 270px;
+	width: 500px;
+	position: relative;
+	/*background-color: blue;*/
+}
+div.logingrammo {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 270px;
+	width: 230px;
+	/*background-color: green;*/
+	background: transparent url(../images/login_grammo.png) no-repeat bottom left;
+}
+form.login {
+	padding-top: 75px;
+	text-align: right;
+}
+form.login label {
+	font-weight: bold;
+	font-size: 13px;
+	font-family: Trebuchet MS, Verdana, Arial, Helvetica, sans-serif;
+	padding-left: 5px;
+}
+form.login input {
+	width: 150px;
+	margin: 4px 0 4px 4px;
+	padding: 0px;
+	vertical-align: center;
+}
+
+/*----------------------------------------------------------------------------*/
+/* page head
+/*----------------------------------------------------------------------------*/
+
+div.head {
+	position: relative;
+	background: #C5C6DA url(../images/header_bg.png) repeat-x top left;
+}
+
+a.logout {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 3px;
+	color: black;
+}
+
+span.current_playlist {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+/*----------------------------------------------------------------------------*/
+/* menu
+/*----------------------------------------------------------------------------*/
+
+div.menu {
+	border-top: 2px solid white;
+	border-bottom: 2px solid white;
+	position: relative;
+	display: block;
+	height: 42px;
+	font-size: 11px;
+	font-weight: bold;
+	background: transparent url(../images/menu_bg.png) repeat-x top left;
+	font-family: Trebuchet MS, Verdana, Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	background-color: #C11;
+}
+div.menu ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	width:auto
+}
+div.menu ul li {
+	display: block;
+	float: left;
+	margin: 0 1px 0 0;
+}
+div.menu a {
+	display: block;
+	float: left;
+	color: white;
+	text-decoration: none;
+	padding:14px 22px 0 22px;
+	height:28px;
+}
+div.menu a:hover {
+	color: #fff;
+	background:transparent url(../images/menu_bg_hover.png) repeat-x top center;
+	background-color: #A00;
+}
+div.menu a.active {
+	color: yellow;
+}
+
+/*----------------------------------------------------------------------------*/
+/* nav bar
+/*----------------------------------------------------------------------------*/
+
+div.nav {
+	position: relative;
+	background: #CCD url(../images/helper_bg.png) repeat-x top center;
+	margin: 0;
+	padding: 5px;
+}
+
+form.simplesearch {
+	margin: 0;
+	padding: 0;
+}
+
+div.nav a {
+	text-decoration: none;
+	color: #A00;
+}
+div.nav a:hover {
+	color: black;
+	text-decoration: underline;
+}
+
+div.alphalinks, div.tools {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding-top: 8px;
+	padding-right: 8px;
+	font-size: 1.1em;
+}
+
+div.alphalinks a {
+	font-weight: bold;
+	color: #A00;
+	text-decoration: none;
+	padding: 3px 6px;
+}
+
+div.alphalinks a:hover {
+	background-color: #A00;
+	color: white;
+}
+
+/*----------------------------------------------------------------------------*/
+/* content
+/*----------------------------------------------------------------------------*/
+
+div.content {
+	background: #D9D9ED url(../images/content_bg.png) repeat-x top center;
+	clear: both;
+	font-size: 12px;
+	padding: 20px;
+	margin: 0;
+}
+div.content table {
+	font-size: 12px;
+}
+div.content a {
+	text-decoration: none;
+	color: #A00;
+}
+div.content a:hover {
+	color: black;
+	text-decoration: underline;
+}
+
+/* content area --------------------------------------------------------------*/
+
+h1, h2, h3 {
+	font-family: Trebuchet MS, Arial, Helvetica, Sans-Serif;
+}
+h1 {
+	font-size: 24px;
+	padding: 10px 50px;
+	margin: 0;
+}
+
+table.default {
+	font-size: 0.9em;
+	border: 3px solid white;
+	border-collapse: collapse;
+	margin-bottom: 15px;
+	clear: both;
+	background-color: white;
+}
+table.default td,
+table.default th {
+	padding: 2px;
+	font-weight: normal;
+	/*border-bottom: 1px solid #334;
+	border-top: 1px solid #334;*/
+}
+table.default td {
+	vertical-align: top;
+}
+table.default th {
+	vertical-align: bottom;
+}
+table.default th {
+	padding: 3px;
+	text-align: left;
+	background-color: #FFF;
+	color: black;
+	font-size: 14px;
+	font-family: Trebuchet MS, Arial, Helvetica, Sans-Serif;
+}
+/*table.default th.th2,
+table.default tr.th2 th {
+	font-weight: normal;
+	background-color: #334;
+}*/
+table.default tr.odd, li.odd {
+	background-color: #E0E0E8;
+}
+table.default tr.even, li.even {
+	background-color: white;
+}
+
+ul.sortable {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+ul.sortable li {
+	clear: both;
+	margin: 0 2px;
+	display: block;
+	padding: 2px;
+	cursor: n-resize;
+}
+
+/* album covers --------------------------------------------------------------*/
+
+div.albumcover {
+	padding: 10px 5px 10px 10px;
+	text-align: center;
+	float: left;
+}
+
+/* voting --------------------------------------------------------------------*/
+
+a.imglink img {
+	vertical-align: baseline;
+	border: 0;
+}
+
+
+/* icons ---------------------------------------------------------------------*/
+
+*.type {
+	padding: 1px 3px 1px 20px;
+	margin: 0 0 0 1px;
+	background-repeat: no-repeat;
+	background-image: url(../icons/type_node.gif);
+	background-position: 0px center;
+}
+
+*.button {
+	margin: 0;
+	padding: 0;
+}
+
+/* standard objects/types */
+
+*.track {
+	background-image: url(../icons/type_track.png);
+}
+*.album {
+	background-image: url(../icons/type_cd.png);
+}
+*.artist {
+	background-image: url(../icons/type_artist.png);
+}
+*.playlist {
+	background-image: url(../icons/type_playlist.png);
+}
+*.tag {
+	background-image: url(../icons/type_tag.png);
+}
+
+/* menu (has to be after 'type' definition) */
+
+*.menu_overview {
+	background-image: url(../icons/menu_overview.png);
+}
+*.menu_albums {
+	background-image: url(../icons/menu_cd.png);
+}
+*.menu_artists {
+	background-image: url(../icons/menu_artists.png);
+}
+*.menu_charts {
+	background-image: url(../icons/menu_charts.png);
+}
+*.menu_tags {
+	background-image: url(../icons/menu_tags.png);
+}
+*.menu_favorites {
+	background-image: url(../icons/menu_favorites.png);
+}
+*.menu_playlists {
+	background-image: url(../icons/menu_playlists.png);
+}
+
+/* actions */
+
+*.play {
+	background-image: url(../icons/play.png);
+}
+*.play:hover {
+	background-image: url(../icons/play_hover.png);
+}
+*.lyrics {
+	background-image: url(../icons/lyrics.png);
+}
+*.lyrics:hover {
+	background-image: url(../icons/lyrics_hover.png);
+}
+*.create {
+	background-image: url(../icons/create.png);
+}
+*.create:hover {
+	background-image: url(../icons/create_hover.png);
+}
+*.addToFavorites {
+	background-image: url(../icons/add_to_favorites.png);
+}
+*.addToFavorites:hover {
+	background-image: url(../icons/add_to_favorites_hover.png);
+}
+*.addToPlaylist {
+	background-image: url(../icons/add_to_playlist.png);
+}
+*.addToPlaylist:hover {
+	background-image: url(../icons/add_to_playlist_hover.png);
+}
+*.collapse {
+	background-image: url(../icons/collapse.png);
+}
+*.collapse:hover {
+	background-image: url(../icons/collapse_hover.png);
+}
+*.expand {
+	background-image: url(../icons/expand.png);
+}
+*.expand:hover {
+	background-image: url(../icons/expand_hover.png);
+}
+*.remove {
+	background-image: url(../icons/remove.png);
+}
+*.remove:hover {
+	background-image: url(../icons/remove_hover.png);
+}
+*.activate {
+	background-image: url(../icons/activate.png);
+}
+*.activate:hover {
+	background-image: url(../icons/activate_hover.png);
+}
+*.activated {
+	background-image: url(../icons/activated.png);
+}
+
+
+
+/* album details -------------------------------------------------------------*/
+
+div.albumcontainer {
+	background-color: white;
+	padding: 20px;
+	margin-bottom: 30px;
+}
+div.albumcontainer h2 {
+	font-size: 1.2em;
+	padding: 5px;
+	margin: 0 0 10px 0;
+	border-bottom: 1px solid black;
+}
+
+/* comments ------------------------------------------------------------------*/
+
+div.comments {
+	background-color: white;
+	padding: 20px;
+}
+div.comments h2 {
+	font-size: 1.2em;
+	padding: 5px;
+	margin: 0 0 10px 0;
+	border-bottom: 1px solid black;
+}
+div.comments h3 {
+	font-weight: normal;
+	padding: 2px;
+	margin: 0;
+	border-bottom: 1px solid #DDE;
+}
+div.comments div {
+	padding: 5px;
+	background: url(../images/comment_bg.png) repeat-x top left;
+}
+
+/* tags ----------------------------------------------------------------------*/
+
+div.tagcontainer {
+	padding: 10px;
+	font-size: 1.5em;
+	text-align: justify;
+	vertical-align: middle;
+}
+div.tagcontainer a {
+	margin-right: 10px;
+	white-space: nowrap;
+}
+
+/*----------------------------------------------------------------------------*/
+/* footer
+/*----------------------------------------------------------------------------*/
+
+div.footer {
+	background-color: black;
+	font-size: 10px;
+	font-weight: bold;
+	color: #BBB;
+	padding: 4px;
+	margin: 0px;
+	text-align: right;
+}
+
+div.footer a {
+	color: #BBB;
+}
+
+/*----------------------------------------------------------------------------*/
+/* forms
+/*----------------------------------------------------------------------------*/
+
+span.formerror {
+	color: red;
+	text-decoration: blink;
+}
+
+form.default input.formerror,
+form.default textarea.formerror {
+	background-color: #FEE;
+	border: 2px solid red;
+	padding: 1px 2px;
+}
+
+/*----------------------------------------------------------------------------*/
+/* exceptions & errors
+/*----------------------------------------------------------------------------*/
+
+table.exception {
+	border: 2px solid red;
+	background-color: white;
+	color: red;
+	font-size: 80%;
+	border-collapse: collapse;
+	margin: 20px;
+}
+table.exception th, table.exception td {
+	text-align: left;
+	border: 1px solid red;
+	padding: 2px;
+}
+table.exception tr.root {
+	background-color: #FCC;
+}
+table.exception th.message {
+	color: white;
+	background-color: red;
+}
+
+table.warning {
+	border: 2px solid yellow;
+	background-color: white;
+	color: black;
+	font-size: 80%;
+	border-collapse: collapse;
+	margin: 20px;
+}
+table.warning th, table.warning td {
+	text-align: left;
+	border: 1px solid yellow;
+	padding: 2px;
+}
+table.warning tr.root {
+	background-color: #FCC;
+}
+table.warning th.message {
+	color: black;
+	background-color: yellow;
+}
+
+

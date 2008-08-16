@@ -1,0 +1,4 @@
+#!/bin/bash
+
+## Update to path of your phpdoc
+~/bin/phpdoc -d src,support -t doc -s -o HTML:frames:DOM/earthli

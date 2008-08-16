@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="html.xsl"?>
+<doc type="api" version="1.00.00">
+
+	<chapter title="Introduction" id="intro">
+		<p>
+		
+		</p>
+		<section title="How to read this document" id="howtoread">
+			<subsection title="Where to start" id="start">
+			
+			
+			</subsection>
+			<subsection title="Formatting Conventions">
+				<p>
+					In this documentation, you will find several types of formatting words and paragraphs, the meaning is as follows:
+				</p>
+				<p class="action">
+					This box contains actions that you should take, e.g. edit files, add values to the database and such. Used everytime you have to do something...
+If you hate to read manuals and are more the learning-by-doing type of person, you can just follow the instructions in these boxes, ignore the rest and you should have a fully running module in the end. You'll miss something then, though...
+
+				</p>
+				<p class="caution">
+					This box provides information that can prevent you from screwing something up. Used when there are common errors to be made or where i myself are constantly implementing oversights...
+				</p>
+				<p class="info">
+					This box holds important additional information, resp. where to find additional information on the current subject. Used when there are more things to know than are used/told in place...
+				</p>
+				<pre class="code">This box contains program-code</pre>
+				
+			</subsection>
+		</section>
+		<section title="What solidMatter is and what it's not" id="what">
+			<p>
+				solidMatter is a Web-Development-Framework in the first place.
+			</p>
+			<subsection title="Content Repository Aspects" id="cr">
+				<p>
+					
+				</p>
+			</subsection>
+			<subsection title="Web Development Aspects" id="wd">
+			
+			</subsection>
+		</section>
+		<section title="Why was it created?" id="why">
+		
+		</section>
+		<section title="Past &amp; Future" id="past">
+		
+		</section>
+	</chapter>
+
+	<chapter title="Modes of Operation" id="">
+		<section title="JCR API only" id="">
+			
+		</section>
+		<section title="sbCR Infrastructure" id="">
+			
+		</section>
+		<section title="Full solidMatter API" id="">
+			
+		</section>
+	</chapter>
+
+	<chapter title="Content Repository (sbCR)" id="sbcr">
+		<section title="What is a Content Repository?" id="whatiscr">
+			<subsection title="Purpose" id="">
+				
+			</subsection>
+			<subsection title="Rough Comparison JCR vs. sbCR" id="">
+				- compromise between speed and JCR compatibility
+				- DB backed, access possible aside JCR API
+				- some things adapted to PHP
+				- added functionality leads to restrictions
+				- Conclusion: not portable if using the full sbCR API
+			</subsection>
+			
+		</section>
+		<section title="JCR vs. sbCR (Restrictions)" id="jcrsbcr">
+			<subsection title="Workspaces" id="">
+				- only one workspace
+				- more workspaces supported, but not connected
+			</subsection>
+			<subsection title="Permissions" id="">
+				- no session-level permissions
+				- but user-level authorisations
+			</subsection>
+			<subsection title="Same Name Siblings" id="">
+				- does not support same name siblings
+			</subsection>
+			<subsection title="Shared Sets" id="">
+				- Shared nodes have to have the same name
+				- only one instance of all nodes is created (problem with getSharedSet)
+			</subsection>
+			<subsection title="Mixin Types" id="mixin">
+				All nodes have (at least) the following mixin types:
+				<ul>
+					<li>mix:created</li>
+					<li>mix:lastModified</li>
+					<li>mix:referencable</li>
+					<li>mix:referencable</li>
+					<li>mix:lockable</li>
+					<li>mix:referencable</li>
+					<li>sb:deleted</li>
+					<li>sb:node</li>
+				</ul>
+			</subsection>
+			<subsection title="Properties" id="">
+				- doesn't implement items
+				- all properties are returned as sensible php types
+				- properties mandatory (?)
+			</subsection>
+			<subsection title="" id="">
+				
+			</subsection>
+			<subsection title="" id="">
+				
+			</subsection>
+			<subsection title="" id="">
+				
+			</subsection>
+			
+		</section>
+		<section title="JCR vs. sbCR (Additions)" id="jcrsbcr">
+			<subsection title="Same Name Siblings" id="">
+				
+			</subsection>
+			<subsection title="Shared Nodes" id="">
+				
+			</subsection>
+			<subsection title="" id="">
+				
+			</subsection>
+			<subsection title="" id="">
+				
+			</subsection>
+			<subsection title="" id="">
+				
+			</subsection>
+			<subsection title="" id="">
+				
+			</subsection>
+			<subsection title="" id="">
+				
+			</subsection>
+			<subsection title="" id="">
+				
+			</subsection>
+			<subsection title="" id="">
+				
+			</subsection>
+			
+		</section>
+		<section title="Repository Structure" id="structure">
+			
+		</section>
+		<section title="sbCR Repository Constraints and " id="custom">
+			
+			
+		</section>
+		<section title="API Changes" id="api">
+			
+		</section>
+	</chapter>
+	
+	
+	
+	
+	<chapter title="Custom Features" id="viewsactions">
+		<section title="Views and Actions" id="concept">
+			<subsection title="Content vs. Application Logic?" id="contentlogic">
+			
+			</subsection>
+			<subsection title="What is a View?" id="view">
+				
+			</subsection>
+			<subsection title="What is an Action?" id="action">
+			
+			</subsection>
+		</section>
+	</chapter>
+	
+	
+	
+	
+	<chapter title="Appendix" id="appendix">
+		<section title="Additional Documentation" id="add_docu">
+		
+		</section>
+	</chapter>
+	
+
+</doc>

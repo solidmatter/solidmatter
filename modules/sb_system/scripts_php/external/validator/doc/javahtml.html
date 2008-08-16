@@ -1,0 +1,141 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>TWINE Project: HTML Validator for Java</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<style type="text/css" media="screen">
+		<!--	
+ 		  @import url(style.css);
+		-->
+	</style> 
+</head>
+<body>
+
+
+<div id="header">
+<a href="http://twineproject.sourceforge.net" title="TWINE Project Home">TWINE Project</a>
+</div>
+
+
+<div id="nav">
+    <a href="../index.html">Home</a><br />
+    HTML Validator for Java<br />
+    <a href="phphtml.html">HTML Validator for PHP</a><br />
+	<a href="java.html">Custom Validator for Java</a><br />    
+    <a href="php.html">Custom Validator for PHP</a><br />
+	<a href="http://sourceforge.net/project/showfiles.php?group_id=99065">Downloads</a><br />
+</div>
+
+
+<div id="main">
+
+<h1>HTML Validator for Java</h1>
+
+<p>
+The HTML Validator for Java is a Java class/Servlet filter designed to 
+submit a HTML interfaces of dynamic web applications to the W3C HTML
+Markup Validation Service and display the results in an HTML table.  It is 
+designed to be <strong>super easy to use.</strong>
+</p>
+
+<h2>Usage</h2>
+
+<p>
+To use this class, you will need a Java Servlet container that supports
+the Servlet API version 2.3 or greater.
+</p>
+
+<ul>
+  <li>drop <b>validator.jar</b> in your web apps <b>lib</b> directory</li>
+  <li>copy the contents of the sample HTMLValidator_web.xml file (in the conf/ directory) 
+  into your web app's <b>WEB-INF/web.xml</b> file</li>
+</ul>
+
+<p>
+...and you are ready to go.  This will result in the current page being submitted 
+to the W3C validation service and the results displayed in an inline table.
+</p>
+
+<h2>Configuration options</h2>
+
+<table cellpadding="2" border="1">
+	<tr>
+		<th width="20%">config option</th>
+		<th width="20%">default value</th>
+		<th width="60%">description</th>
+	</tr>
+	<tr>
+		<td>fileExtension</td>
+		<td>.validate.html</td>
+		<td>the file extension given to the temporary file written to disk</td>
+	</tr>		
+	<tr>
+		<td>workDir</td>
+		<td>[directory where JSP script was run]</td>
+		<td>the directory where static files should be written to disk</td>
+	</tr>	
+	<tr>
+		<td>workDirUrl</td>
+		<td>[web path to directory where JSP script was run]</td>
+		<td>the web server URL for the workDir; used to show the validation service where to access the static HTML files</td>
+	</tr>		
+</table>
+
+<p>In your web.xml file, configuration would look like this:
+</p>
+
+<div class="code">
+    &lt;filter&gt; <br/>
+   &lt;filter-name&gt;HTMLValidatorFilter&lt;/filter-name&gt; <br/>
+   &lt;filter-class&gt;org.twine.filter.HTMLValidatorFilter&lt;/filter-class&gt; <br/> 
+   &lt;init-param&gt; <br/>
+      &lt;param-name&gt;fileExtension&lt;/param-name&gt; <br/>
+      &lt;param-value&gt;.temp.html&lt;/param-value&gt; <br/>
+   &lt;/init-param&gt; <br/>
+   &lt;init-param&gt; <br/>
+      &lt;param-name&gt;workDir&lt;/param-name&gt; <br/>
+      &lt;param-value&gt;/path/to/some/dir&lt;/param-value&gt; <br/>
+   &lt;/init-param&gt;    <br/>
+   &lt;init-param&gt; <br/>
+      &lt;param-name&gt;workDirUrl&lt;/param-name&gt; <br/>
+      &lt;param-value&gt;http://host.server/dir/&lt;/param-value&gt; <br/>
+   &lt;/init-param&gt;    <br/>   
+  &lt;/filter&gt; <br/>
+  <br/>
+   &lt;filter-mapping&gt; <br/>
+      &lt;filter-name&gt;ValidatorFilter&lt;/filter-name&gt; <br/>
+      &lt;url-pattern&gt;/*.jsp&lt;/url-pattern&gt; <br/>
+   &lt;/filter-mapping&gt; <br/>
+   &lt;filter-mapping&gt; <br/>
+      &lt;filter-name&gt;ValidatorFilter&lt;/filter-name&gt; <br/>
+      &lt;url-pattern&gt;/*.do&lt;/url-pattern&gt; <br/>
+   &lt;/filter-mapping&gt; <br/>   
+   
+</div>
+
+
+<p>
+To configure the display of the output, you can use CSS.  The results are displayed 
+in a div with an 'id' of 'htmlvalidator', and you can use CSS selectors to modify the
+display. For example, to set a 1 pixel border on the table and its cells, 
+you could do this:
+</p>
+
+<div class="code">
+#htmlvalidator table {<br/>
+	border:1px solid #ccc;<br/>
+	border-collapse:collapse;<br/>
+}<br/>
+<br/>
+#htmlvalidator td {<br/>
+	border:1px solid #ccc;<br/>
+	border-collapse:collapse;<br/>
+}<br/>
+</div>
+
+</div>
+
+</body>
+</html>

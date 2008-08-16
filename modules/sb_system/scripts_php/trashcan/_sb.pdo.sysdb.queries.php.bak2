@@ -1,0 +1,708 @@
+<?php
+
+global $_QUERIES;
+/*
+$_TABLES['sb_system/nodes'] = TABLE_PREFIX.'_system_nodes';
+$_TABLES['sb_system/nodes/parents'] = TABLE_PREFIX.'_system_nodes_parents';
+$_TABLES['sb_system/nodes/attributes'] = TABLE_PREFIX.'_system_nodes_parents';
+$_TABLES['sb_system/nodes/authorisation'] = TABLE_PREFIX.'_system_nodes_parents';
+*/
+//------------------------------------------------------------------------------
+// session
+//------------------------------------------------------------------------------
+
+$_QUERIES['sb_system/session/load'] = '
+	SELECT		s_data
+	FROM		{PREFIX_WORKSPACE}_system_sessions
+	WHERE		s_sessionid = :session_id
+';
+$_QUERIES['sb_system/session/store'] = '
+	INSERT INTO {PREFIX_WORKSPACE}_system_sessions
+				(
+					s_sessionid,
+					s_data
+				) VALUES (
+					:session_id,
+					:data
+				)
+	ON DUPLICATE KEY UPDATE
+				s_data = :data
+';
+$_QUERIES['sb_system/session/destroy'] = '
+	DELETE FROM	{PREFIX_WORKSPACE}_system_sessions
+	WHERE		s_sessionid = :session_id
+';
+
+//------------------------------------------------------------------------------
+// nodefactory
+//------------------------------------------------------------------------------
+
+$_QUERIES['sb_system/factory/node/load_nodetypes'] = '
+	SELECT		*
+	FROM		{PREFIX_FRAMEWORK}_system_nodetypes
+';
+$_QUERIES['sb_system/factory/node/by_id'] = '
+	SELECT		sn.uuid,
+				sn.s_uid,
+				sn.fk_nodetype,
+				sn.s_name,
+				sn.s_label,
+				sn.s_customcsstype,
+				snt.s_classfile,
+				snt.s_class,
+				snt.s_csstype,
+				(SELECT		fk_parent
+					FROM	{PREFIX_WORKSPACE}_system_nodes_parents
+					WHERE	fk_child = :id
+						AND	b_primary = \'TRUE\'
+				) as fk_parent
+	FROM		{PREFIX_WORKSPACE}_system_nodes sn
+	INNER JOIN	{PREFIX_FRAMEWORK}_system_nodetypes snt
+		ON		sn.fk_nodetype = snt.s_type
+	WHERE		sn.uuid = :id
+';
+$_QUERIES['sb_system/factory/node/by_uid'] = '
+	SELECT		sn.uuid,
+				sn.s_uid,
+				sn.fk_nodetype,
+				sn.s_name,
+				sn.s_label,
+				sn.s_customcsstype,
+				snt.s_classfile,
+				snt.s_class,
+				snt.s_csstype,
+				(SELECT		fk_parent
+					FROM	{PREFIX_WORKSPACE}_system_nodes_parents
+					WHERE	fk_child = sn.uuid
+						AND	b_primary = \'TRUE\'
+				) as fk_parent
+	FROM		{PREFIX_WORKSPACE}_system_nodes sn
+	LEFT JOIN	{PREFIX_FRAMEWORK}_system_nodetypes snt
+		ON		sn.fk_nodetype = snt.s_type
+	WHERE		sn.s_uid = :uid
+';
+
+//------------------------------------------------------------------------------
+// path cache
+//------------------------------------------------------------------------------
+
+$_QUERIES['sb_system/cache/paths/store'] = '
+	INSERT INTO	{PREFIX_WORKSPACE}_system_cache_paths
+				(
+					s_path,
+					fk_node
+				) VALUES (
+					:path,
+					:node_id
+				)
+	ON DUPLICATE KEY UPDATE
+				fk_node = :node_id
+';
+$_QUERIES['sb_system/cache/paths/load'] = '
+	SELECT		fk_node
+	FROM		{PREFIX_WORKSPACE}_system_cache_paths
+	WHERE		s_path = :path
+';
+$_QUERIES['sb_system/cache/paths/clear'] = '
+	DELETE FROM	{PREFIX_WORKSPACE}_system_cache_paths
+	WHERE		s_path LIKE :path
+';
+$_QUERIES['sb_system/cache/paths/empty'] = '
+	DELETE FROM {PREFIX_WORKSPACE}_system_cache_paths
+';
+
+//------------------------------------------------------------------------------
+// node:default
+//------------------------------------------------------------------------------
+
+$_QUERIES['sb_system/node/loadChildren/mode/standard/unordered'] = '
+	SELECT		sn.uuid,
+				sn.fk_nodetype,
+				sn.s_name,
+				sn.s_label,
+				sn.s_customcsstype,
+				snt.s_csstype,
+				snp.b_primary,
+				(SELECT
+					COUNT(*) 
+					FROM		{PREFIX_WORKSPACE}_system_nodes_parents isnp
+					INNER JOIN	{PREFIX_WORKSPACE}_system_nodes isn
+						ON		isnp.fk_child = isn.uuid
+					WHERE		isnp.fk_parent = sn.uuid
+						AND		isn.fk_nodetype IN (
+									SELECT	fk_nodetype
+									FROM	{PREFIX_FRAMEWORK}_system_nodetypes_modes
+									WHERE	s_mode = :mode
+									AND		fk_parentnodetype = sn.fk_nodetype
+								)
+				) AS n_numsubnodes
+	FROM		{PREFIX_WORKSPACE}_system_nodes sn
+	INNER JOIN	{PREFIX_FRAMEWORK}_system_nodetypes snt
+		ON		sn.fk_nodetype = snt.s_type
+	INNER JOIN	{PREFIX_WORKSPACE}_system_nodes_parents snp
+		ON		sn.uuid = snp.fk_child
+	INNER JOIN	{PREFIX_WORKSPACE}_system_nodes snpn
+		ON		snp.fk_parent = snpn.uuid
+	WHERE		snp.fk_parent = :parent_id
+		AND		sn.fk_nodetype IN (
+					SELECT		fk_nodetype
+					FROM		{PREFIX_FRAMEWORK}_system_nodetypes_modes
+					WHERE		s_mode = :mode
+					AND			fk_parentnodetype = snpn.fk_nodetype
+				) 
+';
+$_QUERIES['sb_system/node/loadChildren/mode/standard/byOrder'] = $_QUERIES['sb_system/node/loadChildren/mode/standard/unordered'].'
+	ORDER BY	snp.n_order
+';
+$_QUERIES['sb_system/node/loadChildren/mode/standard/byLabel'] = $_QUERIES['sb_system/node/loadChildren/mode/standard/unordered'].'
+	ORDER BY	sn.s_label
+';
+$_QUERIES['sb_system/node/loadChildren/mode/standard/byNodetype'] = $_QUERIES['sb_system/node/loadChildren/mode/standard/unordered'].'
+	ORDER BY	sn.fk_nodetype
+';
+$_QUERIES['sb_system/node/loadChildren/mode/standard/byNodetypeAndLabel'] = $_QUERIES['sb_system/node/loadChildren/mode/standard/unordered'].'
+	ORDER BY	sn.fk_nodetype, sn.label
+';
+$_QUERIES['sb_system/node/loadChildren/mode/standard/byCreationDate/ASC'] = $_QUERIES['sb_system/node/loadChildren/mode/standard/unordered'].'
+	ORDER BY	sn.dt_created
+';
+$_QUERIES['sb_system/node/loadChildren/mode/standard/byCreationDate/DESC'] = $_QUERIES['sb_system/node/loadChildren/mode/standard/unordered'].'
+	ORDER BY	sn.dt_created DESC
+';
+$_QUERIES['sb_system/node/loadChildren/mode/reduced'] = '
+	SELECT		sn.uuid,
+				sn.fk_nodetype,
+				sn.s_name,
+				sn.s_label
+	FROM		{PREFIX_WORKSPACE}_system_nodes sn
+	LEFT JOIN	{PREFIX_WORKSPACE}_system_nodes_parents snp
+		ON		sn.uuid = snp.fk_child
+	WHERE		snp.fk_parent = :parent_id
+		AND		sn.fk_nodetype IN (
+					SELECT		fk_nodetype
+					FROM		{PREFIX_FRAMEWORK}_system_nodetypes_modes
+					WHERE		s_mode = :mode
+				) 
+	ORDER BY	snp.n_order
+';
+$_QUERIES['sb_system/node/loadChildren/debug'] = '
+	SELECT		sn.uuid,
+				sn.fk_nodetype,
+				sn.s_name,
+				sn.s_label,
+				sn.s_customcsstype,
+				snt.s_csstype,
+				snp.b_primary
+	FROM		{PREFIX_WORKSPACE}_system_nodes sn
+	INNER JOIN	{PREFIX_FRAMEWORK}_system_nodetypes snt
+		ON		sn.fk_nodetype = snt.s_type
+	LEFT JOIN	{PREFIX_WORKSPACE}_system_nodes_parents snp
+		ON		sn.uuid = snp.fk_child
+	WHERE		snp.fk_parent = :parent_id
+	ORDER BY	snp.n_order
+';
+$_QUERIES['sb_system/node/save/new'] = '
+	INSERT INTO	{PREFIX_WORKSPACE}_system_nodes
+				(
+					uuid,
+					s_uid,
+					fk_nodetype,
+					s_label,
+					s_name,
+					s_customcsstype,
+					b_inheritrights,
+					b_bequeathrights,
+					fk_createdby,
+					fk_modifiedby,
+					fk_deletedby,
+					dt_createdat,
+					dt_modifiedat,
+					dt_deletedat
+				) VALUES (
+					:uuid,
+					:s_uid,
+					:fk_nodetype,
+					:s_label,
+					:s_name,
+					:s_customcsstype,
+					\'TRUE\',
+					\'TRUE\',
+					:user_id,
+					:user_id,
+					NULL,
+					NOW(),
+					NOW(),
+					NULL
+				)
+';
+$_QUERIES['sb_system/node/save/existing'] = '
+	UPDATE		{PREFIX_WORKSPACE}_system_nodes
+	SET			s_uid = :s_uid,
+				s_label = :s_label,
+				s_name = :s_name,
+				s_customcsstype = :s_customcsstype,
+				b_inheritrights = :b_inheritrights,
+				b_bequeathrights = :b_bequeathrights,
+				fk_modifiedby = :user_id,
+				dt_modifiedat = NOW()
+	WHERE		uuid = :uuid
+';
+$_QUERIES['sb_system/node/getAllowedSubtypes'] = '
+	SELECT		sntm.fk_parentnodetype,
+				sntm.fk_nodetype,
+				snt.s_csstype
+	FROM		{PREFIX_FRAMEWORK}_system_nodetypes_modes sntm
+	INNER JOIN	{PREFIX_FRAMEWORK}_system_nodetypes snt
+		ON		sntm.fk_nodetype = snt.s_type
+	WHERE		sntm.s_mode = :mode
+		AND		sntm.fk_parentnodetype = (
+					SELECT	fk_nodetype
+					FROM	{PREFIX_WORKSPACE}_system_nodes
+					WHERE	uuid = :parent_uuid
+				)
+		AND		sntm.b_display = \'TRUE\'
+		
+';
+$_QUERIES['sb_system/node/getParent'] = '
+	SELECT		fk_parent
+	FROM		{PREFIX_WORKSPACE}_system_nodes_parents
+	WHERE		fk_child = :fk_child
+		AND		b_primary = \'TRUE\'
+';
+$_QUERIES['sb_system/node/getParents'] = '
+	SELECT		fk_parent
+	FROM		{PREFIX_WORKSPACE}_system_nodes_parents
+	WHERE		fk_child = :fk_child
+';
+$_QUERIES['sb_system/node/addLink/primary'] = '
+	INSERT INTO	{PREFIX_WORKSPACE}_system_nodes_parents
+				(
+					fk_child,
+					fk_parent,
+					b_primary,
+					n_order
+				) VALUES (
+					:child_uuid,
+					:parent_uuid,
+					:status,
+					NULL
+					/*(SELECT		COUNT(*)
+						FROM	{PREFIX_WORKSPACE}_system_nodes_parents
+						WHERE	fk_parent = :parent_uuid
+					)*/
+				)
+';
+$_QUERIES['sb_system/node/removeLink'] = '
+	DELETE FROM	{PREFIX_WORKSPACE}_system_nodes_parents snp
+	WHERE		fk_parent = :parent_uuid
+		AND		fk_child = :child_uuid
+';
+$_QUERIES['sb_system/node/getLinkStatus'] = '
+	SELECT		snp.b_primary
+	FROM		{PREFIX_WORKSPACE}_system_nodes_parents snp
+	WHERE		snp.fk_parent = :parent_uuid
+		AND		snp.fk_child = :child_uuid
+';
+$_QUERIES['sb_system/node/setLinkStatus'] = '
+	SELECT		snp.b_primary
+	FROM		{PREFIX_WORKSPACE}_system_nodes_parents snp
+	WHERE		snp.fk_parent = :parent_uuid
+		AND		snp.fk_child = :child_uuid
+';
+$_QUERIES['sb_system/node/setLinkStatus/newPrimary'] = '
+	UPDATE		{PREFIX_WORKSPACE}_system_nodes_parents
+	SET			b_primary = \'TRUE\'
+	WHERE		fk_child = :child_uuid
+		AND		fk_parent IN (
+					SELECT		fk_parent
+					FROM		{PREFIX_WORKSPACE}_system_nodes_parents
+					WHERE		fk_child = :child_uuid
+					ORDER BY	n_order
+					LIMIT		0, 1
+				)
+';
+$_QUERIES['sb_system/node/getChild/byName'] = '
+	SELECT		sn.uuid,
+				sn.fk_nodetype,
+				sn.s_name,
+				snt.s_csstype,
+				snt.s_extension
+	FROM		{PREFIX_WORKSPACE}_system_nodes sn
+	INNER JOIN	{PREFIX_FRAMEWORK}_system_nodetypes snt
+		ON		sn.fk_nodetype = snt.s_type
+	LEFT JOIN	{PREFIX_WORKSPACE}_system_nodes_parents snp
+		ON		sn.uuid = snp.fk_child 
+	WHERE		sn.s_name = :name
+		AND		snp.fk_parent = :parent_uuid
+';
+$_QUERIES['sb_system/node/loadAttributes/basic'] = '
+	SELECT		sn.s_name,
+				sn.s_label
+	FROM		{PREFIX_WORKSPACE}_system_nodes sn
+	WHERE		sn.uuid = :node_id
+';
+$_QUERIES['sb_system/node/loadAttributes/extended'] = '
+	SELECT		sn.s_name,
+				sn.s_uid,
+				sn.s_label,
+				sn.s_customcsstype,
+				sn.b_inheritrights,
+				sn.b_bequeathrights,
+				sn.fk_createdby,
+				sn.fk_modifiedby,
+				sn.fk_deletedby,
+				sn.dt_createdat,
+				sn.dt_modifiedat,
+				sn.dt_deletedat
+	FROM		{PREFIX_WORKSPACE}_system_nodes sn
+	WHERE		sn.uuid = :node_id
+';
+$_QUERIES['sb_system/node/loadAttributes/external'] = '
+	SELECT		snta.s_attributename,
+				snta.e_type,
+				snta.s_labelpath,
+				snta.s_internaltype,
+				(SELECT		m_content
+					FROM	{PREFIX_WORKSPACE}_system_nodes_properties
+					WHERE	fk_node = :node_id
+						AND	fk_attributename = snta.s_attributename
+				) as s_value
+	FROM		{PREFIX_FRAMEWORK}_system_nodetypes_properties snta
+	WHERE		snta.fk_nodetype = (
+					SELECT	fk_nodetype
+					FROM	{PREFIX_WORKSPACE}_system_nodes sn
+					WHERE	sn.uuid = :node_id
+				)
+		AND		snta.e_type != \'BINARY\'
+	ORDER BY	snta.n_order
+';
+/*$_QUERIES['sb_system/node/loadAttributes/external'] = '
+	SELECT		snta.s_attributename,
+				snta.e_type,
+				snta.s_labelpath,
+				snta.s_internaltype,
+				(SELECT		m_content
+					FROM	{PREFIX_WORKSPACE}_system_nodes_attributes
+					WHERE	fk_node = :node_id
+						AND	fk_attributename = snta.s_attributename
+				) as s_value
+	FROM		{PREFIX_WORKSPACE}_system_nodes sn
+	LEFT JOIN	{PREFIX_WORKSPACE}_system_nodetypes_attributes snta
+		ON		sn.fk_nodetype = snta.s_nodetype
+	LEFT JOIN	{PREFIX_WORKSPACE}_system_nodes_attributes sna
+		ON		snta.fk_node = sna
+	WHERE		snta.fk_nodetype = (
+					SELECT	fk_nodetype
+					FROM	{PREFIX_WORKSPACE}_system_nodes sn
+					WHERE	sn.id = :node_id
+				)
+';*/
+$_QUERIES['sb_system/node/loadAuthorisations/supported'] = '
+	SELECT		snta.s_authorisation,
+				snta.fk_parentauthorisation
+	FROM		{PREFIX_FRAMEWORK}_system_nodetypes_authorisations snta
+	WHERE		snta.fk_nodetype = :node_type
+	ORDER BY	snta.n_order
+';
+$_QUERIES['sb_system/node/loadAuthorisations/local'] = '
+	SELECT		sa.fk_authorisation,
+				sa.fk_userentity,
+				sa.e_granttype,
+				sn.fk_nodetype AS fk_userentitytype
+	FROM		{PREFIX_WORKSPACE}_system_nodes_authorisation sa
+	INNER JOIN	{PREFIX_WORKSPACE}_system_nodes sn
+		ON		sa.fk_userentity = sn.uuid
+	WHERE		sa.fk_subject = :uuid
+';
+$_QUERIES['sb_system/node/saveAttributes/basic'] = '
+	UPDATE		{PREFIX_WORKSPACE}_system_nodes
+	SET			s_name = :name,
+				s_label = :label
+	WHERE		uuid = :node_id
+';
+$_QUERIES['sb_system/node/saveAttributes/external'] = '
+	INSERT INTO	{PREFIX_WORKSPACE}_system_nodes_properties
+				(
+					fk_node,
+					fk_attributename,
+					m_content
+				) VALUES (
+					:node_id,
+					:attributename,
+					:content
+				)
+	ON DUPLICATE KEY UPDATE
+				m_content = :content
+';
+$_QUERIES['sb_system/node/loadBinaryAttribute'] = '
+	SELECT		m_content
+	FROM		{PREFIX_WORKSPACE}_system_nodes_properties
+	WHERE		fk_node = :node_id
+		AND		fk_attributename = :property
+';
+$_QUERIES['sb_system/node/loadViews'] = '
+	SELECT		snv.s_view,
+				snv.s_classfile,
+				snv.s_class,
+				snv.b_default,
+				snv.b_display,
+				snv.fk_module
+	FROM		{PREFIX_FRAMEWORK}_system_nodetypes_views snv
+	INNER JOIN	{PREFIX_WORKSPACE}_system_nodes sn
+		ON		snv.fk_nodetype = sn.fk_nodetype
+	WHERE		sn.uuid = :node_id
+	ORDER BY	snv.n_order
+';
+$_QUERIES['sb_system/node/loadActionDetails/given'] = '
+	SELECT		*
+	FROM		{PREFIX_FRAMEWORK}_system_nodetypes_viewactions snva
+	INNER JOIN	{PREFIX_WORKSPACE}_system_nodes sn
+		ON		snva.fk_nodetype = sn.fk_nodetype
+	WHERE		sn.uuid = :uuid
+		AND		snva.s_view = :view
+		AND		snva.s_action = :action
+';
+$_QUERIES['sb_system/node/loadActionDetails/default'] = '
+	SELECT		*
+	FROM		{PREFIX_FRAMEWORK}_system_nodetypes_viewactions snva
+	INNER JOIN	{PREFIX_WORKSPACE}_system_nodes sn
+		ON		snva.fk_nodetype = sn.fk_nodetype
+	WHERE		sn.uuid = :uuid
+		AND		snva.s_view = :view
+		AND		snva.b_default = \'TRUE\'
+';
+/*$_QUERIES['sb_system/node/getReferences'] = '
+	SELECT		snp.fk_subject
+	FROM		{PREFIX_WORKSPACE}_system_nodes_properties snp
+	INNER JOIN	{PREFIX_FRAMEWORK}_system_nodetypes_properties sntp
+		ON		snp.
+	WHERE		snp.m_value = :uuid
+		AND		snp.e_type = \'REFERENCE\'
+';
+
+//------------------------------------------------------------------------------
+// node:root
+//------------------------------------------------------------------------------
+/*
+$_QUERIES['sb_system/node/root/loadChildren/menu'] = '
+	SELECT		sn.uuid,
+				sn.fk_nodetype,
+				sn.s_name,
+				sn.s_label,
+				snt.s_csstype,
+				(SELECT
+					COUNT(*) 
+					FROM	{PREFIX_WORKSPACE}_system_nodes_parents
+					WHERE	fk_parent = sn.uuid
+				) AS n_numsubnodes
+	FROM		{PREFIX_WORKSPACE}_system_nodes sn
+	INNER JOIN	{PREFIX_WORKSPACE}_system_nodetypes snt
+		ON		sn.fk_nodetype = snt.s_type
+	LEFT JOIN	{PREFIX_WORKSPACE}_system_nodes_parents snp
+		ON		sn.uuid = snp.fk_child
+	WHERE		snp.fk_parent = 0
+	ORDER BY	snp.n_order
+';
+*/
+//------------------------------------------------------------------------------
+// node:useraccounts
+//------------------------------------------------------------------------------
+/*
+$_QUERIES['sb_system/node/useraccounts/loadUsers/basic'] = '
+	SELECT		sn.uuid,
+				sn.s_nickname
+	FROM		{PREFIX_WORKSPACE}_system_useraccounts sua
+	ORDER BY	sua.s_nickname
+';
+$_QUERIES['sb_system/node/useraccounts/loadGroups/basic'] = '
+	SELECT		suag.id,
+				suag.s_title
+	FROM		{PREFIX_WORKSPACE}_system_usergroups sug
+	ORDER BY	suag.s_title
+';
+*/
+//------------------------------------------------------------------------------
+// node:default view:security
+//------------------------------------------------------------------------------
+
+$_QUERIES['sb_system/node/view/security/addUser'] = '
+	INSERT INTO	{PREFIX_WORKSPACE}_system_authorisation
+				(
+					fk_subject,
+					fk_authorisation,
+					fk_user,
+					fk_group,
+					e_granttype
+				) 
+	SELECT		:subject_id,
+				s_authorisation,
+				:user_id,
+				:group_id,
+				\'ALLOW\'
+		FROM	{PREFIX_WORKSPACE}_system_nodetypes_authorisations
+	WHERE		fk_nodetype = (
+					SELECT	fk_nodetype
+					FROM	{PREFIX_WORKSPACE}_system_nodes
+					WHERE	uuid = :uuid
+				)
+		AND		b_default = \'TRUE\'
+';
+/*$_QUERIES['sb_system/node/view/security/saveInheritance'] = '
+	UPDATE		{PREFIX_WORKSPACE}_system_nodes
+	SET			b_inheritrights = :inherit_rights,
+				b_bequeathrights = :bequeath_rights
+	WHERE		uuid = :uuid
+';
+$this->aQueries['getDefaultAuthorisations'] = '
+			SELECT		fk_authorisation
+			FROM		{PREFIX_WORKSPACE}_system_nodetypes_authorisations
+			WHERE		fk_nodetype = :nodetype
+				AND		b_default = \'TRUE\'
+		';
+		$this->aQueries['addAuthorisation'] = '
+			INSERT INTO	{PREFIX_WORKSPACE}_system_authorisations
+						(
+							fk_subject,
+							fk_authorisation,
+							fk_user,
+							fk_group,
+							e_granttype
+						) VALUES (
+							:subject_id,
+							:authorisation_id,
+							:user_id,
+							:group_id,
+							\'ALLOW\'
+						)
+		';*/
+
+
+//------------------------------------------------------------------------------
+// node:root 
+//------------------------------------------------------------------------------
+
+// view:welcome ----------------------------------------------------------------
+
+$_QUERIES['sb_system/root/view/welcome/loadUserdata'] = '
+	SELECT		sn.s_label AS s_nickname,
+				sua.b_activated,
+				sua.dt_lastlogin,
+				sua.dt_currentlogin,
+				sua.n_totalfailedlogins,
+				sua.n_successfullogins
+	FROM		{PREFIX_WORKSPACE}_system_useraccounts sua
+	INNER JOIN	{PREFIX_WORKSPACE}_system_nodes sn
+		ON		sn.uuid = sua.uuid
+	WHERE		sn.uuid = :user_id
+';
+
+// view:login ------------------------------------------------------------------
+
+$_QUERIES['sb_system/root/view/login/loadUserdata'] = '
+	SELECT		sua.uuid,
+				sn.s_label AS s_nickname,
+				sua.s_password,
+				sua.b_activated,
+				sua.b_locked,
+				sua.dt_currentlogin,
+				sua.n_failedlogins,
+				sua.dt_failedlogin
+	FROM		{PREFIX_WORKSPACE}_system_useraccounts sua
+	INNER JOIN	{PREFIX_WORKSPACE}_system_nodes sn
+		ON		sn.uuid = sua.uuid
+	WHERE		sn.s_name= :login
+';
+$_QUERIES['sb_system/root/view/login/increaseFailedLogins'] = '
+	UPDATE		{PREFIX_WORKSPACE}_system_useraccounts sua
+	SET			n_failedlogins = n_failedlogins + 1,
+				n_totalfailedlogins = n_totalfailedlogins + 1,
+				dt_failedlogin = NOW()
+	WHERE		uuid = :user_id
+';
+$_QUERIES['sb_system/root/view/login/resetFailedLogins'] = '
+	UPDATE		{PREFIX_WORKSPACE}_system_useraccounts
+	SET			n_failedlogins = 0,
+				dt_failedlogin = NULL
+	WHERE		uuid = :user_id
+';
+$_QUERIES['sb_system/root/view/login/successfulLogin'] = '
+	UPDATE		{PREFIX_WORKSPACE}_system_useraccounts
+	SET			n_failedlogins		= 0,
+				dt_lastlogin		= dt_currentlogin,
+				dt_currentlogin		= NOW(),
+				n_successfullogins	= n_successfullogins + 1,
+				s_currentip			= :current_ip
+	WHERE		uuid = :user_id
+';
+
+//------------------------------------------------------------------------------
+// node:user 
+//------------------------------------------------------------------------------
+
+$_QUERIES['sb_system/user/loadAttributes/auxiliary'] = '
+	SELECT		sua.s_password,
+				sua.s_email,
+				sua.s_activationkey,
+				sua.s_currentip,
+				sua.t_comment,
+				sua.n_failedlogins,
+				sua.b_activated,
+				sua.b_stayloggedin,
+				sua.b_locked,
+				sua.b_emailsent,
+				sua.dt_activatedat
+	FROM		{PREFIX_WORKSPACE}_system_useraccounts sua
+	WHERE		sua.uuid = :node_id
+';
+
+//------------------------------------------------------------------------------
+// node:maintenance view:repair
+//------------------------------------------------------------------------------
+
+$_QUERIES['sb_system/maintenance/view/repair/loadRoot'] = '
+	SELECT		uuid
+	FROM		{PREFIX_WORKSPACE}_system_nodes
+	WHERE		s_uid = \'sb_system:root\'
+';
+$_QUERIES['sb_system/maintenance/view/repair/loadChildren'] = '
+	SELECT		fk_child as uuid
+	FROM		{PREFIX_WORKSPACE}_system_nodes_parents
+	WHERE		fk_parent = :fk_parent
+	ORDER BY	n_order
+';
+$_QUERIES['sb_system/maintenance/view/repair/setCoordinates'] = '
+	UPDATE 		{PREFIX_WORKSPACE}_system_nodes_parents
+	SET			n_left = :left,
+				n_right = :right,
+				n_level = :level
+	WHERE		fk_child = :fk_child
+		AND		fk_parent = :fk_parent
+';/*
+$_QUERIES['sb_system/maintenance/view/repair/setPositions'] = '
+	UPDATE 		{PREFIX_WORKSPACE}_system_nodes
+	SET			n_position = :position
+	WHERE		id = :node_id
+';*/
+
+//------------------------------------------------------------------------------
+// node:folder view:upload
+//------------------------------------------------------------------------------
+
+$_QUERIES['sb_system/folder/view/upload/getMimetypeMapping'] = '
+	SELECT		s_mimetype,
+				fk_nodetype
+	FROM		{PREFIX_FRAMEWORK}_system_nodetypes_mimetypemapping
+';
+
+//------------------------------------------------------------------------------
+// node:preferences view:moduleinfo
+//------------------------------------------------------------------------------
+
+$_QUERIES['sb_system/modules/getInfo'] = '
+	SELECT		*
+	FROM		{PREFIX_FRAMEWORK}_system_modules
+';
+
+
+
+?>

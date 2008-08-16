@@ -1,0 +1,195 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>TWINE Project: Custom Validator for PHP</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<style type="text/css" media="screen">
+		<!--	
+ 		  @import url(style.css);
+		-->
+	</style> 
+</head>
+<body>
+
+
+<div id="header">
+<a href="http://twineproject.sourceforge.net" title="TWINE Project Home">TWINE Project</a>
+</div>
+
+
+<div id="nav">
+    <a href="../index.html">Home</a><br />
+    <a href="javahtml.html">HTML Validator for Java</a><br />
+    <a href="phphtml.html">HTML Validator for PHP</a><br />
+	<a href="java.html">Custom Validator for Java</a><br />    
+    Custom Validator for PHP<br />
+	<a href="http://sourceforge.net/project/showfiles.php?group_id=99065">Downloads</a><br />	
+</div>
+
+
+<div id="main">
+
+<h1>Custom Validator for PHP</h1>
+
+<p>
+The Custom Validator for PHP is a PHP class designed to submit HTML interfaces of 
+dynamic web applications to online validation services. 
+</p>
+
+<p>See a <a href="../demo.php">demo</a>.   View the <a href="demo.txt">demo code</a></p>
+
+<h2>Usage</h2>
+
+<p>
+To use this class, just include it in your HTML page, instantiate the class, and invoke methods on it.  
+A minimal configration is as follows:
+</p>
+
+<div class="code">
+    include("/path/to/Validator.class.php");<br />
+    $v = new Validator();<br />
+    $v->execute();<br />
+</div>
+
+<p>
+This code <em>must</em> appear at the top of the page, <em>before</em> any other content is generated.
+</p>
+
+<p>
+This will result in the current page being submitted to the W3C validation service and 
+the results displayed in a new window.  The following options can be set on this class:
+</p>
+
+
+<table cellpadding="2" border="1">
+	<tr>
+		<th width="20%">method signature</th>
+		<th width="20%">default value</th>
+		<th width="60%">description</th>
+	</tr>
+	<tr>
+		<td>setValidatorUrl(String);</td>
+		<td>http://validator.w3.org/check?<br/>uri=###URL###"</td>
+		<td>the URL of the validator to submit this page to; place the string '###URL###'
+		where the URL of the resource to be validated should go (as in the default)</td>
+	</tr>	
+	<tr>
+		<td>setFileExtension(String);</td>
+		<td>.validate.html</td>
+		<td>this is extension added to the script name when the HTTP request is written to disk</td>
+	</tr>	
+	<tr>
+		<td>setButtonText(String);</td>
+		<td>validate</td>
+		<td>this is the text which appears in the validate button</td>
+	</tr>
+	<tr>
+		<td>setButtonMarker(String);</td>
+		<td></td>
+		<td>this asks the validator to substitute a string in the target page with the
+		validation link, allowing you to avoid a sure-fire validation error 
+		(the validator drops the link at the end of the file by default) as well
+		as customize the display</td>
+	</tr>	
+	<tr>
+		<td>setTargetWindow(String)</td>
+		<td>newWindow</td>
+		<td>the name of the window to direct validation results to; 
+		you may use the typical constants, '_blank', '_top', etc.</td>
+	</tr>	
+	<tr>
+		<td>setWindowOptions(String)</td>
+		<td>scrollbars=yes,location=yes,<br/>menubar=yes,titlebar=yes,<br/>
+		resizable=yes,width=600,<br/>height=450</td>
+		<td>These are the options to use IF opening a browser window to display the results</td>
+	</tr>	
+	<tr>
+		<td>setWorkDir(String)</td>
+		<td>[file path to executing PHP script]</td>
+		<td>the directory to write static HTML files to</td>
+	</tr>		
+	<tr>
+		<td>setWorkDirUrl(String)</td>
+		<td>[url of executing PHP script]</td>
+		<td>the url of the workDir directory</td>
+	</tr>				
+</table>
+
+
+<p>
+A fuller configuration might look like:
+</p>
+
+<div class="code">
+    $v = new Validator();<br />
+    $v->setValidatorUrl("http://valet.webthing.com/view=Asis/access/htnorm?url=###URL###&suite=WCAG1&xslt=compact");<br />
+    $v->setButtonText("[validate]");<br />
+    $v->setButtonMarker("###BUTTON###");<br />
+    $v->setTargetWindow("someWindow");<br />
+    $v->setWindowOptions("scrollbars=yes,location=yes");<br />
+    $v->setFileExtension(".someext.html");<br />
+    $v->execute();<br />
+</div>
+
+<p>
+This asks the Validator class to...
+</p>
+
+<ul>
+  <li>set the validation service URL to 'http://valet.webthing.com/view=Asis/access/htnorm' (an accessibility validator)</li>
+  <li>set the button text to '[validate]'</li>
+  <li>substitute the text '###BUTTON###' in the source file with the validaton button</li>
+  <li>direct the output to the window 'someWindow'</li>
+  <li>use the parameters 'scrollbars=yes,location=yes' when opening the window</li>  
+  <li>use the file extension '.someext.html' wen writing the request results to disk</li> 
+</ul>
+
+
+<h2>Advanced Usage</h2>
+
+<p>
+If you want to place more than one validation link on an interface (for example, a link to both an HTML and an accessibility validation service), you need to configure the Validator object slightly differently due to the way that PHP output buffering works.  Instead of setting parameters directly on the Validation object, you add a series of ValidationButtons to the Validation object.  The syntax looks like this:
+<p>
+
+<div class="code">
+    $v = new Validator();<br /><br/>
+
+    $vb = new ValidatorButton();<br/>
+    $vb->setValidatorUrl("http://some.HTMLvalidationservice.org?uri=###URL###");<br />
+    $vb->setButtonText("[HTML]");<br />
+    $vb->setButtonMarker("###HTML###");<br />
+    $vb->setTargetWindow("newWindow1");<br />
+    $vb->setWindowOptions("scrollbars=yes,location=yes");<br />
+    $v->addValidatorButton($vb);<br /><br/>
+
+    $vb = new ValidatorButton();<br/>
+    $vb->setValidatorUrl("http://some.ACCESSIBILITYvalidationservice.org?uri=###URL###");<br />
+    $vb->setButtonText("[accessibility]");<br />
+    $vb->setButtonMarker("###ACCESSIBILITY###");<br />
+    $vb->setTargetWindow("newWindow2");<br />
+    $vb->setWindowOptions("scrollbars=yes,location=yes");<br />
+    $v->addValidatorButton($vb);<br /><br/>
+
+    $v->execute();<br />
+</div>
+
+<p>
+The methods listed above for ValidatorButton behave the same as their counterparts in Validator, and all methods on Validator will continue to work as previously explained.
+</p>
+
+
+<h2>Known Issues</h2>
+
+<p>
+There is a problem with reading data via <strong>fgets()</strong> under certain 
+server/PHP/character encoding configurations which causes bad characters to be 
+written to the file and can result in validation issues.  If you know what might
+cause this--or solve this--please contact me.
+</p>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+<?xml version="1.0" ?>
+<config>
+	
+	<!-- primary repostitory, keep it clean! -->
+	<site location="sb2.localhost/" type="controller" handler="frontend">
+		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
+		<debug enabled="false" verbose="false" />
+	</site>
+	<site location="admin.localhost/" type="controller" handler="backend">
+		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="admin.localhost/templates" type="controller" handler="xsl" />
+		<site location="admin.localhost/theme" type="theme" handler="backend"/>
+		<site location="admin.localhost/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
+	</site>
+	<!--<site location="admin.localhost/theme" type="theme" handler="backend" />
+	<site location="admin.localhost/templates" type="controller" handler="xsl">
+		<storage repository="dev" workspace="dev" user="system" pass="solidbytes"/>
+		<debug enabled="true" verbose="false" />
+		<tiers seperated="false">
+			<tier1 host="admin.localhost" port="80" path="" />
+		</tiers>
+	</site>-->
+	
+	<!-- test repository, free to play around -->
+	<site location="test.jukebox/" type="controller" handler="application" subject="jukebox">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="test.jukebox/theme" type="theme" handler="backend" theme="_default" />
+	</site>
+	<site location="ollo.gotdns.org/" type="controller" handler="application" subject="jukebox">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="ollo.gotdns.org/theme" type="theme" handler="backend" theme="_default" />
+	</site>
+	<site location="test.backend/" type="controller" handler="backend">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="test.backend/templates" type="controller" handler="xsl" />
+		<site location="test.backend/theme" type="theme" handler="backend" />
+		<site location="test.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
+	</site>
+	<site location="test.frontend/" type="controller" handler="frontend">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+	</site>
+	<site location="test.tiers/" type="controller" handler="backend">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<tier2 separated="true" host="test.controller" port="" path="" />
+		<site location="test.tiers/templates" type="controller" handler="xsl" />
+		<site location="test.tiers/theme" type="theme" handler="backend" />
+		<site location="test.tiers/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
+	</site>
+	
+	<!-- domains on BITBURG -->
+	<site location="admin.bitbox/" type="controller" handler="backend">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="admin.bitbox/templates" type="controller" handler="xsl" />
+		<site location="admin.bitbox/theme" type="theme" handler="backend" />
+		<site location="admin.bitbox/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
+	</site>
+	<site location="test.bitbox/" type="controller" handler="application" subject="jukebox">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="test.bitbox/theme" type="theme" handler="backend" theme="_default" />
+	</site>
+	
+	<!-- domains on SBWEB2 -->
+	<site location="sbweb2.jukebox/" type="controller" handler="application" subject="jukebox">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="sbweb2.jukebox/theme" type="theme" handler="backend" theme="_default" />
+	</site>
+	<site location="sbweb2.backend/" type="controller" handler="backend">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="sbweb2.backend/templates" type="controller" handler="xsl" />
+		<site location="sbweb2.backend/theme" type="theme" handler="backend" />
+		<site location="sbweb2.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
+	</site>
+	
+	<!-- utilities -->
+	<site location="admin.localhost/phpinfo" type="script" handler="phpinfo.php" />
+	<site location="admin.localhost/test" type="script" handler="test.php" />
+	<site location="sb2.localhost/solidbrickz" type="redirect" destination="http://sb2.localhost/de/entwicklung/solidbrickz" />
+	
+	<!-- heiko VM -->
+	<site location="backend.heiko/phpinfo" type="script" handler="phpinfo.php" />
+	<site location="backend.heiko/" type="controller" handler="backend">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="backend.heiko/templates" type="controller" handler="xsl" />
+		<site location="backend.heiko/theme" type="theme" handler="backend"/>
+		<site location="backend.heiko/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
+	</site>
+	<site location="jukebox.heiko/" type="controller" handler="application" subject="jukebox">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="jukebox.heiko/theme" type="theme" handler="backend" theme="_default" />
+	</site>
+	
+</config>

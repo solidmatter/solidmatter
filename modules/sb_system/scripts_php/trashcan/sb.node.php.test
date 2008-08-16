@@ -1,0 +1,526 @@
+<?php
+
+class sbNode extends DOMElement {
+	
+	//protected $elemSubject = NULL;
+	protected $aQueries = array();
+	protected $aViews = array();
+	protected $elemViews = NULL;
+	/*protected $aViews = array(
+		'properties' => array('sb.node.view.properties', 'sbView_properties'),
+		'list' => array('sb.node.view.list', 'sbView_list'),
+		'security' => array('sb.node.view.security', 'sbView_security')
+	);*/
+	protected $sLastView = '';
+	
+	protected $elemLocalAuthorisations = NULL;
+	protected $elemInheritedAuthorisations = NULL;
+	
+	protected $aAffectedGroups = array();
+	protected $aAffectedUsers = array();
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function __construct($elemSubject=NULL) {
+		//parent::__construct('sbnode');
+		$this->__setQueries();
+		global $_RESPONSE;
+		$this->ownerDocument = $_RESPONSE;
+	}
+	/*public function __construct($elemSubject) {
+		$this->elemSubject = $elemSubject;
+		$this->__setQueries();
+	}*/
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function __setQueries() {
+		
+		$this->aQueries['loadChildren']['menu'] = 'sb_system/node/loadChildren/menu';
+		$this->aQueries['loadChildren']['debug'] = 'sb_system/node/loadChildren/debug';
+		$this->aQueries['loadChildren']['list'] = 'sb_system/node/loadChildren/list';
+		$this->aQueries['loadAttributes']['basic'] = 'sb_system/node/loadAttributes/basic';
+		$this->aQueries['loadAttributes']['extended'] = 'sb_system/node/loadAttributes/extended';
+		$this->aQueries['loadAttributes']['external'] = 'sb_system/node/loadAttributes/external';
+		$this->aQueries['loadSupportedAuthorisations'] = 'sb_system/node/loadAuthorisations/supported';
+		$this->aQueries['loadLocalAuthorisations'] = 'sb_system/node/loadAuthorisations/local';
+		$this->aQueries['saveAttributes']['basic'] = 'sb_system/node/saveAttributes/basic';
+		$this->aQueries['saveAttributes']['external'] = 'sb_system/node/saveAttributes/external';
+		$this->aQueries['loadViews'] = 'sb_system/node/loadViews';
+		
+	}
+	
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function loadEffectiveAuthorisations() {
+		$this->loadSupportedAuthorisations();
+		$aInherited = $this->loadInheritedAuthorisations(TRUE);
+		$aLocal = $this->loadLocalAuthorisations(TRUE);
+		$aMerged = merge_authorisations($aLocal, $aInherited);
+		
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function loadSecurityAuthorisations() {
+		
+		$this->loadSupportedAuthorisations();
+		$aInherited = $this->loadInheritedAuthorisations(TRUE);
+		$aLocal = $this->loadLocalAuthorisations(TRUE);
+		$aGroups = array();
+		$aUsers = array();
+		
+		global $_RESPONSE;
+		/*
+		$elemContainer = $_RESPONSE->createElement('security');
+		foreach ($aInherited as $sType => $aEntries) {
+			foreach ($aEntries as $iID => $unused) {
+				if ($sType == 'groups') {
+					if (!isset($aGroups[$iID] )) {
+						$aGroups[$iID] = TRUE;
+						$elemItem = $_RESPONSE->createElement('group');
+						$elemItem->setAttribute('id', $iID);
+						$elemContainer->appendChild($elemItem);
+					}
+				} else {
+					if (!isset($aUsers[$iID] )) {
+						$aUsers[$iID] = TRUE;
+						$elemItem = $_RESPONSE->createElement('user');
+						$elemItem->setAttribute('id', $iID);
+						$elemContainer->appendChild($elemItem);
+					}
+				}
+			}
+		}*/
+		
+		$elemUseraccounts = NodeFactory::getInstance('useraccounts');
+		$elemUsers = $elemUseraccounts->callView('gatherdata', 'users');
+		$elemGroups = $elemUseraccounts->callView('gatherdata', 'groups');
+		
+		$_RESPONSE->addData($elemGroups);
+		$_RESPONSE->addData($elemUsers);
+		
+		//$_RESPONSE->addData($elemContainer);
+		
+	}
+	
+	
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	// TODO: implement 2 variants
+	public function loadInheritedAuthorisations($bReturnAsArray = FALSE, $bSaveToElement = TRUE) {
+				
+		import('sb.system.authorisation');
+		$aMerged = array();
+		$this->loadAttributes('extended');
+		
+		$_CACHE = CacheFactory::getInstance('system');
+		
+		if ($this->elemSubject->getAttribute('b_inheritrights') == 'TRUE' && $this->elemSubject->getAttribute('fk_parent') != NULL) {
+			if ($_CACHE->exists('authorisations:array/'.$this->elemSubject->getAttribute('nodeid'))) {
+				$aMerged = $_CACHE->loadData('authorisations:array/'.$this->elemSubject->getAttribute('nodeid'));
+			} else {
+				$nodeParent = NodeFactory::getInstance($this->elemSubject->getAttribute('fk_parent'));
+				$nodeParent->loadAttributes('extended');
+				$aLocal = $nodeParent->loadLocalAuthorisations(TRUE, FALSE);
+				$aInherited = $nodeParent->loadInheritedAuthorisations(TRUE, FALSE);
+				if ($nodeParent->getAttribute('b_bequeathrights') == 'TRUE') {
+					$aMerged = merge_authorisations($aLocal, $aInherited);
+					$_CACHE->storeData('authorisations:array/'.$this->elemSubject->getAttribute('nodeid'), $aMerged);
+				}
+			}
+		}
+		
+		if ($bSaveToElement) {
+			$elemContainer = $this->elemSubject->ownerDocument->createElement('inherited_authorisations');
+			foreach ($aMerged as $sType => $aEntries) {
+				foreach ($aEntries as $iID => $aAuthorisations) {
+					foreach ($aAuthorisations as $sAuthorisation => $sGrantType) {
+						if ($sType == 'users') {
+							$elemAuthorisation = $this->elemSubject->ownerDocument->createElement('user');
+						} else {
+							$elemAuthorisation = $this->elemSubject->ownerDocument->createElement('group');
+						}
+						$elemAuthorisation->setAttribute('nodeid', $iID);
+						$elemAuthorisation->setAttribute('name', $sAuthorisation);
+						$elemAuthorisation->setAttribute('grant_type', $sGrantType);
+						$elemContainer->appendChild($elemAuthorisation);
+					}
+				}
+			}
+			$this->elemSubject->appendChild($elemContainer);
+		}
+		
+		if ($bReturnAsArray) {
+			return ($aMerged);
+		}
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function loadLocalAuthorisations($bReturnAsArray = FALSE, $bSaveToElement = TRUE) {
+		
+		$DB = DBFactory::getInstance('system');
+		$stmtAuthorisations = $DB->prepareKnown($this->aQueries['loadLocalAuthorisations']);
+		$mParam = $this->elemSubject->getAttribute('nodeid');
+		$stmtAuthorisations->bindParam(':node_id', $mParam, PDO::PARAM_INT);
+		$stmtAuthorisations->execute();
+		
+		if ($bSaveToElement) {
+			$elemContainer = $this->elemSubject->ownerDocument->createElement('local_authorisations');
+			foreach ($stmtAuthorisations as $aRow) {
+				if ($aRow['fk_group'] == NULL) {
+					$elemAuthorisation = $this->elemSubject->ownerDocument->createElement('user');
+					$elemAuthorisation->setAttribute('nodeid', $aRow['fk_user']);
+				} else {
+					$elemAuthorisation = $this->elemSubject->ownerDocument->createElement('group');
+					$elemAuthorisation->setAttribute('nodeid', $aRow['fk_group']);
+				}
+				$elemAuthorisation->setAttribute('name', $aRow['fk_authorisation']);
+				$elemAuthorisation->setAttribute('grant_type', $aRow['e_granttype']);
+				$elemContainer->appendChild($elemAuthorisation);
+			}
+			$this->elemSubject->appendChild($elemContainer);
+		}
+		
+		if ($bReturnAsArray) {
+			$aAuthorisations = array();
+			foreach ($stmtAuthorisations as $aRow) {
+				if ($aRow['fk_group'] == NULL) {
+					$aAuthorisations['users'][$aRow['fk_user']][$aRow['fk_authorisation']] = $aRow['e_granttype'];
+				} else {
+					$aAuthorisations['groups'][$aRow['fk_group']][$aRow['fk_authorisation']] = $aRow['e_granttype'];
+				}
+			}
+			return ($aAuthorisations);
+		}
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function loadSupportedAuthorisations($bReturnAsArray = FALSE, $bSaveToElement = TRUE) {
+		$DB = DBFactory::getInstance('system');
+		$stmtAuthorisations = $DB->prepareKnown($this->aQueries['loadSupportedAuthorisations']);
+		$mParam = $this->elemSubject->getAttribute('type');
+		$stmtAuthorisations->bindParam(':node_type', $mParam, PDO::PARAM_STR);
+		$stmtAuthorisations->execute();
+		
+		if ($bSaveToElement) {
+			$elemContainer = $this->elemSubject->ownerDocument->createElement('supported_authorisations');
+			foreach ($stmtAuthorisations as $aRow) {
+				$elemAuthorisation = $this->elemSubject->ownerDocument->createElement('authorisation');
+				$elemAuthorisation->setAttribute('name', $aRow['s_authorisation']);
+				if ($aRow['fk_parentauthorisation'] != NULL) {
+					$elemAuthorisation->setAttribute('parent', $aRow['fk_parentauthorisation']);
+				}
+				$elemContainer->appendChild($elemAuthorisation);
+			}
+			$this->elemSubject->appendChild($elemContainer);
+		}
+		
+		if ($bReturnAsArray) {
+			$aAuthorisations = array();
+			foreach ($stmtAuthorisations as $aRow) {
+				$aAuthorisations[$aRow['s_authorisation']] = TRUE;
+			}
+			return ($aAuthorisations);
+		}
+		
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function loadChildren($sView, $bAddContainer = FALSE, $bReturnChildren = FALSE) {
+		if ($bAddContainer || $bReturnChildren) {
+			$elemContainer = $this->elemSubject->ownerDocument->createElement('children');
+			$this->elemSubject->appendChild($elemContainer);
+		} else {
+			$elemContainer = $this->elemSubject;
+		}
+		$sbDB = DBFactory::getInstance('system');
+		$stmtChildren = $sbDB->prepareKnown($this->aQueries['loadChildren'][$sView]);
+		$mParam = $this->elemSubject->getAttribute('nodeid');
+		$stmtChildren->bindParam(':parent_id', $mParam, PDO::PARAM_INT);
+		$stmtChildren->execute();
+		foreach ($stmtChildren as $aRow) {
+			$elemNode = $this->elemSubject->ownerDocument->createElement('sbnode');
+			$elemNode->setAttribute('nodeid', $aRow['id']);
+			$elemNode->setAttribute('type', $aRow['fk_nodetype']);
+			$elemNode->setAttribute('label', $aRow['s_name']);
+			$elemNode->setAttribute('subnodes', $aRow['n_numsubnodes']);
+			if (isset($aRow['s_csstype']) && $aRow['s_csstype'] != NULL) {
+				$elemNode->setAttribute('type', $aRow['s_csstype']);
+			}
+			$elemContainer->appendChild($elemNode);
+		}
+		if ($bReturnChildren) {
+			return ($elemContainer);
+		}
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function loadAttributes($sType = 'basic', $bReturnAsArray = FALSE) {
+		if (!isset($this->aQueries['loadAttributes'][$sType])) {
+			throw new sbException('attribute view not supported: '.$sType);	
+		}
+		$DB = DBFactory::getInstance('system');
+		$stmtAttributes = $DB->prepareKnown($this->aQueries['loadAttributes'][$sType]);
+		$mParam = $this->elemSubject->getAttribute('nodeid');
+		$stmtAttributes->bindParam(':node_id', $mParam, PDO::PARAM_INT);
+		$stmtAttributes->execute();
+		if ($sType == 'external') {
+			foreach ($stmtAttributes as $aRow) {
+				$this->elemSubject->setAttribute($aRow['s_name'], $aRow['m_content']);
+			}
+		} else {
+			foreach ($stmtAttributes as $aRow) {
+				// TODO: implement in a cleaner way
+				foreach ($aRow as $sName => $sValue) {
+					if (!is_numeric($sName)) {
+						$this->elemSubject->setAttribute($sName, $sValue);
+					}
+				}
+			}
+		}
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function saveAttributes($sType = 'basic', $aAttributes) {
+		if (!isset($this->aQueries['saveAttributes'][$sType])) {
+			throw new sbException('attribute view not supported: '.$sType);	
+		}
+		$DB = DBFactory::getInstance('system');
+		$stmtAttributes = $DB->prepareKnown($this->aQueries['saveAttributes'][$sType]);
+		$mParam = $this->elemSubject->getAttribute('nodeid');
+		$stmtAttributes->bindParam(':node_id', $mParam, PDO::PARAM_INT);
+		// TODO: think over this again...
+		if ($sType == 'basic') {
+			$stmtAttributes->bindParam(':name', $aAttributes['name'], PDO::PARAM_STR);
+			$stmtAttributes->bindParam(':shortname', $aAttributes['shortname'], PDO::PARAM_STR);
+			$stmtAttributes->bindParam(':longname', $aAttributes['longname'], PDO::PARAM_STR);
+			$stmtAttributes->bindParam(':urlname', $aAttributes['urlname'], PDO::PARAM_STR);
+		} else {
+			throw new sbException('how to implement this?');
+		}
+		$stmtAttributes->execute();
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function loadViews($bReturnViews = FALSE) {
+		$elemViews = $this->ownerDocument->createElement('views');
+		$DB = DBFactory::getInstance('system');
+		$stmtViews = $DB->prepareKnown($this->aQueries['loadViews']);
+		$mParam = $this->getAttribute('nodeid');
+		$stmtViews->bindParam(':node_id', $mParam, PDO::PARAM_INT);
+		$stmtViews->execute();
+		foreach ($stmtViews as $aRow) {
+			$elemView = $this->ownerDocument->createElement('view');
+			// TODO: find cleaner way to distinct non-display views
+			if ($aRow['b_display'] == 'TRUE') {
+				$elemView->setAttribute('name', $aRow['s_view']);
+				$elemView->setAttribute('file', $aRow['s_classfile']);
+				$elemView->setAttribute('class', $aRow['s_class']);
+				$elemView->setAttribute('module', $aRow['fk_module']);
+				$elemViews->appendChild($elemView);
+			}
+			$this->aViews[$aRow['s_view']]['classfile'] = $aRow['s_classfile']; 
+			$this->aViews[$aRow['s_view']]['class'] = $aRow['s_class'];
+			$this->aViews[$aRow['s_view']]['module'] = $aRow['fk_module'];
+		}
+		// TODO: improve debug stuff
+		if (DEBUG) {
+			$elemView = $this->ownerDocument->createElement('view');
+			$elemView->setAttribute('name', 'debug');
+			$elemView->setAttribute('file', 'sb.node.view.debug');
+			$elemView->setAttribute('class', 'sbView_debug');
+			$elemView->setAttribute('module', 'sb_system');
+			$elemViews->appendChild($elemView);
+			$this->aViews['debug']['classfile'] = 'sb.node.view.debug';
+			$this->aViews['debug']['class'] = 'sbView_debug';
+			$this->aViews['debug']['module'] = 'sb_system';
+		}
+		
+		if ($bReturnViews) {
+			return($elemViews);
+		} else {
+			// TODO: save views in another way?
+			$this->elemViews = $elemViews;
+			$this->elemSubject->appendChild($elemViews);
+		}
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	// TODO: remove debug stuff
+	public function callView($sView = NULL, $sAction = NULL, $aParams = array()) {
+		
+		//echo ($sView.'|'.$sAction.'<br>');
+		
+		//print_r($this->aViews);
+		
+		$this->loadViews(FALSE);
+		//var_dump($this->aViews);
+		
+		if ($sView == NULL) {
+			$aKeys = array_keys($this->aViews);
+			$sView = $aKeys[0];
+		}
+		
+		$this->sLastView = $sView;
+		
+		if (isset($this->aViews[$sView])) {
+			//import($this->aViews[$sView]['classfile'], $this->aViews[$sView]['module']);
+			try {
+				import($this->aViews[$sView]['classfile'], $this->aViews[$sView]['module']);
+			} catch (LibraryNotFoundException $e) {
+				$sView = 'debug';
+				import($this->aViews[$sView]['classfile'], $this->aViews[$sView]['module']);
+				$this->sLastView = $sView;
+			}
+			// TODO: ???
+			/*if (!import($this->aViews[$sView]['classfile'], $this->aViews[$sView]['module'])) {
+				$sView = 'debug';
+				import($this->aViews[$sView]['classfile'], $this->aViews[$sView]['module']);
+				$this->sLastView = $sView;
+			}*/
+			if (!class_exists($this->aViews[$sView]['class'])) {
+				throw new sbException('Class does not exist: '.$this->aViews[$sView]['class']);
+			}
+			$viewCurrent = new $this->aViews[$sView]['class']($this);
+			//var_dump($viewCurrent);
+			if ($viewCurrent->requiresLogin() && !is_loggedin()) {
+				//echo 'redirect_login|';
+				return(redirect(0, 'login'));
+			}
+			if (strlen($sAction) == 0) {
+				$elemView = $viewCurrent->execute();
+			} else {
+				$elemView = $viewCurrent->execute($sAction);
+			}
+			return ($elemView);
+		} else {
+			throw new sbException('view undefined: '.$sView.' in node '.$this->elemSubject->getAttribute('nodeid'));
+		}
+		
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getViews() {
+		return ($this->elemViews);
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getLastView() {
+		return ($this->sLastView);
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function callAction() {
+		
+		
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getSubject() {
+		return ($this->elemSubject);	
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	/*public function setAttribute($sName, $sValue) {
+		$this->setAttribute($sName, $sValue);
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	/*public function getAttribute($sName) {
+		return ($this->getAttribute($sName));
+	}*/
+	
+	
+}
+
+	
+
+?>

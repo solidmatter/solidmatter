@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shop>
+
+	<nodetypes>
+		<type id="sb_shop:shop">sbShop</type>
+		<type id="sb_shop:category">Shopkategorie</type>
+	</nodetypes>
+	
+</shop>

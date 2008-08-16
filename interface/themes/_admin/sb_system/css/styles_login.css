@@ -1,0 +1,100 @@
+
+
+body {
+	text-align: center;
+	padding-top: 50px;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 0.8em;
+}
+
+div.login {
+	width: 500px;
+	height: 400px;
+	background: url(../images/login_bg.png) left top repeat-x;
+	text-align: left;
+	margin: 0 auto;
+	padding: 0;
+	position: relative;
+}
+
+div.login span.version {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	color: white;
+}
+
+div.logo {
+	font-family: Arial Narrow, Arial, Helvetica, Sans-Serif;
+	/*background: url(../images/login_logo.png) left top repeat-x;*/
+	/*padding: 20px 20px 0 0;*/
+	position: relative;
+	height: 110px;
+	background: url(../images/login_logo3.png) 10px 10px no-repeat;
+	/*background-color:red;*/
+}
+div.logo h1 {
+	color: white;
+	font-size: 70px;
+	position: relative;
+	top: 30px;
+	left: 140px;
+	/*background-color: blue;*/
+	display: inline;
+	font-weight: normal;
+}
+
+div.logo h1 b {
+	font-family: Trebuchet MS;
+}
+
+div.form {
+	margin: 50px 10px 0 10px;
+	background: url(../images/login_bg_bright.png) left top repeat-x;
+	padding: 10px 0;
+}
+
+div.corner {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+}
+div.nw {
+	background: url(../images/login_corner_nw.png) left top no-repeat;
+	top: 0;
+	left: 0;
+}
+div.ne {
+	background: url(../images/login_corner_ne.png) left top no-repeat;
+	top: 0;
+	right: 0;
+}
+div.se {
+	background: url(../images/login_corner_se.png) left top no-repeat;
+	bottom: 0;
+	right: 0;
+}
+div.sw {
+	background: url(../images/login_corner_sw.png) left top no-repeat;
+	bottom: 0;
+	left: 0;
+}
+
+table.login	{
+	font-size: 0.9em;
+	border: 0;
+	border-collapse: collapse;
+	clear: both;
+	width: 430px;
+	
+}
+
+table.default td, table.default th {
+	text-align: left;
+	padding: 2px;
+	border: 0;
+}
+
+input {
+	border: 0;
+}

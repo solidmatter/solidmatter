@@ -1,0 +1,21 @@
+
+#xhtmlvalidator {
+	font-size:11px;
+	font-family:Arial,Helvetica, sans-serif;
+}
+
+#xhtmlvalidator table {
+	border:1px solid #ccc;
+	border-collapse:collapse;
+}
+
+#xhtmlvalidator td {
+	border:1px solid #ccc;
+	border-collapse:collapse;
+}
+
+#xhtmlvalidator th {
+	border:1px solid #ccc;
+	border-collapse:collapse;
+	font-weight:bold;
+}

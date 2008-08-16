@@ -1,0 +1,65 @@
+html {
+	font-family: Arial, Helvetica, Sans-Serif;
+}
+
+body {
+	padding: 40px;
+}
+
+
+a {
+	color: black;
+}
+a:hover {
+	color: blue;
+}
+
+
+
+h1 {
+	padding: 30px;
+	text-align: center;
+	color: white;
+	background-color: darkgrey;
+}
+
+h2 {
+	padding: 10px 15px;
+	background-color: orange;
+}
+
+h3 {
+	padding: 5px 0;
+	border-bottom: 1px solid orange;
+}
+
+h4 {
+	padding: 5px 0;
+}
+
+
+
+
+p {
+	padding: 10px 0;
+}
+
+p.caution {
+	background-color: #FEE;
+	border: 3px solid #FCC;
+	padding: 10px;
+}
+p.info {
+	background-color: #FFE;
+	border: 3px solid #FFC;
+	padding: 10px;
+}
+p.action {
+	background-color: #EEF;
+	border: 3px solid #CCF;
+	padding: 10px;
+}
+pre.code {
+	background-color: #DDD;
+	padding: 10px;
+}
