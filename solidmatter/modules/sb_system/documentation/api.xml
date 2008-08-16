@@ -15,19 +15,17 @@
 				<p>
 					In this documentation, you will find several types of formatting words and paragraphs, the meaning is as follows:
 				</p>
-				<p class="action">
+				<action>
 					This box contains actions that you should take, e.g. edit files, add values to the database and such. Used everytime you have to do something...
 If you hate to read manuals and are more the learning-by-doing type of person, you can just follow the instructions in these boxes, ignore the rest and you should have a fully running module in the end. You'll miss something then, though...
-
-				</p>
-				<p class="caution">
+				</action>
+				<caution>
 					This box provides information that can prevent you from screwing something up. Used when there are common errors to be made or where i myself are constantly implementing oversights...
-				</p>
-				<p class="info">
+				</caution>
+				<info>
 					This box holds important additional information, resp. where to find additional information on the current subject. Used when there are more things to know than are used/told in place...
-				</p>
-				<pre class="code">This box contains program-code</pre>
-				
+				</info>
+				<code>This box contains program-code</code>
 			</subsection>
 		</section>
 		<section title="What solidMatter is and what it's not" id="what">
@@ -75,7 +73,6 @@ If you hate to read manuals and are more the learning-by-doing type of person, y
 				- added functionality leads to restrictions
 				- Conclusion: not portable if using the full sbCR API
 			</subsection>
-			
 		</section>
 		<section title="JCR vs. sbCR (Restrictions)" id="jcrsbcr">
 			<subsection title="Workspaces" id="">
@@ -120,7 +117,6 @@ If you hate to read manuals and are more the learning-by-doing type of person, y
 			<subsection title="" id="">
 				
 			</subsection>
-			
 		</section>
 		<section title="JCR vs. sbCR (Additions)" id="jcrsbcr">
 			<subsection title="Same Name Siblings" id="">
@@ -164,9 +160,6 @@ If you hate to read manuals and are more the learning-by-doing type of person, y
 		</section>
 	</chapter>
 	
-	
-	
-	
 	<chapter title="Custom Features" id="viewsactions">
 		<section title="Views and Actions" id="concept">
 			<subsection title="Content vs. Application Logic?" id="contentlogic">
@@ -181,8 +174,36 @@ If you hate to read manuals and are more the learning-by-doing type of person, y
 		</section>
 	</chapter>
 	
-	
-	
+	<chapter title="Coding Guidelines" id="codingguidelines">
+		<section title="Variable Naming" id="variablenaming">
+			Variables should indicate their proposed type as lowercase prefix, followed by the self explanatory name: "$prefixExplanatoryName.
+			The well-known Prefixes for scalar types are:
+			<ul>
+				<li>i: Integer</li>
+				<li>s: String</li>
+				<li>f: Float</li>
+				<li>a: Array</li>
+				<li></li>
+			</ul>
+			For objects:
+			<ul>
+				<li>node: a sbNode or sbCRNode</li>
+				<li>cache: any kind of cache object</li>
+				<li>o: unspecified object</li>
+			</ul> 
+		</section>
+		<section title="Code Formatting" id="codeformatting">
+			
+		</section>
+		<section title="Session Usage" id="sessionusage">
+			<p>The session can be used to store various information. This chapter explains what different modes of access exist.</p>
+			<subsection title="Per Nodetype Settings" id="pernodetype">
+				The keys for the information should be named like this: "module:nodetype:setting".
+				Example:
+				<code>sbSession::addData('sb_system:folder:defaultView', $sView);</code>
+			</subsection>
+		</section>
+	</chapter>
 	
 	<chapter title="Appendix" id="appendix">
 		<section title="Additional Documentation" id="add_docu">
@@ -190,5 +211,4 @@ If you hate to read manuals and are more the learning-by-doing type of person, y
 		</section>
 	</chapter>
 	
-
 </doc>
