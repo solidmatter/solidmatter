@@ -22,7 +22,7 @@
 			<h2>Table of Contents</h2>
 			<ul>
 			<xsl:for-each select="chapter">
-				<li><a href="#{@id}"><xsl:value-of select="@title" /></a>
+				<li><a href="#{@id}"><strong><xsl:value-of select="@title" /></strong></a>
 				<ul>
 				<xsl:for-each select="section">
 					<li><a href="#{@id}"><xsl:value-of select="@title" /></a>
@@ -61,8 +61,18 @@
 	<xsl:template match="p">
 		<xsl:copy-of select="." />
 	</xsl:template>
-	<xsl:template match="pre">
-		<xsl:copy-of select="." />
+	
+	<xsl:template match="action">
+		<p class="action"><xsl:copy-of select="." /></p>
+	</xsl:template>
+	<xsl:template match="caution">
+		<p class="caution"><xsl:copy-of select="." /></p>
+	</xsl:template>
+	<xsl:template match="info">
+		<p class="info"><xsl:copy-of select="." /></p>
+	</xsl:template>
+	<xsl:template match="code">
+		<pre class="code"><xsl:copy-of select="." /></pre>
 	</xsl:template>
 	
 	

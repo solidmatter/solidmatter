@@ -45,18 +45,18 @@ p {
 }
 
 p.caution {
-	background-color: #FEE;
-	border: 3px solid #FCC;
+	background-color: #FDD;
+	border: 3px solid #FAA;
 	padding: 10px;
 }
 p.info {
-	background-color: #FFE;
-	border: 3px solid #FFC;
+	background-color: #FFB;
+	border: 3px solid #FF4;
 	padding: 10px;
 }
 p.action {
-	background-color: #EEF;
-	border: 3px solid #CCF;
+	background-color: #DDF;
+	border: 3px solid #AAF;
 	padding: 10px;
 }
 pre.code {
