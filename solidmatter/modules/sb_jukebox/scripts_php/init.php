@@ -357,8 +357,6 @@ class sbJukeboxView extends sbView {
 		$niChildren = $nodeSubject->getChildren('playlist');
 		foreach ($niChildren as $nodeChild) {
 			
-			//var_dumpp($nodeChild->getPrimaryNodeType().' - '.$nodeChild->getName());
-			
 			// prevent infinite loops
 			if (isset($aCyclePrevention[$nodeChild->getIdentifier()])) {
 				continue;
@@ -374,20 +372,6 @@ class sbJukeboxView extends sbView {
 					$aItems[$sTrackUUID]['label'] = $nodeChild->getProperty('label');
 					$aItems[$sTrackUUID]['playtime'] = $nodeChild->getProperty('enc_playtime');
 					break;
-				
-				case 'sb_jukebox:artist':
-					// additionally iclude tracks from foreign albums
-					$stmtGetTitles = $this->crSession->prepareKnown('sbJukebox/artist/getTracks/differentAlbums');
-					$stmtGetTitles->bindValue('jukebox_uuid', $this->getJukebox()->getProperty('jcr:uuid'), PDO::PARAM_STR);
-					$stmtGetTitles->bindValue('artist_uuid', $nodeChild->getProperty('jcr:uuid'), PDO::PARAM_STR);
-					$stmtGetTitles->bindValue('limit', 100, PDO::PARAM_INT);
-					$stmtGetTitles->execute();
-					foreach ($stmtGetTitles as $aRow) {
-						$sTrackUUID = $aRow['uuid'];
-						$aItems[$sTrackUUID]['uuid'] = $sTrackUUID;
-						$aItems[$sTrackUUID]['label'] = $aRow['label'];
-						$aItems[$sTrackUUID]['playtime'] = $aRow['playtime'];
-					}
 					
 				default:
 					$aItems	= array_merge($aItems, $this->getPlaylistItems($nodeChild, $aCyclePrevention));
@@ -395,6 +379,22 @@ class sbJukeboxView extends sbView {
 						
 			}
 			
+		}
+		
+		// if it is an artist append the tracks from foreign albums
+		if ($nodeSubject->getPrimaryNodeType() == 'sb_jukebox:artist') {
+			$stmtGetTitles = $this->crSession->prepareKnown('sbJukebox/artist/getTracks/differentAlbums');
+			$stmtGetTitles->bindValue('jukebox_uuid', $this->getJukebox()->getProperty('jcr:uuid'), PDO::PARAM_STR);
+			$stmtGetTitles->bindValue('artist_uuid', $nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
+			$stmtGetTitles->bindValue('limit', 100, PDO::PARAM_INT);
+			$stmtGetTitles->execute();
+			foreach ($stmtGetTitles as $aRow) {
+				$sTrackUUID = $aRow['uuid'];
+				$aItems[$sTrackUUID]['uuid'] = $sTrackUUID;
+				$aItems[$sTrackUUID]['label'] = $aRow['label'];
+				$aItems[$sTrackUUID]['playtime'] = $aRow['playtime'];
+			}
+			$stmtGetTitles->closeCursor();
 		}
 		
 		return ($aItems);

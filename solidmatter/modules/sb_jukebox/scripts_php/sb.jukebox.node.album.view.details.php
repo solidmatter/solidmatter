@@ -24,8 +24,6 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 			
 			case 'display':
 				
-				//file_put_contents('C:/test.txt', serialize($_SERVER));
-				
 				// search form
 				$formSearch = $this->buildSearchForm('albums');
 				$formSearch->saveDOM();

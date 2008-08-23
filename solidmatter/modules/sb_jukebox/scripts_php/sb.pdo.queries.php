@@ -160,6 +160,7 @@ $_QUERIES['sbJukebox/jukebox/search/albums/byLabel'] = '
 				n.s_label AS label,
 				n.s_name AS name,
 				a.b_coverexists,
+				a.n_published,
 				(SELECT 	n_vote 
 					FROM	{TABLE_VOTES} v
 					WHERE	v.fk_subject = n.uuid
@@ -177,6 +178,7 @@ $_QUERIES['sbJukebox/jukebox/search/albums/numeric'] = '
 				n.s_label AS label,
 				n.s_name AS name,
 				a.b_coverexists,
+				a.n_published,
 				(SELECT 	n_vote 
 					FROM	{TABLE_VOTES} v
 					WHERE	v.fk_subject = n.uuid

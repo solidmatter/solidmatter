@@ -231,6 +231,7 @@ class JukeboxToolkit {
 		foreach ($aAlbumInfo['properties'] as $sProperty => $mValue) {
 			$nodeAlbum->setProperty($sProperty, $mValue);
 		}
+		$nodeAlbum->setProperty('info_artist', $nodeAlbumArtist->getProperty('jcr:uuid'));
 		
 		try {
 			

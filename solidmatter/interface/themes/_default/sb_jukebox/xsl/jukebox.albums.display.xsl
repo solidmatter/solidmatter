@@ -81,7 +81,12 @@
 								<span style="float: right;">
 									<xsl:call-template name="render_buttons" />
 								</span>
-								<a href="/{@uuid}"><xsl:value-of select="@label" /></a><br />
+								<a href="/{@uuid}">
+									<xsl:value-of select="@label" />
+									<xsl:if test="@n_published">
+										[<xsl:value-of select="@n_published" />]
+									</xsl:if>
+								</a><br />
 								<xsl:call-template name="render_stars" />
 							</td>
 						</tr>
