@@ -56,7 +56,7 @@
 				<li><a href="javascript:sbMenu.cut('{@parent}', '{@uuid}');"><span class="type cut"><xsl:value-of select="$locale/system/general/actions/cut" /></span></a></li>
 			</xsl:if>
 			<xsl:if test="@delete='TRUE'">
-				<li><a href="javascript:sbUtilities.execute('/-/structure/copy/parentnode={@parent}&amp;childnode={@uuid}');"><span class="type copy"><xsl:value-of select="$locale/system/general/actions/copy" /></span></a></li>
+				<li><a href="javascript:top.sbUtilities.execute('/-/structure/copy/parentnode={@parent}&amp;childnode={@uuid}');"><span class="type copy"><xsl:value-of select="$locale/system/general/actions/copy" /></span></a></li>
 			</xsl:if>
 			<xsl:if test="@refresh='TRUE'">
 				<hr />
@@ -70,7 +70,7 @@
 			</xsl:if>
 			<xsl:if test="@delete='TRUE'">
 				<hr />
-				<li><a href="javascript:sbUtilities.popupModal('/-/structure/deleteChild/parentnode={@parent}&amp;childnode={@uuid}', 500, 250);"><span class="type delete"><xsl:value-of select="$locale/system/general/actions/delete" /></span></a></li>
+				<li><a href="javascript:top.sbUtilities.popupModal('/-/structure/deleteChild/parentnode={@parent}&amp;childnode={@uuid}', 500, 250);"><span class="type delete"><xsl:value-of select="$locale/system/general/actions/delete" /></span></a></li>
 			</xsl:if>
 			
 		</ul>

@@ -19,6 +19,8 @@
 		<html>
 		<head>
 			<title>solidMatter Backend</title>
+			<script type="text/javascript" src="{$scripts_js}/prototype/prototype.js"></script>
+			<script type="text/javascript" src="{$scripts_js}/utilities.js"></script>
 		</head>
 		<frameset cols="300, *" border="7">
 			<frame src="/-/menu" name="navigation" />

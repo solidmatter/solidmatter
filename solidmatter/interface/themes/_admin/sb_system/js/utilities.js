@@ -1,8 +1,19 @@
 
+//------------------------------------------------------------------------------
+/**
+*	@package solidMatter[sbSystem]
+*	@author	()((() [Oliver Müller]
+*	@version 1.00.00
+*/
+//------------------------------------------------------------------------------
 
-
+//------------------------------------------------------------------------------
+/**
+* provides general utility functions
+*/
 var sbUtilities = {
 	
+	//--------------------------------------------------------------------------
 	// issue command
 	initProgress : function (sURL, sID) {
 		
@@ -10,7 +21,12 @@ var sbUtilities = {
 		
 	},
 	
+	//--------------------------------------------------------------------------
+	// open modal window
+	//
 	popupModal : function (sURL, iWidth, iHeight) {
+		
+		this.modal(true);
 		
 		var iWindowLeft = (screen.width - iWidth) / 2;
 		var iWindowTop = (screen.height - iHeight) / 2;
@@ -28,8 +44,12 @@ var sbUtilities = {
 				'height=' + iHeight + ',width=' + iWidth + ',top=' + iWindowTop + ',left=' + iWindowLeft + ',toolbar=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no ,modal=yes'
 			);
 		}
+		
 	},
 	
+	//--------------------------------------------------------------------------
+	// just open an url in background
+	//
 	execute : function (sURL) {
 		
 		var myAjaxRequest = new Ajax.Request( 
@@ -41,17 +61,53 @@ var sbUtilities = {
 			}
 		);
 		
-	}
+	},
+	
+	//--------------------------------------------------------------------------
+	// grey out or open the menu and work frames
+	//
+	modal : function (bState) {
 		
+		var oWindow1 = top.frames[0];
+		var oWindow2 = top.frames[1];
+		var eDiv1 = top.frames[0].document.getElementById('modalbackground');
+		var eDiv2 = top.frames[1].document.getElementById('modalbackground');
+		
+		this.cover_page(eDiv1, oWindow1);
+		this.cover_page(eDiv2, oWindow2);
+		
+		var sStyle = "none";
+		if (bState) {
+			sStyle = "block";
+		}
+		
+		eDiv1.style.display = sStyle;
+		eDiv2.style.display = sStyle;
+		
+	},
+	
+	//--------------------------------------------------------------------------
+	// match size and position of an element to the window
+	//
+	match_size : function (eLayer, oWindow) {
+		
+		eLayer.style.width = oWindow.innerWidth;
+		eLayer.style.height = oWindow.innerHeight;
+		eLayer.style.top = oWindow.pageYOffset;
+		eLayer.style.left = oWindow.pageXOffset;
+	
+	},
+	
+	//--------------------------------------------------------------------------
+	// cover the whole page
+	//
+	cover_page : function (eLayer, oWindow) {
+		
+		eLayer.style.width = oWindow.document.body.scrollWidth;
+		eLayer.style.height = oWindow.document.body.scrollHeight;
+		eLayer.style.top = 0;
+		eLayer.style.left = 0;
+		
+	},
+	
 }
-
-
-/*function newWindow(a_str_windowURL, a_str_windowName, a_int_windowWidth, a_int_windowHeight, a_bool_scrollbars, a_bool_resizable, a_bool_menubar, a_bool_toolbar, a_bool_addressbar, a_bool_statusbar, a_bool_fullscreen) {
-  var int_windowLeft = (screen.width - a_int_windowWidth) / 2;
-  var int_windowTop = (screen.height - a_int_windowHeight) / 2;
-  var str_windowProperties = 'height=' + a_int_windowHeight + ',width=' + a_int_windowWidth + ',top=' + int_windowTop + ',left=' + int_windowLeft + ',scrollbars=' + a_bool_scrollbars + ',resizable=' + a_bool_resizable + ',menubar=' + a_bool_menubar + ',toolbar=' + a_bool_toolbar + ',location=' + a_bool_addressbar + ',statusbar=' + a_bool_statusbar + ',fullscreen=' + a_bool_fullscreen + '';
-  var obj_window = window.open(a_str_windowURL, a_str_windowName, str_windowProperties)
-    if (parseInt(navigator.appVersion) >= 4) {
-      obj_window.window.focus();
-    }
-}*/

@@ -116,6 +116,14 @@ class ImageCache {
 		$stmtClear->closeCursor();
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* alias of clearAll() for sbCache interface compliance
+	*/
+	public function clear() {
+		$this->clearAll();
+	}
+	
 }
 
 ?>

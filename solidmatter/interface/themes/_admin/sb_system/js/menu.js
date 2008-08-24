@@ -1,9 +1,21 @@
 
+//------------------------------------------------------------------------------
+/**
+*	@package solidMatter[sbSystem]
+*	@author	()((() [Oliver Müller]
+*	@version 1.00.00
+*/
+//------------------------------------------------------------------------------
 
-
+//------------------------------------------------------------------------------
+/**
+* all special functionalities required by the tree menu only 
+*/
 var sbMenu = {
 	
+	//--------------------------------------------------------------------------
 	// open/close menu branches
+	//
 	toggleMenuEntry : function (sNodeID) {
 	
 		var nodeIcon = $('icon' + sNodeID);
@@ -16,12 +28,16 @@ var sbMenu = {
 		
 	},
 	
-	// just reload a branch
+	//--------------------------------------------------------------------------
+    // just reload a branch
+    //
 	reloadMenuEntry : function (sNodeID) {
 		sbMenu._updateMenuEntry(sNodeID, 'open');
 	},
 	
-	// update a branch with desired method
+	//--------------------------------------------------------------------------
+    // update a branch with desired method
+    //
 	_updateMenuEntry : function (sNodeID, sMode) {
 	
 		var nodeItem = $('entry' + sNodeID);
@@ -88,26 +104,36 @@ var sbMenu = {
 	
 	},
 	
-	paste : function (sParentUUID) {
-		sbUtilities.execute('/-/structure/paste/parentnode=' + sParentUUID);
+	//--------------------------------------------------------------------------
+	// pastes a node from the clipboard
+	//
+    paste : function (sParentUUID) {
+		top.sbUtilities.execute('/-/structure/paste/parentnode=' + sParentUUID);
 		sbCommander.issueCommand('reloadTree', null);
 	},
 	
-	createLink : function (sParentUUID) {
-		sbUtilities.execute('/-/structure/createLink/parentnode=' + sParentUUID);
+	//--------------------------------------------------------------------------
+    // creates a hardlink from the node in clipboard
+    //
+    createLink : function (sParentUUID) {
+		top.sbUtilities.execute('/-/structure/createLink/parentnode=' + sParentUUID);
 		sbCommander.issueCommand('reloadTree', null);
 	},
 	
-	cut : function (sParentUUID, sChildUUID) {
-		sbUtilities.execute('/-/structure/cut/parentnode=' + sParentUUID + '&childnode=' + sChildUUID);
+	//--------------------------------------------------------------------------
+	// cuts a node from the tree to clipboard
+	//
+    cut : function (sParentUUID, sChildUUID) {
+		top.sbUtilities.execute('/-/structure/cut/parentnode=' + sParentUUID + '&childnode=' + sChildUUID);
 		//sbCommander.issueCommand('reloadTree', null);
 	}
 
 }
 
-
-
-
+//------------------------------------------------------------------------------
+/**
+* functionalities for the tree rightclick context menu
+*/
 var sbContextMenu = {
 
  	// private attributes
@@ -117,8 +143,9 @@ var sbContextMenu = {
     _preventDefault : true,
     _preventForms : true,
 	
-
-    // public method. Sets up whole context menu stuff..
+	//--------------------------------------------------------------------------
+    // public method. Sets up whole context menu stuff...
+    //
     init : function (conf) {
 	
         if ( document.all && document.getElementById && !window.opera ) {
@@ -152,7 +179,9 @@ var sbContextMenu = {
 
     },
 
-	// public method. Attaches context menus to specific class names
+	//--------------------------------------------------------------------------
+    // public method. Attaches context menus to specific class names
+    //
     attach : function (classNames, menuId) {
 
         if (typeof(classNames) == "string") {
@@ -168,6 +197,7 @@ var sbContextMenu = {
     },
 	
 
+    //--------------------------------------------------------------------------
     // private method. Get which context menu to show
     /*_getMenuElementId : function (e) {
 
@@ -202,41 +232,17 @@ var sbContextMenu = {
 
     },*/
 
-	_returnfalse : function () {
+	//--------------------------------------------------------------------------
+	// private method. returns false as you may have guessed...
+	//
+    _returnfalse : function () {
 		return (false);
 	},
 
+    //--------------------------------------------------------------------------
     // private method. Shows context menu
+    //
     _getReturnValue : function (e) {
-
-        /*var returnValue = true;
-        var evt = sbContextMenu.IE ? window.event : e;
-
-        if (evt.button != 1) {
-            
-            if (evt.target) {
-                var el = evt.target;
-            } else if (evt.srcElement) {
-                var el = evt.srcElement;
-            }
-			
-            var tname = el.tagName.toLowerCase();
-
-            if ((tname == "input" || tname == "textarea")) {
-                if (!sbContextMenu._preventForms) {
-                    returnValue = true;
-                } else {
-                    returnValue = false;
-                }
-            } else {
-                if (!sbContextMenu._preventDefault) {
-                    returnValue = true;
-                } else {
-                    returnValue = false;
-                }
-            }
-        }
-        return returnValue;*/
         
         var returnValue = true;
         var evt = sbContextMenu.IE ? window.event : e;
@@ -250,7 +256,7 @@ var sbContextMenu = {
             }
 			
             var sTagname = el.tagName.toLowerCase();
-			//alert(sTagname);
+            
             if ((sTagname == "input" || sTagname == "textarea")) {
                 if (!sbContextMenu._preventForms) {
                     returnValue = true;
@@ -274,7 +280,10 @@ var sbContextMenu = {
 
     },
 	
-	_getMenuPath : function (e) {
+	//--------------------------------------------------------------------------
+	// private method. returns necessary info to generate the contect menu
+	// 
+    _getMenuPath : function (e) {
 	
 		var evt = sbContextMenu.IE ? window.event : e;
 		if (evt.target) {
@@ -302,12 +311,13 @@ var sbContextMenu = {
         
 	},
 	
-	_loadContent : function (e) {
+	//--------------------------------------------------------------------------
+	// private method. loads the contextmenu content into the div
+	//
+    _loadContent : function (e) {
 		
 		var oPath = sbContextMenu._getMenuPath(e);
-		//var sUrl = 'backend.view=contextmenu&mode=create&subjectnode=' + oPath.node_id + '&parentnode=' + oPath.parent_id;
 		var sUrl = '/-/contextmenu/-/mode=create&subjectnode=' + oPath.node_id + '&parentnode=' + oPath.parent_id;
-		//alert(sUrl);
 		var sID = 'contextmenu';
 		var myAjaxOpener = new Ajax.Updater( 
 			sID,
@@ -321,7 +331,9 @@ var sbContextMenu = {
 		
 	},
 
+    //--------------------------------------------------------------------------
     // private method. Shows context menu
+    //
     _show : function (e) {
 
        /* sbContextMenu._hide();
@@ -348,14 +360,15 @@ var sbContextMenu = {
 	        sbContextMenu._menuElement.style.display = 'block';
 		}
 		
-		
         //return false;
         return bReturnValue;
 		
     },
 
 
+	//--------------------------------------------------------------------------
     // private method. Hides context menu
+    //
     _hide : function () {
 
         if (sbContextMenu._menuElement) {
@@ -365,7 +378,9 @@ var sbContextMenu = {
     },
 
 
+    //--------------------------------------------------------------------------
     // private method. Returns mouse position
+    //
     _getMousePosition : function (e) {
 
         if (sbContextMenu.IE) {

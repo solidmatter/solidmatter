@@ -24,7 +24,6 @@ class sbView_maintenance_cache extends sbView {
 				
 			case 'clearCache':
 				$sCache = $_REQUEST->getParam('cache');
-				//var_dumpp($sCache);
 				$cacheCurrent = CacheFactory::getInstance($sCache);
 				$cacheCurrent->clear();
 				$this->logEvent(System::MAINTENANCE, 'CACHE_CLEARED', $sCache);
@@ -32,7 +31,6 @@ class sbView_maintenance_cache extends sbView {
 			
 			default:
 				throw new sbException(__CLASS__.': action not recognized ('.$sAction.')');
-
 			
 		}
 		
@@ -41,6 +39,5 @@ class sbView_maintenance_cache extends sbView {
 	}	
 	
 }
-
 
 ?>

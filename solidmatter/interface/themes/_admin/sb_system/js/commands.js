@@ -1,17 +1,27 @@
 
+//------------------------------------------------------------------------------
+/**
+*	@package solidMatter[sbSystem]
+*	@author	()((() [Oliver Müller]
+*	@version 1.00.00
+*/
+//------------------------------------------------------------------------------
 
-
+//------------------------------------------------------------------------------
+/**
+* carries out system commands in client UI
+*/
 var sbCommander = {
 	
 	// issue command
 	issueCommand : function (sCommand, oParams) {
 	
 		switch (sCommand) {
-		
+			
 			case "reloadTree":
 				parent.frames[0].window.location.reload();
 				break;
-		
+			
 			case "showProgress":
 				//alert(oParams.init_url);
 				var sInitURL = oParams.init_url;

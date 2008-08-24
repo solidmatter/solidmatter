@@ -28,6 +28,7 @@
 	</xsl:template>
 	
 	<xsl:template match="/response/content/sbnode/views[1]">
+		<div id="modalbackground"></div>
 		<div class="path">
 			<xsl:for-each select="../ancestors/sbnode">
 				<xsl:sort order="descending" />

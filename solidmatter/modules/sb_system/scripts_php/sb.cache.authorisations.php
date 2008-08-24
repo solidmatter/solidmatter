@@ -72,6 +72,16 @@ class AuthorisationCache {
 		$stmtClear->closeCursor();
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* Alias for clearAuthorisations() for sbCache interface compliance
+	* @param 
+	* @return 
+	*/
+	public function clear() {
+		$this->clearAuthorisations();
+	}
+	
 }
 
 ?>
