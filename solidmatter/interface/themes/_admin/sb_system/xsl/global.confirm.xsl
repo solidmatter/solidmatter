@@ -17,7 +17,24 @@
 	<xsl:template match="/">
 	<html>
 	<head>
-		<link rel="stylesheet" href="{$stylesheets_css}/styles_default.css" type="text/css" media="all" />
+		<!--<link rel="stylesheet" href="{$stylesheets_css}/styles_default.css" type="text/css" media="all" />-->
+		<xsl:for-each select="/response/metadata/modules/*">
+			<link rel="stylesheet" href="/theme/{name()}/css/styles.css" type="text/css" media="all" />
+		</xsl:for-each>
+		<script type="text/javascript" src="{$scripts_js}/prototype/prototype.js"></script>
+		<script type="text/javascript">
+			function confirm (sURL) {
+				var myAjaxRequest = new Ajax.Request( 
+					sURL, 
+					{
+						method: 'get', 
+						parameters: null,
+						asynchronous: false 
+					}
+				);
+				window.close();
+			}
+		</script>
 	</head>
 	<body class="confirm">
 		<xsl:apply-templates select="response/errors" />
@@ -51,7 +68,7 @@
 					</xsl:for-each>
 					</ul>
 				</xsl:if>
-				<a class="ok" href="{@url_confirm}/-/structure/deleteChild/parentnode={parent/sbnode/@uuid}&amp;childnode={child/sbnode/@uuid}&amp;confirm=true" style="float:left">OK</a>
+				<a class="ok" href="javascript:confirm('{@url_confirm}/-/structure/deleteChild/parentnode={parent/sbnode/@uuid}&amp;childnode={child/sbnode/@uuid}&amp;confirm=true');" style="float:left">OK</a>
 				<a class="cancel" href="javascript:window.close();" style="float:right">Cancel</a>
 				<hr class="clear" />
 			</xsl:when>

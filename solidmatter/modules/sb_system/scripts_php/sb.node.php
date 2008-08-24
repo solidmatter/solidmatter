@@ -886,12 +886,18 @@ class sbNode extends sbCR_Node {
 		
 		// clipboard data
 		if (isset(sbSession::$aData['clipboard'])) {
-			$nodeSubject = $this->crSession->getNodeByIdentifier(sbSession::$aData['clipboard']['childnode']);
-			// TODO: also check for parent(s)!
-			if (!$nodeSubject->isAncestorOf($this) && !$nodeSubject->isSame($this)) {
-				$elemContextMenu->setAttribute('clipboard', 'TRUE');
-				$elemContextMenu->setAttribute('clipboard_type', sbSession::$aData['clipboard']['type']);
-				$elemContextMenu->setAttribute('clipboard_subject', $nodeSubject->getProperty('label'));
+			// TODO: remove this hack, it might be that the node in clipboard is already deleted
+			// the clipboard should instead be cleaned on deletion...
+			try {
+				$nodeSubject = $this->crSession->getNodeByIdentifier(sbSession::$aData['clipboard']['childnode']);
+				// only include the clipboard options if no cyclic recursions would be created
+				if (!$this->isAncestorOf($nodeSubject) && !$nodeSubject->isAncestorOf($this) && !$nodeSubject->isSame($this)) {
+					$elemContextMenu->setAttribute('clipboard', 'TRUE');
+					$elemContextMenu->setAttribute('clipboard_type', sbSession::$aData['clipboard']['type']);
+					$elemContextMenu->setAttribute('clipboard_subject', $nodeSubject->getProperty('label'));
+				}
+			} catch (NodeNotFoundException $e) {
+				// ignore
 			}
 		}
 		

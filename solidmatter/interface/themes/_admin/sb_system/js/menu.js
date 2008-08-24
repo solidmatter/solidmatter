@@ -105,11 +105,19 @@ var sbMenu = {
 	},
 	
 	//--------------------------------------------------------------------------
+	// delete a node
+	//
+	delete : function (sParentUUID, sChildUUID) {
+		top.sbUtilities.popupModal('/-/structure/deleteChild/parentnode='+ sParentUUID + '&childnode=' + sChildUUID, 500, 250, "top.sbCommander.issueCommand('reloadTree', null);");
+		//top.sbCommander.issueCommand('reloadTree', null);
+	},
+	
+	//--------------------------------------------------------------------------
 	// pastes a node from the clipboard
 	//
     paste : function (sParentUUID) {
 		top.sbUtilities.execute('/-/structure/paste/parentnode=' + sParentUUID);
-		sbCommander.issueCommand('reloadTree', null);
+		top.sbCommander.issueCommand('reloadTree', null);
 	},
 	
 	//--------------------------------------------------------------------------
@@ -117,7 +125,7 @@ var sbMenu = {
     //
     createLink : function (sParentUUID) {
 		top.sbUtilities.execute('/-/structure/createLink/parentnode=' + sParentUUID);
-		sbCommander.issueCommand('reloadTree', null);
+		top.sbCommander.issueCommand('reloadTree', null);
 	},
 	
 	//--------------------------------------------------------------------------

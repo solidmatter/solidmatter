@@ -70,7 +70,7 @@
 			</xsl:if>
 			<xsl:if test="@delete='TRUE'">
 				<hr />
-				<li><a href="javascript:top.sbUtilities.popupModal('/-/structure/deleteChild/parentnode={@parent}&amp;childnode={@uuid}', 500, 250);"><span class="type delete"><xsl:value-of select="$locale/system/general/actions/delete" /></span></a></li>
+				<li><a href="javascript:sbMenu.delete('{@parent}', '{@uuid}');"><span class="type delete"><xsl:value-of select="$locale/system/general/actions/delete" /></span></a></li>
 			</xsl:if>
 			
 		</ul>

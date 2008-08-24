@@ -155,7 +155,7 @@ class sbView_structure extends sbView {
 					//$nodeParent->deleteChild($nodeChild, FALSE);
 					//$_RESPONSE->addCommand('reloadTree');
 					$_RESPONSE->addData($this->nodeSubject);
-					$_RESPONSE->redirect($sParentUUID, '-', '-', 'sbCommand=reloadTree');
+					$_RESPONSE->forceRenderMode(XML);
 				}
 				break;
 				
@@ -207,19 +207,12 @@ class sbView_structure extends sbView {
 			default:
 				throw new sbException(__CLASS__.': action not recognized ('.$sAction.')');
 			
-			
-			
 		}
 		
-		
-		
-		
 		return (NULL);
-		
 		
 	}
 	
 }
-
 
 ?>

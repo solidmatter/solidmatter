@@ -30,8 +30,6 @@
 						<script type="text/javascript" src="{$scripts_js}/prototype/prototype.js"></script>
 						<script type="text/javascript" src="{$scripts_js}/window/window.js"></script>
 						<script type="text/javascript" src="{$scripts_js}/menu.js"></script>
-						<script type="text/javascript" src="{$scripts_js}/commands.js"></script>
-						<!--<script type="text/javascript" src="{$scripts_js}/utilities.js"></script>-->
 					</head>
 					<body onload="sbContextMenu.init();">
 						<div id="modalbackground"></div>

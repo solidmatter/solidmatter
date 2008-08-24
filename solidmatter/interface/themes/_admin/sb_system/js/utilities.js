@@ -13,6 +13,9 @@
 */
 var sbUtilities = {
 	
+	wModalPopup : null,
+	oModalInterval : null,
+	
 	//--------------------------------------------------------------------------
 	// issue command
 	initProgress : function (sURL, sID) {
@@ -24,12 +27,14 @@ var sbUtilities = {
 	//--------------------------------------------------------------------------
 	// open modal window
 	//
-	popupModal : function (sURL, iWidth, iHeight) {
+	popupModal : function (sURL, iWidth, iHeight, sCallback) {
 		
 		this.modal(true);
 		
 		var iWindowLeft = (screen.width - iWidth) / 2;
 		var iWindowTop = (screen.height - iHeight) / 2;
+		
+		var wPopup = null;
 		
 		if (false && window.showModalDialog) { // browser supports modal windows
 			window.showModalDialog(
@@ -38,29 +43,27 @@ var sbUtilities = {
 				'dialogWidth:' + iWidth + 'px;dialogHeight:' + iHeight + 'px'
 			);
 		} else { // fall back
-			window.open(
+			this.wModalPopup = window.open(
 				sURL,
 				'name',
 				'height=' + iHeight + ',width=' + iWidth + ',top=' + iWindowTop + ',left=' + iWindowLeft + ',toolbar=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no ,modal=yes'
 			);
+			this.oModalInterval = window.setInterval('sbUtilities.checkModal("' + sCallback + '")', 100);
 		}
 		
 	},
 	
 	//--------------------------------------------------------------------------
-	// just open an url in background
+	// check modal window
 	//
-	execute : function (sURL) {
-		
-		var myAjaxRequest = new Ajax.Request( 
-			sURL, 
-			{
-				method: 'get', 
-				parameters: null,
-				asynchronous: false 
+	checkModal : function (sCallback) {
+		if (this.wModalPopup.closed) {
+			window.clearInterval(this.oModalInterval);
+			this.modal(false);
+			if (sCallback != null) {
+				eval(sCallback);
 			}
-		);
-		
+		}
 	},
 	
 	//--------------------------------------------------------------------------
@@ -107,6 +110,22 @@ var sbUtilities = {
 		eLayer.style.height = oWindow.document.body.scrollHeight;
 		eLayer.style.top = 0;
 		eLayer.style.left = 0;
+		
+	},
+	
+	//--------------------------------------------------------------------------
+	// just open an url in background
+	//
+	execute : function (sURL) {
+		
+		var myAjaxRequest = new Ajax.Request( 
+			sURL, 
+			{
+				method: 'get', 
+				parameters: null,
+				asynchronous: false 
+			}
+		);
 		
 	},
 	
