@@ -14,7 +14,6 @@
 var sbUtilities = {
 	
 	wModalPopup : null,
-	oModalInterval : null,
 	
 	//--------------------------------------------------------------------------
 	// issue command
@@ -34,7 +33,7 @@ var sbUtilities = {
 		var iWindowLeft = (screen.width - iWidth) / 2;
 		var iWindowTop = (screen.height - iHeight) / 2;
 		
-		var wPopup = null;
+		var wModalPopup = null;
 		
 		if (false && window.showModalDialog) { // browser supports modal windows
 			window.showModalDialog(
@@ -43,26 +42,29 @@ var sbUtilities = {
 				'dialogWidth:' + iWidth + 'px;dialogHeight:' + iHeight + 'px'
 			);
 		} else { // fall back
-			this.wModalPopup = window.open(
+			this.wModalPopup = window.open (
 				sURL,
 				'name',
 				'height=' + iHeight + ',width=' + iWidth + ',top=' + iWindowTop + ',left=' + iWindowLeft + ',toolbar=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no ,modal=yes'
 			);
-			this.oModalInterval = window.setInterval('sbUtilities.checkModal("' + sCallback + '")', 100);
+			if (this.wModalPopup.opener == null) {
+  				this.wModalPopup.opener = window;
+			}
+			if (sCallback != null) {
+				window.onModalPopupClosed = sCallback;
+			}
 		}
 		
 	},
 	
 	//--------------------------------------------------------------------------
-	// check modal window
+	// close modal window
 	//
-	checkModal : function (sCallback) {
-		if (this.wModalPopup.closed) {
-			window.clearInterval(this.oModalInterval);
-			this.modal(false);
-			if (sCallback != null) {
-				eval(sCallback);
-			}
+	closeModal : function (bConfirmed) {
+		this.wModalPopup.close();
+		this.modal(false);
+		if (bConfirmed && window.onModalPopupClosed != null) {
+			eval(window.onModalPopupClosed);
 		}
 	},
 	

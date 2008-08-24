@@ -105,7 +105,10 @@ class sbCR_Node {
 		$this->aQueries['addLink']['updateRight']			= 'sbCR/node/addLink/updateRight';
 		$this->aQueries['addLink']['updateLeft']			= 'sbCR/node/addLink/updateLeft';
 		$this->aQueries['addLink']['insertNode']			= 'sbCR/node/addLink/insertNode';
+		$this->aQueries['delete']['getBasicInfo']			= 'sbCR/node/hierarchy/getInfo';
+		$this->aQueries['delete']['shift']					= 'sbCR/node/removeLink/shiftLeft';
 		$this->aQueries['removeLink']						= 'sbCR/node/removeLink';
+		$this->aQueries['removeDescendantLinks']			= 'sbCR/node/removeDescendantLinks';
 		$this->aQueries['reorder']['getBasicInfo']			= 'sbCR/node/orderBefore/getInfo';
 		$this->aQueries['reorder']['writeNestedSet']		= 'sbCR/node/orderBefore/writeNestedSet';
 		$this->aQueries['reorder']['writeOrder']			= 'sbCR/node/orderBefore/writeOrder';
@@ -437,18 +440,35 @@ class sbCR_Node {
 		
 		// should we delete the node? then do it and remove other tasks
 		if (isset($this->aSaveTasks['remove_node'])) {
-			// remove children first
-			foreach ($this->getChildren() as $nodeChild) {
+			
+			// recursing through children disabled because the nodes might be in use in another workspace
+			// TODO: implement connected workspaces, versioning etc... :-|
+			/*foreach ($this->getChildren() as $nodeChild) {
 				$nodeChild->remove();
 				$nodeChild->save();
+			}*/
+			
+			// first remove all decendant links
+			$this->deleteDescendantLinks();
+			
+			// then remove all links to this node from repository tree
+			$niParents = $this->getParents();
+			foreach($niParents as $nodeParent) {
+				$this->deleteLink($nodeParent);
 			}
-			$this->deleteNode();
+			
+			// remove this node? for now, removing the links is enough!
+			//$this->deleteNode();
+			
+			// finally clean up and remove this node
 			$this->aModifiedChildren = array();
 			$this->aModifiedProperties = array();
 			$this->bIsModified = FALSE;
+			
 		}
 		
 		// remove this share from shared set
+		// TODO: instead of throwing an exception, a remaining link shoud become primary
 		if (isset($this->aSaveTasks['remove_share'])) {
 			$nodePrimaryParent = $this->getPrimaryParent();
 			$nodeParent = $this->getParent();
@@ -476,10 +496,6 @@ class sbCR_Node {
 			
 			foreach ($this->aSaveTasks['add_child'] as $iTaskNumber => $aOptions) {
 				
-				//$this->crSession->beginTransaction('sbNode::addChild');
-				
-				// get first node with this name
-				
 				$sParentUUID = $this->getIdentifier();
 				$nodeChild = $this->aModifiedChildren[$aOptions['uuid']];
 				
@@ -493,7 +509,6 @@ class sbCR_Node {
 				$stmtChild->bindValue('child_name', $nodeChild->getProperty('name'), PDO::PARAM_STR);
 				$stmtChild->execute();
 				foreach ($stmtChild as $aRow) {
-					//var_dumpp($aRow);
 					$iRight = $aRow['n_right'];
 					$iLevel = $aRow['n_level'];
 					$iPosition = $aRow['n_position'];
@@ -508,7 +523,6 @@ class sbCR_Node {
 				if ($iNumSameNameSiblings != 0) {
 					throw new RepositoryException('a node with the name "'.$nodeChild->getProperty('name').'" already exists under '.$this->getProperty('label').' ('.$this->getProperty('jcr:uuid').')');	
 				}
-				
 				
 				$sIsPrimary = 'FALSE';
 				if ($iNumParents == 0) {
@@ -795,7 +809,7 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* CAUTION: will not update the nested sets
 	* @param 
 	* @return 
 	*/
@@ -818,9 +832,13 @@ class sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	protected function getHierarchyInfo() {
+	protected function getHierarchyInfo($nodeParent = NULL) {
 		$sChildUUID = $this->getIdentifier();
-		$sParentUUID = (string) $this->elemSubject->getAttribute('parent');
+		if ($nodeParent == NULL) {
+			$sParentUUID = (string) $this->elemSubject->getAttribute('parent');
+		} else {
+			$sParentUUID = $this->getPrimaryParent()->getProperty('jcr:uuid');
+		}
 		$stmtGetInfo = $this->prepareKnown('sbCR/node/hierarchy/getInfo');
 		$stmtGetInfo->bindValue(':parent_uuid', $sParentUUID, PDO::PARAM_STR);
 		$stmtGetInfo->bindValue(':child_uuid', $sChildUUID, PDO::PARAM_STR);
@@ -845,10 +863,10 @@ class sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	protected function deleteLink($nodeParent) {
+	protected function deleteLink($nodeParent = NULL) {
 		
 		// get info
-		$aInfo = $this->getHierarchyInfo();
+		$aInfo = $this->getHierarchyInfo($nodeParent);
 		
 		// delete link to parent
 		$stmtRemoveLink = $this->crSession->prepareKnown($this->aQueries['removeLink']);
@@ -859,12 +877,31 @@ class sbCR_Node {
 		
 		// shift following nodes
 		$stmtShift = $this->crSession->prepareKnown('sbCR/node/removeLink/shiftLeft');
-		$stmtShift->bindValue('left', $aInfo['left'], PDO::PARAM_STR);
+		$stmtShift->bindValue('left', $aInfo['left'], PDO::PARAM_INT);
+		$stmtShift->bindValue('distance', $aInfo['right'] - $aInfo['left'] + 1, PDO::PARAM_INT);
 		$stmtShift->execute();
 		//$stmtShift->closeCursor();
 		
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* Deletes all links of this node's ancestors from the hierarchy table 
+	* TODO: update path cache
+	* @param 
+	* @return 
+	*/
+	protected function deleteDescendantLinks() {
+		
+		$aInfo = $this->getHierarchyInfo($this->getPrimaryParent());
+		
+		// delete link to parent
+		$stmtRemoveLink = $this->crSession->prepareKnown($this->aQueries['removeDescendantLinks']);
+		$stmtRemoveLink->bindValue('left', $aInfo['left'], PDO::PARAM_STR);
+		$stmtRemoveLink->bindValue('right', $aInfo['right'], PDO::PARAM_STR);
+		$stmtRemoveLink->execute();
+		
+	}
 	
 	
 	

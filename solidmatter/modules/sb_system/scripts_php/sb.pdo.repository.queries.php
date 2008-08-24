@@ -631,6 +631,11 @@ $_QUERIES['sbCR/node/hierarchy/getInfo'] = '
 	SET			n_left = n_left + :offset
 	WHERE		n_left > :boundary
 ';*/
+$_QUERIES['sbCR/node/removeDescendantLinks'] = '
+	DELETE FROM	{TABLE_HIERARCHY}
+	WHERE		n_left > :left
+		AND		n_right < :right;
+';
 $_QUERIES['sbCR/node/removeLink'] = '
 	DELETE FROM	{TABLE_HIERARCHY}
 	WHERE		fk_parent = :parent_uuid
@@ -638,8 +643,8 @@ $_QUERIES['sbCR/node/removeLink'] = '
 ';
 $_QUERIES['sbCR/node/removeLink/shiftLeft'] = '
 	UPDATE		{TABLE_HIERARCHY}
-	SET			n_left = n_left - 2,
-				n_right = n_right - 2
+	SET			n_left = n_left - :distance,
+				n_right = n_right - :distance
 		WHERE	n_left > :left
 ';
 $_QUERIES['sbCR/node/getLinkStatus'] = '

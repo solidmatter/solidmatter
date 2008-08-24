@@ -23,7 +23,11 @@
 		</xsl:for-each>
 		<script type="text/javascript" src="{$scripts_js}/prototype/prototype.js"></script>
 		<script type="text/javascript">
+			
 			function confirm (sURL) {
+			
+				//window.location = sURL;
+				
 				var myAjaxRequest = new Ajax.Request( 
 					sURL, 
 					{
@@ -32,11 +36,12 @@
 						asynchronous: false 
 					}
 				);
-				window.close();
+				window.opener.sbUtilities.closeModal(true);
 			}
+			
 		</script>
 	</head>
-	<body class="confirm">
+	<body class="confirm" onunload="window.opener.sbUtilities.closeModal();">
 		<xsl:apply-templates select="response/errors" />
 		<xsl:apply-templates select="response/content/confirm" />
 	</body>
@@ -69,6 +74,7 @@
 					</ul>
 				</xsl:if>
 				<a class="ok" href="javascript:confirm('{@url_confirm}/-/structure/deleteChild/parentnode={parent/sbnode/@uuid}&amp;childnode={child/sbnode/@uuid}&amp;confirm=true');" style="float:left">OK</a>
+				<!--<a class="ok" target="_blank" href="{@url_confirm}/-/structure/deleteChild/parentnode={parent/sbnode/@uuid}&amp;childnode={child/sbnode/@uuid}&amp;confirm=true" style="float:left">OK</a>-->
 				<a class="cancel" href="javascript:window.close();" style="float:right">Cancel</a>
 				<hr class="clear" />
 			</xsl:when>

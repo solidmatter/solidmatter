@@ -150,12 +150,16 @@ class sbView_structure extends sbView {
 						$_RESPONSE->addData($niLinkingNodes->getElement('softlinks'));
 					}
 				} else {
+					$nodeTrashcan = $this->crSession->getNode('//*[@uid="sb_system:trashcan"]');
+					$this->crSession->moveBranchByNodes($nodeChild, $nodeParent, $nodeTrashcan);
+					$this->crSession->save();
+					/* DISABLED, testing trashcan
 					$nodeChild->remove();
 					$nodeChild->save();
 					//$nodeParent->deleteChild($nodeChild, FALSE);
-					//$_RESPONSE->addCommand('reloadTree');
+					//$_RESPONSE->addCommand('reloadTree');*/
 					$_RESPONSE->addData($this->nodeSubject);
-					$_RESPONSE->forceRenderMode(XML);
+					$_RESPONSE->forceRenderMode('XML');
 				}
 				break;
 				

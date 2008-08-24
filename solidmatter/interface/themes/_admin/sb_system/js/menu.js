@@ -108,7 +108,7 @@ var sbMenu = {
 	// delete a node
 	//
 	delete : function (sParentUUID, sChildUUID) {
-		top.sbUtilities.popupModal('/-/structure/deleteChild/parentnode='+ sParentUUID + '&childnode=' + sChildUUID, 500, 250, "top.sbCommander.issueCommand('reloadTree', null);");
+		top.sbUtilities.popupModal('/-/structure/deleteChild/parentnode='+ sParentUUID + '&childnode=' + sChildUUID, 500, 250, "sbCommander.issueCommand('reloadTree', null);");
 		//top.sbCommander.issueCommand('reloadTree', null);
 	},
 	
@@ -133,7 +133,6 @@ var sbMenu = {
 	//
     cut : function (sParentUUID, sChildUUID) {
 		top.sbUtilities.execute('/-/structure/cut/parentnode=' + sParentUUID + '&childnode=' + sChildUUID);
-		//sbCommander.issueCommand('reloadTree', null);
 	}
 
 }

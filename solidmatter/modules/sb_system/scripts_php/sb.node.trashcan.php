@@ -26,7 +26,7 @@ class sbNode_trashcan extends sbNode {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* FIXME: doesn't work currently
 	* @param 
 	* @return 
 	*/
