@@ -109,6 +109,13 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 				}
 				break;
 				
+			case 'orderBefore':
+				$nodeSubject = $this->crSession->getNodeByIdentifier($_REQUEST->getParam('subject'));
+				$nodeNextSibling = $this->crSession->getNodeByIdentifier($_REQUEST->getParam('nextsibling'));
+				$this->nodeSubject->orderBefore($nodeSubject->getName(), $nodeNextSibling->getName());
+				$this->nodeSubject->save();
+				break;
+				
 			case 'activate':
 				if (!User::isAuthorised('edit', $this->nodeSubject)) {
 					throw new Exception('You are not allowed to edit this playlist');

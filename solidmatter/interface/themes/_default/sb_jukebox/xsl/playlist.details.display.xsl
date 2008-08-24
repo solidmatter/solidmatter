@@ -115,8 +115,11 @@
 		
 			<script language="Javascript">
 				
-				//Sortable.create('playlist', { onUpdate: redraw } );
-				Sortable.create('playlist', { onChange: redraw } );
+				
+				var oPlaylist = $('playlist');
+				var aInitialState = getOrder(oPlaylist);
+				
+				Sortable.create('playlist', { onChange: redraw, onUpdate: reorder } );
 				
 				function remove(sUUID) {
 					
@@ -133,7 +136,7 @@
 				}
 				
 				function redraw() {
-					//alert('redraw');
+					
 					var sClass = 'odd';
 					var eChildren = $('playlist').childElements();
 					for (var i=0; i&lt;eChildren.length; i++) {
@@ -147,7 +150,81 @@
 							sClass = 'odd';
 						}
 					}
+					
 				}
+				
+				function reorder(info) {
+					
+					var aCurrentState = getOrder(oPlaylist);
+					var sSubject = '';
+					var sNextSibling = '';
+					
+					for (var i=0; i&lt;aCurrentState.length; i++) {
+						if (aInitialState[i] != aCurrentState[i]) { // different item in lists
+							if (aCurrentState[i] == aInitialState[i+1] &amp;&amp; aCurrentState[i+1] == aInitialState[i]) { // items switched
+								sSubject = aCurrentState[i];
+								sNextSibling = aCurrentState[i+1];
+								update(sSubject, sNextSibling);
+								break;
+							} else if (aCurrentState[i] == aInitialState[i+1]) { // missing item moved down
+								for (var j=i; j&lt;aCurrentState.length; j++) { // find missing item
+									if (aCurrentState[j] != aInitialState[j+1]) {
+										if (!aCurrentState[j+1]) {
+											sPreviousSibling = aCurrentState[j-1];
+											sSubject = aCurrentState[j];
+											update(sSubject, sPreviousSibling);
+											update(sPreviousSibling, sSubject); // flip the two
+										} else {
+											sSubject = aCurrentState[j];
+											sNextSibling = aCurrentState[j+1];		
+											update(sSubject, sNextSibling);
+										}
+										break;
+									}
+								}
+								break;
+							} else { // item moved up
+								sSubject = aCurrentState[i];
+								sNextSibling = aCurrentState[i+1];
+								update(sSubject, sNextSibling);
+								break;
+							}
+						}
+					}
+					
+					//alert('before: ' + aInitialState.join('|') + '\nafter: ' + aCurrentState.join('|') + '\nitem ' + sSubject + ' moved before ' + sNextSibling); 
+					//alert('\nitem ' + sSubject + ' moved before ' + sNextSibling); 
+					aInitialState = aCurrentState;
+				}
+				
+				function update (sSubject, sNextSibling) {
+					
+					sURL = "/<xsl:value-of select="$master/@uuid" />/details/orderBefore/subject=" + sSubject + "&amp;nextsibling=" + sNextSibling;
+					//window.open(sURL);
+					
+					var myAjaxUpdater = new Ajax.Request(
+						sURL, 
+						{
+							method: 'get', 
+							parameters: null,
+							asynchronous: false 
+						}
+					);
+					
+				}
+				
+				function getOrder() {
+					
+					var aCurrentOrder = new Array();
+					var aOrderedNodes = oPlaylist.getElementsByTagName("li");
+					for (var i=0; i&lt;aOrderedNodes.length; i++) {
+						aCurrentOrder[i] = aOrderedNodes[i].getAttribute('id').substr(5);
+					}
+					
+					return (aCurrentOrder);
+					
+				}
+
 				
 			</script>
 			
