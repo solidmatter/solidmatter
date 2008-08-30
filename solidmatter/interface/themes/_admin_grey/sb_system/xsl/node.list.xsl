@@ -35,6 +35,7 @@
 		<table class="default" width="100%">
 			<thead>
 				<tr>
+					<th></th>
 					<th><xsl:value-of select="$locale/system/general/labels/name" /></th>
 					<th><xsl:value-of select="$locale/system/general/labels/type" /></th>
 					<th><xsl:value-of select="$locale/system/general/labels/created_at" /></th>
@@ -47,14 +48,8 @@
 				<xsl:when test="children[@mode='list']/sbnode">
 					<xsl:for-each select="children[@mode='list']/sbnode">
 						<tr>
-							<xsl:choose>
-								<xsl:when test="position() mod 2 = 1">
-									<xsl:attribute name="class">odd</xsl:attribute>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:attribute name="class">even</xsl:attribute>
-								</xsl:otherwise>
-							</xsl:choose>
+							<xsl:call-template name="colorize" />
+							<td width="1"><input type="checkbox" /></td>
 							<td>
 								<a href="/{@uuid}"><span class="type {@csstype}"><xsl:value-of select="@label" /></span></a>
 							</td>
@@ -78,9 +73,16 @@
 							</td>
 						</tr>
 					</xsl:for-each>
+					<tr class="lastline"><td colspan="6">
+						<input type="checkbox" /> alle markieren | markierte
+						<input type="button" value="ausschneiden" />
+						<input type="button" value="löschen" />
+						<input type="button" value="zu Favoriten" />
+						 
+					</td></tr>
 				</xsl:when>
 				<xsl:otherwise>
-					<tr><td colspan="5"><xsl:value-of select="$locale/system/general/texts/no_subobjects" /></td></tr>
+					<tr><td colspan="6"><xsl:value-of select="$locale/system/general/texts/no_subobjects" /></td></tr>
 				</xsl:otherwise>
 			</xsl:choose>
 			</tbody>

@@ -39,12 +39,13 @@
 				<tr><th colspan="3"><xsl:value-of select="dyn:evaluate(@label)" /></th></tr>	
 				<xsl:for-each select="sbinput">
 					<tr>
+						<xsl:call-template name="colorize" />
 						<td width="30%"><xsl:value-of select="translate(@name, '_', '.')" /></td>
 						<td width="10%"><xsl:value-of select="fg" /></td>
 						<td width="60%"><xsl:apply-templates select="." mode="inputonly" /></td>
 					</tr>
 				</xsl:for-each>
-				<tr>
+				<tr class="lastline">
 					<td colspan="2"></td>
 					<td><xsl:apply-templates select="submit" mode="inputonly" /></td>
 				</tr>

@@ -161,15 +161,13 @@ table.default th {
 table.default th {
 	padding: 4px;
 	text-align: left;
-	background-color: #808880;
 	color: #FFFFFF;
-	/*background: #334 url(../images/tbg_th.png) 0 0 repeat-x;*/
+	background: #808880 url(../images/tbg_th.png) 0 0 repeat-x;
 }
 table.default th.th2,
 table.default tr.th2 th {
 	font-weight: normal;
-	background-color: #606860;
-	/*background: #556 url(../images/tbg_th2.png) 0 0 repeat-x;*/
+	background: #606860 url(../images/tbg_th2.png) 0 0 repeat-x;
 }
 table.default th.selected {
 	background-color: #776;
@@ -193,6 +191,12 @@ table.default th a:hover {
 }
 table.default td.small {
 	font-size: smaller;
+}
+table.default tr.lastline {
+	background: #D8E0D8 url(../images/tbg_lastline.png) bottom repeat-x;
+}
+table.default tr.lastline td {
+	padding-bottom: 5px;
 }
 
 /* different table rows ------------------------------------------------------*/

@@ -430,7 +430,7 @@
 	
 	<!-- submit -->
 	<xsl:template match="submit" mode="complete">
-		<tr>
+		<tr class="lastline">
 			<td></td>
 			<td><xsl:apply-templates select="." mode="inputonly" /></td>
 		</tr>

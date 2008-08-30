@@ -35,7 +35,7 @@
 		
 		<table class="invisible">
 			<tr>
-				<td>
+				<td width="50%">
 					<table class="default">
 						<tr>
 							<th colspan="2">Status</th>
@@ -60,8 +60,9 @@
 						</xsl:for-each>
 					</table>
 				</td>
-				<td>
-					<table class="default" style="width:40%; float:left;">
+				<td><div class="spacer"></div></td>
+				<td width="50%">
+					<table class="default">
 						<tr>
 							<th colspan="2">Variablen</th>
 						</tr>

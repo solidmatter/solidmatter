@@ -40,12 +40,12 @@
 	<xsl:template name="sbform" match="response/content/sbform[@id='create']">
 		<form class="default" action="{@action}" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 			<table class="default">
-				<tr><th colspan="2"><label>
+				<tr><th colspan="2">
 					<xsl:value-of select="dyn:evaluate(@label)" />: 
 					<span class="type {$system/csstype}"><xsl:value-of select="$locale//nodetypes/type[@id=$content/@nodetype]" /></span>
 					in
 					<span class="type {$content/parent/sbnode/@csstype}"><xsl:value-of select="$content/parent/sbnode/@label" /></span>
-				</label></th></tr>
+				</th></tr>
 				<xsl:if test="@errorlabel"><br/><xsl:value-of select="dyn:evaluate(@errorlabel)" /></xsl:if>
 				<xsl:apply-templates select="*" mode="complete" />
 			</table>
