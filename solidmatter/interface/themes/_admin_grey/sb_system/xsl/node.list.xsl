@@ -78,7 +78,6 @@
 						<input type="button" value="ausschneiden" />
 						<input type="button" value="löschen" />
 						<input type="button" value="zu Favoriten" />
-						 
 					</td></tr>
 				</xsl:when>
 				<xsl:otherwise>
