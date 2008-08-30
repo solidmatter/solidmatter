@@ -1,0 +1,29 @@
+
+
+
+*.sb_jukebox {
+	background-image: url(../icons/type_jukebox.png);
+}
+*.sb_playlist {
+	background-image: url(../icons/type_playlist.png);
+}
+*.sb_track {
+	background-image: url(../icons/type_track.png);
+}
+*.sb_album {
+	background-image: url(../icons/type_album.png);
+}
+*.sb_artist {
+	background-image: url(../icons/type_artist.png);
+}
+*.sb_cd {
+	background-image: url(../icons/type_cd.png);
+}
+*.sb_tpl_nowplaying {
+	background-image: url(../icons/type_tpl_nowplaying.png);
+}
+
+
+*.sb_action_play {
+	background-image: url(../icons/action_play.png);
+}

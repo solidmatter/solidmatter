@@ -1,0 +1,15 @@
+
+
+
+*.sb_forum {
+	background-image: url(../icons/type_forum.png);
+}
+*.sb_category {
+	background-image: url(../icons/type_category.png);
+}
+*.sb_thread {
+	background-image: url(../icons/type_thread.png);
+}
+*.sb_post {
+	background-image: url(../icons/type_post.gif);
+}

@@ -891,7 +891,8 @@ class sbNode extends sbCR_Node {
 			try {
 				$nodeSubject = $this->crSession->getNodeByIdentifier(sbSession::$aData['clipboard']['childnode']);
 				// only include the clipboard options if no cyclic recursions would be created
-				if (!$this->isAncestorOf($nodeSubject) && !$nodeSubject->isAncestorOf($this) && !$nodeSubject->isSame($this)) {
+				// TODO: check in subtree, too. cyclic recursions are still possible
+				if (!$nodeSubject->isAncestorOf($this) && !$nodeSubject->isSame($this)) {
 					$elemContextMenu->setAttribute('clipboard', 'TRUE');
 					$elemContextMenu->setAttribute('clipboard_type', sbSession::$aData['clipboard']['type']);
 					$elemContextMenu->setAttribute('clipboard_subject', $nodeSubject->getProperty('label'));
@@ -1651,7 +1652,7 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function aggregateAuthorisations($sEntityUUID) {
+	protected function aggregateAuthorisations($sEntityUUID) {
 		
 		if ($this->aSupportedAuthorisations == NULL) {
 			$this->loadSupportedAuthorisations();

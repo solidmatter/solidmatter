@@ -50,21 +50,23 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 				
 				$nlChildren = $this->nodeSubject->getNodes();
 				
-				$this->nodeSubject->getSession()->beginTransaction('sbJukebox::clearLibrary');
+				//$this->nodeSubject->getSession()->beginTransaction('sbJukebox::clearLibrary');
 				
 				foreach ($nlChildren as $nodeChild) {
 					if ($nodeChild->getPrimaryNodeType() == 'sb_jukebox:album') {
 						$nodeChild->remove();
+						$nodeChild->save();
 					}
 				}
 				
 				foreach ($nlChildren as $nodeChild) {
 					if ($nodeChild->getPrimaryNodeType() == 'sb_jukebox:artist') {
 						$nodeChild->remove();
+						$nodeChild->save();
 					}
 				}
 				
-				$this->nodeSubject->getSession()->save();
+				//$this->nodeSubject->getSession()->save();
 				
 				import('sb.tools.filesystem.directory');
 				import('sb.tools.strings.conversion');
@@ -79,7 +81,7 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 				
 				$this->clearLibraryInfo();
 				
-				$this->nodeSubject->getSession()->commit('sbJukebox::clearLibrary');
+				//$this->nodeSubject->getSession()->commit('sbJukebox::clearLibrary');
 				
 				break;
 				

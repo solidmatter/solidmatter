@@ -12,24 +12,52 @@ import('sb.cr.nodeiterator');
 
 //------------------------------------------------------------------------------
 /**
+* TODO: support full qualified naming including namespaces
 */
 class sbCR_Node {
 	
-	// sbCR objects storage
+	//--------------------------------------------------------------------------
+	/**
+	* Session object through which this node was acquired
+	* @var sbCR_Session
+	*/ 
 	protected $crSession			= NULL;
-	
+	/**
+	* 
+	*/
 	protected $crPropertyDefinitionCache = NULL;
+	/**
+	* 
+	*/
 	protected $crLock				= NULL;
 	
+	//--------------------------------------------------------------------------
 	// internal stuff
+	/**
+	* 
+	*/
 	protected $elemSubject			= NULL;
-	
+	/**
+	* 
+	*/
 	protected $aAppendedElements	= array();
-	
+	/**
+	* 
+	*/
 	protected $aQueries				= array();
+	/**
+	* 
+	*/
 	protected $sPath				= '';
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	*/
 	protected $bIsModified			= FALSE;
+	/**
+	* 
+	*/
 	protected $bIsPersisted			= FALSE;
 	
 	// property definitons for this nodetype
@@ -39,23 +67,41 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	// tasks to perform on save()
+	/**
+	* 
+	*/
 	protected $aSaveTasks = array();
+	/**
+	* 
+	*/
 	protected $aModifiedProperties = array();
+	/**
+	* 
+	*/
 	protected $aModifiedChildren = array();
 	
 	
 	
-	
+	//--------------------------------------------------------------------------
+	// authorisation-related helpers
+	/**
+	* 
+	*/
 	protected $aAffectedGroups = array();
+	/**
+	* 
+	*/
 	protected $aAffectedUsers = array();
 	
 	//--------------------------------------------------------------------------
 	// initialisation
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Constructor for the class, applies basic setup.
+	* Calls __setQueries() and __init(), which can be overridden in derived classes.
+	* @param DOMElement contains the node info wrapped by the sbCR_Node class 
+	* @param cbCR_Session the repository session object that retrieved this node
+	* @param string the UUID of the parent that acquired this node, if given
 	*/
 	public function __construct($elemSubject = NULL, $crSession, $sParentUUID = NULL) {
 		
@@ -71,13 +117,12 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Initializes the queries this node uses to interact with the repository.
+	* Queries are stored in $this->aQueries in a multidimensional associative 
+	* array, each entry containing a string that is the identifier of the real
+	* query used with prepareKnown() in sbPDO objects.
 	*/
 	protected function __setQueries() {
-		
-		
 		
 		// getting child nodes
 		$this->aQueries['loadChildren']['byMode']			= 'sbCR/node/loadChildren/mode/standard/byOrder';
@@ -95,9 +140,8 @@ class sbCR_Node {
 		$this->aQueries['getParents']['all']				= 'sbCR/node/getParents/all';
 		$this->aQueries['getParents']['byNodetype']			= 'sbCR/node/getParents/byNodetype';
 		
-		$this->aQueries['hierarchy/getSharedSet']			= 'sbCR/node/getSharedSet';
-		
 		// hierarchy related
+		$this->aQueries['hierarchy/getSharedSet']			= 'sbCR/node/getSharedSet';
 		$this->aQueries['getAncestor']['byUUID']			= 'sbCR/node/getAncestor/byUUID';
 		
 		// linking / nested set stuff
@@ -116,7 +160,6 @@ class sbCR_Node {
 		$this->aQueries['getLinkStatus']					= 'sbCR/node/getLinkStatus';
 		$this->aQueries['setLinkStatus']['normal']			= 'sbCR/node/setLinkStatus';
 		$this->aQueries['setLinkStatus']['newPrimary']		= 'sbCR/node/setLinkStatus/newPrimary';
-		
 		$this->aQueries['delete']['forGood']				= 'sbCR/node/delete/forGood';
 		
 		// property related
@@ -136,9 +179,9 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Initialization for this node object.
+	* Primarily intended to be used when extending the class to override the
+	* defaults.
 	*/
 	protected function __init() {
 		// do nothing for now
@@ -146,7 +189,7 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* currently deactivated for some reason...
 	* @param 
 	* @return 
 	*/
@@ -167,13 +210,11 @@ class sbCR_Node {
 		return ($elemSubject);
 	}*/
 	
-	
 	//--------------------------------------------------------------------------
 	/**
-	* CUSTOM:
-	* TODO: replace with getNode() ?
-	* @param 
-	* @return 
+	* Prepares a statement based on the node's environment, e.g. current sbCR_Session.
+	* @param string the identifier of the query/statement to prepare
+	* @return sbPDOStatement the wanted prepared statement
 	*/
 	protected function prepareKnown($sQueryID) {
 		if (isset($this->aQueries[$sQueryID])) {
@@ -182,14 +223,19 @@ class sbCR_Node {
 		return ($this->crSession->prepareKnown($sQueryID));
 	}
 	
-	
-	
 	//--------------------------------------------------------------------------
 	/**
-	* CUSTOM:
-	* TODO: replace with getNode() ?
-	* @param 
-	* @return 
+	* Returns information on this node's childnode with the given name if possible.
+	* The following values are available in the returned associative array:
+	* - uuid
+	* - fk_nodetype
+	* - s_name
+	* - s_csstype
+	* - s_extension
+	* Throws NodeNotFoundException if no or serveral nodes are found.
+	* TODO: support same name siblings
+	* @param string the child's name
+	* @return array contains the info on the found child
 	*/
 	protected function getChildByName($sName) {
 		
@@ -1130,7 +1176,7 @@ class sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function getParentsByNodetype($sNodetype) {
+	protected function getParentsByNodetype($sNodetype) {
 		
 		$stmtGetParents = $this->crSession->prepareKnown($this->aQueries['getParents']['byNodetype']);
 		$stmtGetParents->bindValue('child_uuid', $this->getIdentifier(), PDO::PARAM_STR);
@@ -2319,8 +2365,6 @@ class sbCR_Node {
 		return ($bHoldsLock);
 	}
 	
-	
-	
 	//--------------------------------------------------------------------------
 	/**
 	* Returns the Lock object that applies to this node. This may be either a 
@@ -2577,9 +2621,9 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Matches a repository level property type to the corresponding PDO type
+	* @param string property type
+	* @return integer defined constant of corresponding PDO type
 	*/
 	protected function getPDOType($sCRType) {
 		switch ($sCRType) {

@@ -1,0 +1,125 @@
+
+/*************************** _admin styles ************************************/
+
+/*@import url(styles_default.css);
+
+/* tree ----------------------------------------------------------------------*/
+
+div.logo {
+	background-color: #404840;
+}
+
+div.logo a img {
+	border: 0;
+}
+div.logo a:hover img {
+	background-image: url(../images/logo_sm_banner_hover_bg.png);
+}
+
+div.tree {
+	font-family: Tahoma, Verdana, Arial, Helvetica, Sans-Serif;
+	padding: 2px;
+	background-color: #E0E8E0;
+}
+
+ul.tree {
+	padding: 0;
+	margin: 2px 0 0 3px;
+}
+ul.tree li {
+	list-style-type: none;
+	margin: 1 0 0 0;
+	padding: 0;
+}
+ul.tree li a img, ul.tree li img {
+	border: 0;
+	padding: 0;
+	vertical-align: top;
+}
+ul.tree li a:hover img {
+	background-color: #EEE650;
+	background: url(../images/highlight.png) top left repeat-x;
+}
+ul.tree ul {
+	padding: 0 0 0 0px;
+	margin: 0;
+	list-style-type: none;
+	white-space: nowrap;
+}
+ul.tree ul ul {
+	padding: 0 0 0 17px;
+	margin: 0;
+	list-style-type: none;
+	white-space: nowrap;
+}
+
+ul.tree li a {
+	color: black;
+}
+/*ul.tree li a:hover {
+	text-decoration: none;
+	background-color: #FF7;
+}*/
+
+
+a.type:hover {
+	/*background-color: #FD8;
+	background-color: highlight;
+	color: highlighttext;*/
+}
+
+a.root {
+	margin: 15px 0 0 3px;
+	padding: 0 3px 0 18px;
+	background-repeat: no-repeat;
+	background-image: url(../icons/type_node.gif);
+	text-decoration: none;
+}
+
+a.link {
+	padding: 0 3px 0 19px;
+	background-image: url(../icons/link.png);
+	background-repeat: no-repeat;
+}
+
+/* context menu --------------------------------------------------------------*/
+
+#contextmenu {
+	position: absolute;
+	border: 2px solid #808880;
+	background-color: #D0D8D0;
+	cursor: default;
+	z-index: 100;
+	display: none;
+}
+#contextmenu hr {
+	border: 0;
+	border-top: 1px solid #808880;
+}
+
+#contextmenu ul {
+	margin: 4px;
+	padding: 0;	
+	list-style-type: none;
+}
+#contextmenu ul ul {
+	padding-left: 10px;
+}
+	
+#contextmenu li {
+	margin: 0;
+	padding: 1px 0;
+}
+
+#contextmenu a {
+	display: block;
+}
+#contextmenu a:hover {
+	/*color: highlighttext;*/
+	background-color: highlight;
+	background: url(../images/highlight.png) top left repeat-x;
+	text-decoration: none;
+}
+
+
+

@@ -73,7 +73,8 @@ class BackendRequestHandler {
 		$_RESPONSE->addData($nodeCurrent);
 		$_RESPONSE->addLocale('sb_system', User::getCurrentLocale());
 		$_RESPONSE->addSystemMeta('lang', User::getCurrentLocale());
-		$_RESPONSE->setTheme('_admin');
+		// FIXME: the theme should be a matter of interface layer!
+		$_RESPONSE->setTheme('_admin_grey');
 		
 		// output debug if desired 
 		$bDebug = $_REQUEST->getParam('debug');

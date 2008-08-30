@@ -115,12 +115,16 @@
 		
 			<script language="Javascript">
 				
-				
+				//--------------------------------------------------------------
+				// init
+				//
 				var oPlaylist = $('playlist');
 				var aInitialState = getOrder(oPlaylist);
-				
 				Sortable.create('playlist', { onChange: redraw, onUpdate: reorder } );
 				
+				//--------------------------------------------------------------
+				// remove an entry and fade it out
+				//
 				function remove(sUUID) {
 					
 					var sURL = "/<xsl:value-of select="$master/@uuid" />/details/removeItem/item=" + sUUID + '&amp;silent';
@@ -135,6 +139,9 @@
 					
 				}
 				
+				//--------------------------------------------------------------
+				// redraw resp. recolor all list entries
+				//
 				function redraw() {
 					
 					var sClass = 'odd';
@@ -153,6 +160,9 @@
 					
 				}
 				
+				//--------------------------------------------------------------
+				// callback on dragging and dropping an item
+				//
 				function reorder(info) {
 					
 					var aCurrentState = getOrder(oPlaylist);
@@ -166,7 +176,7 @@
 								sNextSibling = aCurrentState[i+1];
 								update(sSubject, sNextSibling);
 								break;
-							} else if (aCurrentState[i] == aInitialState[i+1]) { // missing item moved down
+							} else if (aCurrentState[i] == aInitialState[i+1]) { // missing item = moved down
 								for (var j=i; j&lt;aCurrentState.length; j++) { // find missing item
 									if (aCurrentState[j] != aInitialState[j+1]) {
 										if (!aCurrentState[j+1]) {
@@ -192,16 +202,16 @@
 						}
 					}
 					
-					//alert('before: ' + aInitialState.join('|') + '\nafter: ' + aCurrentState.join('|') + '\nitem ' + sSubject + ' moved before ' + sNextSibling); 
-					//alert('\nitem ' + sSubject + ' moved before ' + sNextSibling); 
 					aInitialState = aCurrentState;
+				
 				}
 				
+				//--------------------------------------------------------------
+				// assistant function the saves a change
+				//
 				function update (sSubject, sNextSibling) {
 					
 					sURL = "/<xsl:value-of select="$master/@uuid" />/details/orderBefore/subject=" + sSubject + "&amp;nextsibling=" + sNextSibling;
-					//window.open(sURL);
-					
 					var myAjaxUpdater = new Ajax.Request(
 						sURL, 
 						{
@@ -213,6 +223,9 @@
 					
 				}
 				
+				//--------------------------------------------------------------
+				// gets an array with the current ordered uuids
+				//
 				function getOrder() {
 					
 					var aCurrentOrder = new Array();
@@ -224,7 +237,6 @@
 					return (aCurrentOrder);
 					
 				}
-
 				
 			</script>
 			

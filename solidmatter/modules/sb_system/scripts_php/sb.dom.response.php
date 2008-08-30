@@ -471,7 +471,7 @@ class sbDOMResponse extends sbDOMDocument {
 		
 		$sTheme = (string) $this->firstChild->getAttribute('theme');
 		if ($sTheme == '') {
-			$sTheme = '_default';	
+			$sTheme = '_default';
 		}
 		return ($sTheme);
 	}
