@@ -2,7 +2,7 @@
 //------------------------------------------------------------------------------
 /**
 *	@package solidMatter[sbSystem]
-*	@author	()((() [Oliver MÃ¼ller]
+*	@author	()((() [Oliver Müller]
 *	@version 1.00.00
 */
 //------------------------------------------------------------------------------
@@ -107,9 +107,8 @@ var sbMenu = {
 	//--------------------------------------------------------------------------
 	// delete a node
 	//
-	delete : function (sParentUUID, sChildUUID) {
-		top.sbUtilities.popupModal('/-/structure/deleteChild/parentnode='+ sParentUUID + '&childnode=' + sChildUUID, 500, 250, "sbCommander.issueCommand('reloadTree', null);");
-		//top.sbCommander.issueCommand('reloadTree', null);
+	deleteItem : function (sParentUUID, sChildUUID) {
+		top.sbUtilities.popupModal('/-/structure/deleteChild/parentnode='+ sParentUUID + '&childnode=' + sChildUUID, 500, 250, 'sbCommander.issueCommand("reloadTree", null);');
 	},
 	
 	//--------------------------------------------------------------------------
@@ -715,14 +714,3 @@ document.oncontextmenu=''
 document.onclick=hidemenuie5
 }
 */
-
-
-
-
-
-
-
-
-
-
-

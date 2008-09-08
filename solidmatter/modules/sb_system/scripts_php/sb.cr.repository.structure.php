@@ -18,6 +18,7 @@ define('NODE_EXTENSION', 1007);
 define('NODE_CUSTOM', 1008);
 define('NODE_ABSTRACT', 1009);
 define('NODE_TYPE', 1010);
+define('NODE_USESTAGS', 1011);
 
 define('PROP_TYPE', 2001);
 define('PROP_MANDATORY', 2002);

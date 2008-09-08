@@ -60,6 +60,9 @@ class sbPDOStatement extends PDOStatement {
 	* @return 
 	*/
 	public function bindValue($sParam, $mValue, $eType) {
+		if (substr($sParam, 0, 1) != ':') {
+			$sParam = ':'.$sParam;	
+		}
 		$this->aDebug['params'][$sParam] = $mValue;
 		parent::bindValue($sParam, $mValue, $eType);
 	}
@@ -71,6 +74,9 @@ class sbPDOStatement extends PDOStatement {
 	* @return 
 	*/
 	public function bindParam($sParam, &$mValue, $eType) {
+		if (substr($sParam, 0, 1) != ':') {
+			$sParam = ':'.$sParam;	
+		}
 		$this->aDebug['params'][$sParam] = $mValue;
 		parent::bindParam($sParam, $mValue, $eType);
 	}

@@ -43,6 +43,7 @@
 			<info_relpath>rel. Pfad zur Jukebox</info_relpath>
 			<info_published>Erscheinungsjahr</info_published>
 			<info_type>Albumtyp</info_type>
+			<info_title>Albumtitel</info_title>
 		</album>
 		<track>
 			<info_artist>Künstler</info_artist>

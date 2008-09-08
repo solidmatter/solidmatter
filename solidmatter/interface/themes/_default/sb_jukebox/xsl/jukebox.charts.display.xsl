@@ -66,6 +66,7 @@
 		<xsl:param name="nodes" />
 		<xsl:param name="icon" />
 		<xsl:param name="expand" />
+		<xsl:param name="type" />
 		<table class="default" width="100%" summary="CHANGEME">
 			<thead>
 				<tr>

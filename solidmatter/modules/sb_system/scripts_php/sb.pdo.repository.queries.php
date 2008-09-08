@@ -177,6 +177,7 @@ $_QUERIES['sbCR/getNode/root'] = '
 				nt.s_classfile,
 				nt.s_class,
 				nt.s_csstype,
+				\'FALSE\' AS b_taggable,
 				NULL AS fk_parent
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
@@ -193,6 +194,7 @@ $_QUERIES['sbCR/getNode/byUUID'] = '
 				nt.s_classfile,
 				nt.s_class,
 				nt.s_csstype,
+				nt.b_taggable,
 				h.fk_parent
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
@@ -212,6 +214,7 @@ $_QUERIES['sbCR/getNode/byUID'] = '
 				nt.s_classfile,
 				nt.s_class,
 				nt.s_csstype,
+				nt.b_taggable,
 				h.fk_parent
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
@@ -493,24 +496,6 @@ $_QUERIES['sbCR/node/getAncestor/byUUID'] = '
 						AND		b_primary = \'TRUE\'
 				)
 		AND		h.fk_parent = :parent_uuid
-';
-// authorisations --------------------------------------------------------------
-$_QUERIES['sbCR/node/loadAuthorisations/local'] = '
-	SELECT		a.fk_authorisation,
-				a.fk_userentity,
-				a.e_granttype,
-				n.fk_nodetype AS fk_userentitytype
-	FROM		{TABLE_AUTH} a
-	INNER JOIN	{TABLE_NODES} n
-		ON		a.fk_userentity = n.uuid
-	WHERE		a.fk_subject = :uuid
-';
-$_QUERIES['sbCR/node/loadAuthorisations/local/byEntity'] = '
-	SELECT		a.fk_authorisation,
-				a.e_granttype
-	FROM		{TABLE_AUTH} a
-	WHERE		a.fk_subject = :node_uuid
-		AND		a.fk_userentity = :entity_uuid
 ';
 // save/delete -----------------------------------------------------------------
 $_QUERIES['sbCR/node/save/new'] = '

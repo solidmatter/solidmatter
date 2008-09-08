@@ -172,6 +172,9 @@
 			<config_types_allowed label="erlaubte Mimetypes" />
 			<config_listingallowed label="Auflistung erlaubt" />
 		</folder>
+		<autofolder>
+			<config_realfolder label="Ordner im Dateisystem" />
+		</autofolder>
 		<image>
 			<config_filterstack label="optionaler Grafikfilter" />
 		</image>
@@ -323,6 +326,7 @@
 		
 		<type id="sb_system:filemanager">Dateimanager</type>
 		<type id="sb_system:folder">Ordner</type>
+		<type id="sb_system:autofolder">Auto-Ordner</type>
 		<type id="sb_system:image">Bild</type>
 		<type id="sb_system:asset">Datei</type>
 		<type id="sb_system:comment">Kommentar</type>

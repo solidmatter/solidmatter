@@ -37,14 +37,21 @@
 		<xsl:variable name="subjectid" select="sbnode/@subjectid" />-->
 		<div class="eyecandy"><div class="left"><div class="right">
 			<h1>Berechtigungen von XYZ</h1>
-			<table>
-				<tr>
-					<th>Berechtigung</th>
-					<th>Erl.</th>
-					<th>Ver.</th>
-				</tr>
-				<xsl:apply-templates select="sbnode/supported_authorisations/authorisation[1]" />
-			</table>
+			<form action="/{$master/@uuid}/security/saveAuthorisations" method="post">
+				<input type="hidden" name="userentity" value="{$content/@userentity}" />
+				<table>
+					<tr>
+						<th>Berechtigung</th>
+						<th>Erl.</th>
+						<th>Ver.</th>
+					</tr>
+					<xsl:apply-templates select="sbnode/supported_authorisations/authorisation[1]" />
+					<tr>
+						<td></td>
+						<td colspan="2"><input type="submit" value="SAVE" /></td>
+					</tr>
+				</table>
+			</form>
 		</div></div></div>
 	</xsl:template>
 	
@@ -57,26 +64,38 @@
 	
 	<xsl:template name="build_authorisation">
 		<xsl:param name="parent" />
+		<xsl:param name="parent_allow" />
+		<xsl:param name="parent_deny" />
+		<xsl:param name="parent_inherited_allow" />
+		<xsl:param name="parent_inherited_deny" />
 		<xsl:param name="prefix" />
 		<xsl:for-each select="../authorisation[@parent=$parent]">
 			<xsl:variable name="name" select="@name" />
 			<xsl:variable name="inherited" select="$content/sbnode/inherited_authorisations/authorisation[@name=$name and @uuid=$subjectid]" />
 			<xsl:variable name="local" select="$content/sbnode/local_authorisations/authorisation[@name=$name and @uuid=$subjectid]" />
+			<xsl:variable name="allow" select="$inherited[@grant_type='ALLOW'] or $local[@grant_type='ALLOW'] or $parent_allow" />
+			<xsl:variable name="deny" select="$inherited[@grant_type='DENY'] or $local[@grant_type='DENY'] or $parent_deny" />
+			<xsl:variable name="inherited_allow" select="$inherited[@grant_type='ALLOW']" />
+			<xsl:variable name="inherited_deny" select="$inherited[@grant_type='DENY']" />
 			<tr>
 				<td><xsl:value-of select="$prefix" /><xsl:value-of select="$locale/*/authorisations/*[name()=$name]" /></td>
 				<td>
-					<input type="checkbox" name="{$name}|allow">
-						<xsl:if test="$inherited">
+					<input type="checkbox" name="{$name}_allow">
+						<!--<xsl:if test="($inherited or $parent_inherited) and not($local)">-->
+						<xsl:if test="$inherited_allow or $parent_inherited_allow">
 							<xsl:attribute name="disabled">disabled</xsl:attribute>
 						</xsl:if>
-						<xsl:if test="$inherited[@grant_type='ALLOW'] or $local[@grant_type='ALLOW']">
+						<xsl:if test="$allow">
 							<xsl:attribute name="checked">checked</xsl:attribute>
 						</xsl:if>
 					</input>
 				</td>
 				<td>
-					<input type="checkbox" name="{$name}|deny">
-						<xsl:if test="$inherited[@grant_type='DENY'] or $local[@grant_type='DENY']">
+					<input type="checkbox" name="{$name}_deny">
+						<xsl:if test="$inherited_deny or $parent_inherited_deny">
+							<xsl:attribute name="disabled">disabled</xsl:attribute>
+						</xsl:if>
+						<xsl:if test="$deny">
 							<xsl:attribute name="checked">checked</xsl:attribute>
 						</xsl:if>
 					</input>
@@ -84,6 +103,10 @@
 			</tr>
 			<xsl:call-template name="build_authorisation">
 				<xsl:with-param name="parent" select="@name" />
+				<xsl:with-param name="parent_allow" select="$allow" />
+				<xsl:with-param name="parent_deny" select="$deny" />
+				<xsl:with-param name="parent_inherited_allow" select="$inherited_allow or $parent_inherited_allow" />
+				<xsl:with-param name="parent_inherited_deny" select="$inherited_deny or $parent_inherited_deny" />
 				<xsl:with-param name="prefix" select="concat($prefix, '&#160;&#160;')" />
 			</xsl:call-template>
 		</xsl:for-each>

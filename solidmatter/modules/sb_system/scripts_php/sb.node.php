@@ -56,12 +56,14 @@ class sbNode extends sbCR_Node {
 		$this->aQueries['actions/getDetails/default']				= 'sbSystem/node/loadActionDetails/default';
 		//$this->aQueries['sbSystem/node/getAllowedSubtypes']		= 'sbSystem/node/getAllowedSubtypes';
 		
+		// voting
 		$this->aQueries['voting/placeVote']							= 'sbSystem/voting/placeVote';
 		$this->aQueries['voting/removeVote']						= 'sbSystem/voting/removeVote';
 		$this->aQueries['voting/getUserVote']						= 'sbSystem/voting/getVote/byUser';
 		$this->aQueries['voting/getAverageVote']					= 'sbSystem/voting/getVote/average';
 		$this->aQueries['voting/getAllVotes']						= 'sbSystem/voting/getVotes';
 		
+		// tagging
 		$this->aQueries['tagging/addTagToNode']						= 'sbSystem/tagging/node/addTag';
 		$this->aQueries['tagging/removeTagFromNode']				= 'sbSystem/tagging/node/removeTag';
 		$this->aQueries['tagging/removeTagsFromNode']				= 'sbSystem/tagging/node/removeTags';
@@ -72,6 +74,12 @@ class sbNode extends sbCR_Node {
 		$this->aQueries['tagging/createNewTag']						= 'sbSystem/tagging/tags/addTag';
 		$this->aQueries['tagging/getAllTags']						= 'sbSystem/tagging/tags/getAll';
 		$this->aQueries['tagging/increasePopularity']				= 'sbSystem/tagging/tags/increasePopularity';
+	
+		// authorisation stuff
+		$this->aQueries['loadLocalAuthorisations']					= 'sbSystem/node/loadAuthorisations/local';
+		$this->aQueries['loadLocalEntityAuthorisations']			= 'sbSystem/node/loadAuthorisations/local/byEntity';
+		//$this->aQueries['setAuthorisation']							= 'sbSystem/node/setAuthorisation/local';
+		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -129,6 +137,28 @@ class sbNode extends sbCR_Node {
 			
 			switch ($sTaskType) {
 				
+				case 'remove_tag':
+					
+					foreach ($aOptions as $iKey => $aDetails) {
+						
+						$sTag = $aDetails['tag'];
+						$iTagID = $this->getTagID($sTag);
+						if (!$iTagID) {
+							throw new sbException('tag "'.$sTag.'" does not exist');
+						}
+						$stmtRemove = $this->prepareKnown('tagging/removeTagFromNode');
+						$stmtRemove->bindValue(':subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+						$stmtRemove->bindValue(':tag_id', $iTagID, PDO::PARAM_STR);
+						$stmtRemove->execute();
+						
+						unset($this->aTags[$sTag]);
+						unset($this->aSaveTasks['remove_tag'][$iKey]);
+						
+					}
+					
+					unset($this->aSaveTasks['remove_tag']);
+					break;
+					
 				case 'add_tag':
 					
 					foreach ($aOptions as $iKey => $aDetails) {
@@ -151,28 +181,6 @@ class sbNode extends sbCR_Node {
 					
 					unset($this->aSaveTasks['add_tag']);
 					
-					break;
-				
-				case 'remove_tag':
-				
-					foreach ($aOptions as $iKey => $aDetails) {
-						
-						$sTag = $aDetails['tag'];
-						$iTagID = $this->getTagID($sTag);
-						if (!$iTagID) {
-							throw new sbException('tag "'.$sTag.'" does not exist');
-						}
-						$stmtRemove = $this->prepareKnown($this->aQueries['voting']['removeVote']);
-						$stmtRemove->bindValue(':subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
-						$stmtRemove->bindValue(':tag_id', $iTagID, PDO::PARAM_STR);
-						$stmtRemove->execute();
-						
-						unset($this->aTags[$sTag]);
-						unset($this->aSaveTasks['remove_tag'][$iKey]);
-						
-					}
-					
-					unset($this->aSaveTasks['remove_tag']);
 					break;
 					
 			}
@@ -943,7 +951,7 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* Generates a standard form for this node 
 	* @param 
 	* @return 
 	*/
@@ -959,12 +967,15 @@ class sbNode extends sbCR_Node {
 					return ($this->buildPropertiesForm());
 				} else {
 					
+					// init form
 					$formProperties = new sbDOMForm(
 						'properties',
 						'$locale/system/general/labels/properties',
 						'/'.$this->getProperty('jcr:uuid').'/properties/save',
 						$this->crSession
 					);
+					
+					// add standard inputs for node properties
 					foreach ($this->crPropertyDefinitionCache as $sName => $aDetails) {
 						if ($aDetails['b_showinproperties'] == 'TRUE') {
 							$formProperties->addInput($sName.';'.$aDetails['s_internaltype'], $aDetails['s_labelpath']);
@@ -978,6 +989,17 @@ class sbNode extends sbCR_Node {
 							}
 						}
 					}
+					
+					// add text input for tags
+					// TODO: add locale stuff
+					if ($this->isTaggable()) {
+						$sInputName = 'tags_'.$this->getProperty('jcr:uuid');
+						$aTags = $this->getTags();
+						$formProperties->addInput($sInputName.';text;maxlength=500;rows=2;', '$locale/system/general/labels/tags');
+						$formProperties->setValue($sInputName, implode(', ', $aTags));
+					}
+						
+					// finish form and return�
 					$formProperties->addSubmit('$locale/system/general/actions/save');
 					$this->modifyForm($formProperties, 'properties');
 					return ($formProperties);
@@ -1278,6 +1300,7 @@ class sbNode extends sbCR_Node {
 	*/
 	public function hasTag($sTag) {
 		$this->initTags();
+		$sTag = trim($sTag);
 		if (isset($this->aTags[$sTag]) || isset($this->aNewTags[$sTag])) {
 			return (TRUE);
 		}
@@ -1292,7 +1315,8 @@ class sbNode extends sbCR_Node {
 	*/
 	public function addTag($sTag) {
 		$this->initTags();
-		if (!$this->hasTag($sTag)) {
+		$sTag = trim($sTag);
+		if ($sTag != '' && !$this->hasTag($sTag)) {
 			$this->aNewTags[$sTag] = TRUE;
 			$this->addSaveTask('add_tag', array('tag' => $sTag));
 		}
@@ -1312,13 +1336,26 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Sets all tags of this node, removing old ones.
+	* @param array all new tags as strings.
 	*/
-	/*public function setTags($aTags) {
-		foreach ($aTags as $sTag) {
-			$this->addTag($sTag);	
+	public function setTags($aNewTags) {
+		$this->initTags();
+		$this->aNewTags = array();
+		foreach ($aNewTags as $sKey => $sTag) {
+			$aNewTags[$sKey] = trim($sTag);
+		}
+		foreach ($this->aTags as $sTag => $iID) {
+			if (!in_array($sTag, $aNewTags)) {
+				$this->removeTag($sTag);
+				//echo ' remove "'.$sTag.'"';
+			}
+		}
+		foreach ($aNewTags as $sTag) {
+			if (!$this->hasTag($sTag)) {
+				$this->addTag($sTag);
+				//echo ' add "'.$sTag.'"';
+			}
 		}
 	}
 	
@@ -1438,6 +1475,19 @@ class sbNode extends sbCR_Node {
 		$stmtIncPop = $this->prepareKnown('tagging/increasePopularity');
 		$stmtIncPop->bindValue('tag_id', $iTagID, PDO::PARAM_INT);
 		$stmtIncPop->execute();
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function isTaggable() {
+		if ($this->elemSubject->getAttribute('taggable') == 'TRUE') {
+			return (TRUE);
+		}
+		return (FALSE);
 	}
 	
 	
@@ -1873,6 +1923,15 @@ class sbNode extends sbCR_Node {
 		$this->elemSubject->appendChild($elemContainer);	
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function setAuthorisation($sAuthorisation, $sState) {
+		
+	}
 	
 }
 

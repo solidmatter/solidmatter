@@ -399,7 +399,10 @@ $_QUERIES['sbSystem/tagging/clearUnusedTags'] = '
 				)
 ';
 
-// action- & view-related ------------------------------------------------------
+//------------------------------------------------------------------------------
+// action- & view-related
+//------------------------------------------------------------------------------
+
 $_QUERIES['sbSystem/node/loadActionDetails/given'] = '
 	SELECT		*
 	FROM		{TABLE_ACTIONS} a
@@ -419,6 +422,43 @@ $_QUERIES['sbSystem/node/loadActionDetails/default'] = '
 		AND		a.b_default = \'TRUE\'
 ';
 
+//------------------------------------------------------------------------------
+// authorisations
+//------------------------------------------------------------------------------
+
+$_QUERIES['sbSystem/node/loadAuthorisations/local'] = '
+	SELECT		a.fk_authorisation,
+				a.fk_userentity,
+				a.e_granttype,
+				n.fk_nodetype AS fk_userentitytype
+	FROM		{TABLE_AUTH} a
+	INNER JOIN	{TABLE_NODES} n
+		ON		a.fk_userentity = n.uuid
+	WHERE		a.fk_subject = :uuid
+';
+$_QUERIES['sbSystem/node/loadAuthorisations/local/byEntity'] = '
+	SELECT		a.fk_authorisation,
+				a.e_granttype
+	FROM		{TABLE_AUTH} a
+	WHERE		a.fk_subject = :node_uuid
+		AND		a.fk_userentity = :entity_uuid
+';
+$_QUERIES['sbSystem/node/setAuthorisation/local'] = '
+	INSERT INTO {TABLE_AUTH}
+				(
+					fk_authorisation,
+					fk_userentity,
+					fk_subject,
+					e_granttype
+				) VALUES (
+					:authorisation,
+					:user_uuid,
+					:subject_uuid,
+					:granttype
+				)
+	ON DUPLICATE KEY UPDATE
+				e_granttype = :granttype
+';
 
 //------------------------------------------------------------------------------
 // node:user 

@@ -171,10 +171,6 @@ class sbCR_Node {
 		$this->aQueries['saveBinaryAttribute']				= 'sbCR/node/saveBinaryProperty';
 		$this->aQueries['loadBinaryAttribute']				= 'sbCR/node/loadBinaryProperty';
 		
-		// authorisation stuff
-		$this->aQueries['loadLocalAuthorisations']			= 'sbCR/node/loadAuthorisations/local';
-		$this->aQueries['loadLocalEntityAuthorisations']	= 'sbCR/node/loadAuthorisations/local/byEntity';
-		
 	}
 	
 	//--------------------------------------------------------------------------

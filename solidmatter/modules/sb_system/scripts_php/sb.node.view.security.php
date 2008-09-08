@@ -105,6 +105,27 @@ class sbView_security extends sbView {
 				break;
 				
 			case 'saveAuthorisations':
+				//var_dumpp($this->nodeSubject->loadSupportedAuthorisations());
+				$stmtSaveAuth = $this->nodeSubject->getSession()->prepareKnown('sbSystem/node/setAuthorisation/local');
+				$stmtSaveAuth->bindValue('user_uuid', $_REQUEST->getParam('userentity'), PDO::PARAM_STR);
+				$stmtSaveAuth->bindValue('subject_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
+				// TODO: save on node::save()
+				foreach ($this->nodeSubject->loadSupportedAuthorisations() as $sAuth => $sParentAuth) {
+					//echo($sAuth.'_allow = '.$_REQUEST->getParam($sAuth.'_allow').'<br>');
+					//echo($sAuth.'_deny = '.$_REQUEST->getParam($sAuth.'_deny').'<br>');
+					if ($_REQUEST->getParam($sAuth.'_allow') == 'on') {
+						$stmtSaveAuth->bindValue('authorisation', $sAuth, PDO::PARAM_STR);
+						$stmtSaveAuth->bindValue('granttype', 'ALLOW', PDO::PARAM_STR);
+						$stmtSaveAuth->execute();
+					}
+					if ($_REQUEST->getParam($sAuth.'_deny') == 'on') {
+						$stmtSaveAuth->bindValue('authorisation', $sAuth, PDO::PARAM_STR);
+						$stmtSaveAuth->bindValue('granttype', 'DENY', PDO::PARAM_STR);
+						$stmtSaveAuth->execute();
+					}
+				}
+				$cacheAuth = CacheFactory::getInstance('authorisations');
+				$cacheAuth->clearAuthorisations($_REQUEST->getParam('userentity'));
 				$this->nodeSubject->loadSecurityAuthorisations();
 				$this->nodeSubject->setAttribute('subjectid', $_REQUEST->getParam('userentity'));
 				//$_RESPONSE->addData($this->nodeSubject);

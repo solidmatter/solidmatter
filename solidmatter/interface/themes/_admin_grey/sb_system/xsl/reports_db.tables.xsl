@@ -64,8 +64,8 @@
 					<td><xsl:value-of select="Row_format" /></td>
 					<td><xsl:value-of select="Rows" /></td>
 					<td><xsl:value-of select="Avg_row_length" /></td>
-					<!--<td><xsl:value-of select="Data_length" /></td>-->
-					<td><xsl:value-of select="Max_data_length" /></td>
+					<td><xsl:value-of select="Data_length" /></td>
+					<!--<td><xsl:value-of select="Max_data_length" /></td>-->
 					<td><xsl:value-of select="Index_length" /></td>
 					<td><xsl:value-of select="Data_free" /></td>
 					<td><xsl:value-of select="Collation" /></td>

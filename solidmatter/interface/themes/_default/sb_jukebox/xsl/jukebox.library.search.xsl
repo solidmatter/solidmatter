@@ -56,6 +56,7 @@
 		<xsl:param name="label" />
 		<xsl:param name="nodes" />
 		<xsl:param name="icon" />
+		<xsl:param name="type" />
 		<table class="default" width="100%">
 			<thead>
 				<tr>

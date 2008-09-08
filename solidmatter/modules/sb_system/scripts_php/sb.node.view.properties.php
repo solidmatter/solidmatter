@@ -23,7 +23,6 @@ class sbView_properties extends sbView {
 				
 				$formProperties = $this->buildForm();
 				$formProperties->saveDOM();
-				
 				$_RESPONSE->addData($formProperties);
 				
 				return (NULL);
@@ -39,12 +38,19 @@ class sbView_properties extends sbView {
 						$_RESPONSE->addCommand('reloadTree');
 					}
 					
+					// set properties
 					// TODO: this sucks a bit, i guess
 					$aValues = $formProperties->getValues();
 					foreach ($aValues as $sName => $mValue) {
-						$this->nodeSubject->setProperty($sName, $mValue);
+						// check for tag input
+						if ($sName == 'tags_'.$this->nodeSubject->getProperty('jcr:uuid')) { // tags
+							$this->nodeSubject->setTags(explode(',', $mValue));
+						} else { // normal property
+							$this->nodeSubject->setProperty($sName, $mValue);
+						}
 					}
 					$this->nodeSubject->save();
+					
 					$formProperties->saveDOM();
 					
 					$_RESPONSE->addData($formProperties);

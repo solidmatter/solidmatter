@@ -122,7 +122,7 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	* @return PropertyDefinition[]
 	*/
 	public function getPropertyDefinitions() {
-		
+		throw new LazyBastardException();
 	}
 	
 	//--------------------------------------------------------------------------
@@ -163,7 +163,13 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	public function getSupportedAuthorisations() {
 		return ($this->crRepositoryStructure->getSupportedAuthorisations($this->sNodeTypeName));
 	}
-		
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function getDebugInfo() {
 		
 		$aInfo = array();

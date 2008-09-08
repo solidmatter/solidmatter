@@ -18,7 +18,25 @@
 	<xsl:template match="/">
 	<html>
 	<head>
-		<xsl:apply-templates select="response/metadata" />
+		<xsl:apply-templates select="/response/metadata" />
+		<script type="text/javascript">
+			function toggleAll() {
+				var oToggle = document.getElementById('toggle');
+				var oList = document.getElementById('list');
+				for (var i=0; i &lt; document.massaction.marker.length; i++) {
+					document.massaction.marker[i].checked = oToggle.checked;
+				}
+			}
+			function cutMultiple() {
+				alert('to be implemented...');
+			}
+			function deleteMultiple() {
+				alert('to be implemented...');
+			}
+			function addToFavoritesMultiple() {
+				alert('to be implemented...');
+			}
+		</script> 
 	</head>
 	<body>
 		<xsl:call-template name="views" />
@@ -31,8 +49,8 @@
 	</xsl:template>
 		
 	<xsl:template match="sbnode">
-		
-		<table class="default" width="100%">
+		<form name="massaction" action="/sdsdds">
+		<table class="default" width="100%" id="list">
 			<thead>
 				<tr>
 					<th></th>
@@ -49,7 +67,7 @@
 					<xsl:for-each select="children[@mode='list']/sbnode">
 						<tr>
 							<xsl:call-template name="colorize" />
-							<td width="1"><input type="checkbox" /></td>
+							<td width="1"><input type="checkbox" name="marker" id="marker_{@uuid}" /></td>
 							<td>
 								<a href="/{@uuid}"><span class="type {@csstype}"><xsl:value-of select="@label" /></span></a>
 							</td>
@@ -74,10 +92,10 @@
 						</tr>
 					</xsl:for-each>
 					<tr class="lastline"><td colspan="6">
-						<input type="checkbox" /> alle markieren | markierte
-						<input type="button" value="ausschneiden" />
-						<input type="button" value="löschen" />
-						<input type="button" value="zu Favoriten" />
+						<input type="checkbox" id="toggle" onchange="javascript:toggleAll();" /> alle markieren | markierte
+						<input type="button" value="ausschneiden" onclick="cutMultiple()" />
+						<input type="button" value="löschen" onclick="deleteMultiple()" />
+						<input type="button" value="zu Favoriten" onclick="addToFavoritesMultiple()" />
 					</td></tr>
 				</xsl:when>
 				<xsl:otherwise>
@@ -86,7 +104,7 @@
 			</xsl:choose>
 			</tbody>
 		</table>	
-		
+		</form>
 	</xsl:template>
 
 </xsl:stylesheet>

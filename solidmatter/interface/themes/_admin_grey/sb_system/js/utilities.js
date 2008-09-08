@@ -45,7 +45,7 @@ var sbUtilities = {
 			this.wModalPopup = window.open (
 				sURL,
 				'name',
-				'height=' + iHeight + ',width=' + iWidth + ',top=' + iWindowTop + ',left=' + iWindowLeft + ',toolbar=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no ,modal=yes'
+				'height=' + iHeight + ',width=' + iWidth + ',top=' + iWindowTop + ',left=' + iWindowLeft + ',toolbar=no,directories=no,location=no;status=no,menubar=no,scrollbars=no,resizable=no ,modal=yes'
 			);
 			if (this.wModalPopup.opener == null) {
   				this.wModalPopup.opener = window;
@@ -129,6 +129,6 @@ var sbUtilities = {
 			}
 		);
 		
-	},
+	}
 	
 }
