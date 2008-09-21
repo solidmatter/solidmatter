@@ -316,7 +316,7 @@
 				<a class="type play" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"> </a>
 				<xsl:value-of select="' '" />
 				<xsl:if test="@nodetype='sb_jukebox:track'">
-					<a class="type lyrics" href="http://www.google.de/search?q=lyrics {@label}" title="{$locale/sbJukebox/actions/search_lyrics}"> </a>
+					<a class="type lyrics" href="http://www.google.de/search?q=lyrics {@label}" title="{$locale/sbJukebox/actions/search_lyrics}"><xsl:value-of select="'&amp;nbsp;'" disable-output-escaping="yes" /></a>
 					<xsl:value-of select="' '" />
 				</xsl:if>
 				<a class="type addToFavorites" href="/-/favorites/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_favorites}"> </a>

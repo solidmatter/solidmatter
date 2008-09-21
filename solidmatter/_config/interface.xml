@@ -87,18 +87,18 @@
 	<site location="sb2.localhost/solidbrickz" type="redirect" destination="http://sb2.localhost/de/entwicklung/solidbrickz" />
 	
 	<!-- heiko VM -->
-	<site location="backend.heiko/phpinfo" type="script" handler="phpinfo.php" />
-	<site location="backend.heiko/" type="controller" handler="backend">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+	<site location="sm.backend/phpinfo" type="script" handler="phpinfo.php" />
+	<site location="sm.backend/" type="controller" handler="backend">
+		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
 		<site location="backend.heiko/templates" type="controller" handler="xsl" />
 		<site location="backend.heiko/theme" type="theme" handler="backend" theme="_admin_grey" />
 		<site location="backend.heiko/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
 	</site>
-	<site location="jukebox.heiko/" type="controller" handler="application" subject="jukebox">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+	<site location="sm.jukebox/" type="controller" handler="application" subject="jukebox">
+		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
-		<site location="jukebox.heiko/theme" type="theme" handler="backend" theme="_default" />
+		<site location="sm.jukebox/theme" type="theme" handler="backend" theme="_default" />
 	</site>
 	
 </config>

@@ -21,6 +21,23 @@ class sbNode_jukebox_track extends sbNode {
 		$this->aQueries['saveProperties']['auxiliary'] = 'sbJukebox/track/properties/save/auxiliary';
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getRealPath() {
+		
+		$nodeAlbum = $this->getParent();
+		$nodeJukebox = $nodeAlbum->getParent()->getParent();
+		
+		$sRealPath = $nodeJukebox->getProperty('config_realpath').$nodeAlbum->getProperty('info_relpath').$this->getProperty('info_filename');
+		
+		return ($sRealPath);
+		
+	}
+	
 }
 
 ?>

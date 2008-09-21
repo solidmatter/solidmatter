@@ -215,7 +215,7 @@ class sbJukeboxView extends sbView {
 		$sFilename = $nodeJukebox->getProperty('config_sourcepath');
 		$sFilename = normalize_path($sFilename);
 		$sFilename .= $nodeAlbum->getProperty('info_relpath');
-		$sFilename .= $this->nodeSubject->getProperty('info_coverfilename');
+		$sFilename .= $nodeAlbum->getProperty('info_coverfilename');
 		$sFilename = iconv('UTF-8', System::getFilesystemEncoding(), $sFilename);
 		return ($sFilename);
 	}
@@ -266,8 +266,12 @@ class sbJukeboxView extends sbView {
 				$imgCover->output(JPG, TRUE);
 			}
 			$hCover = fopen($sFilename, 'r');
+			if (!$hCover) {
+				die('error opening cover "'.$sFilename);
+			}
 			header('Content-type: '.get_mimetype_by_extension($sFilename));
 			fpassthru($hCover);
+			exit();
 		} else {
 			die('cover "'.$sFilename.'" does not exist');	
 		}
@@ -311,26 +315,27 @@ class sbJukeboxView extends sbView {
 	* @param 
 	* @return 
 	*/
-	protected function getPlaylist($nodeSubject, $bRandom = FALSE) {
-		//var_dumpp('start');
-		//var_dumpp($nodeSubject->getName());
+	protected function getPlaylist($nodeSubject, $bShuffle = FALSE) {
+		
+		// prepare
+		$nodeJukebox = $this->getJukebox();
 		$aPlaylistItems = $this->getPlaylistItems($nodeSubject);
-		
-		//import('sb.tools.arrays');
-		//$aPlaylistItems = ivsort($aPlaylistItems, 'label');
-		
-		if ($bRandom) {
+		if ($bShuffle) {
 			shuffle($aPlaylistItems);
 		}
 		
+		// generate plain text M3U
 		$sPlaylist = "#EXTM3U\n";
 		foreach ($aPlaylistItems as $aItem) {
+			// title row is always the same / convert label back from UTF8
 			$sPlaylist .= '#EXTINF:'.$aItem['playtime'].','.iconv('UTF-8', 'ISO-8859-1', $aItem['label'])."\n";
-			$sPlaylist .= 'http://'.$_REQUEST->getDomain().'/'.$aItem['uuid'].'/song/play/sid='.sbSession::getSessionID()."\n";
+			if ($nodeJukebox->getProperty('config_userealpath') == 'TRUE') { // use direct paths to e.g. a shared folder
+				$sPlaylist .= iconv('UTF-8', System::getFilesystemEncoding(), $this->crSession->getNodeByIdentifier($aItem['uuid'])->getRealPath())."\n";
+			} else { // use urls
+				$sPlaylist .= 'http://'.$_REQUEST->getDomain().'/'.$aItem['uuid'].'/song/play/sid='.sbSession::getSessionID()."\n";
+			}
 		}
 		
-		//var_dumpp($sPlaylist);
-		//die ('fgg');
 		return ($sPlaylist);
 		
 	}
