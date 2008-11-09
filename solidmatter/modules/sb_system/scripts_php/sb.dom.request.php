@@ -210,6 +210,9 @@ class sbDOMRequest extends sbDOMDocument {
 				if ($mValue === NULL) {
 					$mValue = $this->getParam($sName, 'COOKIE');
 				}
+				if ($mValue === NULL) {
+					$mValue = $this->getParam($sName, 'SERVER');
+				}
 				return ($mValue);
 			case 'PARAMS':
 				$elemCurrent = $this->getElementById('PARAMS');
@@ -222,6 +225,9 @@ class sbDOMRequest extends sbDOMDocument {
 				break;
 			case 'COOKIE':
 				$elemCurrent = $this->getElementById('COOKIE');
+				break;
+			case 'SERVER':
+				$elemCurrent = $this->getElementById('SERVER');
 				break;
 		}
 		

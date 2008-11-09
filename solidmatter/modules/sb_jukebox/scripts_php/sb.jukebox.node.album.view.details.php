@@ -24,6 +24,15 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 			
 			case 'display':
 				
+				// return playlist if user agent is a mediaplayer
+				// FIXME: doesn't work because winamp expects a *.m3u filename
+				/*$sUserAgent = $_REQUEST->getParam('HTTP_USER_AGENT', 'SERVER');
+				$sPattern = '/^(Winamp|NSPlayer|Windows-Media-Player)(.*)/';
+				DEBUG('sbJukebox:album:display', 'UserAgent='.$sUserAgent);
+				if (preg_match($sPattern, $sUserAgent)) {
+					$this->execute('getM3U');
+				}*/
+				
 				// search form
 				$formSearch = $this->buildSearchForm('albums');
 				$formSearch->saveDOM();
@@ -58,7 +67,7 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 				
 			case 'getM3U':
 				$sName = $this->nodeSubject->getProperty('name');
-				$sPlaylist = $this->getPlaylist($this->nodeSubject);
+				$sPlaylist = $this->getPlaylist($this->nodeSubject, FALSE, 'M3U');
 				headers('m3u', array(
 					'filename' => $sName.'.m3u',
 					'download' => false,

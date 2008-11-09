@@ -859,7 +859,11 @@ class sbCR_Session {
 		$elemSubject->setAttribute('uid', $aRow['s_uid']);
 		$elemSubject->setAttribute('query', $sQuery);
 		$elemSubject->setAttribute('csstype', $aRow['s_csstype']);
-		$elemSubject->setAttribute('taggable', $aRow['b_taggable']);
+		if (isset($aRow['b_taggable'])) {
+			$elemSubject->setAttribute('taggable', $aRow['b_taggable']);
+		} else {
+			$elemSubject->setAttribute('taggable', 'FALSE');
+		}
 		if ($aRow['s_customcsstype'] != NULL) {
 			$elemSubject->setAttribute('csstype', $aRow['s_customcsstype']);
 		}

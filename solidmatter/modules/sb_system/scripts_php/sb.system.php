@@ -11,7 +11,8 @@
 
 //------------------------------------------------------------------------------
 /**
-* 
+* Static class that provides information on the system environment the current
+* solidMatter installation is running on. 
 */
 class System {
 	
@@ -35,9 +36,7 @@ class System {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Initializes the class, should be called early in request processing.
 	*/
 	public static function init() {
 		
@@ -49,9 +48,8 @@ class System {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Returns the full system path of the current solidMatter installation.
+	* @return string the system path
 	*/
 	public static function getDir() {
 		return (self::$sSystemDirectory);
@@ -96,21 +94,24 @@ class System {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Adds an entry to the global event log. 
+	* @param integer basic event type (may be one of the class constants INFO, MAINTENANCE, SECURITY, ERROR, DEBUG, WARNING) 
+	* @param string module ID that this entry should be logged under
+	* @param string a unique name of the event type, should be human-readable
+	* @param string a text with additional details (optional)
+	* @param string the subject node UUID
 	*/
 	public static function logEvent($eType, $sModule, $sUID, $sText, $sSubjectUUID) {
 		if (!(self::$iLogLevel & $eType)) {
 			return (FALSE);
 		}
 		switch ($eType) {
-			case System::INFO:			$sType = 'INFO'; break;
-			case System::MAINTENANCE:	$sType = 'MAINTENANCE'; break;
-			case System::SECURITY:		$sType = 'SECURITY'; break;
-			case System::ERROR:			$sType = 'ERROR'; break;
-			case System::DEBUG:			$sType = 'DEBUG'; break;
-			case System::WARNING:		$sType = 'WARNING'; break;
+			case System::INFO:			$sType = 'INFO';			break;
+			case System::MAINTENANCE:	$sType = 'MAINTENANCE';		break;
+			case System::SECURITY:		$sType = 'SECURITY';		break;
+			case System::ERROR:			$sType = 'ERROR';			break;
+			case System::DEBUG:			$sType = 'DEBUG';			break;
+			case System::WARNING:		$sType = 'WARNING';			break;
 		}
 		$stmtLog = self::$crSession->prepareKnown('sbSystem/eventLog/LogEntry');
 		$stmtLog->bindValue('module', $sModule, PDO::PARAM_STR);
@@ -159,8 +160,7 @@ class System {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
+	* Returns an array with info on all installed modules in this solidMatter instance.
 	* @return 
 	*/
 	public static function getModules() {
@@ -228,26 +228,24 @@ class System {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Returns the operating system solidMatter is running on.
+	* @return string identifier of the os
 	*/
 	public static function getEnvironment() {
 		
-		// FIXME: actually check the server environment
+		// TODO: actually check the server environment
 		return ('windows');
 		
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Returns the character encoding used by the operating system.
+	* @return string the encoding in a format ready for iconv()
 	*/
 	public static function getFilesystemEncoding() {
 		
-		// FIXME: actually check the server environment
+		// TODO: actually check the server environment
 		if (self::getEnvironment() == 'windows') {
 			return ('Windows-1252');
 		}

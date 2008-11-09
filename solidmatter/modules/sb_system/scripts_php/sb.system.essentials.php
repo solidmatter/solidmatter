@@ -321,6 +321,7 @@ function headers($sType, $aOptions = NULL) {
 			header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 			break;
 		case 'm3u':
+		case 'xspf':
 			$sFilename = 'dummy';
 			$sDisposition = 'inline';
 			if (isset($aOptions['filename'])) {
@@ -330,8 +331,12 @@ function headers($sType, $aOptions = NULL) {
 				$sDisposition = 'attachment';
 			}
 			header('Content-Disposition: '.$sDisposition.'; filename="'.$aOptions['filename'].'"');
-			//header('Content-type: audio/x-mpegurl; encoding="UTF-8"');
-			header('Content-type: audio/mpegurl; encoding="UTF-8"');
+			if ($sType == 'm3u') {
+				//header('Content-type: audio/x-mpegurl; encoding="UTF-8"');
+				header('Content-type: audio/mpegurl; encoding="UTF-8"');
+			} elseif ($sType == 'xspf') {
+				header('Content-type: application/xspf+xml; encoding="UTF-8"');
+			}
 			if (isset($aOptions['size'])) {
 				header('Content-Length: '.$aOptions['size']);
 			}

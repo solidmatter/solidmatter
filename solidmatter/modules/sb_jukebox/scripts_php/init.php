@@ -315,7 +315,7 @@ class sbJukeboxView extends sbView {
 	* @param 
 	* @return 
 	*/
-	protected function getPlaylist($nodeSubject, $bShuffle = FALSE) {
+	protected function getPlaylist($nodeSubject, $bShuffle = FALSE, $sFormat = 'M3U') {
 		
 		// prepare
 		$nodeJukebox = $this->getJukebox();
@@ -324,16 +324,29 @@ class sbJukeboxView extends sbView {
 			shuffle($aPlaylistItems);
 		}
 		
-		// generate plain text M3U
-		$sPlaylist = "#EXTM3U\n";
-		foreach ($aPlaylistItems as $aItem) {
-			// title row is always the same / convert label back from UTF8
-			$sPlaylist .= '#EXTINF:'.$aItem['playtime'].','.iconv('UTF-8', 'ISO-8859-1', $aItem['label'])."\n";
-			if ($nodeJukebox->getProperty('config_userealpath') == 'TRUE') { // use direct paths to e.g. a shared folder
-				$sPlaylist .= iconv('UTF-8', System::getFilesystemEncoding(), $this->crSession->getNodeByIdentifier($aItem['uuid'])->getRealPath())."\n";
-			} else { // use urls
-				$sPlaylist .= 'http://'.$_REQUEST->getDomain().'/'.$aItem['uuid'].'/song/play/sid='.sbSession::getSessionID()."\n";
+		if ($sFormat == 'M3U') {
+			// generate plain text M3U
+			$sPlaylist = "#EXTM3U\n";
+			foreach ($aPlaylistItems as $aItem) {
+				// title row is always the same / convert label back from UTF8
+				$sPlaylist .= '#EXTINF:'.$aItem['playtime'].','.iconv('UTF-8', 'ISO-8859-1', $aItem['label'])."\n";
+				if ($nodeJukebox->getProperty('config_userealpath') == 'TRUE') { // use direct paths to e.g. a shared folder
+					$sPlaylist .= iconv('UTF-8', System::getFilesystemEncoding(), $this->crSession->getNodeByIdentifier($aItem['uuid'])->getRealPath())."\n";
+				} else { // use urls
+					$sPlaylist .= 'http://'.$_REQUEST->getDomain().'/'.$aItem['uuid'].'/song/play/sid='.sbSession::getSessionID()."\n";
+				}
 			}
+		} elseif ($sFormat == 'XSPF') {
+			// generate plain text M3U
+			$sPlaylist = '<?xml version="1.0" encoding="UTF-8"?><playlist version="1" xmlns="http://xspf.org/ns/0/"><trackList>';
+			foreach ($aPlaylistItems as $aItem) {
+				if ($nodeJukebox->getProperty('config_userealpath') == 'TRUE') { // use direct paths to e.g. a shared folder
+					//$sPlaylist .= iconv('UTF-8', System::getFilesystemEncoding(), $this->crSession->getNodeByIdentifier($aItem['uuid'])->getRealPath())."\n";
+				} else { // use urls
+					$sPlaylist .= '<track><location>http://'.$_REQUEST->getDomain().'/'.$aItem['uuid'].'/song/play/sid='.sbSession::getSessionID()."</track></location>\n";
+				}
+			}
+			$sPlaylist .= '</trackList></playlist>';
 		}
 		
 		return ($sPlaylist);

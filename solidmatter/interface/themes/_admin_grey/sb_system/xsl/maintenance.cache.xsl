@@ -30,7 +30,8 @@
 			<a href="/{$subjectid}/-/clearCache/cache=images">Clear ImageCache</a><br/>
 			<a href="/{$subjectid}/-/clearCache/cache=authorisations">Clear AuthorisationCache</a><br/>
 			<a href="/{$subjectid}/-/clearCache/cache=misc">Clear MiscCache</a><br/>
-			<a href="/{$subjectid}/-/clearCache/cache=repository">Clear RepositoryCache</a><br/>
+			<a href="/{$subjectid}/-/clearCache/cache=repository">Clear RepositoryCache</a><br/><br/>
+			<a href="/{$subjectid}/-/clearCache/cache=all">Clear ALL Caches</a><br/>
 		</div>
 	</body>
 	</html>

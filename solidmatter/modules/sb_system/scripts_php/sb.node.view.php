@@ -3,13 +3,14 @@
 //------------------------------------------------------------------------------
 /**
 * @package	solidMatter[sbCR]
-* @author	()((() [Oliver MÃ¼ller]
+* @author	()((() [Oliver Müller]
 * @version	1.00.00
 */
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 /**
+* Base class for all views.
 */
 abstract class sbView {
 	
@@ -21,9 +22,8 @@ abstract class sbView {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* the constructor expects the 
+	* @param sbNode the subject node on which this view acts
 	*/
 	public function __construct($nodeSubject) {
 		
@@ -48,9 +48,8 @@ abstract class sbView {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Executes an action of this view on the subject node. 
+	* @param string the action id
 	*/
 	public abstract function execute($sAction);
 	
@@ -66,9 +65,8 @@ abstract class sbView {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Checks if this view requires the user to be logged in.
+	* @return boolean true if this view requires the user to be logged in, false otherwise
 	*/
 	public function requiresLogin() {
 		return ($this->bLoginRequired);
@@ -76,7 +74,7 @@ abstract class sbView {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* Checks if this ??????????????????????
 	* @param 
 	* @return 
 	*/

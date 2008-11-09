@@ -217,7 +217,7 @@
 						{
 							method: 'get', 
 							parameters: null,
-							asynchronous: false 
+							asynchronous: true 
 						}
 					);
 					

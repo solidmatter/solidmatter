@@ -29,6 +29,7 @@
 			<xsl:call-template name="simplesearch">
 				<xsl:with-param name="form" select="$content/sbform[@id='searchJukebox']" />
 			</xsl:call-template>
+			
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="response/errors" />
@@ -42,7 +43,10 @@
 		<table class="default" width="100%" summary="CHANGEME">
 			<thead>
 				<tr>
-					<th colspan="2"><span class="type album"><xsl:value-of select="$locale/sbJukebox/labels/latest_albums" /></span></th>
+					<th colspan="2">
+						<span style="float:right"><a href="/-/-/displayCoverWall">display Cover Wall</a></span>
+						<span class="type album"><xsl:value-of select="$locale/sbJukebox/labels/latest_albums" /></span>
+					</th>
 				</tr>
 			</thead>
 			<tbody>

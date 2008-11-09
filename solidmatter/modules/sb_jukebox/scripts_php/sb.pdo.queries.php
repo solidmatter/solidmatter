@@ -226,6 +226,17 @@ $_QUERIES['sbJukebox/jukebox/albums/getLatest'] = '
 	ORDER BY	n.dt_createdat DESC
 	LIMIT		0, :limit
 ';
+$_QUERIES['sbJukebox/jukebox/albums/getAll'] = '
+	SELECT		n.uuid,
+				n.s_label AS label,
+				n.s_name AS name,
+				a.b_coverexists
+	FROM		{TABLE_NODES} n
+	INNER JOIN	{TABLE_JB_ALBUMS} a
+		ON		n.uuid = a.uuid
+				'.$sHierarchyComponent.'
+	ORDER BY	n.s_label ASC
+';
 
 //------------------------------------------------------------------------------
 // artist
@@ -491,5 +502,4 @@ $_QUERIES['sbJukebox/jukebox/getVoters'] = '
 	ORDER BY	n.s_label
 ';
 
-
-
+?>

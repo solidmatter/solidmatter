@@ -23,10 +23,27 @@ class sbView_maintenance_cache extends sbView {
 				break;
 				
 			case 'clearCache':
+				
 				$sCache = $_REQUEST->getParam('cache');
-				$cacheCurrent = CacheFactory::getInstance($sCache);
-				$cacheCurrent->clear();
-				$this->logEvent(System::MAINTENANCE, 'CACHE_CLEARED', $sCache);
+				if ($sCache == 'all') {
+					$aCaches = array(
+						'system',
+						'paths',
+						'registry',
+						'images',
+						'authorisations',
+						'repository',
+						'misc',
+					);
+				} else {
+					$aCaches = array($sCache);
+				}
+				// actually clear caches	
+				foreach ($aCaches as $sCurrentCache) {
+					$cacheCurrent = CacheFactory::getInstance($sCurrentCache);
+					$cacheCurrent->clear();
+					$this->logEvent(System::MAINTENANCE, 'CACHE_CLEARED', $sCurrentCache);
+				}
 				break;
 			
 			default:

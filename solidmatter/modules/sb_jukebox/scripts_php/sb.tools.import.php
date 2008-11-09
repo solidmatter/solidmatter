@@ -223,7 +223,7 @@ class JukeboxToolkit {
 		
 		// check if album already exists
 		if ($nodeAlbumArtist->hasNode($aAlbumInfo['properties']['name'])) {
-			throw new ImportException('artist "'.$aAlbumInfo['artist'].'" already has an album '.$aAlbumInfo['properties']['name']);
+			throw new ImportException('[abort] - artist "'.$aAlbumInfo['artist'].'" already has an album '.$aAlbumInfo['properties']['name']);
 		}
 		
 		// build album node
@@ -415,7 +415,7 @@ class JukeboxToolkit {
 			}
 		} else {
 			if ($this->aAbortFlags['NO_YEAR']) {
-				throw new ImportException('no year given in directory name');
+				throw new ImportException('[abort] - no year given in directory name');
 			}
 		}
 		
@@ -436,7 +436,7 @@ class JukeboxToolkit {
 			}
 		} else {
 			if ($this->aAbortFlags['NO_COVER']) {
-				throw new ImportException('no cover found');
+				throw new ImportException('[abort] - no cover found');
 			}
 			if ($this->aVerboseFlags['COVER_INFO']) {
 				$this->echoInfo('bad', 'no cover found');
@@ -510,7 +510,7 @@ class JukeboxToolkit {
 		}
 		
 		if (!$bTracksPresent) {
-			throw new ImportException('no tracks present in directory');
+			throw new ImportException('[abort] - no tracks present in directory');
 		}
 		
 	}
@@ -553,10 +553,10 @@ class JukeboxToolkit {
 		if (!isset($aInfo['tags']['id3v2'])) {
 			var_dumpp($sAlbumPath.$sRelPath);
 			var_dumpp($aInfo); exit();
-			throw new ImportException('no ID3v2 tags in '.$sRelPath);
+			throw new ImportException('[abort] - no ID3v2 tags in '.$sRelPath);
 		}
 		if (!isset($aInfo['tags']['id3v1'])) {
-			throw new ImportException('no ID3v1 tags in '.$sRelPath);
+			throw new ImportException('[abort] - no ID3v1 tags in '.$sRelPath);
 		}
 		
 		// check if artists are equal
@@ -566,7 +566,7 @@ class JukeboxToolkit {
 			$sArtistV1 = $aInfo['tags']['id3v1']['artist'][0];
 			if ($sArtistV1 != $sArtistV2) {
 				if (substr($sArtistV2, 0, strlen($sArtistV1)) != $sArtistV1) {
-					throw new ImportException('artist in V1 ('.$sArtistV1.') does no match artist in V2 ('.$sArtistV2.')');
+					throw new ImportException('[abort] - artist in V1 ('.$sArtistV1.') does no match artist in V2 ('.$sArtistV2.')');
 				}
 			}
 		}
@@ -580,17 +580,17 @@ class JukeboxToolkit {
 		
 		// check if mandatory tags are empty
 		if ($sArtist == '' || $sTitle == '') {
-			throw new ImportException('artist empty in '.$sRelPath);
+			throw new ImportException('[abort] - artist empty in '.$sRelPath);
 		}
 		if (!isset($aInfo['playtime_string']) || !isset($aInfo['playtime_seconds'])) {
 			//var_dumpp($aInfo);
-			throw new ImportException('playtime missing in '.$sRelPath);
+			throw new ImportException('[abort] - playtime missing in '.$sRelPath);
 		}
 		if (!isset($aInfo['mpeg']['audio'])) {
-			throw new ImportException('mpeg info missing in '.$sRelPath);
+			throw new ImportException('[abort] - mpeg info missing in '.$sRelPath);
 		}
 		if (!isset($aInfo['mpeg']['audio']['bitrate_mode']) || !isset($aInfo['mpeg']['audio']['bitrate'])) {
-			throw new ImportException('encoding or bitrate missing in '.$sRelPath);
+			throw new ImportException('[abort] - encoding or bitrate missing in '.$sRelPath);
 		}
 		
 		//var_dumpp($aSource['content_type'][0]);
@@ -608,7 +608,7 @@ class JukeboxToolkit {
 				$sGenre = trim($sGenre);
 				$aGenres[$iKey] = $sGenre;
 				if (!preg_match('/[\w ]/', $sGenre)) {
-					throw new ImportException('genre "'.$sGenre.'" is not valid [\w ]');	
+					throw new ImportException('[abort] - genre "'.$sGenre.'" is not valid [\w ]');	
 				}
 				if ($sParsedGenre = $this->jbGenreLib->getGenre($sGenre)) {
 					$aGenres[$iKey] = $sParsedGenre;
@@ -620,7 +620,7 @@ class JukeboxToolkit {
 			}
 		} else {
 			if ($this->aAbortFlags['NO_GENRE']) {
-				throw new ImportException('no genre given in '.$sRelPath);
+				throw new ImportException('[abort] - no genre given in '.$sRelPath);
 			}
 			if ($this->aTagFlags['GENRE']) {
 				$aTrackInfo['tags'][] = 'NO GENRE';

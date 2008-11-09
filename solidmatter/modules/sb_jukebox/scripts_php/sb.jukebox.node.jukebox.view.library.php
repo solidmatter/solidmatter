@@ -62,6 +62,18 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 				$_RESPONSE->addData($formSearch);
 				break;
 			
+			case 'displayCoverWall':
+				// get all albums and store in response 
+				$stmtGetAlbums = $this->nodeSubject->getSession()->prepareKnown('sbJukebox/jukebox/albums/getAll');
+				$stmtGetAlbums->bindValue('jukebox_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
+				$stmtGetAlbums->execute();
+				$_RESPONSE->addData($stmtGetAlbums->fetchElements(), 'allAlbums');
+				// add default search form
+				$formSearch = $this->buildSearchForm('jukebox');
+				$formSearch->saveDOM();
+				$_RESPONSE->addData($formSearch);
+				break;
+			
 			default:
 				throw new sbException(__CLASS__.': action not recognized ('.$sAction.')');
 			
