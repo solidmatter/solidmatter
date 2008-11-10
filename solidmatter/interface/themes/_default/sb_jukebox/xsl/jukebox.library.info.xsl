@@ -35,6 +35,7 @@
 			<xsl:apply-templates select="response/errors" />
 			<xsl:apply-templates select="$content/latestAlbums" />
 			<xsl:apply-templates select="$content/nowPlaying" />
+			<xsl:apply-templates select="$content/recommendations" />
 		</div>
 	</xsl:template>
 	
@@ -44,7 +45,7 @@
 			<thead>
 				<tr>
 					<th colspan="2">
-						<span style="float:right"><a href="/-/-/displayCoverWall">display Cover Wall</a></span>
+						<span style="float:right"><a class="type coverwall" href="/-/-/displayCoverWall">Cover Wall</a></span>
 						<span class="type album"><xsl:value-of select="$locale/sbJukebox/labels/latest_albums" /></span>
 					</th>
 				</tr>
@@ -105,6 +106,42 @@
 							</td>
 							<td>
 								<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
+							</td>
+						</tr>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<tr><td colspan="5"><xsl:value-of select="$locale/system/general/texts/no_subobjects" /></td></tr>
+				</xsl:otherwise>
+			</xsl:choose>
+			
+			</tbody>
+		</table>
+	</xsl:template>
+	
+	<xsl:template match="recommendations">
+		<table class="default" width="100%" summary="CHANGEME">
+			<thead>
+				<tr>
+					<th colspan="3">
+						<span class="type recommendations"><xsl:value-of select="$locale/sbJukebox/labels/recommendations" /></span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+			<xsl:choose>
+				<xsl:when test="entry">
+					<xsl:for-each select="entry">
+						<tr>
+							<xsl:call-template name="colorize" />
+							<td width="100">
+								<xsl:value-of select="@username" />
+							</td>
+							<td>
+								<a href="/{@item_uuid}"><xsl:value-of select="@label" /></a>
+							</td>
+							<td>
+								<span style="white-space:nowrap;"><xsl:value-of select="@comment" /></span>
 							</td>
 						</tr>
 					</xsl:for-each>

@@ -97,6 +97,22 @@ class sbView_root_login extends sbView {
 						}
 						$this->logEvent(System::INFO, 'LOGIN_SUCCESSFUL', $sUserText.' with fingerprint "'.$aData['fingerprint'].'" from "'.$aData['user_ip'].'"');
 						
+						// check for inbox node and create it if necessary
+						if (!$nodeUser->hasNode('inbox')) {
+							$nodeInbox = $nodeUser->addNode('inbox', 'sb_system:inbox');
+							$nodeInbox->setProperty('label', 'Inbox');
+							$nodeUser->save();
+							$this->logEvent(System::INFO, 'CREATED_INBOX', 'created inbox node');
+						}
+						
+						// check for tasks node and create it if necessary
+						if (!$nodeUser->hasNode('tasks')) {
+							$nodeInbox = $nodeUser->addNode('tasks', 'sb_system:tasks');
+							$nodeInbox->setProperty('label', 'Tasks');
+							$nodeUser->save();
+							$this->logEvent(System::INFO, 'CREATED_TASKS', 'created tasks node');
+						}
+						
 					} else {
 						
 						// add info to form object

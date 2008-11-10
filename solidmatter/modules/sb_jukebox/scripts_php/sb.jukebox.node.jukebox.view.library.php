@@ -27,19 +27,45 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 			
 			case 'info':
 				
+				// search form
 				$formSearch = $this->buildSearchForm('jukebox');
 				$formSearch->saveDOM();
 				$_RESPONSE->addData($formSearch);
 				
+				// add latest albums
 				$stmtGetLatest = $this->crSession->prepareKnown('sbJukebox/jukebox/albums/getLatest');
 				$stmtGetLatest->bindValue('jukebox_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
-				$stmtGetLatest->bindValue('limit', 16, PDO::PARAM_INT);
+				$stmtGetLatest->bindValue('limit', 8, PDO::PARAM_INT);
 				$stmtGetLatest->bindValue('nodetype', 'sb_jukebox:album', PDO::PARAM_STR);
 				$stmtGetLatest->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
 				$stmtGetLatest->execute();
-				
 				$_RESPONSE->addData($stmtGetLatest->fetchElements(), 'latestAlbums');
 				
+				// add recommendations
+				$elemRecommendations = $_RESPONSE->createElement('recommendations');
+				$nodeUser = $this->crSession->getNodeByIdentifier(User::getUUID());
+				$nodeInbox = $nodeUser->getNode('inbox');
+				$nodeJukebox = $this->getJukebox();
+				$niRecommendations = $nodeInbox->getChildren('recommendations');
+				foreach ($niRecommendations as $nodeRecommendation) {
+					//only list entries from this jukebox
+					/*if (substr($nodeJukebox->getName(), 32) != substr($nodeRecommendation->getName(), 32)) {
+						continue;
+					}*/
+					// add relevant data
+					$elemRecommendation = $_RESPONSE->createElement('entry');
+					$nodeSubject = $this->crSession->getNodeByIdentifier($nodeRecommendation->getProperty('subject'));
+					$nodeRecommentor = $this->crSession->getNodeByIdentifier($nodeRecommendation->getProperty('jcr:createdBy'));
+					$elemRecommendation->setAttribute('uuid', $nodeRecommendation->getProperty('jcr:uuid'));
+					$elemRecommendation->setAttribute('comment', $nodeRecommendation->getProperty('comment'));
+					$elemRecommendation->setAttribute('item_uuid', $nodeSubject->getProperty('jcr:uuid'));
+					$elemRecommendation->setAttribute('label', $nodeSubject->getProperty('label'));
+					$elemRecommendation->setAttribute('nodetype', $nodeSubject->getProperty('nodetype'));
+					$elemRecommendation->setAttribute('username', $nodeRecommentor->getProperty('label'));
+					$elemRecommendation->setAttribute('user_uuid', $nodeRecommentor->getProperty('jcr:uuid'));
+					$elemRecommendations->appendChild($elemRecommendation);
+				}
+				$_RESPONSE->addData($elemRecommendations);
 				break;
 				
 			case 'search':

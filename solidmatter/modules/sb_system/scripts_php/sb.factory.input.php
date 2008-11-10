@@ -46,6 +46,7 @@ class InputFactory {
 		'captcha',
 		'nodeselector',
 		'codeeditor',
+		'users',
 	);
 	
 	//--------------------------------------------------------------------------

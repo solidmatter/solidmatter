@@ -81,7 +81,6 @@
 	</xsl:template>
 	
 	<xsl:template match="warnings">
-		dfsdfsdfsdfsdfdsf
 		<style type="text/css">
 			@import url(<xsl:value-of select="$stylesheets_css" />/styles_default.css);
 		</style>
@@ -312,20 +311,19 @@
 		<xsl:param name="nolabels" />
 		<xsl:param name="withlyrics" />
 		<xsl:choose>
-			<xsl:when test="$nolabels">
-				<a class="type play" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"> </a>
-				<xsl:value-of select="' '" />
+			<xsl:when test="$nolabels or boolean('true')">
+				<a class="type play" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"></a>
+				<a class="type recommend" href="/{@uuid}/recommend" title="{$locale/sbJukebox/actions/recommend}"></a>
 				<xsl:if test="@nodetype='sb_jukebox:track'">
-					<a class="type lyrics" href="http://www.google.de/search?q=lyrics {@label}" title="{$locale/sbJukebox/actions/search_lyrics}"><xsl:value-of select="'&amp;nbsp;'" disable-output-escaping="yes" /></a>
-					<xsl:value-of select="' '" />
+					<a class="type lyrics" href="http://www.google.de/search?q=lyrics {@label}" title="{$locale/sbJukebox/actions/search_lyrics}"></a>
 				</xsl:if>
-				<a class="type addToFavorites" href="/-/favorites/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_favorites}"> </a>
-				<xsl:value-of select="' '" />
+				<a class="type addToFavorites" href="/-/favorites/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_favorites}"></a>
 				<xsl:if test="$content/currentPlaylist">
-					<a class="type addToPlaylist" href="/{$currentPlaylist/@uuid}/details/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_playlist}"> </a>
+					<a class="type addToPlaylist" href="/{$currentPlaylist/@uuid}/details/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_playlist}"></a>
 				</xsl:if>
 			</xsl:when>
 			<xsl:otherwise>
+				<a class="type recommend" href="/{@uuid}/recommend" title="{$locale/sbJukebox/actions/recommend}"><xsl:value-of select="$locale/sbJukebox/actions/recommend" /></a>
 				<a class="type play" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><xsl:value-of select="$locale/sbJukebox/actions/play" /></a>
 				<xsl:value-of select="' '" />
 				<xsl:if test="@nodetype='sb_jukebox:track'">

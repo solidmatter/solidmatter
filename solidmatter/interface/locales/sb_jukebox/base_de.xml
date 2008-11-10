@@ -55,6 +55,9 @@
 			<enc_mode>Kodierung</enc_mode>
 			<enc_bitrate>Bitrate (kbit/s)</enc_bitrate>
 		</track>
+		<recommendation>
+			<subject>Empfehlung</subject>
+		</recommendation>
 	</nodes>
 	
 	<authorisations>
@@ -91,6 +94,7 @@
 		<top_tracks>Top Titel</top_tracks>
 		<weighting>Gewichtung</weighting>
 		<all_tags>Alle Tags</all_tags>
+		<recommendations>Empfehlungen</recommendations>
 	</labels>
 	
 	<menu>
@@ -101,16 +105,18 @@
 		<tags>Tags</tags>
 		<favorites>Favoriten</favorites>
 		<playlists>Playlisten</playlists>
+		<profile>Profil</profile>
 	</menu>
 	
 	<actions>
 		<play>abspielen</play>
 		<search_lyrics>Songtext suchen</search_lyrics>
-		<add_to_favorites>zu Fav.</add_to_favorites>
-		<add_to_playlist>zu Playl.</add_to_playlist>
+		<add_to_favorites>zu Favoriten hinzufügen</add_to_favorites>
+		<add_to_playlist>zu Playlist hinzufügen</add_to_playlist>
 		<vote>bewerten</vote>
 		<expand>aufklappen</expand>
 		<collapse>zuklappen</collapse>
+		<recommend>empfehlen</recommend>
 	</actions>
 	
 </sbJukebox>

@@ -60,8 +60,10 @@ class sbDOMForm extends sbDOMDocument {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
+	* Adds an input field to the form
+	* @param string the configuration string (see input classes for details)
+	* @param string a XPath to the localized string
+	* @param string INACTIVE
 	* @return 
 	*/
 	public function addInput($sConfig, $sLabelPath = '', $sGroup = NULL) {

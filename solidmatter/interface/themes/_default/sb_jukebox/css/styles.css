@@ -328,6 +328,12 @@ a.imglink img {
 	background-image: url(../icons/type_tag.png);
 }
 
+/* other objects/types */
+
+*.recommendations {
+	background-image: url(../icons/recommend_hover.png);
+}
+
 /* menu (has to be after 'type' definition) */
 
 *.menu_overview {
@@ -378,6 +384,12 @@ a.imglink img {
 *.addToFavorites:hover {
 	background-image: url(../icons/add_to_favorites_hover.png);
 }
+*.recommend {
+	background-image: url(../icons/recommend.png);
+}
+*.recommend:hover {
+	background-image: url(../icons/recommend_hover.png);
+}
 *.addToPlaylist {
 	background-image: url(../icons/add_to_playlist.png);
 }
@@ -411,7 +423,12 @@ a.imglink img {
 *.activated {
 	background-image: url(../icons/activated.png);
 }
-
+*.coverwall {
+	background-image: url(../icons/coverwall.png);
+}
+*.coverwall:hover {
+	background-image: url(../icons/coverwall_hover.png);
+}
 
 
 /* album details -------------------------------------------------------------*/

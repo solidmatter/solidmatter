@@ -85,7 +85,6 @@ class sbDOMResponse extends sbDOMDocument {
 		
 		// insert modules
 		$this->aModules = System::getModules();
-		//var_dump($this->aModules);
 		
 		// content
 		$elemContent = $this->createElement('content');
@@ -269,6 +268,9 @@ class sbDOMResponse extends sbDOMDocument {
 			}
 			$this->addMeta('md_modules', $elemModule);
 		}
+		
+		$elemUserID = $this->createElement('userid', User::getUUID());
+		$this->addMeta('md_system', $elemUserID);
 		
 	}
 	

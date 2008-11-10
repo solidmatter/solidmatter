@@ -487,6 +487,15 @@ a.explorercard img {
 *.sb_tags {
 	background-image: url(../icons/type_tags.png);
 }
+*.sb_inbox {
+	background-image: url(../icons/type_inbox.png);
+}
+*.sb_message {
+	background-image: url(../icons/type_message.png);
+}
+*.sb_tasks {
+	background-image: url(../icons/type_tasks.png);
+}
 
 *.new {
 	background-image: url(../icons/doc_new.gif);

@@ -55,6 +55,7 @@
 			<login>Einloggen</login>
 			<logout>Ausloggen</logout>
 			<refresh>Aktualisieren</refresh>
+			<send>Senden</send>
 		</actions>
 		<labels>
 			<id>ID</id>

@@ -234,9 +234,8 @@ function __autoload($sClassName) {
 
 //------------------------------------------------------------------------------
 /**
-* 
-* @param 
-* @return 
+* Generates a UUID, hyphens not included!
+* @return string a 16 byte UUID
 */
 function uuid() {
 	//return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
