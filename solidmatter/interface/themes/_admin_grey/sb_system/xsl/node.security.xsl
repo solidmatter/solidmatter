@@ -110,7 +110,7 @@
 				</td>
 				<td><div class="spacer"></div></td>
 				<td width="50%">
-					<iframe name="details" src="" width="100%" height="300" style="border:0;" />
+					<iframe name="details" src="" width="100%" height="500" style="border:0;" />
 				</td>
 			</tr>
 		</table>

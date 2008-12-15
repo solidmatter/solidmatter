@@ -57,8 +57,8 @@
 						<td style="text-align: center;">
 							<xsl:for-each select="resultset/row">
 								<div class="albumcover">
-									<a class="imglink" href="/{@uuid}" >
-										<img height="100" width="100" src="/{@uuid}/details/getCover/size=100" alt="{@label}" title="{@label}" />
+									<a class="imglink" href="/{@uuid}" style="position:relative;">
+										<img height="100" width="100" src="/{@uuid}/details/getCover/size=100" alt="{@label}" title="{@label}" onMouseOver="add_playbutton('{@uuid}', this)" onMouseOut="remove_playbutton(this)" />
 									</a><br />
 									<xsl:call-template name="render_stars" />
 								</div>
@@ -123,7 +123,7 @@
 		<table class="default" width="100%" summary="CHANGEME">
 			<thead>
 				<tr>
-					<th colspan="3">
+					<th colspan="4">
 						<span class="type recommendations"><xsl:value-of select="$locale/sbJukebox/labels/recommendations" /></span>
 					</th>
 				</tr>
@@ -143,16 +143,21 @@
 							<td>
 								<span style="white-space:nowrap;"><xsl:value-of select="@comment" /></span>
 							</td>
+							<td width="1%">
+								<a class="type play" href="/{@item_uuid}/-/getM3U/playlist.m3u?sid={$sessionid}">play</a>
+								<a class="type remove" href="/{@uuid}/actions/remove">remove</a>
+							</td>
 						</tr>
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>
-					<tr><td colspan="5"><xsl:value-of select="$locale/system/general/texts/no_subobjects" /></td></tr>
+					<tr><td colspan="4"><xsl:value-of select="$locale/system/general/texts/no_subobjects" /></td></tr>
 				</xsl:otherwise>
 			</xsl:choose>
 			
 			</tbody>
 		</table>
+		
 	</xsl:template>
 	
 </xsl:stylesheet>

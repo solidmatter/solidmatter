@@ -315,12 +315,18 @@
 		<type id="sb_system:templategroup">Templategruppe</type>
 		<type id="sb_system:layout">Layout</type>
 		<type id="sb_system:template">Template</type>
+		
 		<type id="sb_system:tpl_image">Bild</type>
 		<type id="sb_system:tpl_plaintext">Text</type>
 		<type id="sb_system:tpl_container">Container</type>
 		<type id="sb_system:tpl_richtext">Richtext</type>
 		<type id="sb_system:tpl_menu">Menü</type>
 		<type id="sb_system:tpl_script">Skript</type>
+		
+		<type id="sb_system:ctn_container">Container</type>
+		<type id="sb_system:ctn_image">Bild</type>
+		<type id="sb_system:ctn_plaintext">Text</type>
+		<type id="sb_system:ctn_richtext">Richtext</type>
 		
 		<type id="sb_system:imageprocessing">Bildbearbeitung</type>
 		<!--<type id="sb_system:layoutgroup">Layoutgruppe</type>-->
@@ -347,6 +353,9 @@
 		<type id="sb_system:useraccounts">Benutzer &amp; Gruppen</type>
 		<type id="sb_system:usergroup">Benutzergruppe</type>
 		<type id="sb_system:user">Benutzer</type>
+		
+		<type id="sb_system:inbox">Posteingang</type>
+		<type id="sb_system:tasks">Aufgaben</type>
 		
 		<type id="sb_system:modules">Module</type>
 		<type id="sb_system:module">Modul</type>

@@ -7,6 +7,7 @@
 		<type id="sb_jukebox:album">Album</type>
 		<type id="sb_jukebox:artist">Künstler</type>
 		<type id="sb_jukebox:track">Titel</type>
+		<type id="sb_jukebox:recommendation">Empfehlung</type>
 		<type id="sb_jukebox:tpl_mostheard">Jukebox: Populär</type>
 		<type id="sb_jukebox:tpl_favorites">Jukebox: Favoriten</type>
 		<type id="sb_jukebox:tpl_toprated">Jukebox: Charts</type>
@@ -64,7 +65,7 @@
 		<start_import>Import starten</start_import>
 		<clear_library>Bibliothek löschen</clear_library>
 		<add_playlists>Playlisten anlegen</add_playlists>
-		<add_tracks>Titel hinzufügen</add_tracks>
+		<add_titles>Titel hinzufügen</add_titles>
 	</authorisations>
 	
 	<labels>

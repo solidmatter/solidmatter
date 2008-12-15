@@ -443,7 +443,7 @@ $_QUERIES['sbSystem/node/loadAuthorisations/local/byEntity'] = '
 	WHERE		a.fk_subject = :node_uuid
 		AND		a.fk_userentity = :entity_uuid
 ';
-$_QUERIES['sbSystem/node/setAuthorisation/local'] = '
+$_QUERIES['sbSystem/node/setAuthorisation'] = '
 	INSERT INTO {TABLE_AUTH}
 				(
 					fk_authorisation,
@@ -452,12 +452,18 @@ $_QUERIES['sbSystem/node/setAuthorisation/local'] = '
 					e_granttype
 				) VALUES (
 					:authorisation,
-					:user_uuid,
+					:entity_uuid,
 					:subject_uuid,
 					:granttype
 				)
 	ON DUPLICATE KEY UPDATE
 				e_granttype = :granttype
+';
+$_QUERIES['sbSystem/node/removeAuthorisation'] = '
+	DELETE FROM	{TABLE_AUTH}
+	WHERE		fk_subject = :subject_uuid
+		AND		fk_userentity = :entity_uuid
+		AND		fk_authorisation = :authorisation
 ';
 
 //------------------------------------------------------------------------------

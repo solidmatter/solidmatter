@@ -408,6 +408,14 @@ class sbDOMResponse extends sbDOMDocument {
 			$elemData = $mData;
 		} elseif ($mData instanceof sbNode) {
 			$elemData = $mData->getElement();
+		} elseif ($mData instanceof sbCR_NodeIterator) {
+			if ($sNodeName == NULL) {
+				throw new sbException('adding a nodeiterator requires an node name');	
+			}
+			$elemData = $this->createElement('nodes');
+			foreach ($mData as $nodeCurrent) {
+				$elemData->appendChild($nodeCurrent->getElement());
+			}
 		} elseif (is_array($mData)) {
 			$elemData = $this->convertArrayToElement($sNodeName, $mData);
 		} elseif (is_string($mData)) {

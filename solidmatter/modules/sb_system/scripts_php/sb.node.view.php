@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------
 /**
 * @package	solidMatter[sbCR]
-* @author	()((() [Oliver Müller]
+* @author	()((() [Oliver Mï¿½ller]
 * @version	1.00.00
 */
 //------------------------------------------------------------------------------
@@ -16,6 +16,8 @@ abstract class sbView {
 	
 	protected $bUseLocale = TRUE;
 	protected $bLoginRequired = TRUE;
+	// TODO: move this information to the database/repository?
+	protected $aRequiredAuthorisations = array();
 	
 	protected $nodeSubject = NULL;
 	protected $crSession = NULL;
@@ -42,7 +44,7 @@ abstract class sbView {
 	*/
 	protected function __init() {
 		if (__CLASS__ != 'sbView') {
-			parent::__init();	
+			parent::__init();
 		}
 	}
 	
@@ -74,11 +76,11 @@ abstract class sbView {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* Checks if this ??????????????????????
+	* Checks if this view uses 
 	* @param 
 	* @return 
 	*/
-	public function usesLocale() {
+	/*public function usesLocale() {
 		return ($this->bUseLocale);
 	}
 	
@@ -99,6 +101,42 @@ abstract class sbView {
 		
 		return ($mValue);
 	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function requireAuthorisation($sAuthorisation, $nodeSubject = null) {
+		
+		if ($nodeSubject == null) {
+			$nodeSubject = $this->nodeSubject;
+		}
+		
+		if (!User::isAuthorised($sAuthorisation, $nodeSubject)) {
+			throw new SecurityException('you are not granted the necessary authorisation: '.$sAuthorisation.' on '.$nodeSubject->getProperty('label'));
+		}
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function checkRequirements($sAction) {
+		
+		if (!isset($this->aRequiredAuthorisations[$sAction])) {
+			return;
+		}
+		
+		foreach ($this->aRequiredAuthorisations[$sAction] as $sRequirement) {
+			$this->requireAuthorisation($sRequirement, $this->nodeSubject);
+		}
+		
+	}		
 	
 	//--------------------------------------------------------------------------
 	/**

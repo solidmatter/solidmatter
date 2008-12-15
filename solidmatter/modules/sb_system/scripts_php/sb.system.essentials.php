@@ -125,7 +125,7 @@ function import($sLibrary, $bRequired = TRUE) {
 		DEBUG('import()', $sModule.':'.$sLibrary, DEBUG::IMPORT);
 	} else {
 		// TODO: $bRequired disabled for now - always complain!
-		die ('import(): FILE_NOT_FOUND ('.$sLibrary.')');
+		die ('import(): FILE_NOT_FOUND ('.$sModule.':'.$sLibrary.')');
 		
 		if ($bRequired) {
 			throw new LibraryNotFoundException('Library not found: '.$sLibrary.' in '.$sModule);

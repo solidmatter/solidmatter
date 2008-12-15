@@ -56,18 +56,19 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 			case 'placeVote':
 				$iVote = $_REQUEST->getParam('vote');
 				$nodeJukebox = $this->nodeSubject->getAncestorOfType('sb_jukebox:jukebox');
-				$iMin = Registry::getValue('sb.jukebox.voting.scale.min');
+				/*$iMin = Registry::getValue('sb.jukebox.voting.scale.min');
 				$iMax = Registry::getValue('sb.jukebox.voting.scale.max');
 				$iScale = $iMax - $iMin;
-				$iRealVote = round(100 / $iScale * ($iVote));
-				
+				$iRealVote = round(100 / $iScale * ($iVote));*/
+				$iRealVote = $iVote;
 				/*var_dumpp($iVote);
 				var_dumpp($iRealVote);
 				die();*/
 				$this->nodeSubject->removeVote(User::getUUID());
 				$this->nodeSubject->placeVote(User::getUUID(), $iRealVote);
 				
-				if ($_REQUEST->getParam('silent') == NULL) {
+				// disabled - moved this stuff to ajax, header contains current vote 
+				/*if ($_REQUEST->getParam('silent') == NULL) {
 					if ($_REQUEST->getParam('target') != NULL) {
 						switch ($_REQUEST->getParam('target')) {
 							case 'parent':
@@ -90,7 +91,8 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 								break;
 						}
 					}
-				}
+				}*/
+				$_RESPONSE->addHeader('X-Vote: '.$this->nodeSubject->getVote());
 				break;
 				
 			default:

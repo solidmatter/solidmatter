@@ -106,9 +106,12 @@ class sbView_security extends sbView {
 				
 			case 'saveAuthorisations':
 				//var_dumpp($this->nodeSubject->loadSupportedAuthorisations());
-				$stmtSaveAuth = $this->nodeSubject->getSession()->prepareKnown('sbSystem/node/setAuthorisation/local');
-				$stmtSaveAuth->bindValue('user_uuid', $_REQUEST->getParam('userentity'), PDO::PARAM_STR);
+				$stmtSaveAuth = $this->nodeSubject->getSession()->prepareKnown('sbSystem/node/setAuthorisation');
+				$stmtSaveAuth->bindValue('entity_uuid', $_REQUEST->getParam('userentity'), PDO::PARAM_STR);
 				$stmtSaveAuth->bindValue('subject_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
+				$stmtRemoveAuth = $this->nodeSubject->getSession()->prepareKnown('sbSystem/node/removeAuthorisation');
+				$stmtRemoveAuth->bindValue('entity_uuid', $_REQUEST->getParam('userentity'), PDO::PARAM_STR);
+				$stmtRemoveAuth->bindValue('subject_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
 				// TODO: save on node::save()
 				foreach ($this->nodeSubject->loadSupportedAuthorisations() as $sAuth => $sParentAuth) {
 					//echo($sAuth.'_allow = '.$_REQUEST->getParam($sAuth.'_allow').'<br>');
@@ -117,12 +120,15 @@ class sbView_security extends sbView {
 						$stmtSaveAuth->bindValue('authorisation', $sAuth, PDO::PARAM_STR);
 						$stmtSaveAuth->bindValue('granttype', 'ALLOW', PDO::PARAM_STR);
 						$stmtSaveAuth->execute();
-					}
-					if ($_REQUEST->getParam($sAuth.'_deny') == 'on') {
+					} elseif ($_REQUEST->getParam($sAuth.'_deny') == 'on') {
 						$stmtSaveAuth->bindValue('authorisation', $sAuth, PDO::PARAM_STR);
 						$stmtSaveAuth->bindValue('granttype', 'DENY', PDO::PARAM_STR);
 						$stmtSaveAuth->execute();
+					} else {
+						$stmtRemoveAuth->bindValue('authorisation', $sAuth, PDO::PARAM_STR);
+						$stmtRemoveAuth->execute();
 					}
+					
 				}
 				$cacheAuth = CacheFactory::getInstance('authorisations');
 				$cacheAuth->clearAuthorisations($_REQUEST->getParam('userentity'));

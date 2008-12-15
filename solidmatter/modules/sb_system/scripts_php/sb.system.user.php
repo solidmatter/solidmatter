@@ -46,6 +46,20 @@ class User {
 	* @param 
 	* @return 
 	*/
+	public static function getGroupUUIDs() {
+		if (isset(sbSession::$aData['userdata']['groups'])) {
+			return (sbSession::$aData['userdata']['groups']);
+		} else {
+			return (array());
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public static function getNode() {
 		return (self::$crSession->getNodeByIdentifier(sbSession::getUserID()));
 	}

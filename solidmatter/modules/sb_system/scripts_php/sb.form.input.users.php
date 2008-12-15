@@ -22,7 +22,9 @@ class sbInput_users extends sbInput_select {
 		'size' => '1',
 		'multiple' => 'FALSE',
 		'maxselected' => 'unlimited',
-		'includeself' => 'FALSE',
+		'includeself' => 'FALSE', //TODO: actually use this and following options
+		'includehidden' => 'FALSE',
+		'allowempty' => 'FALSE',
 	);
 	
 	//--------------------------------------------------------------------------

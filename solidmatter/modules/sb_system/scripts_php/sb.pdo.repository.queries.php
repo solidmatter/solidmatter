@@ -975,12 +975,6 @@ $_QUERIES['sb_system/node/view/security/addAuthorisation'] = '
 					:granttype
 				)
 ';
-$_QUERIES['sb_system/node/view/security/removeAuthorisation'] = '
-	DELETE FROM	{TABLE_AUTH}
-	WHERE		fk_subject = :subject_uuid
-		AND		fk_userentity = :entity_uuid
-		AND		fk_authorisation = :authorisation
-';
 $_QUERIES['sb_system/node/view/security/removeAuthorisations'] = '
 	DELETE FROM	{TABLE_AUTH}
 	WHERE		fk_subject = :subject_uuid

@@ -48,7 +48,7 @@ class sbJukeboxView extends sbView {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* FIXME: values from registry are not flushed when changed there (double caching!)
 	* @param 
 	* @return 
 	*/

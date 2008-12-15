@@ -39,8 +39,8 @@ class sbView_debug extends sbView {
 		//$this->nodeSubject->loadViews(FALSE);
 		$this->nodeSubject->loadUserAuthorisations();
 		$this->nodeSubject->storeSupportedAuthorisations();
-		$this->nodeSubject->loadLocalAuthorisations();
-		$this->nodeSubject->loadInheritedAuthorisations();
+		//$this->nodeSubject->loadLocalAuthorisations();
+		//$this->nodeSubject->loadInheritedAuthorisations();
 		$this->nodeSubject->setAttribute('full_path', $this->nodeSubject->getPath());
 		
 		$this->nodeSubject->storeSupertypeNames();

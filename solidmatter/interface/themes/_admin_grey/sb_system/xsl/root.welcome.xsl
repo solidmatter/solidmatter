@@ -58,7 +58,10 @@
 	<xsl:template name="inbox">
 		<div class="eyecandy"><div class="left"><div class="right">
 			<h1>Inbox</h1>
-			Feature still needs to be implemented!
+			<xsl:for-each select="response/content/inbox/nodes/sbnode">
+				<a href="/{@uuid}" class="type sb_message"><xsl:value-of select="@label" /></a><br/>
+			</xsl:for-each>
+			<br/>
 		</div></div></div>
 	</xsl:template>
 	

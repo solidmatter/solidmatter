@@ -15,6 +15,15 @@
 */
 class sbView_jukebox_playlist_details extends sbJukeboxView {
 	
+	protected $aRequiredAuthorisations = array(
+		'display' => array('read'),
+		'addItem' => array('add_titles'),
+		'removeItem' => array('write'),
+		'orderBefore' => array('write'),
+		'activate' => array('add_titles'),
+		'getM3U' => array('read'),
+	);
+	
 	//--------------------------------------------------------------------------
 	/**
 	* 
@@ -24,6 +33,7 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 	public function execute($sAction) {
 		
 		global $_RESPONSE;
+		$this->checkRequirements($sAction);
 		
 		switch ($sAction) {
 			
@@ -65,9 +75,6 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 				break;
 			
 			case 'addItem':
-				if (!User::isAuthorised('edit', $this->nodeSubject)) {
-					throw new Exception('You are not allowed to edit this playlist');
-				}
 				
 				$nodeItem = $this->crSession->getNodeByIdentifier($_REQUEST->getParam('item'));
 				
@@ -117,9 +124,6 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 				break;
 				
 			case 'activate':
-				if (!User::isAuthorised('edit', $this->nodeSubject)) {
-					throw new Exception('You are not allowed to edit this playlist');
-				}
 				$sJukeboxUUID = $this->getJukebox()->getIdentifier();
 				sbSession::$aData['sbJukebox'][$sJukeboxUUID]['playlist'] = $this->nodeSubject->getIdentifier();
 				$_RESPONSE->redirect('-', 'playlists');
