@@ -245,7 +245,7 @@ $_QUERIES['sbJukebox/jukebox/albums/getAll'] = '
 $_QUERIES['sbJukebox/artist/getTracks/differentAlbums'] = '
 	SELECT		n.uuid,
 				n.s_label AS label,
-				t.s_playtime AS playtime,
+				t.n_playtime AS playtime,
 				n2.uuid AS albumuuid,
 				n2.s_label as albumlabel
 	FROM		{TABLE_JB_TRACKS} jt
