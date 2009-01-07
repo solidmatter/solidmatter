@@ -93,6 +93,20 @@ class sbCR_Node {
 	*/
 	protected $aAffectedUsers = array();
 	
+	protected $aPropertyTranslation = array(
+		'jcr:uuid'				=> 'uuid',
+		'jcr:created'			=> 'createdat',
+		'jcr:createdBy'			=> 'createdby',
+		'jcr:lastModified'		=> 'modifiedat',
+		'jcr:lastModifiedBy'	=> 'modifiedby',
+		'sbcr:label'			=> 'label',
+		'sbcr:inheritrights'	=> 'inheritrights',
+		'sbcr:bequeathrights'	=> 'bequeathrights',
+		'sbcr:deleted'			=> 'deletedat',
+		'sbcr:deletedBy'		=> 'deletedby',
+		'sbcr:deletedFrom'		=> 'deletedfrom',
+	);
+	
 	//--------------------------------------------------------------------------
 	// initialisation
 	//--------------------------------------------------------------------------
@@ -485,22 +499,22 @@ class sbCR_Node {
 			
 			// recursing through children disabled because the nodes might be in use in another workspace
 			// TODO: implement connected workspaces, versioning etc... :-|
-			/*foreach ($this->getChildren() as $nodeChild) {
+			foreach ($this->getChildren() as $nodeChild) {
 				$nodeChild->remove();
 				$nodeChild->save();
-			}*/
-			
-			// first remove all decendant links
-			$this->deleteDescendantLinks();
-			
-			// then remove all links to this node from repository tree
-			$niParents = $this->getParents();
-			foreach($niParents as $nodeParent) {
-				$this->deleteLink($nodeParent);
 			}
 			
 			// remove this node? for now, removing the links is enough!
-			//$this->deleteNode();
+			$this->deleteNode();
+			
+//			// first remove all decendant links
+//			$this->deleteDescendantLinks();
+//			
+//			// then remove all links to this node from repository tree
+//			$niParents = $this->getParents();
+//			foreach($niParents as $nodeParent) {
+//				$this->deleteLink($nodeParent);
+//			}
 			
 			// finally clean up and remove this node
 			$this->aModifiedChildren = array();
@@ -539,8 +553,7 @@ class sbCR_Node {
 			foreach ($this->aSaveTasks['add_child'] as $iTaskNumber => $aOptions) {
 				
 				$sParentUUID = $this->getIdentifier();
-				$nodeChild = $this->aModifiedChildren[$aOptions['uuid']];
-				
+				$nodeChild = $this->aModifiedChildren[$aOptions['uuid']];				
 				$nodeChild->saveNode();
 				$sChildUUID = $nodeChild->getIdentifier();
 				
@@ -598,7 +611,6 @@ class sbCR_Node {
 				
 			}
 			
-			//$this->crSession->commit('sbCR_Node::addChild');
 			// remove task type
 			unset($this->aSaveTasks['add_child']);
 			
@@ -723,9 +735,9 @@ class sbCR_Node {
 		$this->aModifiedProperties = array();
 		$this->bIsModified = FALSE;
 		
-		if ($this->isNew()) {
-			$this->elemSubject->setAttribute('query', $this->getIdentifier());
-		}
+//		if ($this->isNew()) {
+//			$this->elemSubject->setAttribute('query', $this->getIdentifier());
+//		}
 		
 		return (TRUE);
 		
@@ -746,27 +758,29 @@ class sbCR_Node {
 			return (FALSE);
 		}
 		
-		if ($this->isNew() && !$this->bIsPersisted) {
+		if ($this->isNew()) {
 			$stmtInsert = $this->crSession->prepareKnown($this->aQueries['save']['new']);
-			$stmtInsert->bindValue(':uuid',				$this->getIdentifier(),					PDO::PARAM_STR);
-			$stmtInsert->bindValue(':s_uid',			$this->getProperty('uid'),				PDO::PARAM_STR);
-			$stmtInsert->bindValue(':fk_nodetype',		$this->getProperty('nodetype'),			PDO::PARAM_STR);
-			$stmtInsert->bindValue(':s_label',			$this->getProperty('label'),			PDO::PARAM_STR);
-			$stmtInsert->bindValue(':s_name',			$this->getProperty('name'),				PDO::PARAM_STR);
-			$stmtInsert->bindValue(':s_customcsstype',	$this->getProperty('customcsstype'),	PDO::PARAM_STR);
-			$stmtInsert->bindValue(':user_id',			User::getUUID(),						PDO::PARAM_STR);
+			$stmtInsert->bindValue(':uuid',				$this->getIdentifier(),						PDO::PARAM_STR);
+			$stmtInsert->bindValue(':uid',				$this->getProperty('uid'),					PDO::PARAM_STR);
+			$stmtInsert->bindValue(':nodetype',			$this->getProperty('nodetype'),				PDO::PARAM_STR);
+			$stmtInsert->bindValue(':label',			$this->getProperty('label'),				PDO::PARAM_STR);
+			$stmtInsert->bindValue(':name',				$this->getProperty('name'),					PDO::PARAM_STR);
+			$stmtInsert->bindValue(':customcsstype',	$this->getProperty('customcsstype'),		PDO::PARAM_STR);
+			$stmtInsert->bindValue(':inheritrights',	$this->getProperty('sbcr:inheritrights'),	PDO::PARAM_STR);
+			$stmtInsert->bindValue(':bequeathrights',	$this->getProperty('sbcr:bequeathrights'),	PDO::PARAM_STR);
+			$stmtInsert->bindValue(':user_id',			User::getUUID(),							PDO::PARAM_STR);
 			$stmtInsert->execute();
-			$this->bIsPersisted = TRUE;
+			$this->elemSubject->setAttribute('query', $this->getIdentifier());
 		} else {
 			$stmtInsert = $this->crSession->prepareKnown($this->aQueries['save']['existing']);
-			$stmtInsert->bindValue(':uuid',				$this->getIdentifier(),					PDO::PARAM_STR);
-			$stmtInsert->bindValue(':s_uid',			$this->getProperty('uid'),				PDO::PARAM_STR);
-			$stmtInsert->bindValue(':s_label',			$this->getProperty('label'),			PDO::PARAM_STR);
-			$stmtInsert->bindValue(':s_name',			$this->getProperty('name'),				PDO::PARAM_STR);
-			$stmtInsert->bindValue(':s_customcsstype',	$this->getProperty('customcsstype'),	PDO::PARAM_STR);
-			$stmtInsert->bindValue(':b_inheritrights',	$this->getProperty('inheritrights'),	PDO::PARAM_STR);
-			$stmtInsert->bindValue(':b_bequeathrights',	$this->getProperty('bequeathrights'),	PDO::PARAM_STR);
-			$stmtInsert->bindValue(':user_id',			User::getUUID(),						PDO::PARAM_STR);
+			$stmtInsert->bindValue(':uuid',				$this->getIdentifier(),						PDO::PARAM_STR);
+			$stmtInsert->bindValue(':uid',				$this->getProperty('uid'),					PDO::PARAM_STR);
+			$stmtInsert->bindValue(':label',			$this->getProperty('label'),				PDO::PARAM_STR);
+			$stmtInsert->bindValue(':name',				$this->getProperty('name'),					PDO::PARAM_STR);
+			$stmtInsert->bindValue(':customcsstype',	$this->getProperty('customcsstype'),		PDO::PARAM_STR);
+			$stmtInsert->bindValue(':inheritrights',	$this->getProperty('sbcr:inheritrights'),	PDO::PARAM_STR);
+			$stmtInsert->bindValue(':bequeathrights',	$this->getProperty('sbcr:bequeathrights'),	PDO::PARAM_STR);
+			$stmtInsert->bindValue(':user_id',			User::getUUID(),							PDO::PARAM_STR);
 			$stmtInsert->execute();
 		}
 		$stmtInsert->closeCursor();
@@ -782,7 +796,7 @@ class sbCR_Node {
 	protected function saveProperties($sType = 'FULL') {
 		
 		$this->initPropertyDefinitions();
-		
+//		var_dumpp($this->crPropertyDefinitionCache);
 		if ($sType == 'FULL') {
 			// check if aux or ext properties have changed
 			$bChangedAux = FALSE;
@@ -832,15 +846,31 @@ class sbCR_Node {
 			foreach ($this->crPropertyDefinitionCache as $sName => $aDetails) {
 				if ($aDetails['e_storagetype'] == 'AUXILIARY') {
 					//var_dumpp($this->isNew());
-					/*if ($this->isNew() && $aDetails['b_protectedoncreation'] == 'TRUE') {
-						echo 'new&protectedoncreation ';
-						continue;
+					if ($this->isNew() && $aDetails['b_protectedoncreation'] == 'TRUE') {
+						//echo 'new&protectedoncreation ';
+						//var_dumpp($sName); var_dumpp($aDetails['s_defaultvalues']); 
+						$mValue = $aDetails['s_defaultvalues'];
 					} elseif (!$this->isNew() && $aDetails['b_protected'] == 'TRUE') {
-						echo 'notnew&protected ';
-						continue;
-					}*/
+						//echo 'notnew&protected ';
+						//continue;
+						$mValue = $this->elemSubject->getAttribute($sName);
+					} else {
+						$mValue = $this->elemSubject->getAttribute($sName);
+					}
 					//var_dumpp($sName.'|'.$this->elemSubject->getAttribute($sName));
-					$stmtSave->bindValue(':'.$sName, $this->elemSubject->getAttribute($sName), PDO::PARAM_STR);
+					/*if ($sName == 'security_expires') {
+						var_dumpp($aDetails);
+						var_dumpp($this->elemSubject->getAttribute($sName));
+					}*/
+					
+					
+					if (strlen(trim($mValue)) == 0) {
+						$mValue = NULL;
+						$eParam = PDO::PARAM_NULL;
+					} else {
+						$eParam = PDO::PARAM_STR;
+					}
+					$stmtSave->bindValue(':'.$sName, $mValue, $eParam);
 				}
 			}
 			$stmtSave->execute();
@@ -1943,36 +1973,25 @@ class sbCR_Node {
 		
 		$this->initPropertyDefinitions();
 		
-		if ($sRelativePath == 'jcr:uuid') {
-			return ($this->elemSubject->getAttribute('uuid'));
-		} elseif ($sRelativePath == 'jcr:primaryType') {
+		if (isset($this->aPropertyTranslation[$sRelativePath])) {
+			$sRelativePath = $this->aPropertyTranslation[$sRelativePath];
+		}
+		
+		if ($sRelativePath == 'jcr:primaryType') {
 			return ($this->getPrimaryNodeType());
 		} elseif ($sRelativePath == 'jcr:mixinTypes') {
-			// TODO: implement multivalue properties and mixin types
-		} elseif ($sRelativePath == 'jcr:created') {
-			return ($this->getProperty('createdat'));
-		} elseif ($sRelativePath == 'jcr:createdBy') {
-			return ($this->getProperty('createdby'));
-		} elseif ($sRelativePath == 'jcr:lastModified') {
-			
-		} elseif ($sRelativePath == 'jcr:lastModifiedBy') {
-			
-		} elseif ($sRelativePath == 'sbcr:deleted') {
-			
-		} elseif ($sRelativePath == 'sbcr:deletedBy') {
-			
-		} elseif ($sRelativePath == 'sbcr:deletedFrom') {
-			
-		} elseif ($sRelativePath == 'jcr:lockOwner') {
+		// TODO: implement multivalue properties and mixin types
+//		} elseif ($sRelativePath == 'jcr:lockOwner') {
 			/*if ($this->holdsLock()) {
 				$this->getLock();
 			}
 			return ($this->crLock->getLockOwner());*/
-		} elseif ($sRelativePath == 'jcr:lockIsDeep') {
+//		} elseif ($sRelativePath == 'jcr:lockIsDeep') {
 			/*if ($this->holdsLock()) {
 				$this->getLock();
 			}
 			return ($this->crLock->isDeep());*/
+
 		} elseif ($sRelativePath == 'sbcr:isDeletable') {
 			// TODO: remove this almost dirty hack, implement special attributes instead
 			$aKnownMandatoryNodes = array(
@@ -1999,14 +2018,16 @@ class sbCR_Node {
 		} elseif (isset($this->aModifiedProperties[$sRelativePath])) {
 			return ($this->aModifiedProperties[$sRelativePath]);
 		} elseif ($this->elemSubject->hasAttribute($sRelativePath)) {
-			return ($this->elemSubject->getAttribute($sRelativePath));
+//			var_dumpp('attribute|'.$sRelativePath.'|'.(string) $this->elemSubject->getAttribute($sRelativePath));
+			return ((string) $this->elemSubject->getAttribute($sRelativePath));
 		} elseif ($this->crPropertyDefinitionCache->hasProperty($sRelativePath)) {
 			$this->loadProperties($this->crPropertyDefinitionCache->getStorageType($sRelativePath));
-		}
-		if (!$this->elemSubject->hasAttribute($sRelativePath)) {
+			return ($this->elemSubject->getAttribute($sRelativePath));
+		} else {
+//		if (!$this->elemSubject->hasAttribute($sRelativePath)) {
 			throw new PathNotFoundException('in Node \''.$this->getIdentifier().'\' for path \''.$sRelativePath.'\'');
 		}
-		return ($this->elemSubject->getAttribute($sRelativePath));
+//		return ($this->elemSubject->getAttribute($sRelativePath));
 	}
 	
 	//--------------------------------------------------------------------------
@@ -2071,6 +2092,10 @@ class sbCR_Node {
 	* @return 
 	*/
 	public function setProperty($sName, $mValue) {
+		
+		if (isset($this->aPropertyTranslation[$sName])) {
+			$sName = $this->aPropertyTranslation[$sName];
+		}
 		
 		if ($sName == 'jcr:uuid' && $this->isNew()) {
 			$this->elemSubject->setAttribute('uuid', $mValue);
@@ -2168,9 +2193,9 @@ class sbCR_Node {
 		
 		if ($sType == 'EXTERNAL') {
 			foreach ($stmtGetProperties as $aRow) {
-				if ($bOnlyProperties && $aPropDef[$aRow['s_attributename']]['b_showinproperties'] == 'FALSE') {
-					continue;
-				}
+//				if ($bOnlyProperties && $aPropDef[$aRow['s_attributename']]['b_showinproperties'] == 'FALSE') {
+//					continue;
+//				}
 				if (!isset($this->aModifiedAttributes[$aRow['s_attributename']])) {
 					$this->elemSubject->setAttribute($aRow['s_attributename'], $aRow['s_value']);
 				}
@@ -2179,9 +2204,13 @@ class sbCR_Node {
 		} else {
 			$aProperties = $stmtGetProperties->fetch(PDO::FETCH_ASSOC);
 			$stmtGetProperties->closeCursor();
-			if ($sType == 'EXTENDED') {
+			// $aProperties != null because of a bug when reading newly saved nodes (investigate!!!)
+			if ($sType == 'EXTENDED' && $aProperties != NULL) {
+				//var_dumpp($aProperties);
 				foreach ($this->crPropertyDefinitionCache as $sName => $aDetails) {
+					//DEBUG('loadProperties:Extended:before', $sName.'='.$this->elemSubject->getAttribute($sName));
 					if (!isset($this->aModifiedAttributes[$sName]) && $aDetails['e_storagetype'] == 'EXTENDED') {
+						//DEBUG('loadProperties:Extended:after', $sName.'='.$aProperties[$aDetails['s_auxname']]);
 						$this->elemSubject->setAttribute($sName, $aProperties[$aDetails['s_auxname']]);
 					}
 				}

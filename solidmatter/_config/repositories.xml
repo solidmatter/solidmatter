@@ -19,7 +19,7 @@
 			<pass>solidmatter</pass>
 			<schema>solidmatter_jukeboxtest</schema>
 			<charset>utf8</charset>
-			<log enabled="false" verbose="false">
+			<log enabled="true" verbose="false">
 				<file>_logs/log_database_test.txt</file>
 				<size>1024</size>
 			</log>

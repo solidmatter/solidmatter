@@ -487,7 +487,8 @@ $_QUERIES['sbSystem/user/loadProperties/auxiliary'] = '
 				n_successfullogins,
 				n_silentlogins,
 				n_totalfailedlogins,
-				b_backendaccess
+				b_backendaccess,
+				dt_expires
 	FROM		{TABLE_USERS}
 	WHERE		uuid = :node_id
 ';
@@ -511,6 +512,7 @@ $_QUERIES['sbSystem/user/saveProperties/auxiliary'] = '
 					n_silentlogins,
 					n_totalfailedlogins,
 					b_backendaccess,
+					dt_expires,
 					uuid
 				) VALUES (
 					:security_password,
@@ -530,6 +532,7 @@ $_QUERIES['sbSystem/user/saveProperties/auxiliary'] = '
 					:info_silentlogins,
 					:info_totalfailedlogins,
 					:security_backendaccess,
+					:security_expires,
 					:node_id
 				)
 	ON DUPLICATE KEY UPDATE
@@ -548,7 +551,8 @@ $_QUERIES['sbSystem/user/saveProperties/auxiliary'] = '
 				n_failedlogins = :security_failedlogins,
 				n_successfullogins = :info_successfullogins,
 				n_silentlogins = :info_silentlogins,
-				n_totalfailedlogins = :info_totalfailedlogins
+				n_totalfailedlogins = :info_totalfailedlogins,
+				dt_expires = :security_expires
 ';
 
 //------------------------------------------------------------------------------
@@ -776,7 +780,8 @@ $_QUERIES['sb_system/root/view/login/loadUserdata'] = '
 				u.b_locked,
 				u.dt_currentlogin,
 				u.n_failedlogins,
-				u.dt_failedlogin
+				u.dt_failedlogin,
+				u.dt_expires
 	FROM		{TABLE_USERS} u
 	INNER JOIN	{TABLE_NODES} n
 		ON		n.uuid = u.uuid

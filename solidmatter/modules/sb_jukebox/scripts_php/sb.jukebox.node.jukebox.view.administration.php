@@ -13,6 +13,13 @@
 */
 class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 	
+	protected $aRequiredAuthorisations = array(
+		'info' => array('write'),
+		'startImport' => array('write'),
+		'clearLibrary' => array('write'),
+		'clearQuilts' => array('write'),
+	);
+	
 	//--------------------------------------------------------------------------
 	/**
 	* 
@@ -22,6 +29,7 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 	public function execute($sAction) {
 		
 		global $_RESPONSE;
+		$this->checkRequirements($sAction);
 		
 		switch ($sAction) {
 			

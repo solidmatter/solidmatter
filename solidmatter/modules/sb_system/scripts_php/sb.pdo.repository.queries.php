@@ -174,6 +174,8 @@ $_QUERIES['sbCR/getNode/root'] = '
 				n.s_name,
 				n.s_label,
 				n.s_customcsstype,
+				n.b_inheritrights,
+				n.b_bequeathrights,
 				nt.s_classfile,
 				nt.s_class,
 				nt.s_csstype,
@@ -191,6 +193,8 @@ $_QUERIES['sbCR/getNode/byUUID'] = '
 				n.s_name,
 				n.s_label,
 				n.s_customcsstype,
+				n.b_inheritrights,
+				n.b_bequeathrights,
 				nt.s_classfile,
 				nt.s_class,
 				nt.s_csstype,
@@ -211,6 +215,8 @@ $_QUERIES['sbCR/getNode/byUID'] = '
 				n.s_name,
 				n.s_label,
 				n.s_customcsstype,
+				n.b_inheritrights,
+				n.b_bequeathrights,
 				nt.s_classfile,
 				nt.s_class,
 				nt.s_csstype,
@@ -517,13 +523,13 @@ $_QUERIES['sbCR/node/save/new'] = '
 					dt_deletedat
 				) VALUES (
 					:uuid,
-					:s_uid,
-					:fk_nodetype,
-					:s_label,
-					:s_name,
-					:s_customcsstype,
-					\'TRUE\',
-					\'TRUE\',
+					:uid,
+					:nodetype,
+					:label,
+					:name,
+					:customcsstype,
+					:inheritrights,
+					:bequeathrights,
 					:user_id,
 					:user_id,
 					NULL,
@@ -534,12 +540,12 @@ $_QUERIES['sbCR/node/save/new'] = '
 ';
 $_QUERIES['sbCR/node/save/existing'] = '
 	UPDATE		{TABLE_NODES}
-	SET			s_uid = :s_uid,
-				s_label = :s_label,
-				s_name = :s_name,
-				s_customcsstype = :s_customcsstype,
-				b_inheritrights = :b_inheritrights,
-				b_bequeathrights = :b_bequeathrights,
+	SET			s_uid = :uid,
+				s_label = :label,
+				s_name = :name,
+				s_customcsstype = :customcsstype,
+				b_inheritrights = :inheritrights,
+				b_bequeathrights = :bequeathrights,
 				fk_modifiedby = :user_id,
 				dt_modifiedat = NOW()
 	WHERE		uuid = :uuid
@@ -834,7 +840,9 @@ $_QUERIES['sbCR/node/getPropertyDefinitions'] = '
 				pd.e_storagetype,
 				pd.s_auxname,
 				pd.b_protected,
-				pd.b_protectedoncreation
+				pd.b_protectedoncreation,
+				pd.s_defaultvalues,
+				pd.s_labelpath
 	FROM		{TABLE_PROPERTYDEFS} pd
 	WHERE		pd.fk_nodetype = :nodetype
 		AND		pd.e_type != \'BINARY\'

@@ -70,6 +70,7 @@ class ApplicationRequestHandler {
 		
 		$nodeCurrent->callView($sView, $sAction);
 		$nodeCurrent->loadAncestors();
+		$nodeCurrent->loadUserAuthorisations();
 		$nodeCurrent->storeAncestors(TRUE, TRUE);
 		$nodeCurrent->setAttribute('master', 'true');
 		

@@ -13,14 +13,29 @@ global $_QUERIES;
 $_QUERIES['MAPPING']['{TABLE_JB_ALBUMS}']			= '{PREFIX_WORKSPACE}_jukebox_albums';
 $_QUERIES['MAPPING']['{TABLE_JB_TRACKS}']			= '{PREFIX_WORKSPACE}_jukebox_tracks';
 $_QUERIES['MAPPING']['{TABLE_JB_ARTISTS}']			= '{PREFIX_WORKSPACE}_jukebox_artists';
-$_QUERIES['MAPPING']['{TABLE_JB_VOTES}']			= '{PREFIX_WORKSPACE}_jukebox_votes';
 $_QUERIES['MAPPING']['{TABLE_JB_GENRES}']			= '{PREFIX_WORKSPACE}_jukebox_genres';
 $_QUERIES['MAPPING']['{TABLE_JB_TRACKSGENRES}']		= '{PREFIX_WORKSPACE}_jukebox_tracks_genres';
 $_QUERIES['MAPPING']['{TABLE_JB_BLACKLIST}']		= '{PREFIX_WORKSPACE}_jukebox_blacklist';
 $_QUERIES['MAPPING']['{TABLE_JB_NOWPLAYING}']		= '{PREFIX_WORKSPACE}_jukebox_nowplaying';
+$_QUERIES['MAPPING']['{TABLE_JB_HISTORY}']			= '{PREFIX_WORKSPACE}_jukebox_history';
+
+$sHierarchyComponent = '
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	WHERE		h.n_left > (SELECT n_left
+					FROM	{TABLE_HIERARCHY}
+					WHERE	fk_child = :jukebox_uuid
+						AND	b_primary = \'TRUE\'
+				)
+		AND		h.n_right < (SELECT n_right
+					FROM	{TABLE_HIERARCHY}
+					WHERE	fk_child = :jukebox_uuid
+						AND	b_primary = \'TRUE\'
+				)
+';
 
 //------------------------------------------------------------------------------
-// nowplaying
+// nowplaying / history
 //------------------------------------------------------------------------------
 
 $_QUERIES['sbJukebox/nowPlaying/set'] = '
@@ -58,6 +73,36 @@ $_QUERIES['sbJukebox/nowPlaying/clear'] = '
 	WHERE		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(dt_played) > :seconds
 		AND		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(dt_played) > n_playtime
 ';
+
+$_QUERIES['sbJukebox/history/set'] = '
+	INSERT INTO	{TABLE_JB_HISTORY}
+				(
+					fk_user,
+					fk_track,
+					n_playtime,
+					dt_played
+				) VALUES (
+					:user_uuid,
+					:track_uuid,
+					:playtime,
+					NOW()
+				)
+';
+$_QUERIES['sbJukebox/history/getTop'] = '
+	SELECT		n.uuid,
+				n.s_label AS label,
+				n.s_name AS name,
+				COUNT(*) AS times_played 
+	FROM		{TABLE_NODES} n
+	INNER JOIN	{TABLE_JB_HISTORY} hi
+		ON		n.uuid = hi.fk_track
+				'.$sHierarchyComponent.'
+		AND		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(hi.dt_played) < 60*60*24*7
+	GROUP BY	hi.fk_track
+	ORDER BY	COUNT(*) DESC
+	LIMIT		0, :limit
+';
+
 
 //------------------------------------------------------------------------------
 // jukebox
@@ -97,20 +142,6 @@ $_QUERIES['sbJukebox/jukebox/gatherInfo'] = '
 				) AS n_numplaylists
 	FROM		{TABLE_HIERARCHY} h
 	WHERE		h.fk_child = :jukebox_uuid
-';
-$sHierarchyComponent = '
-	INNER JOIN	{TABLE_HIERARCHY} h
-		ON		n.uuid = h.fk_child
-	WHERE		h.n_left > (SELECT n_left
-					FROM	{TABLE_HIERARCHY}
-					WHERE	fk_child = :jukebox_uuid
-						AND	b_primary = \'TRUE\'
-				)
-		AND		h.n_right < (SELECT n_right
-					FROM	{TABLE_HIERARCHY}
-					WHERE	fk_child = :jukebox_uuid
-						AND	b_primary = \'TRUE\'
-				)
 ';
 $_QUERIES['sbJukebox/jukebox/search/anything/byLabel'] = '
 	SELECT		n.uuid,
@@ -286,15 +317,12 @@ $_QUERIES['sbJukebox/album/properties/load/auxiliary'] = '
 	SELECT		fk_artist,
 				s_title,
 				n_published,
-				n_cdsinset,
 				b_coverexists,
 				s_coverfilename,
 				n_coverlightness,
 				n_coverhue,
 				n_coversaturation,
-				s_relpath,
-				e_type,
-				e_defects
+				s_relpath
 	FROM		{TABLE_JB_ALBUMS}
 	WHERE		uuid = :node_id
 ';
@@ -305,43 +333,34 @@ $_QUERIES['sbJukebox/album/properties/save/auxiliary'] = '
 					fk_artist,
 					s_title,
 					n_published,
-					n_cdsinset,
 					b_coverexists,
 					s_coverfilename,
 					n_coverhue,
 					n_coversaturation,
 					n_coverlightness,
-					s_relpath,
-					e_type,
-					e_defects
+					s_relpath
 				) VALUES (
 					:node_id,
 					:info_artist,
 					:info_title,
 					:info_published,
-					:info_cdsinset,
 					:info_coverexists,
 					:info_coverfilename,
 					:ext_coverhue,
 					:ext_coversaturation,
 					:ext_coverlightness,
-					:info_relpath,
-					:info_type,
-					:info_defects
-				)
+					:info_relpath
+					)
 	ON DUPLICATE KEY UPDATE
 				fk_artist = :info_artist,
 				s_title = :info_title,
 				n_published = :info_published,
-				n_cdsinset = :info_cdsinset,
 				b_coverexists = :info_coverexists,
 				s_coverfilename = :info_coverfilename,
 				n_coverhue = :ext_coverhue,
 				n_coversaturation = :ext_coversaturation,
 				n_coverlightness = :ext_coverlightness,
-				s_relpath = :info_relpath,
-				e_type = :info_type,
-				e_defects = :info_defects
+				s_relpath = :info_relpath
 ';
 /*$_QUERIES['sbJukebox/album/quilt/findCover'] = '
 	SELECT		n.uuid,
@@ -452,22 +471,38 @@ $_QUERIES['sbJukebox/jukebox/various/getRandom'] = '
 	SELECT		n.uuid,
 				n.s_label AS label,
 				n.s_name AS name,
-				v.n_vote AS vote
+				(SELECT		v.n_vote 
+					FROM	{TABLE_VOTES} v
+					WHERE	v.fk_user = :user_uuid
+						AND	v.fk_subject = n.uuid
+				) AS vote
 	FROM		{TABLE_NODES} n
-	LEFT JOIN	{TABLE_VOTES} v
-		ON		n.uuid = v.fk_subject
 				'.$sHierarchyComponent.'
 		AND		n.fk_nodetype = :nodetype
 	ORDER BY	RAND()
 	LIMIT		0, :limit
 ';
-$_QUERIES['sbJukebox/jukebox/various/getTop'] = '
+/*$_QUERIES['sbJukebox/jukebox/various/getRandom'] = '
 	SELECT		n.uuid,
 				n.s_label AS label,
 				n.s_name AS name,
 				v.n_vote AS vote
 	FROM		{TABLE_NODES} n
 	LEFT JOIN	{TABLE_VOTES} v
+		ON		n.uuid = v.fk_subject
+				'.$sHierarchyComponent.'
+		AND		n.fk_nodetype = :nodetype
+		AND		v.fk_user = :user_uuid
+	ORDER BY	RAND()
+	LIMIT		0, :limit
+';*/
+$_QUERIES['sbJukebox/jukebox/various/getTop'] = '
+	SELECT		n.uuid,
+				n.s_label AS label,
+				n.s_name AS name,
+				v.n_vote AS vote
+	FROM		{TABLE_NODES} n
+	INNER JOIN	{TABLE_VOTES} v
 		ON		n.uuid = v.fk_subject
 				'.$sHierarchyComponent.'
 		AND		n.fk_nodetype = :nodetype

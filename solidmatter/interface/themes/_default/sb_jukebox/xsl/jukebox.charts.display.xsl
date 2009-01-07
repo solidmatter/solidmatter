@@ -58,6 +58,14 @@
 					<xsl:with-param name="expand" select="'tracks'" />
 				</xsl:call-template>
 			</xsl:if>
+			<xsl:if test="$content/mostPlayed">
+				<xsl:call-template name="renderResult">
+					<xsl:with-param name="label" select="$locale/sbJukebox/labels/most_played" />
+					<xsl:with-param name="nodes" select="$content/mostPlayed/resultset/row" />
+					<xsl:with-param name="type" select="'track'" />
+					<xsl:with-param name="expand" select="'mostPlayed'" />
+				</xsl:call-template>
+			</xsl:if>
 		</div>
 	</xsl:template>
 	
@@ -77,7 +85,7 @@
 									<a class="type collapse" href="/-/charts"><xsl:value-of select="$locale/sbJukebox/actions/collapse" /></a>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:if test="count($nodes) > 9">
+									<xsl:if test="1 or count($nodes) > 9">
 										<a class="type expand" href="/-/charts/-/expand={$expand}"><xsl:value-of select="$locale/sbJukebox/actions/expand" /></a>
 									</xsl:if>
 								</xsl:otherwise>
@@ -96,7 +104,17 @@
 						<tr>
 							<xsl:call-template name="colorize" />
 							<td width="80">
-								<xsl:call-template name="render_stars" />
+								<xsl:choose>
+									<xsl:when test="$expand = 'mostPlayed'">
+										<!--<div style="text-align: right;">
+											<xsl:value-of select="@times_played" />
+										</div>-->
+										<xsl:call-template name="render_timesplayed" />
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:call-template name="render_stars" />
+									</xsl:otherwise>
+								</xsl:choose>
 							</td>
 							<td width="10" style="text-align: right;">
 								<xsl:value-of select="position()" />.

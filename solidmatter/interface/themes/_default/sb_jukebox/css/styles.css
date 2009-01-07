@@ -80,6 +80,18 @@ div.head {
 	background: #C5C6DA url(../images/header_bg.png) repeat-x top left;
 }
 
+div.head h1 {
+	/*background: url(../images/logo.png) no-repeat 50px 5px;
+	padding-left: 100px;*/
+	background: url(../images/header_bg_rightbracket.png) no-repeat 0 300;
+	padding-left: 60px;
+}
+
+div.head a {
+	text-decoration: none;
+	color: #A00;
+}
+
 a.logout {
 	position: absolute;
 	top: 0;
@@ -91,8 +103,8 @@ a.logout {
 
 span.current_playlist {
 	position: absolute;
-	bottom: 0;
-	right: 0;
+	bottom: 3px;
+	right: 3px;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -430,6 +442,12 @@ a.imglink img {
 }
 *.remove:hover {
 	background-image: url(../icons/remove_hover.png);
+}
+*.download {
+	background-image: url(../icons/download.png);
+}
+*.download:hover {
+	background-image: url(../icons/download_hover.png);
 }
 *.activate {
 	background-image: url(../icons/activate.png);

@@ -13,6 +13,11 @@
 */
 class sbView_jukebox_artist_details extends sbJukeboxView {
 	
+	protected $aRequiredAuthorisations = array(
+		'display' => array('read'),
+		'getM3U' => array('read'),
+	);
+	
 	//--------------------------------------------------------------------------
 	/**
 	* 
@@ -22,6 +27,7 @@ class sbView_jukebox_artist_details extends sbJukeboxView {
 	public function execute($sAction) {
 		
 		global $_RESPONSE;
+		$this->checkRequirements($sAction);
 		
 		switch ($sAction) {
 			

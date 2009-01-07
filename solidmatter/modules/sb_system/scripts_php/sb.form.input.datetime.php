@@ -27,12 +27,28 @@ class sbInput_datetime extends sbInput_string {
 	*/
 	public function checkInput() {
 		
-		if (!is_mysqldatetime($this->mValue)) {
+		if (strlen($this->mValue) == 0 && $this->aConfig['required'] == 'TRUE') {
+			$this->sErrorLabel = '$locale/system/formerrors/not_null';
+		}
+		if ($this->aConfig['required'] == 'TRUE' && !is_mysqldatetime($this->mValue)) {
 			$this->sErrorLabel = '$locale/system/formerrors/no_datetime';
 		}
 		
 		return (parent::checkInput());
 		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getValue() {
+		if (strlen(trim($this->mValue)) == 0) {
+			$this->mValue = NULL;
+		}
+		return ($this->mValue);
 	}
 	
 }

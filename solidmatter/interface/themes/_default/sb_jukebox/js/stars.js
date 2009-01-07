@@ -107,3 +107,27 @@ function update_stars(oStarContainer, iMaxStars, iVote) {
 
 }
 
+//------------------------------------------------------------------------------
+/**
+* display times played dots
+*/
+function render_timesplayed(sTimesPlayed, iMaxDots) {
+	
+	if (sTimesPlayed == 'NaN') {
+		var iTimesPlayed = 0;
+	} else {
+		var iTimesPlayed = parseInt(sTimesPlayed);
+		}
+	
+	var sDotHTML = '|';
+	var sNoDotHTML = '';
+	
+	for (var i=0; i<iMaxDots; i++) {
+		if (i < iTimesPlayed) {
+			document.write(sDotHTML);
+		} else {
+			document.write(sNoDotHTML);
+		}
+	}
+	
+}

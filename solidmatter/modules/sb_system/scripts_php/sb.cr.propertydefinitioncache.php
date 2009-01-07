@@ -153,6 +153,16 @@ class sbCR_PropertyDefinitionCache implements Iterator {
 		return (TRUE);
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getDefaultValue($sName) {
+		return ($this->aPropertyDefinitions[$sName]['s_defaultvalues']);
+	}
+	
 }
 
 ?>

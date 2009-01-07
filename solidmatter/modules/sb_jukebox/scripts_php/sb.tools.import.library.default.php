@@ -142,10 +142,18 @@ class DefaultJukeboxImporter {
 						
 						$nodeArtist = $aResult['nodeAlbumArtist'];
 						$nodeAlbum = $aResult['nodeAlbum'];
+//						var_dumpp('startImport1:'.$nodeAlbum->getProperty('sbcr:inheritrights'));
+						
 						if (!$nodeArtist->isNew()) {
-							$nodeArtist->save();	
+							$nodeArtist->save();
+//							var_dumpp('startImport2:'.$nodeAlbum->getProperty('sbcr:inheritrights'));
 						}
 						$this->nodeJukebox->save();
+						
+//						var_dumpp('startImport3:'.$nodeAlbum->getProperty('sbcr:inheritrights'));
+		
+						//var_dumpp($nodeAlbum->getName().'-'.$nodeAlbum->getProperty('sbcr:inheritrights'));
+						//var_dumpp($nodeAlbum->getProperties());
 						
 						$aLibraryInfo['album_uuid'] = $nodeAlbum->getProperty('jcr:uuid');
 						$aLibraryInfo['state'] = 'imported';

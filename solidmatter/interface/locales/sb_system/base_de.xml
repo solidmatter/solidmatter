@@ -258,6 +258,7 @@
 			<security_locked label="gesperrt" />
 			<security_failedlogins label="fehlgeschlagene Logins (aktuell)" />
 			<security_backendaccess label="Zugriff auf Backend erlaubt" />
+			<security_expires label="Account läuft aus am" />
 			<info_emailsent label="eMail verschickt" />
 			<info_successfullogins label="erfolgreiche Logins" />
 			<info_silentlogins label="stille Logins" />
@@ -421,6 +422,8 @@
 		<publish>Publizieren</publish>
 		<rate>Bewertung abgeben</rate>
 		<comment>Kommentieren</comment>
+		<tag>Taggen</tag>
+		<download>Runterladen</download>
 	</authorisations>
 	
 	<registry>
@@ -465,6 +468,7 @@
 		<wrong_sequence>Die Zeichenfolge stimmt nicht überein</wrong_sequence>
 		<account_locked>Dieses Konto ist gesperrt</account_locked>
 		<account_inaktive>Dieses Konto ist nicht aktiviert</account_inaktive>
+		<account_expired>Dieses Konto ist abgelaufen</account_expired>
 		<account_temp_locked>Dieses Konto ist vorübergehend gesperrt</account_temp_locked>
 		<not_in_options>Der übermittelte Wert ist nicht in der Liste</not_in_options>
 		<wrong_nodetype>Falscher Typ ausgewählt</wrong_nodetype>

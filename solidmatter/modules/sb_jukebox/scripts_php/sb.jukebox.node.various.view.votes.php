@@ -13,6 +13,18 @@
 */
 class sbView_jukebox_various_votes extends sbJukeboxView {
 	
+	protected $aRequiredAuthorisations = array(
+		'addComment' => array('comment'),
+		'placeVote' => array('vote'),
+		'addTag' => array('tag'),
+	);
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function execute($sAction) {
 		
 		global $_RESPONSE;
@@ -54,7 +66,8 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				break;
 				
 			case 'placeVote':
-				$iVote = $_REQUEST->getParam('vote');
+				//$iVote = $_REQUEST->getParam('vote');
+				$iVote = $this->requireParam('vote');
 				$nodeJukebox = $this->nodeSubject->getAncestorOfType('sb_jukebox:jukebox');
 				/*$iMin = Registry::getValue('sb.jukebox.voting.scale.min');
 				$iMax = Registry::getValue('sb.jukebox.voting.scale.max');
@@ -93,6 +106,12 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 					}
 				}*/
 				$_RESPONSE->addHeader('X-Vote: '.$this->nodeSubject->getVote());
+				break;
+				
+			case 'addTag':
+				$sTag = $this->requireParam('tag');
+				$this->nodeSubject->addTag($sTag);
+				$this->nodeSubject->save();
 				break;
 				
 			default:

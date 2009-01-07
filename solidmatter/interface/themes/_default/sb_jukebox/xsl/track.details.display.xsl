@@ -45,7 +45,7 @@
 			<h2>
 				<div class="albumdetails" style="float:right;">
 					<xsl:call-template name="render_buttons" />
-					Vote: <xsl:call-template name="render_stars">
+					| <xsl:call-template name="render_stars">
 						<xsl:with-param name="voting" select="1" />
 					</xsl:call-template>
 				</div>
@@ -56,7 +56,7 @@
 				<tbody>
 					<tr class="odd">
 						<td style="padding:10px;" width="160" rowspan="3">
-							<a class="imglink" target="_blank" href="/{@uuid}/details/getCover"><img height="150" width="150" src="/{@uuid}/details/getCover/size=150" alt="cover" /></a>
+							<a class="imglink" target="_blank" href="/{@uuid}/details/getCover/{ancestors/sbnode[@nodetype='sb_jukebox:album']/@name}.jpg"><img height="150" width="150" src="/{@uuid}/details/getCover/size=150" alt="cover" /></a>
 						</td>
 						<td style="padding: 15px 15px 15px 0;">
 							<table width="100%">

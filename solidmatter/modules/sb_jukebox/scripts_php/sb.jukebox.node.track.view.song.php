@@ -64,6 +64,7 @@ class sbView_jukebox_track_song extends sbView {
 				
 				$this->setNowPlaying();
 				
+				
 				sbSession::disableStoring();
 				
 				header('Content-type: audio/mpeg');
@@ -76,6 +77,7 @@ class sbView_jukebox_track_song extends sbView {
 					header("Content-Range: bytes=$range");
 					header("Content-Length: ".($iFilesize-$start));
 				} else {
+					$this->setHistory();
 					header('Content-Length: '.$iFilesize);
 					header('Content-Disposition: attachment; filename='.$this->nodeSubject->getProperty('info_filename'));
 				}
@@ -99,6 +101,20 @@ class sbView_jukebox_track_song extends sbView {
 	*/
 	public function setNowPlaying() {
 		$stmtSet = $this->crSession->prepareKnown('sbJukebox/nowPlaying/set');
+		$stmtSet->bindValue('user_uuid', User::getUUID(), PDO::PARAM_STR);
+		$stmtSet->bindValue('track_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
+		$stmtSet->bindValue('playtime', $this->nodeSubject->getProperty('enc_playtime'), PDO::PARAM_INT);
+		$stmtSet->execute();
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function setHistory() {
+		$stmtSet = $this->crSession->prepareKnown('sbJukebox/history/set');
 		$stmtSet->bindValue('user_uuid', User::getUUID(), PDO::PARAM_STR);
 		$stmtSet->bindValue('track_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
 		$stmtSet->bindValue('playtime', $this->nodeSubject->getProperty('enc_playtime'), PDO::PARAM_INT);

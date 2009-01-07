@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <config>
 	
-	<!-- primary repostitory, keep it clean! -->
+	<!-- primary repository, keep it clean! -->
 	<site location="sb2.localhost/" type="controller" handler="frontend">
 		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
 		<debug enabled="false" verbose="false" />
@@ -27,6 +27,7 @@
 		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
 		<site location="test.jukebox/theme" type="theme" handler="backend" theme="_default" />
+		<site location="test.jukebox/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
 	</site>
 	<site location="ollo.gotdns.org/" type="controller" handler="application" subject="jukebox">
 		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
@@ -86,19 +87,20 @@
 	<site location="admin.localhost/test" type="script" handler="test.php" />
 	<site location="sb2.localhost/solidbrickz" type="redirect" destination="http://sb2.localhost/de/entwicklung/solidbrickz" />
 	
-	<!-- heiko VM -->
+	<!-- default domains -->
 	<site location="sm.backend/phpinfo" type="script" handler="phpinfo.php" />
 	<site location="sm.backend/" type="controller" handler="backend">
 		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
-		<site location="backend.heiko/templates" type="controller" handler="xsl" />
-		<site location="backend.heiko/theme" type="theme" handler="backend" theme="_admin_grey" />
-		<site location="backend.heiko/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
+		<site location="sm.backend/templates" type="controller" handler="xsl" />
+		<site location="sm.backend/theme" type="theme" handler="backend" theme="_admin_grey" />
+		<site location="sm.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
 	</site>
 	<site location="sm.jukebox/" type="controller" handler="application" subject="jukebox">
 		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
 		<site location="sm.jukebox/theme" type="theme" handler="backend" theme="_default" />
+		<site location="sm.jukebox/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
 	</site>
 	
 </config>

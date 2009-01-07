@@ -16,9 +16,18 @@ import('sb.tools.mime');
 */
 class sbView_jukebox_album_details extends sbJukeboxView {
 	
+	protected $aRequiredAuthorisations = array(
+		'display' => array('read'),
+		'getM3U' => array('read'),
+		'download' => array('download'),
+		'getCover' => array('read'),
+		'buildQuilt' => array('read'),
+	);
+	
 	public function execute($sAction) {
 		
 		global $_RESPONSE;
+		$this->checkRequirements($sAction);
 		
 		switch ($sAction) {
 			
@@ -75,7 +84,31 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 				));
 				echo $sPlaylist;
 				exit();
+			
+			case 'download':
+				import('sb_system:external:pclzip/pclzip.lib');
+				$sTempFile = Registry::getValue('sb.system.temp.dir').'/'.$this->nodeSubject->getProperty('name').'.zip';
+				$zipAlbum = new PclZip($sTempFile);
+				$aFileList = $this->getDownloadItems($this->nodeSubject);
+				$zipAlbum->create($aFileList, PCLZIP_OPT_REMOVE_ALL_PATH, PCLZIP_OPT_NO_COMPRESSION);
 				
+//				var_dumpp($aFileList);
+//				var_dumpp($sTempFile);
+//				var_dumpp($zipAlbum);
+				
+				$aOptions = array();
+				$aOptions['filename'] = $this->nodeSubject->getProperty('name').'.zip';
+				headers('download', $aOptions);
+				$hTempFile = fopen($sTempFile, 'r');
+				fpassthru($hTempFile);
+				// this loop is necessary because it can take some time to close the handle
+				while (file_exists($sTempFile)) {
+					fclose($hTempFile);
+					unlink($sTempFile);
+				}
+				exit();
+				break;
+			
 			case 'getCover':
 				parent::getCover($this->nodeSubject);
 				break;

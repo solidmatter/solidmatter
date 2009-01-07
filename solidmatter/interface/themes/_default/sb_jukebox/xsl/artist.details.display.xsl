@@ -48,7 +48,7 @@
 			<h2>
 				<span class="albumdetails" style="float:right;">
 					<xsl:call-template name="render_buttons" />
-					<xsl:value-of select="$locale/sbJukebox/actions/vote" />: <xsl:call-template name="render_stars">
+					| <xsl:call-template name="render_stars">
 						<xsl:with-param name="voting" select="1" />
 					</xsl:call-template>
 				</span>
@@ -81,7 +81,7 @@
 									<span style="float: right;">
 										<xsl:call-template name="render_buttons" />
 									</span>
-									<a href="/{@uuid}"><xsl:value-of select="@label" /></a><br />
+									<a href="/{@uuid}"><xsl:value-of select="@label" /> [<xsl:value-of select="@info_published"/>]</a><br />
 									<xsl:call-template name="render_stars" />
 								</td>
 							</tr>

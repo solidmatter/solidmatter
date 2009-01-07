@@ -116,6 +116,11 @@ class DefaultAuthenticationManager {
 			$aResult['failure_reason'] = 'account_inactive';
 		}
 		
+		// is the account expired?
+		if ($aInfo['dt_expires'] != NULL && datetime_mysql2timestamp($aInfo['dt_expires']) < time()) {
+			$aResult['failure_reason'] = 'account_expired';	
+		}
+		
 		// everything ok? then tell the client!
 		if ($aResult['failure_reason'] == 'none') {
 			$aResult['login_successful'] = TRUE;

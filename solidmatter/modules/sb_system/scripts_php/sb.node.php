@@ -1815,9 +1815,9 @@ class sbNode extends sbCR_Node {
 		}
 				
 		$aMerged = array();
-		$this->loadProperties('extended');
+		//$this->loadProperties('extended');
 		
-		if ($this->getProperty('inheritrights') == 'TRUE') {
+		if ($this->getProperty('sbcr:inheritrights') == 'TRUE') {
 			$_CACHE = CacheFactory::getInstance('system');
 			if ($_CACHE->exists('authorisations:array/'.$this->getProperty('jcr:uuid'))) {
 				$aMerged = $_CACHE->loadData('authorisations:array/'.$this->getProperty('jcr:uuid'));
@@ -1825,7 +1825,7 @@ class sbNode extends sbCR_Node {
 				try {
 					$nodeParent = $this->getParent();
 					$aLocal = $nodeParent->loadLocalAuthorisations(FALSE);
-					if ($nodeParent->getProperty('bequeathrights') == 'TRUE') {
+					if ($nodeParent->getProperty('sbcr:bequeathrights') == 'TRUE') {
 						$aInherited = $nodeParent->loadInheritedAuthorisations(FALSE);
 						$aMerged = $this->mergeAuthInherited($aLocal, $aInherited);
 						//$_CACHE->storeData('authorisations:array/'.$this->elemSubject->getAttribute('uuid'), $aMerged);

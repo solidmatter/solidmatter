@@ -419,6 +419,49 @@ class sbJukeboxView extends sbView {
 		
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function getDownloadItems($nodeSubject, $aCyclePrevention = array()) {
+		
+		$aItems = array();
+		
+		switch ($nodeSubject->getPrimaryNodeType()) {
+			
+			case 'sb_jukebox:album':
+				$nodeAlbum = $nodeSubject;
+				$nodeArtist = $nodeAlbum->getParent();
+				$nodeJukebox = $nodeArtist->getParent();
+				$sFilename = $nodeJukebox->getProperty('config_sourcepath');
+				$sFilename = normalize_path($sFilename);
+				$sFilename .= $nodeAlbum->getProperty('info_relpath');
+				$sFilename = iconv('UTF-8', 'Windows-1252', $sFilename);
+				$aItems[] = $sFilename;
+				break;
+				
+			case 'sb_jukebox:track':
+				$nodeAlbum = $nodeSubject->getParent();
+				$nodeArtist = $nodeAlbum->getParent();
+				$nodeJukebox = $nodeArtist->getParent();
+				$sFilename = $nodeJukebox->getProperty('config_sourcepath');
+				$sFilename = normalize_path($sFilename);
+				$sFilename .= $nodeAlbum->getProperty('info_relpath');
+				$sFilename = iconv('UTF-8', 'Windows-1252', $sFilename);
+				$aItems[] = $sFilename;
+				break;
+				
+			default:
+				throw new sbException(__CLASS__.': getDownloadItems() doesn\'t support nodetype '.$nodeSubject->getPrimaryNodeType());
+				
+		}
+		
+		return ($aItems);
+		
+	}
+	
 }
 
 ?>

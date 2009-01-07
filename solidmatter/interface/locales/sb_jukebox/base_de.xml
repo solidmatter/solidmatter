@@ -93,6 +93,7 @@
 		<top_artists>Top Künstler</top_artists>
 		<top_albums>Top Alben</top_albums>
 		<top_tracks>Top Titel</top_tracks>
+		<most_played>am meisten gespielt</most_played>
 		<weighting>Gewichtung</weighting>
 		<all_tags>Alle Tags</all_tags>
 		<recommendations>Empfehlungen</recommendations>
@@ -118,6 +119,7 @@
 		<expand>aufklappen</expand>
 		<collapse>zuklappen</collapse>
 		<recommend>empfehlen</recommend>
+		<download>herunterladen</download>
 	</actions>
 	
 </sbJukebox>

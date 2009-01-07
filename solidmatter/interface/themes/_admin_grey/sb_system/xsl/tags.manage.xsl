@@ -38,11 +38,14 @@
 		
 		
 		<table class="default">
-			<tr><th colspan="6">Tags<span style="float:right;"><a href="/{$master/@uuid}/manage/clearUnused">Clear Unused Tags</a></span></th></tr>	
+			<tr><th colspan="4">Tags</th>
+				<th colspan="2">
+					<span style="float:right;"><a href="/{$master/@uuid}/manage/clearUnused">Clear Unused Tags</a></span>
+				</th></tr>	
 			<tr class="th2">
 				<th>Tag</th>
 				<th>NumItems</th>
-				<th>Poularity</th>
+				<th>Popularity</th>
 				<th>Custom Weight</th>
 				<th>Visibility</th>
 				<th></th>

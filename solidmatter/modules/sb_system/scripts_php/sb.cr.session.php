@@ -727,7 +727,10 @@ class sbCR_Session {
 		$aNode['s_csstype'] = $this->aNodetypes[$sNodetype]['s_csstype'];
 		$aNode['s_customcsstype'] = NULL;
 		$aNode['fk_parent'] = $sParentUUID;
-		//var_dump($aNode);
+		// for now always set full inheritance on new nodes
+		$aNode['b_inheritrights'] = 'TRUE';
+		$aNode['b_bequeathrights'] = 'TRUE';
+		
 		return ($this->generateInstanceFromRow($aNode, 'new'));
 	}
 	
@@ -853,7 +856,7 @@ class sbCR_Session {
 		} else {
 			$nodeSubject = new sbCR_Node($elemSubject, $this);
 		}
-		//$elemNode->setProperty('nodetype', $aRow['fk_nodetype']);
+		
 		$elemSubject->setAttribute('name', $aRow['s_name']);
 		$elemSubject->setAttribute('label', $aRow['s_label']);
 		$elemSubject->setAttribute('uid', $aRow['s_uid']);
@@ -872,7 +875,11 @@ class sbCR_Session {
 			$aRow['fk_parent'] = 'PRIMARY';
 		}*/
 		$elemSubject->setAttribute('parent', $aRow['fk_parent']);
-		
+		// rights
+		$elemSubject->setAttribute('inheritrights', $aRow['b_inheritrights']);
+		$elemSubject->setAttribute('bequeathrights', $aRow['b_bequeathrights']);
+//		var_dumpp($elemSubject->getAttribute('bequeathrights'));
+//		var_dumpp($nodeSubject->getProperty('sbcr:inheritrights'));
 		return ($nodeSubject);
 		
 	}

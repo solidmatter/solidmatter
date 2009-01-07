@@ -128,6 +128,9 @@ class sbView_root_login extends sbView {
 							case 'account_inactive':
 								$formLogin->setFormError('$locale//formerrors/account_inactive');
 								break;
+							case 'account_expired':
+								$formLogin->setFormError('$locale//formerrors/account_expired');
+								break;
 							default:
 								throw new sbException('login failed for unknown reason "'.$aResult['failure_reason'].'"');
 								break;

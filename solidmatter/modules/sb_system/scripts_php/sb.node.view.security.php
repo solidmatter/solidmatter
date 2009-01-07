@@ -89,9 +89,10 @@ class sbView_security extends sbView {
 					throw new InvalidFormDataException('changeInheritance');
 				}
 				$aInputs = $formInheritance->getValues();
-				$this->nodeSubject->setProperty('inheritrights', $aInputs['inheritrights']);
-				$this->nodeSubject->setProperty('bequeathrights', $aInputs['bequeathrights']);
+				$this->nodeSubject->setProperty('sbcr:inheritrights', $aInputs['inheritrights']);
+				$this->nodeSubject->setProperty('sbcr:bequeathrights', $aInputs['bequeathrights']);
 				$this->nodeSubject->save();
+				
 				$cacheAuth = CacheFactory::getInstance('authorisations');
 				$cacheAuth->clearAuthorisations($_REQUEST->getParam('userentity'));
 				//$this->nodeSubject->callView('security', 'display');

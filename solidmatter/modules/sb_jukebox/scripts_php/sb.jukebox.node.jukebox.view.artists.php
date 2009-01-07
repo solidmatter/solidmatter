@@ -13,6 +13,11 @@
 */
 class sbView_jukebox_jukebox_artists extends sbJukeboxView {
 	
+	protected $aRequiredAuthorisations = array(
+		'display' => array('read'),
+		'search' => array('read'),
+	);
+	
 	//--------------------------------------------------------------------------
 	/**
 	* 

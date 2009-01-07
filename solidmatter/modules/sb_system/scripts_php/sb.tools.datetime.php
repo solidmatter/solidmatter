@@ -68,7 +68,7 @@ function datetime_mysql2timestamp($sMySQLDateTime) {
 	list($sPart1, $sPart2) = explode(' ', $sMySQLDateTime);
 	list($sYear, $sMonth, $sDay) = explode('-', $sPart1);
 	list($sHour, $sMinute, $sSecond) = explode(':', $sPart2);
-
+	
 	return (mktime($sHour, $sMinute, $sSecond, $sMonth, $sDay, $sYear));
 }
 

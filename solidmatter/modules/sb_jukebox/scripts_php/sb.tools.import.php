@@ -228,10 +228,13 @@ class JukeboxToolkit {
 		
 		// build album node
 		$nodeAlbum = $nodeAlbumArtist->addNode($aAlbumInfo['properties']['info_title'], 'sb_jukebox:album');
+//		var_dumpp('importAlbum1:'.$nodeAlbum->getProperty('sbcr:inheritrights'));
+		
 		foreach ($aAlbumInfo['properties'] as $sProperty => $mValue) {
 			$nodeAlbum->setProperty($sProperty, $mValue);
 		}
 		$nodeAlbum->setProperty('info_artist', $nodeAlbumArtist->getProperty('jcr:uuid'));
+//		var_dumpp('importAlbum2:'.$nodeAlbum->getProperty('sbcr:inheritrights'));
 		
 		try {
 			
@@ -261,6 +264,8 @@ class JukeboxToolkit {
 			//$aInfo['tags'] = $aAlbumTags;
 			$aInfo['nodeAlbum'] = $nodeAlbum;
 			$aInfo['nodeAlbumArtist'] = $nodeAlbumArtist;
+//			var_dumpp('importAlbum3:'.$nodeAlbum->getProperty('sbcr:inheritrights'));
+		
 			return ($aInfo);
 			
 		} catch (ImportException $e) {
@@ -286,11 +291,11 @@ class JukeboxToolkit {
 		$aAlbumProps = array(
 			'label' => '',
 			'name' => '',
-			'info_type' => 'LP',
+			//'info_type' => 'LP',
 			'info_artist' => '',
-			'info_defects' => '',
+			//'info_defects' => '',
 			'info_relpath' => '',
-			'info_cdsinset' => '',
+			//'info_cdsinset' => '',
 			'info_published' => '',
 			'info_coverexists' => 'FALSE',
 			'info_coverfilename' => '',
@@ -300,8 +305,8 @@ class JukeboxToolkit {
 			'artist' => '%a',
 			'title' => '%t',
 			'year' => '%y',
-			'defects' => '%d',
-			'albumtype' => '%v',
+			//'defects' => '%d',
+			//'albumtype' => '%v',
 			'[',
 			']',
 		);
@@ -309,8 +314,8 @@ class JukeboxToolkit {
 			'(.+)',
 			'(.+)',
 			'(\d+)',
-			'(.+)',
-			'(.+)',
+			//'(.+)',
+			//'(.+)',
 			'\[',
 			'\]',
 		);
@@ -533,6 +538,7 @@ class JukeboxToolkit {
 			'name' => '',
 			'info_title' => '',
 			'info_index' => 0,
+			'info_published' => 0,
 			'info_filename' => '',
 			'info_playtime' => '',
 			'enc_playtime' => '',

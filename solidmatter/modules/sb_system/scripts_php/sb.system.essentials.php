@@ -329,13 +329,24 @@ function headers($sType, $aOptions = NULL) {
 			if (isset($aOptions['download']) && $aOptions['download']) {
 				$sDisposition = 'attachment';
 			}
-			header('Content-Disposition: '.$sDisposition.'; filename="'.$aOptions['filename'].'"');
+			header('Content-Disposition: '.$sDisposition.'; filename="'.$sFilename.'"');
 			if ($sType == 'm3u') {
 				//header('Content-type: audio/x-mpegurl; encoding="UTF-8"');
 				header('Content-type: audio/mpegurl; encoding="UTF-8"');
 			} elseif ($sType == 'xspf') {
 				header('Content-type: application/xspf+xml; encoding="UTF-8"');
 			}
+			if (isset($aOptions['size'])) {
+				header('Content-Length: '.$aOptions['size']);
+			}
+			break;
+		case 'download':
+			$sFilename = 'dummy';
+			if (isset($aOptions['filename'])) {
+				$sFilename = $aOptions['filename'];
+			}
+			header('Content-Disposition: attachment; filename="'.$sFilename.'"');
+			//header('Content-type: ');
 			if (isset($aOptions['size'])) {
 				header('Content-Length: '.$aOptions['size']);
 			}

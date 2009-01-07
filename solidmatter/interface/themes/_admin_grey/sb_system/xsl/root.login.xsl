@@ -21,6 +21,11 @@
 	<html>
 	<head>
 		<link rel="stylesheet" href="{$stylesheets_css}/styles_login.css" type="text/css" media="all" />
+		<script type="text/javascript" language="javascript">
+			if (top.frames.length > 0) {
+				top.location.href = self.location;
+			}
+		</script>
 	</head>
 	<body>
 		<xsl:apply-templates select="response/errors" />
