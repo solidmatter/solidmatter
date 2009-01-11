@@ -89,7 +89,7 @@ class sbView_jukebox_jukebox_favorites extends sbJukeboxView {
 		if ($nodeUser->hasNode($sJukeboxUUID)) {
 			$nodeFavorites = $nodeUser->getNode($sJukeboxUUID);
 		} else {
-			$nodeFavorites = $nodeUser->addNode($sJukeboxUUID, 'sb_jukebox:playlist');
+			$nodeFavorites = $nodeUser->addNode($sJukeboxUUID, 'sbJukebox:Playlist');
 			$nodeFavorites->setProperty('label', 'Favorites');
 			$nodeUser->save();
 		}

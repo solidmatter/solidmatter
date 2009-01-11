@@ -23,7 +23,7 @@
 	
 	<xsl:template match="menu">
 		<xsl:choose>
-			<xsl:when test="sbnode/@nodetype='sb_system:root'">
+			<xsl:when test="sbnode/@nodetype='sbSystem:Root'">
 				<html>
 					<head>
 						<xsl:apply-templates select="/response/metadata" />

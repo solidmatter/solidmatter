@@ -36,10 +36,10 @@ class sbJukeboxView extends sbView {
 	*/
 	public function getJukebox() {
 		// is subject node the jukebox?
-		if ($this->nodeSubject->getPrimaryNodeType() == 'sb_jukebox:jukebox') {
+		if ($this->nodeSubject->getPrimaryNodeType() == 'sbJukebox:Jukebox') {
 			$nodeJukebox = $this->nodeSubject;
 		} else {
-			$nodeJukebox = $this->nodeSubject->getAncestorOfType('sb_jukebox:jukebox');
+			$nodeJukebox = $this->nodeSubject->getAncestorOfType('sbJukebox:Jukebox');
 		}
 		
 		return ($nodeJukebox);
@@ -150,8 +150,8 @@ class sbJukeboxView extends sbView {
 			$this->crSession
 		);
 		
-		$formSearch->addInput('title;string;minlength=2;maxlength=250;required=true;', '$locale/system/general/labels/title');
-		$formSearch->addInput('comment;text;minlength=3;maxlength=2000;required=true;', '$locale/system/general/labels/comment');
+		$formSearch->addInput('title;string;minlength=2;maxlength=250;required=true;', '$locale/sbSystem/general/labels/title');
+		$formSearch->addInput('comment;text;minlength=3;maxlength=2000;required=true;', '$locale/sbSystem/general/labels/comment');
 		$formSearch->addSubmit('$locale/system/general/actions/save');
 		
 		return ($formSearch);
@@ -196,8 +196,8 @@ class sbJukeboxView extends sbView {
 			$this->crSession
 		);
 		
-		$formSearch->addInput('searchstring;string;minlength=2;maxlength=20;', '$locale/system/general/labels/search/title');
-		$formSearch->addSubmit('$locale/system/general/actions/search');
+		$formSearch->addInput('searchstring;string;minlength=2;maxlength=20;', '$locale/sbSystem/general/labels/search/title');
+		$formSearch->addSubmit('$locale/sbSystem/general/actions/search');
 		
 		return ($formSearch);
 		
@@ -364,7 +364,7 @@ class sbJukeboxView extends sbView {
 		$aItems = array();
 		
 		// if it is a track just return itself
-		if ($nodeSubject->getPrimaryNodeType() == 'sb_jukebox:track') {
+		if ($nodeSubject->getPrimaryNodeType() == 'sbJukebox:Track') {
 			$sTrackUUID = $nodeSubject->getIdentifier();
 			$aItems[$sTrackUUID]['uuid'] = $sTrackUUID;
 			$aItems[$sTrackUUID]['label'] = $nodeSubject->getProperty('label');
@@ -384,7 +384,7 @@ class sbJukeboxView extends sbView {
 			// add stuff dependent on node type
 			switch ($nodeChild->getPrimaryNodeType()) {
 				
-				case 'sb_jukebox:track':
+				case 'sbJukebox:Track':
 					$sTrackUUID = $nodeChild->getIdentifier();
 					$aItems[$sTrackUUID]['uuid'] = $sTrackUUID;
 					$aItems[$sTrackUUID]['label'] = $nodeChild->getProperty('label');
@@ -400,7 +400,7 @@ class sbJukeboxView extends sbView {
 		}
 		
 		// if it is an artist append the tracks from foreign albums
-		if ($nodeSubject->getPrimaryNodeType() == 'sb_jukebox:artist') {
+		if ($nodeSubject->getPrimaryNodeType() == 'sbJukebox:Artist') {
 			$stmtGetTitles = $this->crSession->prepareKnown('sbJukebox/artist/getTracks/differentAlbums');
 			$stmtGetTitles->bindValue('jukebox_uuid', $this->getJukebox()->getProperty('jcr:uuid'), PDO::PARAM_STR);
 			$stmtGetTitles->bindValue('artist_uuid', $nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
@@ -431,7 +431,7 @@ class sbJukeboxView extends sbView {
 		
 		switch ($nodeSubject->getPrimaryNodeType()) {
 			
-			case 'sb_jukebox:album':
+			case 'sbJukebox:Album':
 				$nodeAlbum = $nodeSubject;
 				$nodeArtist = $nodeAlbum->getParent();
 				$nodeJukebox = $nodeArtist->getParent();
@@ -442,7 +442,7 @@ class sbJukeboxView extends sbView {
 				$aItems[] = $sFilename;
 				break;
 				
-			case 'sb_jukebox:track':
+			case 'sbJukebox:Track':
 				$nodeAlbum = $nodeSubject->getParent();
 				$nodeArtist = $nodeAlbum->getParent();
 				$nodeJukebox = $nodeArtist->getParent();

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbFiles>
+	
+	<nodes>
+		<folder>
+			<security_requireauthorisation label="Login erforderlich" />
+			<config_types_allowed label="erlaubte Mimetypes" />
+			<config_listingallowed label="Auflistung erlaubt" />
+		</folder>
+		<autofolder>
+			<config_realfolder label="Ordner im Dateisystem" />
+		</autofolder>
+		<image>
+			<config_filterstack label="optionaler Grafikfilter" />
+		</image>
+	</nodes>
+	
+	<nodetypes>
+		<type id="sbFiles:Filemanager">Dateimanager</type>
+		<type id="sbFiles:Folder">Ordner</type>
+		<type id="sbFiles:Autofolder">Auto-Ordner</type>
+		<type id="sbFiles:Image">Bild</type>
+		<type id="sbFiles:Asset">Datei</type>
+	</nodetypes>
+	
+	<views>
+		<view id="thumbnails">Miniaturansicht</view>
+		<view id="upload">Upload</view>
+	</views>
+	
+</sbFiles>

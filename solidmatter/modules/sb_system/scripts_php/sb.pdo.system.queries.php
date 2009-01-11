@@ -574,7 +574,7 @@ $_QUERIES['sb_system/userentity/getAuthorisations'] = '
 $_QUERIES['sbSystem/maintenance/view/repair/loadRoot'] = '
 	SELECT		uuid
 	FROM		{TABLE_NODES}
-	WHERE		s_uid = \'sb_system:root\'
+	WHERE		s_uid = \'sbSystem:Root\'
 ';
 $_QUERIES['sbSystem/maintenance/view/repair/loadChildren'] = '
 	SELECT		fk_child as uuid
@@ -711,7 +711,7 @@ $_QUERIES['sbSystem/node/trashcan/getAbandonedNodes'] = '
 					FROM	{TABLE_HIERARCHY} h
 					WHERE	fk_child = n.uuid
 				) = 0
-	AND			n.fk_nodetype != \'sb_system:root\'
+	AND			n.fk_nodetype != \'sbSystem:Root\'
 ';
 /*$_QUERIES['sb_system/node/loadChildren/trashcan'] = '
 	SELECT		sn.uuid,

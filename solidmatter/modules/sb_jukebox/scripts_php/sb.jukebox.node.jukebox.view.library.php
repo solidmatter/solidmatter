@@ -36,7 +36,7 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 				$stmtGetLatest = $this->crSession->prepareKnown('sbJukebox/jukebox/albums/getLatest');
 				$stmtGetLatest->bindValue('jukebox_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
 				$stmtGetLatest->bindValue('limit', 8, PDO::PARAM_INT);
-				$stmtGetLatest->bindValue('nodetype', 'sb_jukebox:album', PDO::PARAM_STR);
+				$stmtGetLatest->bindValue('nodetype', 'sbJukebox:Album', PDO::PARAM_STR);
 				$stmtGetLatest->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
 				$stmtGetLatest->execute();
 				$_RESPONSE->addData($stmtGetLatest->fetchElements(), 'latestAlbums');

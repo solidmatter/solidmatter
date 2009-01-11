@@ -1,5 +1,7 @@
 
-
+/*----------------------------------------------------------------------------*/
+/* types / icons
+/*----------------------------------------------------------------------------*/
 
 *.sb_jukebox {
 	background-image: url(../icons/type_jukebox.png);
@@ -19,8 +21,15 @@
 *.sb_cd {
 	background-image: url(../icons/type_cd.png);
 }
+
 *.sb_tpl_nowplaying {
 	background-image: url(../icons/type_tpl_nowplaying.png);
+}
+*.sb_tpl_favorites {
+	background-image: url(../icons/type_tpl_favorites.png);
+}
+*.sb_tpl_toprated {
+	background-image: url(../icons/type_tpl_toprated.png);
 }
 
 

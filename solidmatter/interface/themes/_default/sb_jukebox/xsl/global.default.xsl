@@ -147,7 +147,7 @@
 						</li>
 						<li>
 							<a href="/-/albums">
-								<xsl:if test="$content/@view = 'albums' or $master/@nodetype='sb_jukebox:album'">
+								<xsl:if test="$content/@view = 'albums' or $master/@nodetype='sbJukebox:Album'">
 									<xsl:attribute name="class">active</xsl:attribute> 
 								</xsl:if>
 								<span class="type menu_albums"><xsl:value-of select="$locale/sbJukebox/menu/albums" /></span>
@@ -155,7 +155,7 @@
 						</li>
 						<li>
 							<a href="/-/artists">
-								<xsl:if test="$content/@view = 'artists' or $master/@nodetype='sb_jukebox:artist'">
+								<xsl:if test="$content/@view = 'artists' or $master/@nodetype='sbJukebox:Artist'">
 									<xsl:attribute name="class">active</xsl:attribute> 
 								</xsl:if>
 								<span class="type menu_artists"><xsl:value-of select="$locale/sbJukebox/menu/artists" /></span>
@@ -187,7 +187,7 @@
 						</li>
 						<li>
 							<a href="/-/playlists">
-								<xsl:if test="$content/@view = 'playlists' or $master/@nodetype='sb_jukebox:playlist'">
+								<xsl:if test="$content/@view = 'playlists' or $master/@nodetype='sbJukebox:Playlist'">
 									<xsl:attribute name="class">active</xsl:attribute> 
 								</xsl:if>
 								<span class="type menu_playlists"><xsl:value-of select="$locale/sbJukebox/menu/playlists" /></span>
@@ -285,14 +285,14 @@
 			<xsl:when test="$nolabels or boolean('true')">
 				<a class="type play icononly" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 				<a class="type recommend icononly" href="/{@uuid}/recommend" title="{$locale/sbJukebox/actions/recommend}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
-				<xsl:if test="@nodetype='sb_jukebox:track'">
+				<xsl:if test="@nodetype='sbJukebox:Track'">
 					<a class="type lyrics icononly" href="http://www.google.de/search?q=lyrics {@label}" title="{$locale/sbJukebox/actions/search_lyrics}" target="_blank"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 				</xsl:if>
 				<a class="type addToFavorites icononly" href="/-/favorites/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_favorites}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 				<xsl:if test="$content/currentPlaylist">
 					<a class="type addToPlaylist icononly" href="/{$currentPlaylist/@uuid}/details/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_playlist}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 				</xsl:if>
-				<xsl:if test="@nodetype='sb_jukebox:album'">
+				<xsl:if test="@nodetype='sbJukebox:Album'">
 				<!--  and $master/user_authorisations/authorisation[@name='download' and @grant_type='ALLOW'] -->
 					<a class="type download icononly" href="/{@uuid}/details/download" title="{$locale/sbJukebox/actions/download}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 				</xsl:if>
@@ -301,7 +301,7 @@
 				<a class="type recommend" href="/{@uuid}/recommend" title="{$locale/sbJukebox/actions/recommend}"><xsl:value-of select="$locale/sbJukebox/actions/recommend" /></a>
 				<a class="type play" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><xsl:value-of select="$locale/sbJukebox/actions/play" /></a>
 				<xsl:value-of select="' '" />
-				<xsl:if test="@nodetype='sb_jukebox:track'">
+				<xsl:if test="@nodetype='sbJukebox:Track'">
 					<a class="type lyrics" href="http://www.google.de/search?q=lyrics {@label}" title="{$locale/sbJukebox/actions/search_lyrics}">Lyrics</a>
 					<xsl:value-of select="' '" />
 				</xsl:if>

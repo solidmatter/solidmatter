@@ -1,0 +1,23 @@
+
+/*----------------------------------------------------------------------------*/
+/* types / icons
+/*----------------------------------------------------------------------------*/
+
+*.sb_multimediamanager {
+	background-image: url(../icons/type_multimediamanager.png);
+}
+*.sb_folder {
+	background-image: url(../icons/type_folder.png);
+}
+*.sb_image {
+	background-image: url(../icons/type_image.png);
+}
+
+*.sb_ctn_image {
+	background-image: url(../icons/type_ctn_image.png);
+}
+*.sb_tpl_image {
+	background-image: url(../icons/type_tpl_image.png);
+}
+
+

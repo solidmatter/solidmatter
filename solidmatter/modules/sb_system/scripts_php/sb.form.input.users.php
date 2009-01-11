@@ -35,7 +35,7 @@ class sbInput_users extends sbInput_select {
 	*/
 	public function initConfig() {
 		
-		$nodeUserAccounts = $this->crSession->getNode('//*[@uid="sb_system:useraccounts"]');;
+		$nodeUserAccounts = $this->crSession->getNode('//*[@uid="sbSystem:Useraccounts"]');;
 		
 		$stmtUsers = $this->crSession->prepareKnown('sbCR/node/loadChildren/mode/standard/byLabel');
 		$stmtUsers->bindValue('parent_uuid', $nodeUserAccounts->getProperty('jcr:uuid'), PDO::PARAM_INT);

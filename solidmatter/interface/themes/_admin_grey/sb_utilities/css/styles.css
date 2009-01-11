@@ -1,0 +1,33 @@
+
+/*----------------------------------------------------------------------------*/
+/* types / icons
+/*----------------------------------------------------------------------------*/
+
+*.sb_imageprocessing {
+	background-image: url(../icons/type_imageprocessing.png);
+}
+*.sb_imagefilterstack {
+	background-image: url(../icons/type_imagefilterstack.png);
+}
+*.sb_imagefilter_resize {
+	background-image: url(../icons/type_imagefilter_resize.png);
+}
+*.sb_imagefilter_colorize {
+	background-image: url(../icons/type_imagefilter_colorize.png);
+}
+*.sb_imagefilter_negative {
+	background-image: url(../icons/type_imagefilter_negative.png);
+}
+*.sb_imagefilter_lightness {
+	background-image: url(../icons/type_imagefilter_lightness.png);
+}
+*.sb_imagefilter_crop {
+	background-image: url(../icons/type_imagefilter_crop.png);
+}
+*.sb_imagefilter_greyscale {
+	background-image: url(../icons/type_imagefilter_greyscale.png);
+}
+*.sb_imagefilter_roundededges {
+	background-image: url(../icons/type_imagefilter_roundededges.png);
+}
+

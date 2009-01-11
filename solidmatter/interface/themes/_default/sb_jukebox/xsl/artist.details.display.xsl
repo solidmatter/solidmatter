@@ -72,11 +72,6 @@
 										<img height="50" width="50" src="/{@uuid}/details/getCover/size=50" alt="cover" />
 									</a>
 								</td>
-								<!--<td width="20">
-									<a class="imglink" href="/{@uuid}/details/play/sessionid={$system/sessionid}">
-										<img src="/theme/sb_jukebox/images/play.png" alt="play" />
-									</a>
-								</td>-->
 								<td>
 									<span style="float: right;">
 										<xsl:call-template name="render_buttons" />

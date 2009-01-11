@@ -61,14 +61,14 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 				//$this->nodeSubject->getSession()->beginTransaction('sbJukebox::clearLibrary');
 				
 				foreach ($nlChildren as $nodeChild) {
-					if ($nodeChild->getPrimaryNodeType() == 'sb_jukebox:album') {
+					if ($nodeChild->getPrimaryNodeType() == 'sbJukebox:Album') {
 						$nodeChild->remove();
 						$nodeChild->save();
 					}
 				}
 				
 				foreach ($nlChildren as $nodeChild) {
-					if ($nodeChild->getPrimaryNodeType() == 'sb_jukebox:artist') {
+					if ($nodeChild->getPrimaryNodeType() == 'sbJukebox:Artist') {
 						$nodeChild->remove();
 						$nodeChild->save();
 					}

@@ -36,17 +36,17 @@
 			<xsl:apply-templates select="response/errors" />
 			<xsl:call-template name="renderResult">
 				<xsl:with-param name="label" select="'Artists'" />
-				<xsl:with-param name="nodes" select="$content/searchresult/resultset/row[@nodetype='sb_jukebox:artist']" />
+				<xsl:with-param name="nodes" select="$content/searchresult/resultset/row[@nodetype='sbJukebox:Artist']" />
 				<xsl:with-param name="type" select="'artist'" />
 			</xsl:call-template>
 			<xsl:call-template name="renderResult">
 				<xsl:with-param name="label" select="'Albums'" />
-				<xsl:with-param name="nodes" select="$content/searchresult/resultset/row[@nodetype='sb_jukebox:album']" />
+				<xsl:with-param name="nodes" select="$content/searchresult/resultset/row[@nodetype='sbJukebox:Album']" />
 				<xsl:with-param name="type" select="'album'" />
 			</xsl:call-template>
 			<xsl:call-template name="renderResult">
 				<xsl:with-param name="label" select="'Tracks'" />
-				<xsl:with-param name="nodes" select="$content/searchresult/resultset/row[@nodetype='sb_jukebox:track']" />
+				<xsl:with-param name="nodes" select="$content/searchresult/resultset/row[@nodetype='sbJukebox:Track']" />
 				<xsl:with-param name="type" select="'track'" />
 			</xsl:call-template>
 		</div>

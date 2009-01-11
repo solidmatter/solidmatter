@@ -274,8 +274,6 @@ class sbCR_Session {
 	*/
 	public function getRootNode() {
 		$stmtInfo = $this->DB->prepareKnown('sbCR/getNode/root');
-		$sUID = 'sb_system:root';
-		//$stmtInfo->bindParam('uid', $sUID, PDO::PARAM_STR);
 		$stmtInfo->execute();
 		return ($this->generateInstance($stmtInfo, '/'));
 	}

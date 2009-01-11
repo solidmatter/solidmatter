@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<system>
+<sbSystem>
 	
 	<lang>Deutsch</lang>
 	
@@ -15,7 +15,7 @@
 	</formats>
 	
 	<general>
-		<apptitle>System</apptitle>
+		<apptitle>sbSystem</apptitle>
 		<actions>
 			<new>Neu</new>
 			<edit>Bearbeiten</edit>
@@ -136,7 +136,6 @@
 		<texts>
 			<no_subobjects>Dieses Objekt hat keine anzeigbaren Unterobjekte</no_subobjects>
 			<no_comments>Keine Kommentare vorhanden</no_comments>
-			
 		</texts>
 	</general>
 	
@@ -148,105 +147,29 @@
 		<visibility>Sichtbarkeit</visibility>
 	</tags>
 	
+	<nodetypes>
+		<type id="sbSystem:Root">Wurzel</type>
+		<type id="sbSystem:Comment">Kommentar</type>
+		<type id="sbSystem:Preferences">Systemsteuerung</type>
+		<type id="sbSystem:Useraccounts">Benutzer &amp; Gruppen</type>
+		<type id="sbSystem:Usergroup">Benutzergruppe</type>
+		<type id="sbSystem:User">Benutzer</type>
+		<type id="sbSystem:Inbox">Posteingang</type>
+		<type id="sbSystem:Tasks">Aufgaben</type>
+		<type id="sbSystem:Modules">Module</type>
+		<type id="sbSystem:Module">Modul</type>
+		<type id="sbSystem:Maintenance">Wartung</type>
+		<type id="sbSystem:Debug">Debug</type>
+		<type id="sbSystem:Logs">Logs</type>
+		<type id="sbSystem:Reports">Auswertungen</type>
+		<type id="sbSystem:Reports_db">Datenbank</type>
+		<type id="sbSystem:Reports_structure">Struktur</type>
+		<type id="sbSystem:Registry">Registry</type>
+		<type id="sbSystem:Tags">Tags</type>
+		<type id="sbSystem:Trashcan">Mülleimer</type>
+	</nodetypes>
+	
 	<nodes>
-		<page>
-			<properties_pagetitle label="Seitentitel" />
-			<properties_additionaltitle label="Zusätzlicher Titel" />
-			<properties_keywords label="Schlüsselwörter" />
-			<properties_notes label="Notizen" />
-			<config_showinmenu label="Im Menü anzeigen" />
-			<config_active label="Publizieren" />
-			<display_template label="Template" />
-			<display_layout label="Layout" />
-		</page>
-		<site>
-			<config_defaultpage label="Startseite" />
-			<config_isclosed label="Seite ist geschlossen" />
-			<config_language label="Sprache" />
-			<config_notes label="Notizen" />
-			<config_boundtemplates label="verbundene Templates" />
-			<config_defaultlayout label="Standard-Layout" />
-			<config_defaulttemplate label="Standard-Template" />
-		</site>
-		<folder>
-			<security_requireauthorisation label="Login erforderlich" />
-			<config_types_allowed label="erlaubte Mimetypes" />
-			<config_listingallowed label="Auflistung erlaubt" />
-		</folder>
-		<autofolder>
-			<config_realfolder label="Ordner im Dateisystem" />
-		</autofolder>
-		<image>
-			<config_filterstack label="optionaler Grafikfilter" />
-		</image>
-		<imagefilterstack>
-			<config_reverse label="Durchlaufrichtung umkehren" />
-		</imagefilterstack>
-		<imagefilter_resize>
-			<config_width label="Breite" />
-			<config_height label="Höhe" />
-			<config_mode label="Modus">
-				<keepaspect label="Seitenverhältnis beibehalten" />
-				<loseaspect label="Seitenverhältnis nicht beibehalten" />
-			</config_mode>
-			<config_direction label="Skalierungsrichtung">
-				<upsample label="nur hochskalieren" />
-				<downsample label="nur herunterskalieren" />
-				<both label="egal" />
-			</config_direction>
-		</imagefilter_resize>
-		<imagefilter_colorize>
-			<config_color label="Farbe" />
-			<config_strength label="Effektstärke" />
-		</imagefilter_colorize>
-		<imagefilter_crop>
-			<config_origin label="Positionierung">
-				<topleft label="oben links" />
-				<topcenter label="oben mittig" />
-				<topright label="oben rechts" />
-				<bottomleft label="unten links" />
-				<bottomcenter label="unten mittig" />
-				<bottomright label="unten rechts" />
-				<leftcenter label="links mittig" />
-				<rightcenter label="recht mittig" />
-				<center label="zentriert" />
-			</config_origin>
-			<config_width label="Breite" />
-			<config_height label="Höhe" />
-			<config_offsetx label="X-Offset" />
-			<config_offsety label="Y-Offset" />
-		</imagefilter_crop>
-		<imagefilter_greyscale>
-			<config_strength label="Effektstärke" />
-		</imagefilter_greyscale>
-		<imagefilter_lightness>
-			<config_brightness label="Helligkeit" />
-			<config_contrast label="Kontrast" />
-			<config_contrastfirst label="Kontrast zuerst ausführen" />
-		</imagefilter_lightness>
-		<imagefilter_negative>
-			<config_strength label="Effektstärke" />
-		</imagefilter_negative>
-		<imagefilter_roundededges>
-			<config_mode label="Modus" />
-			<config_radius label="Radius" />
-		</imagefilter_roundededges>
-		<layout>
-			<xsl_frontend label="Frontend-Code" />
-			<xsl_backend label="Backend-Code" />
-		</layout>
-		<template>
-			<xsl_frontend label="Frontend-Code" />
-			<xsl_backend label="Backend-Code" />
-		</template>
-		<tpl_menu>
-			<config_numlevels label="Anzahl Ebenen" />
-			<config_menuroot label="Menüwurzel" />
-		</tpl_menu>
-		<tpl_image>
-			<config_filterstack label="optionaler Grafikfilter" />
-			<config_allowlinking label="Verlinken erlauben" />
-		</tpl_image>
 		<user>
 			<properties_email label="eMail-Adresse" />
 			<properties_comment label="Kommentar" />
@@ -280,8 +203,6 @@
 		<view id="properties">Eigenschaften</view>
 		<view id="list">Liste</view>
 		<view id="security">Sicherheit</view>
-		<view id="thumbnails">Miniaturansicht</view>
-		<view id="upload">Upload</view>
 		<view id="information">Informationen</view>
 		<view id="overview">Übersicht</view>
 		<view id="debug">Debug</view>
@@ -304,76 +225,6 @@
 		<view id="administration">Administration</view>
 		<view id="manage">Verwalten</view>
 	</views>
-	
-	<nodetypes>
-		<type id="sb_system:root">Wurzel</type>
-		
-		<type id="sb_system:site">Website</type>
-		<type id="sb_system:page">Seite</type>
-		
-		
-		<type id="sb_system:templatemanager">Templatemanager</type>
-		<type id="sb_system:templategroup">Templategruppe</type>
-		<type id="sb_system:layout">Layout</type>
-		<type id="sb_system:template">Template</type>
-		
-		<type id="sb_system:tpl_image">Bild</type>
-		<type id="sb_system:tpl_plaintext">Text</type>
-		<type id="sb_system:tpl_container">Container</type>
-		<type id="sb_system:tpl_richtext">Richtext</type>
-		<type id="sb_system:tpl_menu">Menü</type>
-		<type id="sb_system:tpl_script">Skript</type>
-		
-		<type id="sb_system:ctn_container">Container</type>
-		<type id="sb_system:ctn_image">Bild</type>
-		<type id="sb_system:ctn_plaintext">Text</type>
-		<type id="sb_system:ctn_richtext">Richtext</type>
-		
-		<type id="sb_system:imageprocessing">Bildbearbeitung</type>
-		<!--<type id="sb_system:layoutgroup">Layoutgruppe</type>-->
-		
-		<type id="sb_system:filemanager">Dateimanager</type>
-		<type id="sb_system:folder">Ordner</type>
-		<type id="sb_system:autofolder">Auto-Ordner</type>
-		<type id="sb_system:image">Bild</type>
-		<type id="sb_system:asset">Datei</type>
-		<type id="sb_system:comment">Kommentar</type>
-		
-		<type id="sb_system:imagefilterstack">Filterblock</type>
-		<type id="sb_system:imagefilter_resize">Skalieren</type>
-		<type id="sb_system:imagefilter_crop">Beschneiden</type>
-		<type id="sb_system:imagefilter_colorize">Einfärben</type>
-		<type id="sb_system:imagefilter_negative">Negativ</type>
-		<type id="sb_system:imagefilter_lightness">Helligkeit/Kontrast</type>
-		<type id="sb_system:imagefilter_greyscale">Graustufen</type>
-		<type id="sb_system:imagefilter_roundededges">Ecken abrunden</type>
-		<type id="sb_system:imagefilter_merge">Verschmelzen</type>
-		
-		<type id="sb_system:preferences">Systemsteuerung</type>
-		
-		<type id="sb_system:useraccounts">Benutzer &amp; Gruppen</type>
-		<type id="sb_system:usergroup">Benutzergruppe</type>
-		<type id="sb_system:user">Benutzer</type>
-		
-		<type id="sb_system:inbox">Posteingang</type>
-		<type id="sb_system:tasks">Aufgaben</type>
-		
-		<type id="sb_system:modules">Module</type>
-		<type id="sb_system:module">Modul</type>
-		
-		<type id="sb_system:maintenance">Wartung</type>
-		<type id="sb_system:debug">Debug</type>
-		<type id="sb_system:logs">Logs</type>
-		
-		<type id="sb_system:reports">Auswertungen</type>
-		<type id="sb_system:reports_db">Datenbank</type>
-		<type id="sb_system:reports_structure">Struktur</type>
-		<type id="sb_system:registry">Registry</type>
-		<type id="sb_system:tags">Tags</type>
-		
-		<type id="sb_system:trashcan">Mülleimer</type>
-		
-	</nodetypes>
 	
 	<config>
 		<security>
@@ -474,4 +325,4 @@
 		<wrong_nodetype>Falscher Typ ausgewählt</wrong_nodetype>
 	</formerrors>
 	
-</system>
+</sbSystem>

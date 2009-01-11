@@ -1,0 +1,49 @@
+
+/*----------------------------------------------------------------------------*/
+/* types / icons
+/*----------------------------------------------------------------------------*/
+
+*.sb_site {
+	background-image: url(../icons/type_site.png);
+}
+*.sb_templatemanager {
+	background-image: url(../icons/type_templatemanager.png);
+}
+*.sb_templategroup {
+	background-image: url(../icons/type_templategroup.png);
+}
+*.sb_template {
+	background-image: url(../icons/type_template.png);
+}
+*.sb_layout {
+	background-image: url(../icons/type_layout.png);
+}
+*.sb_page {
+	background-image: url(../icons/doc.gif);
+}
+
+
+*.sb_ctn_container {
+	background-image: url(../icons/type_ctn_container.png);
+}
+*.sb_ctn_menu {
+	background-image: url(../icons/type_ctn_menu.png);
+}
+*.sb_ctn_plaintext {
+	background-image: url(../icons/type_ctn_plaintext.png);
+}
+*.sb_ctn_richtext {
+	background-image: url(../icons/type_ctn_richtext.png);
+}
+*.sb_tpl_container {
+	background-image: url(../icons/type_tpl_container.png);
+}
+*.sb_tpl_menu {
+	background-image: url(../icons/type_tpl_menu.png);
+}
+*.sb_tpl_plaintext {
+	background-image: url(../icons/type_tpl_plaintext.png);
+}
+*.sb_tpl_richtext {
+	background-image: url(../icons/type_tpl_richtext.png);
+}

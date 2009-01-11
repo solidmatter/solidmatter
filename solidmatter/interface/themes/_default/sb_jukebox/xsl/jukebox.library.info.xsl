@@ -96,11 +96,6 @@
 									
 								</xsl:call-template>
 							</td>-->
-							<!--<td width="20">
-								<a class="imglink" href="/{@uuid}/song/play/sessionid={$system/sessionid}">
-									<img src="/theme/sb_jukebox/images/play.png" alt="play" />
-								</a>
-							</td>-->
 							<td width="100">
 								<xsl:value-of select="@username" />
 							</td>

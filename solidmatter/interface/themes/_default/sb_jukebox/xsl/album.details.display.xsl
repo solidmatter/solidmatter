@@ -69,7 +69,7 @@
 										<xsl:value-of select="$locale/sbJukebox/labels/artist" />:
 									</td>
 									<td>
-										<a href="/{ancestors/sbnode[@nodetype='sb_jukebox:artist']/@uuid}"><xsl:value-of select="ancestors/sbnode[@nodetype='sb_jukebox:artist']/@label" /></a>
+										<a href="/{ancestors/sbnode[@nodetype='sbJukebox:Artist']/@uuid}"><xsl:value-of select="ancestors/sbnode[@nodetype='sbJukebox:Artist']/@label" /></a>
 									</td>
 								</tr>
 								<tr class="odd">
@@ -138,11 +138,6 @@
 										<xsl:with-param name="voting" select="1" />-->
 									</xsl:call-template>
 								</td>
-								<!--<td width="20">
-									<a class="imglink" href="/{@uuid}/song/play/sessionid={$system/sessionid}">
-										<img src="/theme/sb_jukebox/images/play.png" alt="play" />
-									</a>
-								</td>-->
 								<td width="10" style="text-align: right;">
 									<xsl:value-of select="@info_index" />.
 								</td>

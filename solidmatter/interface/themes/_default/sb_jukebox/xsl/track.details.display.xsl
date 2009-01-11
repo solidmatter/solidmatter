@@ -56,7 +56,7 @@
 				<tbody>
 					<tr class="odd">
 						<td style="padding:10px;" width="160" rowspan="3">
-							<a class="imglink" target="_blank" href="/{@uuid}/details/getCover/{ancestors/sbnode[@nodetype='sb_jukebox:album']/@name}.jpg"><img height="150" width="150" src="/{@uuid}/details/getCover/size=150" alt="cover" /></a>
+							<a class="imglink" target="_blank" href="/{@uuid}/details/getCover/{ancestors/sbnode[@nodetype='sbJukebox:Album']/@name}.jpg"><img height="150" width="150" src="/{@uuid}/details/getCover/size=150" alt="cover" /></a>
 						</td>
 						<td style="padding: 15px 15px 15px 0;">
 							<table width="100%">
@@ -65,7 +65,7 @@
 										<xsl:value-of select="$locale/sbJukebox/labels/artist" />:
 									</td>
 									<td>
-										<a href="/{ancestors/sbnode[@nodetype='sb_jukebox:artist']/@uuid}"><xsl:value-of select="ancestors/sbnode[@nodetype='sb_jukebox:artist']/@label" /></a>
+										<a href="/{ancestors/sbnode[@nodetype='sbJukebox:Artist']/@uuid}"><xsl:value-of select="ancestors/sbnode[@nodetype='sbJukebox:Artist']/@label" /></a>
 									</td>
 								</tr>
 								<tr class="odd">
@@ -81,7 +81,7 @@
 										<xsl:value-of select="$locale/sbJukebox/labels/album" />:
 									</td>
 									<td>
-										<a href="/{ancestors/sbnode[@nodetype='sb_jukebox:album']/@uuid}"><xsl:value-of select="ancestors/sbnode[@nodetype='sb_jukebox:album']/@label" /></a>
+										<a href="/{ancestors/sbnode[@nodetype='sbJukebox:Album']/@uuid}"><xsl:value-of select="ancestors/sbnode[@nodetype='sbJukebox:Album']/@label" /></a>
 									</td>
 								</tr>
 								

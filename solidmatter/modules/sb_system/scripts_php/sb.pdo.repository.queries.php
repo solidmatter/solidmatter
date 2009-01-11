@@ -184,7 +184,7 @@ $_QUERIES['sbCR/getNode/root'] = '
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
 		ON		n.fk_nodetype = nt.s_type
-	WHERE		n.fk_nodetype = \'sb_system:root\'
+	WHERE		n.fk_nodetype = \'sbSystem:Root\'
 ';
 $_QUERIES['sbCR/getNode/byUUID'] = '
 	SELECT		n.uuid,
@@ -991,7 +991,7 @@ $_QUERIES['sb_system/node/view/security/removeAuthorisations'] = '
 $_QUERIES['sbCR/test/loadRoot'] = '
 	SELECT		uuid
 	FROM		{TABLE_NODES}
-	WHERE		s_uid = \'sb_system:root\'
+	WHERE		s_uid = \'sbSystem:Root\'
 ';
 $_QUERIES['sbCR/test/loadChildren'] = '
 	SELECT		fk_child as uuid

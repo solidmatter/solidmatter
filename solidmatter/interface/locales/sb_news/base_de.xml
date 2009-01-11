@@ -2,11 +2,11 @@
 <shop>
 
 	<nodetypes>
-		<type id="sb_news:channel">Channel</type>
-		<type id="sb_news:category">Nachrichtenkategorie</type>
-		<type id="sb_news:post">Nachricht</type>
-		<type id="sb_news:tpl_teaser">Teaserblock</type>
-		<type id="sb_news:tpl_calendar">Kalender</type>
+		<type id="sbNews:Channel">Channel</type>
+		<type id="sbNews:Category">Nachrichtenkategorie</type>
+		<type id="sbNews:Post">Nachricht</type>
+		<type id="sbNews:TPL_Teaser">Teaserblock</type>
+		<type id="sbNews:TPL_Calendar">Kalender</type>
 	</nodetypes>
 	
 </shop>

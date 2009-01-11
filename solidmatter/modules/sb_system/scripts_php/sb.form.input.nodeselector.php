@@ -19,7 +19,7 @@ class sbInput_nodeselector extends sbInput {
 	protected $aConfig = array(
 		'style' => 'dropdown',
 		'mode' => 'tree',
-		'root' => 'sb_system:root',
+		'root' => 'sbSystem:Root',
 		'omit_root' => 'TRUE',
 		'nodetype' => '',
 		'required' => 'FALSE'

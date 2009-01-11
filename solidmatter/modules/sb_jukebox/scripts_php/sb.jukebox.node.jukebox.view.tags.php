@@ -67,15 +67,15 @@ class sbView_jukebox_jukebox_tags extends sbJukeboxView {
 				
 				$aCategories = array(
 					'artists' => array(
-						'nodetype' => 'sb_jukebox:artist',
+						'nodetype' => 'sbJukebox:Artist',
 						'resultset' => 'taggedArtists',
 					),
 					'albums' => array(
-						'nodetype' => 'sb_jukebox:album',
+						'nodetype' => 'sbJukebox:Album',
 						'resultset' => 'taggedAlbums',
 					),
 					'tracks' => array(
-						'nodetype' => 'sb_jukebox:track',
+						'nodetype' => 'sbJukebox:Track',
 						'resultset' => 'taggedTracks',	
 					),
 				);

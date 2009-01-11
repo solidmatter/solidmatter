@@ -35,7 +35,7 @@ class sbView_jukebox_various_communication extends sbJukeboxView {
 					$nodeUser = $this->crSession->getNodeByIdentifier($aInputs['user']);
 					$nodeInbox = $nodeUser->getNode('inbox');
 					$nodeJukebox = $this->getJukebox();
-					$nodeRecommendation = $nodeInbox->addNode($nodeInbox->getIdentifier().'_'.uuid(), 'sb_jukebox:recommendation');
+					$nodeRecommendation = $nodeInbox->addNode($nodeInbox->getIdentifier().'_'.uuid(), 'sbJukebox:Recommendation');
 					$nodeRecommendation->setProperty('label', $this->nodeSubject->getProperty('label'));
 					$nodeRecommendation->setProperty('comment', $aInputs['comment']);
 					$nodeRecommendation->setProperty('subject', $this->nodeSubject->getProperty('jcr:uuid'));

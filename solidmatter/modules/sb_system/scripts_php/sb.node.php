@@ -1790,7 +1790,7 @@ class sbNode extends sbCR_Node {
 		$this->loadInheritedAuthorisations();
 		$this->loadLocalAuthorisations();
 		
-		$nodeUseraccounts = $this->crSession->getNode('//*[@uid="sb_system:useraccounts"]');
+		$nodeUseraccounts = $this->crSession->getNode('//*[@uid="sbSystem:Useraccounts"]');
 		// FIXME: loading these destroys response!!?!?
 		$aResultNodes['users'] = $nodeUseraccounts->callView('gatherdata', 'users', NULL, $_RESPONSE);
 		$aResultNodes['groups'] = $nodeUseraccounts->callView('gatherdata', 'groups', NULL, $_RESPONSE);

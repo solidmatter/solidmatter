@@ -135,7 +135,7 @@ class JukeboxToolkit {
 		}
 		
 		if (!$this->nodeJukebox->hasNode($sArtistClean)) {
-			$nodeArtist = $this->nodeJukebox->addNode($sArtistClean, 'sb_jukebox:artist');
+			$nodeArtist = $this->nodeJukebox->addNode($sArtistClean, 'sbJukebox:Artist');
 			$nodeArtist->setProperty('label', $sArtist);
 			if ($this->aVerboseFlags['ARTIST_QUERY']) {
 				$this->echoInfo('info', '[note] new Artist: '.$sArtist);
@@ -227,7 +227,7 @@ class JukeboxToolkit {
 		}
 		
 		// build album node
-		$nodeAlbum = $nodeAlbumArtist->addNode($aAlbumInfo['properties']['info_title'], 'sb_jukebox:album');
+		$nodeAlbum = $nodeAlbumArtist->addNode($aAlbumInfo['properties']['info_title'], 'sbJukebox:Album');
 //		var_dumpp('importAlbum1:'.$nodeAlbum->getProperty('sbcr:inheritrights'));
 		
 		foreach ($aAlbumInfo['properties'] as $sProperty => $mValue) {
@@ -501,7 +501,7 @@ class JukeboxToolkit {
 			}
 			
 			// build track node
-			$nodeTrack = $nodeAlbum->addNode($aTrackInfo['properties']['name'], 'sb_jukebox:track');
+			$nodeTrack = $nodeAlbum->addNode($aTrackInfo['properties']['name'], 'sbJukebox:Track');
 			foreach ($aTrackInfo['properties'] as $sProperty => $mValue) {
 				$nodeTrack->setProperty($sProperty, $mValue);
 			}

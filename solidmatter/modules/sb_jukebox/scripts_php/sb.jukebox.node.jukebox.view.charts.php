@@ -38,22 +38,22 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 				
 				$aCategories = array(
 					'artists' => array(
-						'nodetype' => 'sb_jukebox:artist',
+						'nodetype' => 'sbJukebox:Artist',
 						'resultset' => 'topArtists',
 						'query' => 'getTop',
 					),
 					'albums' => array(
-						'nodetype' => 'sb_jukebox:album',
+						'nodetype' => 'sbJukebox:Album',
 						'resultset' => 'topAlbums',
 						'query' => 'getTop',
 					),
 					'tracks' => array(
-						'nodetype' => 'sb_jukebox:track',
+						'nodetype' => 'sbJukebox:Track',
 						'resultset' => 'topTracks',
 						'query' => 'getTop',
 					),
 					'mostPlayed' => array(
-						'nodetype' => 'sb_jukebox:track',
+						'nodetype' => 'sbJukebox:Track',
 						'resultset' => 'mostPlayed',
 						'query' => 'getMostPlayed',
 					),
@@ -176,7 +176,7 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 		
 		$aOptions[$sRootUUID] = 'Average';
 		foreach ($stmtVoters as $aRow) {
-			if ($aRow['fk_nodetype'] != 'sb_system:root') {
+			if ($aRow['fk_nodetype'] != 'sbSystem:Root') {
 				$aOptions[$aRow['uuid']] = $aRow['label'];
 			}
 		}

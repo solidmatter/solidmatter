@@ -32,7 +32,7 @@
 		<div class="path">
 			<xsl:for-each select="../ancestors/sbnode">
 				<xsl:sort order="descending" />
-				<xsl:if test="@nodetype != 'sb_system:root'">
+				<xsl:if test="@nodetype != 'sbSystem:Root'">
 					<a href="/{@uuid}"><span class="type {@csstype}"><xsl:value-of select="@label" /></span></a>
 					<xsl:if test="position() != last()+1">
 						/

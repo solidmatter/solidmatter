@@ -1244,7 +1244,7 @@ class sbCR_Node {
 			return ($this->sPath);
 		}
 		$nodeParent = $this->getParent();
-		if ($nodeParent->isNodeType('sb_system:root')) {
+		if ($nodeParent->isNodeType('sbSystem:Root')) {
 			$sPath = '/'.$this->getProperty($sProperty);
 		} else {
 			$sPath = $nodeParent->getPath($sProperty).'/'.$this->getProperty($sProperty);
@@ -1267,7 +1267,7 @@ class sbCR_Node {
 		/*$niParents = $this->getParents();
 		
 		foreach ($niParents as $nodeParent) {
-			if ($nodeParent->isNodeType('sb_system:root')) {
+			if ($nodeParent->isNodeType('sbSystem:Root')) {
 				$sPath = '/'.$this->getProperty('name');
 			} else {
 				$sPath = $nodeParent->getPath().'/'.$this->getProperty('name');
@@ -1995,21 +1995,21 @@ class sbCR_Node {
 		} elseif ($sRelativePath == 'sbcr:isDeletable') {
 			// TODO: remove this almost dirty hack, implement special attributes instead
 			$aKnownMandatoryNodes = array(
-				'sb_system:root',
-				'sb_system:preferences',
-				'sb_system:reports',
-				'sb_system:imageprocessing',
-				'sb_system:maintenance',
-				'sb_system:modules',
-				'sb_system:templatemanager',
-				'sb_system:reports_db',
-				'sb_system:reports_structure',
-				'sb_system:trashcan',
-				'sb_system:useraccounts',
-				'sb_system:registry',
-				'sb_system:module',
-				'sb_system:debug',
-				'sb_system:logs'
+				'sbSystem:Root',
+				'sbSystem:Preferences',
+				'sbSystem:Reports',
+				'sbSystem:Imageprocessing',
+				'sbSystem:Maintenance',
+				'sbSystem:Modules',
+				'sbSystem:Templatemanager',
+				'sbSystem:Reports_db',
+				'sbSystem:Reports_structure',
+				'sbSystem:Trashcan',
+				'sbSystem:Useraccounts',
+				'sbSystem:Registry',
+				'sbSystem:Module',
+				'sbSystem:Debug',
+				'sbSystem:Logs'
 			);
 			if (in_array($this->getProperty('jcr:primaryType'), $aKnownMandatoryNodes, TRUE)) {
 				return (FALSE);

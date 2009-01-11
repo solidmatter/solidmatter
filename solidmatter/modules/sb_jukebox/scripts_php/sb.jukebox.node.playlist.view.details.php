@@ -80,10 +80,10 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 				
 				$aTracks = array();
 				switch ($nodeItem->getPrimaryNodeType()) {
-					case 'sb_jukebox:track':
+					case 'sbJukebox:Track':
 						$aTracks[] = $nodeItem;
 						break;
-					case 'sb_jukebox:album':
+					case 'sbJukebox:Album':
 						$niTracks = $nodeItem->getChildren('play');
 						foreach ($niTracks as $nodeTrack) {
 							$aTracks[] = $nodeTrack;

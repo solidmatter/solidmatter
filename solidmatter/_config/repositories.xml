@@ -17,7 +17,7 @@
 			<port>3306</port>
 			<user>solidmatter</user>
 			<pass>solidmatter</pass>
-			<schema>solidmatter_jukeboxtest</schema>
+			<schema>solidmatter_test</schema>
 			<charset>utf8</charset>
 			<log enabled="true" verbose="false">
 				<file>_logs/log_database_test.txt</file>

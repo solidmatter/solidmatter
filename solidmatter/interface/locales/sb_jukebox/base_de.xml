@@ -2,16 +2,16 @@
 <sbJukebox>
 
 	<nodetypes>
-		<type id="sb_jukebox:jukebox">Jukebox</type>
-		<type id="sb_jukebox:playlist">Playlist</type>
-		<type id="sb_jukebox:album">Album</type>
-		<type id="sb_jukebox:artist">Künstler</type>
-		<type id="sb_jukebox:track">Titel</type>
-		<type id="sb_jukebox:recommendation">Empfehlung</type>
-		<type id="sb_jukebox:tpl_mostheard">Jukebox: Populär</type>
-		<type id="sb_jukebox:tpl_favorites">Jukebox: Favoriten</type>
-		<type id="sb_jukebox:tpl_toprated">Jukebox: Charts</type>
-		<type id="sb_jukebox:tpl_nowplaying">Jukebox: On Air</type>
+		<type id="sbJukebox:Jukebox">Jukebox</type>
+		<type id="sbJukebox:Playlist">Playlist</type>
+		<type id="sbJukebox:Album">Album</type>
+		<type id="sbJukebox:Artist">Künstler</type>
+		<type id="sbJukebox:Track">Titel</type>
+		<type id="sbJukebox:Recommendation">Empfehlung</type>
+		<type id="sbJukebox:TPL_MostHeard">Jukebox: Populär</type>
+		<type id="sbJukebox:TPL_Favorites">Jukebox: Favoriten</type>
+		<type id="sbJukebox:TPL_Toprated">Jukebox: Charts</type>
+		<type id="sbJukebox:TPL_Nowplaying">Jukebox: On Air</type>
 	</nodetypes>
 	
 	<views>

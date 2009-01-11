@@ -115,14 +115,14 @@ $_QUERIES['sbJukebox/jukebox/gatherInfo'] = '
 						ON		h1.fk_child = n.uuid
 					WHERE		h1.n_left > h.n_left
 						AND		h1.n_right < h.n_right
-						AND		n.fk_nodetype = \'sb_jukebox:album\'
+						AND		n.fk_nodetype = \'sbJukebox:Album\'
 				) AS n_numalbums,
 				(SELECT COUNT(*)
 					FROM		{TABLE_HIERARCHY} h1
 					INNER JOIN	{TABLE_NODES} n
 						ON		h1.fk_child = n.uuid
 					WHERE		fk_parent = :jukebox_uuid
-						AND		n.fk_nodetype = \'sb_jukebox:artist\'
+						AND		n.fk_nodetype = \'sbJukebox:Artist\'
 				) AS n_numartists,
 				(SELECT COUNT(*)
 					FROM		{TABLE_HIERARCHY} h1
@@ -130,7 +130,7 @@ $_QUERIES['sbJukebox/jukebox/gatherInfo'] = '
 						ON		h1.fk_child = n.uuid
 					WHERE		h1.n_left > h.n_left
 						AND		h1.n_right < h.n_right
-						AND		n.fk_nodetype = \'sb_jukebox:track\'
+						AND		n.fk_nodetype = \'sbJukebox:Track\'
 				) AS n_numtracks,
 				(SELECT COUNT(*)
 					FROM		{TABLE_HIERARCHY} h1
@@ -138,7 +138,7 @@ $_QUERIES['sbJukebox/jukebox/gatherInfo'] = '
 						ON		h1.fk_child = n.uuid
 					WHERE		h1.n_left > h.n_left
 						AND		h1.n_right < h.n_right
-						AND		n.fk_nodetype = \'sb_jukebox:playlist\'
+						AND		n.fk_nodetype = \'sbJukebox:Playlist\'
 				) AS n_numplaylists
 	FROM		{TABLE_HIERARCHY} h
 	WHERE		h.fk_child = :jukebox_uuid
@@ -299,7 +299,7 @@ $_QUERIES['sbJukebox/artist/getTracks/differentAlbums'] = '
 						AND	b_primary = \'TRUE\'
 				)
 		AND		jt.fk_artist = :artist_uuid
-		AND		n2.fk_nodetype = \'sb_jukebox:album\'
+		AND		n2.fk_nodetype = \'sbJukebox:Album\'
 		AND		h.fk_parent NOT IN (
 					SELECT	fk_child
 					FROM	{TABLE_HIERARCHY}

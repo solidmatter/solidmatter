@@ -37,7 +37,7 @@ class sbView_jukebox_jukebox_playlists extends sbJukeboxView {
 			case 'create':
 				$nodeParent = $this->getJukebox();
 				$_RESPONSE->addData($nodeParent, 'parent');
-				$nodeChild = $nodeParent->addNode('temp', 'sb_jukebox:playlist');
+				$nodeChild = $nodeParent->addNode('temp', 'sbJukebox:Playlist');
 				$formCreate = $nodeChild->buildForm('create', $_REQUEST->getParam('parentnode'));
 				$formCreate->setAction(System::getURL('-', 'playlists', 'create'));
 				$formCreate->recieveInputs();

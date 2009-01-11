@@ -44,16 +44,16 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 					$this->nodeSubject->save();
 					if ($_REQUEST->getParam('silent') == NULL) {
 						switch($this->nodeSubject->getPrimaryNodeType()) {
-							case 'sb_jukebox:album':
+							case 'sbJukebox:Album':
 								$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'details');
 								break;	
-							case 'sb_jukebox:artist':
+							case 'sbJukebox:Artist':
 								$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'details');
 								break;	
-							case 'sb_jukebox:track':
+							case 'sbJukebox:Track':
 								$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'details');
 								break;
-							case 'sb_jukebox:playlist':
+							case 'sbJukebox:Playlist':
 								$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'details');
 								break;
 						}
@@ -68,7 +68,7 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 			case 'placeVote':
 				//$iVote = $_REQUEST->getParam('vote');
 				$iVote = $this->requireParam('vote');
-				$nodeJukebox = $this->nodeSubject->getAncestorOfType('sb_jukebox:jukebox');
+				$nodeJukebox = $this->nodeSubject->getAncestorOfType('sbJukebox:Jukebox');
 				/*$iMin = Registry::getValue('sb.jukebox.voting.scale.min');
 				$iMax = Registry::getValue('sb.jukebox.voting.scale.max');
 				$iScale = $iMax - $iMin;
