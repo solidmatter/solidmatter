@@ -60,6 +60,9 @@ class sbPDOStatement extends PDOStatement {
 	* @return 
 	*/
 	public function bindValue($sParam, $mValue, $eType) {
+		if ($mValue === NULL) {
+			$eType = PDO::PARAM_NULL;
+		}
 		if (substr($sParam, 0, 1) != ':') {
 			$sParam = ':'.$sParam;	
 		}
@@ -74,6 +77,9 @@ class sbPDOStatement extends PDOStatement {
 	* @return 
 	*/
 	public function bindParam($sParam, &$mValue, $eType) {
+		if ($mValue === NULL) {
+			$eType = PDO::PARAM_NULL;
+		}
 		if (substr($sParam, 0, 1) != ':') {
 			$sParam = ':'.$sParam;	
 		}

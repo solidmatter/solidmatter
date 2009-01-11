@@ -5,7 +5,7 @@
 	
 	<repository>
 		<add>
-			<nodetype id="sb_jukebox:jukebox" type="PRIMARY" displaytype="sb_jukebox">
+			<nodetype id="sbJukebox:Jukebox" type="PRIMARY" displaytype="sb_jukebox">
 				<module>sb_jukebox</module>
 				<class>sbNode_jukebox_jukebox</class>
 				<classfile>sb.jukebox.node.jukebox</classfile>
@@ -146,43 +146,81 @@
 					</action>
 				</view>
 			</nodetype>
-			<nodetype id="sb_jukebox:artist" type="PRIMARY" taggable="TRUE" displaytype="sb_artist">
+			<nodetype id="sbJukebox:Artist" type="PRIMARY" taggable="TRUE" displaytype="sb_artist">
 				<module>sb_system</module>
 				<class>sbNode</class>
 				<classfile>sb.node</classfile>
 			</nodetype>
-			<nodetype id="sb_jukebox:album" type="PRIMARY" taggable="TRUE" displaytype="sb_album">
+			<nodetype id="sbJukebox:Album" type="PRIMARY" taggable="TRUE" displaytype="sb_album">
 				<module>sb_jukebox</module>
 				<class>sbNode_jukebox_album</class>
 				<classfile>sb.jukebox.node.album</classfile>
 			</nodetype>
-			<nodetype id="sb_jukebox:track" type="PRIMARY" taggable="TRUE" displaytype="sb_track">
+			<nodetype id="sbJukebox:Track" type="PRIMARY" taggable="TRUE" displaytype="sb_track">
 				<module>sb_jukebox</module>
 				<class>sbNode_jukebox_track</class>
 				<classfile>sb.jukebox.node.track</classfile>
 			</nodetype>
-			<nodetype id="sb_jukebox:playlist" type="PRIMARY" taggable="TRUE" displaytype="sb_playlist">
+			<nodetype id="sbJukebox:Playlist" type="PRIMARY" taggable="TRUE" displaytype="sb_playlist">
 				<module>sb_system</module>
 				<class>sbNode</class>
 				<classfile>sb.node</classfile>
 			</nodetype>
-			<nodetype id="sb_jukebox:recommendation" type="PRIMARY" displaytype="sb_message">
+			<nodetype id="sbJukebox:Recommendation" type="PRIMARY" displaytype="sb_message">
 				<module>sb_system</module>
 				<class>sbNode</class>
 				<classfile>sb.node</classfile>
 			</nodetype>
+			<mode id="tree">
+				<allow parent="sbSystem:Root" child="sbJukebox:Jukebox" />
+				<allow parent="sbJukebox:Jukebox" child="sbJukebox:Playlist" />
+				<allow parent="sbSystem:Layout" child="sbJukebox:TPL_Favorites" />
+				<allow parent="sbSystem:Layout" child="sbJukebox:TPL_MostHeard" />
+				<allow parent="sbSystem:Layout" child="sbJukebox:TPL_NowPlaying" />
+				<allow parent="sbSystem:Layout" child="sbJukebox:TPL_TopRated" />
+			</mode>
 			<mode id="create">
-				<allow parent="sb_jukebox:album" child="sb_system:comment" />
-				<allow parent="sb_jukebox:artist" child="sb_system:comment" />
-				<allow parent="sb_jukebox:track" child="sb_system:comment" />
-				<allow parent="sb_jukebox:playlist" child="sb_system:comment" />
-				<allow parent="sb_jukebox:jukebox" child="sb_jukebox:playlist" />
+				<allow parent="sbSystem:Root" child="sbJukebox:Jukebox" />
+				<allow parent="sbJukebox:Album" child="sbSystem:Comment" />
+				<allow parent="sbJukebox:Artist" child="sbSystem:Comment" />
+				<allow parent="sbJukebox:Track" child="sbSystem:Comment" />
+				<allow parent="sbJukebox:Playlist" child="sbSystem:Comment" />
+				<allow parent="sbJukebox:Jukebox" child="sbJukebox:Playlist" />
+				<allow parent="sbSystem:Layout" child="sbJukebox:TPL_Favorites" />
+				<allow parent="sbSystem:Layout" child="sbJukebox:TPL_MostHeard" />
+				<allow parent="sbSystem:Layout" child="sbJukebox:TPL_NowPlaying" />
+				<allow parent="sbSystem:Layout" child="sbJukebox:TPL_TopRated" />
 			</mode>
 			<mode id="list">
-				<allow parent="sb_jukebox:album" child="sb_jukebox:track" />
-				<allow parent="sb_jukebox:album" child="sb_system:comment" />
-				<allow parent="sb_jukebox:jukebox" child="sb_jukebox:artist" />
-				...
+				<allow parent="sbSystem:Root" child="sbJukebox:Jukebox" />
+				<allow parent="sbJukebox:Jukebox" child="sbJukebox:Artist" />
+				<allow parent="sbJukebox:Jukebox" child="sbJukebox:Playlist" />
+				<allow parent="sbJukebox:Artist" child="sbJukebox:Album" />
+				<allow parent="sbJukebox:Album" child="sbJukebox:Track" />
+				<allow parent="sbJukebox:Playlist" child="sbJukebox:Track" />
+				<allow parent="sbJukebox:Artist" child="sbSystem:Comment" />
+				<allow parent="sbJukebox:Album" child="sbSystem:Comment" />
+				<allow parent="sbJukebox:Track" child="sbSystem:Comment" />
+				<allow parent="sbJukebox:Playlist" child="sbSystem:Comment" />
+			</mode>
+			<!--<mode id="chooseAlbum">
+				<allow parent="sbSystem:Root" child="sbJukebox:Jukebox" />
+				<allow parent="sbJukebox:Jukebox" child="sbJukebox:Artist" />
+				<allow parent="sbJukebox:Artist" child="sbJukebox:Album" />
+			</mode>-->
+			<mode id="chooseArtist">
+				<allow parent="sbSystem:Root" child="sbJukebox:Jukebox" />
+				<allow parent="sbJukebox:Jukebox" child="sbJukebox:Artist" />
+			</mode>
+			<mode id="albums">
+				<allow parent="sbJukebox:Artist" child="sbJukebox:Album" />
+			</mode>
+			<mode id="recommendations">
+				<allow parent="sbSystem:Inbox" child="sbJukebox:Recommendation" />
+			</mode>
+			<mode id="tracks">
+				<allow parent="sbJukebox:Album" child="sbJukebox:Track" />
+				<allow parent="sbJukebox:Playlist" child="sbJukebox:Track" />
 			</mode>
 		</add>
 	
