@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<forum>
+<sbForum>
 
+	<nodetypes>
+		<type id="sbForum:Forum">Forum</type>
+		<type id="sbForum:Category">Unterforum</type>
+		<type id="sbForum:Thread">Thema</type>
+		<type id="sbForum:Post">Nachricht</type>
+	</nodetypes>
+	
 	<general>
 		<apptitle>Forum</apptitle>
 		<viewtitles>
@@ -59,27 +66,25 @@
 		</errors>
 	</general>
 	
-	<nodes>
-		<forum>
-			<attachments_allowed>Anhänge erlaubt</attachments_allowed>
-			<attachments_allowedmimetypes>erlaubte Mimetypes</attachments_allowedmimetypes>
-			<attachments_maxfilesize>max. Dateigröße</attachments_maxfilesize>
-			<attachments_maxnumallowed>max. Anzahl Anhänge</attachments_maxnumallowed>
-			<avatars_allow>Avatare erlaubt</avatars_allow>
-			<avatars_maxfilesize>max. Avatar-Dateigröße</avatars_maxfilesize>
-			<avatars_maxxsize>max. Avatar-Breite</avatars_maxxsize>
-			<avatars_maxysize>max. Avatar-Höhe</avatars_maxysize>
-			<maintenance_forumclosed>Forum geschlossen</maintenance_forumclosed>
-			<messages_perpage>Anzahl Nachrichten pro Seite</messages_perpage>
-			<security_hideurlsfromguests>URLs vor Gästen verstecken</security_hideurlsfromguests>
-			<security_requireregistration>Registrierung erzwingen</security_requireregistration>
-			<security_saveips>IPs speichern</security_saveips>
-			<threads_perpage>Anzahl Themen pro Seite</threads_perpage>
-			<threads_sortcriteria>Sortierkriterium für Themen</threads_sortcriteria>
-			<threads_sortdirection>Sortierrichtung für Themen</threads_sortdirection>
-		</forum>
-	</nodes>
-	
+	<Forum>
+		<attachments_allowed>Anhänge erlaubt</attachments_allowed>
+		<attachments_allowedmimetypes>erlaubte Mimetypes</attachments_allowedmimetypes>
+		<attachments_maxfilesize>max. Dateigröße</attachments_maxfilesize>
+		<attachments_maxnumallowed>max. Anzahl Anhänge</attachments_maxnumallowed>
+		<avatars_allow>Avatare erlaubt</avatars_allow>
+		<avatars_maxfilesize>max. Avatar-Dateigröße</avatars_maxfilesize>
+		<avatars_maxxsize>max. Avatar-Breite</avatars_maxxsize>
+		<avatars_maxysize>max. Avatar-Höhe</avatars_maxysize>
+		<maintenance_forumclosed>Forum geschlossen</maintenance_forumclosed>
+		<messages_perpage>Anzahl Nachrichten pro Seite</messages_perpage>
+		<security_hideurlsfromguests>URLs vor Gästen verstecken</security_hideurlsfromguests>
+		<security_requireregistration>Registrierung erzwingen</security_requireregistration>
+		<security_saveips>IPs speichern</security_saveips>
+		<threads_perpage>Anzahl Themen pro Seite</threads_perpage>
+		<threads_sortcriteria>Sortierkriterium für Themen</threads_sortcriteria>
+		<threads_sortdirection>Sortierrichtung für Themen</threads_sortdirection>
+	</Forum>
+		
 	<authorisations>
 		<edit_config>Konfiguration ändern</edit_config>
 		<manage_forums>Foren verwalten</manage_forums>
@@ -267,13 +272,5 @@
 			<numposts>{USERPOSTS} von insgesamt {TOTALPOSTS} ({PERCENTAGE} %)</numposts>
 		</texts>
 	</members>
-
-	<nodetypes>
-		<type id="sb_forum:forum">Forum</type>
-		<type id="sb_forum:category">Unterforum</type>
-		<type id="sb_forum:thread">Thema</type>
-		<type id="sb_forum:post">Nachricht</type>
-	</nodetypes>
 	
-	
-</forum>
+</sbForum>

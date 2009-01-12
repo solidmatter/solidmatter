@@ -34,13 +34,13 @@ class sbInput_string extends sbInput {
 	public function checkInput() {
 		
 		if (mb_strlen($this->mValue) < $this->aConfig['minlength']) {
-			$this->sErrorLabel = '$locale/system/formerrors/string_too_short';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/string_too_short';
 		}
 		if (mb_strlen($this->mValue) > $this->aConfig['maxlength']) {
-			$this->sErrorLabel = '$locale/system/formerrors/string_too_long';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/string_too_long';
 		}
 		if (mb_strlen($this->mValue) == 0 && $this->aConfig['required'] == 'TRUE') {
-			$this->sErrorLabel = '$locale/system/formerrors/not_null';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/not_null';
 		}
 		
 		$this->additionalChecks();

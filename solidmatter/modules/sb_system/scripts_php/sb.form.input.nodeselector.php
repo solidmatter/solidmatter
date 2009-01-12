@@ -100,7 +100,7 @@ class sbInput_nodeselector extends sbInput {
 		if ($this->aConfig['required'] == 'FALSE' && $this->mValue == '') {
 			return (TRUE);
 		} elseif (mb_strlen($this->mValue) == 0 && $this->aConfig['required'] == 'TRUE') {
-			$this->sErrorLabel = '$locale/system/formerrors/not_null';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/not_null';
 		}
 		
 		if ($this->aConfig['nodetype'] != '') {
@@ -108,7 +108,7 @@ class sbInput_nodeselector extends sbInput {
 				$nodeSelected = $this->domForm->getSession()->getNode($this->mValue);
 				$aAllowedTypes = explode('|', $this->aConfig['nodetype']);
 				if (!in_array($nodeSelected->getPrimaryNodeType(), $aAllowedTypes)) {
-					$this->sErrorLabel = '$locale/system/formerrors/wrong_nodetype';
+					$this->sErrorLabel = '$locale/sbSystem/formerrors/wrong_nodetype';
 				}
 			} catch (NodeNotFoundException $e) {
 				// ignore

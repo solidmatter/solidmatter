@@ -2,13 +2,13 @@
 
 //------------------------------------------------------------------------------
 /**
-* @package	solidMatter:sb_system
+* @package	solidMatter:sbUtilities
 * @author	()((() [Oliver Müller]
 * @version	1.00.00
 */
 //------------------------------------------------------------------------------
 
-import('sb.node.imagefilter');
+import('sbUtilities:sb.node.imagefilter');
 
 //------------------------------------------------------------------------------
 /**
@@ -47,7 +47,7 @@ class sbNode_imagefilterstack extends Imagefilter {
 		
 		$niParents = $this->getParents();
 		foreach ($niParents as $nodeCurrent) {
-			if ($nodeCurrent->getPrimaryNodeType() == 'sb_system:imagefilterstack') {
+			if ($nodeCurrent->getPrimaryNodeType() == 'sbUtilities:Imagefilterstack') {
 				$nodeCurrent->clearCache();
 			}
 		}

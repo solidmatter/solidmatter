@@ -971,7 +971,7 @@ class sbNode extends sbCR_Node {
 					// init form
 					$formProperties = new sbDOMForm(
 						'properties',
-						'$locale/system/general/labels/properties',
+						'$locale/sbSystem/labels/properties',
 						'/'.$this->getProperty('jcr:uuid').'/properties/save',
 						$this->crSession
 					);
@@ -996,12 +996,12 @@ class sbNode extends sbCR_Node {
 					if ($this->isTaggable()) {
 						$sInputName = 'tags_'.$this->getProperty('jcr:uuid');
 						$aTags = $this->getTags();
-						$formProperties->addInput($sInputName.';text;maxlength=500;rows=2;', '$locale/system/general/labels/tags');
+						$formProperties->addInput($sInputName.';text;maxlength=500;rows=2;', '$locale/sbSystem/labels/tags');
 						$formProperties->setValue($sInputName, implode(', ', $aTags));
 					}
 						
 					// finish form and return�
-					$formProperties->addSubmit('$locale/system/general/actions/save');
+					$formProperties->addSubmit('$locale/sbSystem/actions/save');
 					$this->modifyForm($formProperties, 'properties');
 					return ($formProperties);
 					
@@ -1017,7 +1017,7 @@ class sbNode extends sbCR_Node {
 					
 					$formCreate = new sbDOMForm(
 						'create',
-						'$locale/system/general/actions/create',
+						'$locale/sbSystem/actions/create',
 						'/-/structure/saveChild/nodetype='.$this->getProperty('nodetype').'&parentnode='.$sParentUUID,
 						$this->crSession
 					);
@@ -1028,7 +1028,7 @@ class sbNode extends sbCR_Node {
 						}
 					}
 					$_RESPONSE->addSystemMeta('csstype', $this->getProperty('csstype'));
-					$formCreate->addSubmit('$locale/system/general/actions/save');
+					$formCreate->addSubmit('$locale/sbSystem/actions/save');
 					$this->modifyForm($formCreate, 'create');
 					return ($formCreate);
 					

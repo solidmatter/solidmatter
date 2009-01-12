@@ -32,7 +32,7 @@ class sbInput_color extends sbInput {
 	public function checkInput() {
 		
 		if (!preg_match('/^[0-9a-f]{6}$/i', $this->mValue)) {
-			$this->sErrorLabel = '$locale/system/formerrors/no_hexcolor';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/no_hexcolor';
 		}
 		
 		if ($this->sErrorLabel == '') {

@@ -17,7 +17,7 @@ class sbView_reports_system extends sbView {
 		
 		global $_RESPONSE;
 		
-		$stmtModules = $this->prepareKnown('sb_system/modules/getInfo');
+		$stmtModules = $this->prepareKnown('sbSystem/modules/getInfo');
 		$stmtModules->execute();
 		$_RESPONSE->addData($stmtModules->fetchDOM('modules'));
 		

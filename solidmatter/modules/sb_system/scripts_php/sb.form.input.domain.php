@@ -27,7 +27,7 @@ class sbInput_domain extends sbInput_string {
 	public function checkInput() {
 		
 		if (!preg_match('/^[a-z][0-9a-z]*\.([-0-9a-z]+\.)*([a-z]){2,8}$/', $this->mValue)) {
-			$this->sErrorLabel = '$locale/system/formerrors/no_domain';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/no_domain';
 		}
 		
 		return (parent::checkInput());

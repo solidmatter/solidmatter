@@ -21,11 +21,11 @@ class sbView_reports_db_status extends sbView {
 			
 			case 'display':
 				
-				$stmtGetStatus = $this->crSession->prepareKnown('sb_system/reports_db/status/status');
+				$stmtGetStatus = $this->crSession->prepareKnown('sbSystem/reports_db/status/status');
 				$stmtGetStatus->execute();
 				$_RESPONSE->addData($stmtGetStatus->fetchDOM('status'));
 				
-				$stmtGetVars = $this->crSession->prepareKnown('sb_system/reports_db/status/variables');
+				$stmtGetVars = $this->crSession->prepareKnown('sbSystem/reports_db/status/variables');
 				$stmtGetVars->execute();
 				$_RESPONSE->addData($stmtGetVars->fetchDOM('variables'));
 				

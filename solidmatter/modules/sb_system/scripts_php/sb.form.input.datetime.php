@@ -28,10 +28,10 @@ class sbInput_datetime extends sbInput_string {
 	public function checkInput() {
 		
 		if (strlen($this->mValue) == 0 && $this->aConfig['required'] == 'TRUE') {
-			$this->sErrorLabel = '$locale/system/formerrors/not_null';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/not_null';
 		}
 		if ($this->aConfig['required'] == 'TRUE' && !is_mysqldatetime($this->mValue)) {
-			$this->sErrorLabel = '$locale/system/formerrors/no_datetime';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/no_datetime';
 		}
 		
 		return (parent::checkInput());

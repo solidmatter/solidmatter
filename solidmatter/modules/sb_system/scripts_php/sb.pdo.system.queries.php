@@ -467,6 +467,61 @@ $_QUERIES['sbSystem/node/removeAuthorisation'] = '
 ';
 
 //------------------------------------------------------------------------------
+// node:module
+//------------------------------------------------------------------------------
+
+$_QUERIES['sbSystem/module/loadProperties/auxiliary'] = '
+	SELECT		s_name,
+				n_mainversion,
+				n_subversion,
+				n_bugfixversion,
+				s_versioninfo,
+				dt_installed,
+				dt_updated,
+				b_uninstallable,
+				b_active
+	FROM		{TABLE_MODULES}
+	WHERE		uuid = :node_id
+
+';
+$_QUERIES['sbSystem/module/saveProperties/auxiliary'] = '
+	INSERT INTO	{TABLE_MODULES}
+				(
+					s_name,
+					n_mainversion,
+					n_subversion,
+					n_bugfixversion,
+					s_versioninfo,
+					dt_installed,
+					dt_updated,
+					b_uninstallable,
+					b_active,
+					uuid
+				) VALUES (
+					:info_name,
+					:version_main,
+					:version_sub,
+					:version_bugfix,
+					:version_suffix,
+					:info_installedat,
+					:info_lastupdate,
+					:info_uninstallable,
+					:config_activated,
+					:node_id
+				)
+	ON DUPLICATE KEY UPDATE
+				s_name,
+				n_mainversion,
+				n_subversion,
+				n_bugfixversion,
+				s_versioninfo,
+				dt_installed,
+				dt_updated,
+				b_uninstallable,
+				b_active
+';
+
+//------------------------------------------------------------------------------
 // node:user 
 //------------------------------------------------------------------------------
 // view:edit -------------------------------------------------------------------
@@ -645,7 +700,7 @@ $_QUERIES['sb_system/folder/view/upload/getMimetypeMapping'] = '
 // node:preferences
 //------------------------------------------------------------------------------
 // view:moduleinfo -------------------------------------------------------------
-$_QUERIES['sb_system/modules/getInfo'] = '
+$_QUERIES['sbSystem/modules/getInfo'] = '
 	SELECT		*
 	FROM		{TABLE_MODULES}
 ';
@@ -654,7 +709,7 @@ $_QUERIES['sb_system/modules/getInfo'] = '
 // node:reports_structure
 //------------------------------------------------------------------------------
 // view:nodetypes --------------------------------------------------------------
-$_QUERIES['sb_system/reports_structure/nodetypes/overview'] = '
+$_QUERIES['sbSystem/reports_structure/nodetypes/overview'] = '
 	SELECT		nt.s_type,
 				nt.s_csstype,
 				(SELECT
@@ -677,7 +732,7 @@ $_QUERIES['sb_system/reports_structure/nodetypes/overview'] = '
 // node:reports_db
 //------------------------------------------------------------------------------
 // view:tables -----------------------------------------------------------------
-$_QUERIES['sb_system/reports_db/tables/overview'] = '
+$_QUERIES['sbSystem/reports_db/tables/overview'] = '
 	SHOW TABLE STATUS
 ';
 /*
@@ -685,10 +740,10 @@ $_QUERIES['sb_system/reports_db/tables/details'] = '
 	SHOW TABLE STATUS LIKE :table_name
 ';*/
 // view:status -----------------------------------------------------------------
-$_QUERIES['sb_system/reports_db/status/variables'] = '
+$_QUERIES['sbSystem/reports_db/status/variables'] = '
 	SHOW VARIABLES
 ';
-$_QUERIES['sb_system/reports_db/status/status'] = '
+$_QUERIES['sbSystem/reports_db/status/status'] = '
 	SHOW STATUS
 ';
 

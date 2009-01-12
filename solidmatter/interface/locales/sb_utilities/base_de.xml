@@ -1,61 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sbUtilities>
 	
-	<nodes>
-		<imagefilterstack>
-			<config_reverse label="Durchlaufrichtung umkehren" />
-		</imagefilterstack>
-		<imagefilter_resize>
-			<config_width label="Breite" />
-			<config_height label="Höhe" />
-			<config_mode label="Modus">
-				<keepaspect label="Seitenverhältnis beibehalten" />
-				<loseaspect label="Seitenverhältnis nicht beibehalten" />
-			</config_mode>
-			<config_direction label="Skalierungsrichtung">
-				<upsample label="nur hochskalieren" />
-				<downsample label="nur herunterskalieren" />
-				<both label="egal" />
-			</config_direction>
-		</imagefilter_resize>
-		<imagefilter_colorize>
-			<config_color label="Farbe" />
-			<config_strength label="Effektstärke" />
-		</imagefilter_colorize>
-		<imagefilter_crop>
-			<config_origin label="Positionierung">
-				<topleft label="oben links" />
-				<topcenter label="oben mittig" />
-				<topright label="oben rechts" />
-				<bottomleft label="unten links" />
-				<bottomcenter label="unten mittig" />
-				<bottomright label="unten rechts" />
-				<leftcenter label="links mittig" />
-				<rightcenter label="recht mittig" />
-				<center label="zentriert" />
-			</config_origin>
-			<config_width label="Breite" />
-			<config_height label="Höhe" />
-			<config_offsetx label="X-Offset" />
-			<config_offsety label="Y-Offset" />
-		</imagefilter_crop>
-		<imagefilter_greyscale>
-			<config_strength label="Effektstärke" />
-		</imagefilter_greyscale>
-		<imagefilter_lightness>
-			<config_brightness label="Helligkeit" />
-			<config_contrast label="Kontrast" />
-			<config_contrastfirst label="Kontrast zuerst ausführen" />
-		</imagefilter_lightness>
-		<imagefilter_negative>
-			<config_strength label="Effektstärke" />
-		</imagefilter_negative>
-		<imagefilter_roundededges>
-			<config_mode label="Modus" />
-			<config_radius label="Radius" />
-		</imagefilter_roundededges>
-	</nodes>
-	
 	<nodetypes>
 		<type id="sbUtilities:Imageprocessing">Bildbearbeitung</type>
 		<type id="sbUtilities:Imagefilterstack">Filterblock</type>
@@ -68,5 +13,58 @@
 		<type id="sbUtilities:Imagefilter_roundededges">Ecken abrunden</type>
 		<type id="sbUtilities:Imagefilter_merge">Verschmelzen</type>
 	</nodetypes>
+	
+	<Imagefilterstack>
+		<config_reverse label="Durchlaufrichtung umkehren" />
+	</Imagefilterstack>
+	<Imagefilter_resize>
+		<config_width label="Breite" />
+		<config_height label="Höhe" />
+		<config_mode label="Modus">
+			<keepaspect label="Seitenverhältnis beibehalten" />
+			<loseaspect label="Seitenverhältnis nicht beibehalten" />
+		</config_mode>
+		<config_direction label="Skalierungsrichtung">
+			<upsample label="nur hochskalieren" />
+			<downsample label="nur herunterskalieren" />
+			<both label="egal" />
+		</config_direction>
+	</Imagefilter_resize>
+	<Imagefilter_colorize>
+		<config_color label="Farbe" />
+		<config_strength label="Effektstärke" />
+	</Imagefilter_colorize>
+	<Imagefilter_crop>
+		<config_origin label="Positionierung">
+			<topleft label="oben links" />
+			<topcenter label="oben mittig" />
+			<topright label="oben rechts" />
+			<bottomleft label="unten links" />
+			<bottomcenter label="unten mittig" />
+			<bottomright label="unten rechts" />
+			<leftcenter label="links mittig" />
+			<rightcenter label="recht mittig" />
+			<center label="zentriert" />
+		</config_origin>
+		<config_width label="Breite" />
+		<config_height label="Höhe" />
+		<config_offsetx label="X-Offset" />
+		<config_offsety label="Y-Offset" />
+	</Imagefilter_crop>
+	<Imagefilter_greyscale>
+		<config_strength label="Effektstärke" />
+	</Imagefilter_greyscale>
+	<Imagefilter_lightness>
+		<config_brightness label="Helligkeit" />
+		<config_contrast label="Kontrast" />
+		<config_contrastfirst label="Kontrast zuerst ausführen" />
+	</Imagefilter_lightness>
+	<Imagefilter_negative>
+		<config_strength label="Effektstärke" />
+	</Imagefilter_negative>
+	<Imagefilter_roundededges>
+		<config_mode label="Modus" />
+		<config_radius label="Radius" />
+	</Imagefilter_roundededges>
 	
 </sbUtilities>

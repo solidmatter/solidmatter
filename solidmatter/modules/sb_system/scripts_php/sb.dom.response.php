@@ -233,7 +233,9 @@ class sbDOMResponse extends sbDOMDocument {
 	* @param 
 	* @return 
 	*/
-	public function addLocale($sModule = 'sb_system', $sLanguage = NULL, $sLocale = NULL) {
+	public function addLocale($sModule = 'sbSystem', $sLanguage = NULL, $sLocale = NULL) {
+		// FIXME: dependencies are no good, rework
+		$sModule = System::getFailsafeModuleName($sModule);
 		if ($sLanguage === NULL) {
 			$sLanguage = User::getCurrentLocale();
 		}

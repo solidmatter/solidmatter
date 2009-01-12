@@ -183,6 +183,24 @@ class System {
 		
 	}
 	
+	// TODO: make obsolete and remove
+	public static function getFailsafeModuleName($sModule) {
+		$aModules = array(
+			'sbSystem' => 'sb_system',
+			'sbCMS' => 'sb_cms',
+			'sbFiles' => 'sb_files',
+			'sbNews' => 'sb_news',
+			'sbUtilities' => 'sb_utilities',
+			'sbForum' => 'sb_forum',
+			'sbGuestbook' => 'sb_guestbook',
+			'sbJukebox' => 'sb_jukebox',
+		);
+		if (isset($aModules[$sModule])) {
+			return ($aModules[$sModule]);
+		}
+		return ($sModule);
+	}
+	
 	//--------------------------------------------------------------------------
 	/**
 	* 

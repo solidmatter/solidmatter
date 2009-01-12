@@ -1998,10 +1998,8 @@ class sbCR_Node {
 				'sbSystem:Root',
 				'sbSystem:Preferences',
 				'sbSystem:Reports',
-				'sbSystem:Imageprocessing',
 				'sbSystem:Maintenance',
 				'sbSystem:Modules',
-				'sbSystem:Templatemanager',
 				'sbSystem:Reports_db',
 				'sbSystem:Reports_structure',
 				'sbSystem:Trashcan',
@@ -2204,7 +2202,7 @@ class sbCR_Node {
 		} else {
 			$aProperties = $stmtGetProperties->fetch(PDO::FETCH_ASSOC);
 			$stmtGetProperties->closeCursor();
-			// $aProperties != null because of a bug when reading newly saved nodes (investigate!!!)
+			// TODO: $aProperties != null because of a bug when reading newly saved nodes (investigate!!!)
 			if ($sType == 'EXTENDED' && $aProperties != NULL) {
 				//var_dumpp($aProperties);
 				foreach ($this->crPropertyDefinitionCache as $sName => $aDetails) {

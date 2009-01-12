@@ -21,21 +21,11 @@ class sbView_modules_overview extends sbView {
 	* @param 
 	* @return 
 	*/
-	protected function init() {
-		$this->aQueries['sb_system/modules/getInfo'] = 'sb_system/modules/getInfo';
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	* 
-	* @param 
-	* @return 
-	*/
 	public function execute($sAction) {
 		
 		global $_RESPONSE;
 		
-		$stmtModules = $this->crSession->prepareKnown('sb_system/modules/getInfo');
+		$stmtModules = $this->crSession->prepareKnown('sbSystem/modules/getInfo');
 		$stmtModules->execute();
 		$_RESPONSE->addData($stmtModules->fetchDOM('modules'));
 		

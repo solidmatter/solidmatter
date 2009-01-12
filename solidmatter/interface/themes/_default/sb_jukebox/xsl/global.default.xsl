@@ -224,7 +224,7 @@
 		<xsl:param name="form" />
 		<!--<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>-->
 		<form action="{$form/@action}" method="post" class="simplesearch">
-			<xsl:value-of select="$locale/system/general/labels/search/title" />:
+			<xsl:value-of select="$locale/sbSystem/labels/search/title" />:
 			<xsl:apply-templates select="$form/sbinput[@type='string']" mode="inputonly" />
 			<xsl:value-of select="' '" />
 			<xsl:apply-templates select="$form/submit" mode="inputonly" />
@@ -259,7 +259,7 @@
 	
 	<xsl:template name="comments">
 		<div class="comments">
-			<h2><xsl:value-of select="$locale/system/general/labels/comments" /></h2>
+			<h2><xsl:value-of select="$locale/sbSystem/labels/comments" /></h2>
 			<xsl:choose>
 				<xsl:when test="children[@mode='comments']/sbnode">
 					<xsl:for-each select="children[@mode='comments']/sbnode">
@@ -270,7 +270,7 @@
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>
-					<div><xsl:value-of select="$locale/system/general/texts/no_comments" /></div>
+					<div><xsl:value-of select="$locale/sbSystem/texts/no_comments" /></div>
 				</xsl:otherwise>
 			</xsl:choose>
 			<br /><br /><br />

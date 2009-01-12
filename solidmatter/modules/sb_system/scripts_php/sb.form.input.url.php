@@ -27,7 +27,7 @@ class sbInput_url extends sbInput_string {
 	public function checkInput() {
 		
 		if (!preg_match('/^([a-z]+://)?[A-Z0-9.-]+\.[A-Z]{2,10}/?[A-Z0-9._?~=/-]*$/', $this->mValue)) {
-			$this->sErrorLabel = '$locale/system/formerrors/no_url';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/no_url';
 		}
 		
 		return (parent::checkInput());

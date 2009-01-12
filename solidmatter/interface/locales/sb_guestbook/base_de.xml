@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <guestbook>
 	
+	<nodetypes>
+		<type id="sbGuestbook:Guestbook">Gästebuch</type>
+		<type id="sbGuestbook:Entry">Gästebucheintrag</type>
+		<type id="sbGuestbook:TPL_Entries">Gästebucheinträge</type>
+	</nodetypes>
+	
 	<general>
 		<apptitle>Gästebuch</apptitle>
 		<information>
@@ -58,11 +64,5 @@
 			<config_maxlength>Max. Anzahl Zeichen</config_maxlength>
 		</guestbook>
 	</nodes> 
-	
-	<nodetypes>
-		<type id="sb_guestbook:guestbook">Gästebuch</type>
-		<type id="sb_guestbook:entry">Gästebucheintrag</type>
-		<type id="sb_guestbook:tpl_entries">Gästebucheinträge</type>
-	</nodetypes>
 	
 </guestbook>

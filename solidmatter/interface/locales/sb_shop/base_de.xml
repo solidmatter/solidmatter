@@ -2,8 +2,8 @@
 <shop>
 
 	<nodetypes>
-		<type id="sb_shop:shop">sbShop</type>
-		<type id="sb_shop:category">Shopkategorie</type>
+		<type id="sbShop:Shop">sbShop</type>
+		<type id="sbShop:Category">Shopkategorie</type>
 	</nodetypes>
 	
 </shop>

@@ -2,13 +2,13 @@
 
 //------------------------------------------------------------------------------
 /**
-* @package	solidMatter:sb_system
+* @package	solidMatter:sbUtilities
 * @author	()((() [Oliver Müller]
 * @version	1.00.00
 */
 //------------------------------------------------------------------------------
 
-import('sb.node.imagefilter');
+import('sbUtilities:sb.node.imagefilter');
 
 //------------------------------------------------------------------------------
 /**
@@ -74,13 +74,13 @@ class sbNode_imagefilter_resize extends Imagefilter {
 	protected function modifyForm($formCurrent, $sMode) {
 		
 		$formCurrent->setOptions('config_mode', array(
-			'KEEPASPECT' => '$locale/system/nodes/imagefilter_resize/config_mode/keepaspect/@label',
-			'LOSEASPECT' => '$locale/system/nodes/imagefilter_resize/config_mode/loseaspect/@label'
+			'KEEPASPECT' => '$locale/sbUtilities/Imagefilter_resize/config_mode/keepaspect/@label',
+			'LOSEASPECT' => '$locale/sbUtilities/Imagefilter_resize/config_mode/loseaspect/@label'
 		));
 		$formCurrent->setOptions('config_direction', array(
-			'DOWNSAMPLE' => '$locale/system/nodes/imagefilter_resize/config_direction/downsample/@label',
-			'UPSAMPLE' => '$locale/system/nodes/imagefilter_resize/config_direction/upsample/@label',
-			'BOTH' => '$locale/system/nodes/imagefilter_resize/config_direction/both/@label'
+			'DOWNSAMPLE' => '$locale/sbUtilities/Imagefilter_resize/config_direction/downsample/@label',
+			'UPSAMPLE' => '$locale/sbUtilities/Imagefilter_resize/config_direction/upsample/@label',
+			'BOTH' => '$locale/sbUtilities/Imagefilter_resize/config_direction/both/@label'
 		));
 		
 		return ($formCurrent);

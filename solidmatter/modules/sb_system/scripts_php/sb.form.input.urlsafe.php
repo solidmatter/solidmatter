@@ -39,11 +39,11 @@ class sbInput_urlsafe extends sbInput_string {
 		
 		if ($this->aConfig['siteformat'] == 'TRUE') {
 			if (!preg_match('/^[a-z0-9_\.]+::[a-z0-9_\.]+$/', $this->mValue)) {
-				$this->sErrorLabel = '$locale/system/formerrors/no_siteformat';
+				$this->sErrorLabel = '$locale/sbSystem/formerrors/no_siteformat';
 			}
 		} else {
 			if (!preg_match('/^[a-z0-9_\.]+$/', $this->mValue)) {
-				$this->sErrorLabel = '$locale/system/formerrors/not_urlsafe';
+				$this->sErrorLabel = '$locale/sbSystem/formerrors/not_urlsafe';
 			}
 		}
 		

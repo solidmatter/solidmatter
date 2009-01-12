@@ -66,7 +66,7 @@ class sbView_root_login extends sbView {
 						foreach ($niParents as $nodeParent) {
 							//echo $nodeParent->getProperty('uid');
 							$aParentUUIDs[] = $nodeParent->getProperty('jcr:uuid');
-							if ($nodeParent->getProperty('uid') == 'sb_system:admins') {
+							if ($nodeParent->getProperty('uid') == 'sbSystem:Admins') {
 								$aData['is_admin'] = TRUE;
 							}
 						}
@@ -99,7 +99,7 @@ class sbView_root_login extends sbView {
 						
 						// check for inbox node and create it if necessary
 						if (!$nodeUser->hasNode('inbox')) {
-							$nodeInbox = $nodeUser->addNode('inbox', 'sb_system:inbox');
+							$nodeInbox = $nodeUser->addNode('inbox', 'sbSystem:Inbox');
 							$nodeInbox->setProperty('label', 'Inbox');
 							$nodeUser->save();
 							$this->logEvent(System::INFO, 'CREATED_INBOX', 'created inbox node');
@@ -107,7 +107,7 @@ class sbView_root_login extends sbView {
 						
 						// check for tasks node and create it if necessary
 						if (!$nodeUser->hasNode('tasks')) {
-							$nodeInbox = $nodeUser->addNode('tasks', 'sb_system:tasks');
+							$nodeInbox = $nodeUser->addNode('tasks', 'sbSystem:Tasks');
 							$nodeInbox->setProperty('label', 'Tasks');
 							$nodeUser->save();
 							$this->logEvent(System::INFO, 'CREATED_TASKS', 'created tasks node');
@@ -197,13 +197,13 @@ class sbView_root_login extends sbView {
 			'/-/login/login',
 			$this->crSession
 		);
-		$formLogin->addInput('login;string;required=TRUE', '$locale/system/general/labels/login');
-		$formLogin->addInput('password;password;required=TRUE', '$locale/system/general/labels/password');
+		$formLogin->addInput('login;string;required=TRUE', '$locale/sbSystem/labels/login');
+		$formLogin->addInput('password;password;required=TRUE', '$locale/sbSystem/labels/password');
 		if (Registry::getValue('sb.system.security.login.captcha.enabled')) {
-			$formLogin->addInput('captcha;captcha;required=TRUE;uid=login_backend', '$locale/system/general/labels/captcha');
+			$formLogin->addInput('captcha;captcha;required=TRUE;uid=login_backend', '$locale/sbSystem/labels/captcha');
 		}
 		
-		$formLogin->addSubmit('$locale/system/general/actions/login');
+		$formLogin->addSubmit('$locale/sbSystem/actions/login');
 		
 		return ($formLogin);
 		

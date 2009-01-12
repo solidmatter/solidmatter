@@ -8,7 +8,7 @@
 */
 //------------------------------------------------------------------------------
 
-import('sb.node.imagefilter');
+import('sbUtilities:sb.node.imagefilter');
 
 //------------------------------------------------------------------------------
 /**
@@ -67,15 +67,15 @@ class sbNode_imagefilter_crop extends Imagefilter {
 	protected function modifyForm($formCurrent, $sMode) {
 		
 		$formCurrent->setOptions('config_origin', array(
-			'CENTER' => '$locale/system/nodes/imagefilter_crop/config_origin/center/@label',
-			'TOPLEFT' => '$locale/system/nodes/imagefilter_crop/config_origin/topleft/@label',
-			'TOPCENTER' => '$locale/system/nodes/imagefilter_crop/config_origin/topcenter/@label',
-			'TOPRIGHT' => '$locale/system/nodes/imagefilter_crop/config_origin/topright/@label',
-			'RIGHTCENTER' => '$locale/system/nodes/imagefilter_crop/config_origin/rightcenter/@label',
-			'BOTTOMRIGHT' => '$locale/system/nodes/imagefilter_crop/config_origin/bottomright/@label',
-			'BOTTOMCENTER' => '$locale/system/nodes/imagefilter_crop/config_origin/bottomcenter/@label',
-			'BOTTOMLEFT' => '$locale/system/nodes/imagefilter_crop/config_origin/bottomleft/@label',
-			'LEFTCENTER' => '$locale/system/nodes/imagefilter_crop/config_origin/leftcenter/@label',
+			'CENTER' => '$locale/sbUtilities/Imagefilter_crop/config_origin/center/@label',
+			'TOPLEFT' => '$locale/sbUtilities/Imagefilter_crop/config_origin/topleft/@label',
+			'TOPCENTER' => '$locale/sbUtilities/Imagefilter_crop/config_origin/topcenter/@label',
+			'TOPRIGHT' => '$locale/sbUtilities/Imagefilter_crop/config_origin/topright/@label',
+			'RIGHTCENTER' => '$locale/sbUtilities/Imagefilter_crop/config_origin/rightcenter/@label',
+			'BOTTOMRIGHT' => '$locale/sbUtilities/Imagefilter_crop/config_origin/bottomright/@label',
+			'BOTTOMCENTER' => '$locale/sbUtilities/Imagefilter_crop/config_origin/bottomcenter/@label',
+			'BOTTOMLEFT' => '$locale/sbUtilities/Imagefilter_crop/config_origin/bottomleft/@label',
+			'LEFTCENTER' => '$locale/sbUtilities/Imagefilter_crop/config_origin/leftcenter/@label',
 		));
 		
 		return ($formCurrent);

@@ -7,9 +7,9 @@
 	xmlns:sbform="http://www.solidbytes.net/sbform"
 	extension-element-prefixes="sbform">
 
-	<xsl:import href="global.default.xsl" />
-	<xsl:import href="global.views.xsl" />
-	<xsl:import href="global.sbform.xsl" />
+	<xsl:import href="../../sb_system/xsl/global.default.xsl" />
+	<xsl:import href="../../sb_system/xsl/global.views.xsl" />
+	<xsl:import href="../../sb_system/xsl/global.sbform.xsl" />
 	
 	<xsl:output 
 		method="html"

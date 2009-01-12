@@ -51,38 +51,6 @@
 				<span class="type playlist"><xsl:value-of select="@label" /></span>
 			</h2>
 			
-			<!--<table class="default" width="100%">
-				<thead>
-					<tr>
-						<th colspan="3">
-							<span style="float: right;">
-								<a class="type play" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}">Play</a>
-							</span>
-							<span class="type track">Tracks</span>
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-				<xsl:choose>
-					<xsl:when test="children[@mode='tracks']/sbnode">
-						<xsl:for-each select="children[@mode='tracks']/sbnode">
-							<tr>
-								<xsl:call-template name="colorize" />
-								<td style="position:relative;top:0;left:0;">
-									<a style="float:right;" class="type remove" href="/{$master/@uuid}/details/removeItem/item={@uuid}">remove</a>
-									<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
-								</td>
-							</tr>
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:otherwise>
-						<tr><td colspan="5"><xsl:value-of select="$locale/system/general/texts/no_subobjects" /></td></tr>
-					</xsl:otherwise>
-				</xsl:choose>
-				
-				</tbody>
-			</table>-->
-			
 			<table class="default" width="100%">
 				<thead>
 					<tr>
@@ -108,7 +76,7 @@
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:otherwise>
-						<li><xsl:value-of select="$locale/system/general/texts/no_subobjects" /></li>
+						<li><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></li>
 					</xsl:otherwise>
 				</xsl:choose>
 			</ul>

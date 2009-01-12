@@ -150,7 +150,7 @@ class sbView_structure extends sbView {
 						$_RESPONSE->addData($niLinkingNodes->getElement('softlinks'));
 					}
 				} else {
-					$nodeTrashcan = $this->crSession->getNode('//*[@uid="sb_system:trashcan"]');
+					$nodeTrashcan = $this->crSession->getNode('//*[@uid="sbSystem:Trashcan"]');
 					$this->crSession->moveBranchByNodes($nodeChild, $nodeParent, $nodeTrashcan);
 					$this->crSession->save();
 					/* DISABLED, testing trashcan

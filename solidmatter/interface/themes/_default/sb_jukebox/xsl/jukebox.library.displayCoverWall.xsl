@@ -60,7 +60,7 @@
 					</tr>
 				</xsl:when>
 				<xsl:otherwise>
-					<tr><td colspan="5"><xsl:value-of select="$locale/system/general/texts/no_subobjects" /></td></tr>
+					<tr><td colspan="5"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>
 				</xsl:otherwise>
 			</xsl:choose>
 			

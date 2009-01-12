@@ -54,11 +54,11 @@
 			<thead>
 				<tr>
 					<th></th>
-					<th><xsl:value-of select="$locale/system/general/labels/name" /></th>
-					<th><xsl:value-of select="$locale/system/general/labels/type" /></th>
-					<th><xsl:value-of select="$locale/system/general/labels/created_at" /></th>
-					<th><xsl:value-of select="$locale/system/general/labels/modified_at" /></th>
-					<th><xsl:value-of select="$locale/system/general/labels/options" /></th>
+					<th><xsl:value-of select="$locale/sbSystem/labels/name" /></th>
+					<th><xsl:value-of select="$locale/sbSystem/labels/type" /></th>
+					<th><xsl:value-of select="$locale/sbSystem/labels/created_at" /></th>
+					<th><xsl:value-of select="$locale/sbSystem/labels/modified_at" /></th>
+					<th><xsl:value-of select="$locale/sbSystem/labels/options" /></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -99,7 +99,7 @@
 					</td></tr>
 				</xsl:when>
 				<xsl:otherwise>
-					<tr><td colspan="6"><xsl:value-of select="$locale/system/general/texts/no_subobjects" /></td></tr>
+					<tr><td colspan="6"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>
 				</xsl:otherwise>
 			</xsl:choose>
 			</tbody>

@@ -5,8 +5,8 @@
 	exclude-result-prefixes="html" 
 	xmlns:html="http://www.w3.org/1999/xhtml">
 
-	<xsl:import href="global.views.xsl" />
-	<xsl:import href="global.default.xsl" />
+	<xsl:import href="../../sb_system/xsl/global.views.xsl" />
+	<xsl:import href="../../sb_system/xsl/global.default.xsl" />
 
 	<xsl:output 
 		method="html"
@@ -37,7 +37,7 @@
 		<xsl:for-each select="children/sbnode">
 			<a href="/{@uuid}" class="explorercard" title="{@name}">
 				<span class="container">
-					<xsl:if test="@nodetype='sb_system:image'">
+					<xsl:if test="@nodetype='sbFiles:Image'">
 						<img src="/{@uuid}/preview/outputresized" />
 					</xsl:if>
 				</span>

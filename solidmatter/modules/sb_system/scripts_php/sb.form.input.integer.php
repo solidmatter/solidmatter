@@ -62,19 +62,19 @@ class sbInput_integer extends sbInput {
 		}
 		
 		if (mb_strlen($this->mValue) > $this->aConfig['maxlength']) {
-			$this->sErrorLabel = '$locale/system/formerrors/string_too_long';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/string_too_long';
 		}
 		if (mb_strlen($this->mValue) < $this->aConfig['minlength']) {
-			$this->sErrorLabel = '$locale/system/formerrors/string_too_short';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/string_too_short';
 		}
 		if (!is_numeric($this->mValue)) {
-			$this->sErrorLabel = '$locale/system/formerrors/not_a_number';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/not_a_number';
 		}
 		if (mb_strlen($this->mValue) == 0 && $this->aConfig['required'] == 'TRUE') {
-			$this->sErrorLabel = '$locale/system/formerrors/not_null';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/not_null';
 		}
 		if ($this->mValue < $this->aConfig['minvalue'] || $this->mValue > $this->aConfig['maxvalue']) {
-			$this->sErrorLabel = '$locale/system/formerrors/not_in_range';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/not_in_range';
 			$this->sErrorHint = $this->aConfig['minvalue'].' - '.$this->aConfig['maxvalue'];
 		}
 		

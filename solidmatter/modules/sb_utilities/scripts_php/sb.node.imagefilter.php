@@ -2,7 +2,7 @@
 
 //------------------------------------------------------------------------------
 /**
-* @package	solidMatter:sb_system
+* @package	solidMatter:sbUtilities
 * @author	()((() [Oliver Müller]
 * @version	1.00.00
 */
@@ -20,7 +20,7 @@ abstract class Imagefilter extends sbNode {
 		if (Registry::getValue('sb.system.cache.images.enabled')) {
 			$niParents = $this->getParents();
 			foreach ($niParents as $nodeCurrent) {
-				if ($nodeCurrent->getPrimaryNodeType() == 'sb_system:imagefilterstack') {
+				if ($nodeCurrent->getPrimaryNodeType() == 'sbUtilities:Imagefilterstack') {
 					$nodeCurrent->clearCache();
 				}
 			}

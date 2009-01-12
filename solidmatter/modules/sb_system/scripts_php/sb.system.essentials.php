@@ -107,6 +107,11 @@ function import($sLibrary, $bRequired = TRUE) {
 			break;
 	}
 	
+	// TODO: remove this workaround
+	if (class_exists('System')) {
+		$sModule = System::getFailsafeModuleName($sModule);
+	}
+	
 	// check if already imported
 	if (isset($aAlreadyLoaded[$sModule][$sLibrary])) {
 		return (TRUE);
@@ -125,7 +130,7 @@ function import($sLibrary, $bRequired = TRUE) {
 		DEBUG('import()', $sModule.':'.$sLibrary, DEBUG::IMPORT);
 	} else {
 		// TODO: $bRequired disabled for now - always complain!
-		die ('import(): FILE_NOT_FOUND ('.$sModule.':'.$sLibrary.')');
+		//die ('import(): FILE_NOT_FOUND ('.$sModule.':'.$sLibrary.')');
 		
 		if ($bRequired) {
 			throw new LibraryNotFoundException('Library not found: '.$sLibrary.' in '.$sModule);

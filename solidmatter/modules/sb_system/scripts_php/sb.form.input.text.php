@@ -29,13 +29,13 @@ class sbInput_text extends sbInput {
 	public function checkInput() {
 		
 		if (strlen($this->mValue) < $this->aConfig['minlength']) {
-			$this->sErrorLabel = '$locale/system/formerrors/string_too_short';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/string_too_short';
 		}
 		if (strlen($this->mValue) > $this->aConfig['maxlength']) {
-			$this->sErrorLabel = '$locale/system/formerrors/string_too_long';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/string_too_long';
 		}
 		if (strlen($this->mValue) == 0 && $this->aConfig['required'] == 'TRUE') {
-			$this->sErrorLabel = '$locale/system/formerrors/not_null';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/not_null';
 		}
 		
 		if ($this->sErrorLabel == '') {

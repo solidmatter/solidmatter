@@ -495,15 +495,7 @@ class sbCR_RepositoryStructure {
 	* @return 
 	*/
 	public function getNodeTypeHierarchy() {
-		
-		/*foreach ($this->getSupertypes('sb_system:imagefilter_greyscale') as $crType) {
-			var_dumpp($crType->getName());
-		}*/
-		//var_dumpp($this->getDeclaredSupertypeNames('sb_system:imagefilter_greyscale'));
-		//var_dumpp($this->aNodeTypeHierarchy);
-		//var_dumpp('defined:'.strlen(serialize($this->aNodeTypeProperies)));
 		return ($this->aNodeTypeHierarchy);
-		
 	}
 	
 	//--------------------------------------------------------------------------

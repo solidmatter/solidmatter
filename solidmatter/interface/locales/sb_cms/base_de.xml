@@ -20,43 +20,40 @@
 		<type id="sbCMS:TPL_Script">Skript</type>
 	</nodetypes>
 	
-	<nodes>
-		<page>
-			<properties_pagetitle label="Seitentitel" />
-			<properties_additionaltitle label="Zusätzlicher Titel" />
-			<properties_keywords label="Schlüsselwörter" />
-			<properties_notes label="Notizen" />
-			<config_showinmenu label="Im Menü anzeigen" />
-			<config_active label="Publizieren" />
-			<display_template label="Template" />
-			<display_layout label="Layout" />
-		</page>
-		<site>
-			<config_defaultpage label="Startseite" />
-			<config_isclosed label="Seite ist geschlossen" />
-			<config_language label="Sprache" />
-			<config_notes label="Notizen" />
-			<config_boundtemplates label="verbundene Templates" />
-			<config_defaultlayout label="Standard-Layout" />
-			<config_defaulttemplate label="Standard-Template" />
-		</site>
-		<layout>
-			<xsl_frontend label="Frontend-Code" />
-			<xsl_backend label="Backend-Code" />
-		</layout>
-		<template>
-			<xsl_frontend label="Frontend-Code" />
-			<xsl_backend label="Backend-Code" />
-		</template>
-		<tpl_menu>
-			<config_numlevels label="Anzahl Ebenen" />
-			<config_menuroot label="Menüwurzel" />
-		</tpl_menu>
-		<tpl_image>
-			<config_filterstack label="optionaler Grafikfilter" />
-			<config_allowlinking label="Verlinken erlauben" />
-		</tpl_image>
-		
-	</nodes>
+	<Site>
+		<config_defaultpage label="Startseite" />
+		<config_isclosed label="Seite ist geschlossen" />
+		<config_language label="Sprache" />
+		<config_notes label="Notizen" />
+		<config_boundtemplates label="verbundene Templates" />
+		<config_defaultlayout label="Standard-Layout" />
+		<config_defaulttemplate label="Standard-Template" />
+	</Site>
+	<Page>
+		<properties_pagetitle label="Seitentitel" />
+		<properties_additionaltitle label="Zusätzlicher Titel" />
+		<properties_keywords label="Schlüsselwörter" />
+		<properties_notes label="Notizen" />
+		<config_showinmenu label="Im Menü anzeigen" />
+		<config_active label="Publizieren" />
+		<display_template label="Template" />
+		<display_layout label="Layout" />
+	</Page>
+	<Layout>
+		<xsl_frontend label="Frontend-Code" />
+		<xsl_backend label="Backend-Code" />
+	</Layout>
+	<Template>
+		<xsl_frontend label="Frontend-Code" />
+		<xsl_backend label="Backend-Code" />
+	</Template>
+	<TPL_Menu>
+		<config_numlevels label="Anzahl Ebenen" />
+		<config_menuroot label="Menüwurzel" />
+	</TPL_Menu>
+	<TPL_Image>
+		<config_filterstack label="optionaler Grafikfilter" />
+		<config_allowlinking label="Verlinken erlauben" />
+	</TPL_Image>
 	
 </sbCMS>

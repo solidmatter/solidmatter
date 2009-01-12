@@ -32,8 +32,6 @@
 		<xsl:apply-templates select="sbform:*" />
 	</xsl:template>-->
 	
-	
-	
 	<!-- string -->
 	<xsl:template match="sbinput[@type='string']" mode="complete">
 		<tr>
@@ -50,8 +48,6 @@
 		</input>
 		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
 	</xsl:template>
-	
-	
 	
 	<!-- email -->
 	<xsl:template match="sbinput[@type='email']" mode="complete">
@@ -70,8 +66,6 @@
 		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
 	</xsl:template>
 	
-	
-	
 	<!-- password -->
 	<xsl:template match="sbinput[@type='password']" mode="complete">
 		<tr>
@@ -88,8 +82,6 @@
 		</input>
 		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
 	</xsl:template>
-	
-	
 	
 	<!-- text -->
 	<xsl:template match="sbinput[@type='text']" mode="complete">
@@ -109,8 +101,6 @@
 		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
 	</xsl:template>
 	
-	
-	
 	<!-- urlsafe -->
 	<xsl:template match="sbinput[@type='urlsafe']" mode="complete">
 		<tr>
@@ -127,8 +117,6 @@
 		</input>
 		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
 	</xsl:template>
-	
-	
 	
 	<!-- hexcolor -->
 	<xsl:template match="sbinput[@type='color']" mode="complete">
@@ -147,8 +135,6 @@
 		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
 	</xsl:template>
 	
-	
-	
 	<!-- integer -->
 	<xsl:template match="sbinput[@type='integer']" mode="complete">
 		<tr>
@@ -165,8 +151,6 @@
 		</input>
 		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
 	</xsl:template>
-	
-	
 	
 	<!-- select -->
 	<xsl:template match="sbinput[@type='select']" mode="complete">
@@ -278,8 +262,6 @@
 		</xsl:for-each>
 	</xsl:template>
 	
-	
-	
 	<!-- codeeditor -->
 	<xsl:template match="sbinput[@type='codeeditor']" mode="complete">
 		<tr>
@@ -321,8 +303,6 @@
 			<xsl:if test="@value='TRUE'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
 		</input>
 	</xsl:template>
-	
-	
 	
 	<!-- multifileupload -->
 	<xsl:template match="sbinput[@type='multifileupload']" mode="complete">
@@ -384,64 +364,6 @@
 			]]>
 		</script>
 	</xsl:template>
-	<!--<xsl:template match="sbinput[@type='multifileupload']" mode="inputonly">
-		<div id="fileInputFrame">
-		<input type="file" /><input type="button" class="button" value="attach this file" id="addAttachmentFile" />
-		</div>
-		<div id="attachments" style="padding: 5px; display:none;">
-			<ul id="attachFileList" class="itemlist">
-				<p>attached files will be shown here</p>
-			</ul>
-			<div id="attachmentRemover" class="droptarget">drop any added files to delete</div>
-		</div>
-		<script type="text/javascript" language="javascript">
-			<![CDATA[
-			//trash bin
-			Droppables.add('attachmentRemover', {
-				accept:'attachedFile',
-				hoverclass:'droptarget_remove',
-				onDrop: function(element){
-					element.parentNode.removeChild(element);
-				}
-			});
-		
-			//attach file button
-			Event.observe("addAttachmentFile", "click", function(event){
-				var thisInputFile = $A($("fileInputFrame").getElementsByTagName("input")).find(function(element, index){
-					if(element.type.toLowerCase() == "file"){
-						return true;
-					}
-				});
-				
-				if(thisInputFile.value == ""){
-					new Effect.Highlight(thisInputFile);
-					Event.stop(event);
-					return;
-				}
-		
-				//input file element name////////////////
-				thisInputFile.name = "]]><xsl:value-of select="@name" /><![CDATA[[]";
-				/////////////////////////////////////////
-				
-				Element.hide(thisInputFile);
-				var li = Builder.node("li", {className: "attachedFile"}, thisInputFile.value);
-				
-				li.appendChild(thisInputFile);
-				
-				$("attachFileList").appendChild(li);
-				new Draggable(li, {revert: true});
-				
-				new Insertion.Before("addAttachmentFile", "<input type='file'>  ");
-				
-				Element.show($('attachments'));
-			
-			}, false);
-			
-			]]>
-		</script>
-	</xsl:template>-->
-	
-	
 	
 	<!-- submit -->
 	<xsl:template match="submit" mode="complete">

@@ -752,7 +752,7 @@ class sbCR_Session {
 			$nodeCurrent = $this->getRootNode();
 		//} elseif (preg_match('/^[a-z_]+:[a-z_]+$/', $sQuery)) {
 			//$nodeCurrent = $this->getInstanceByUID($sQuery);
-		} elseif (preg_match('!^//\*\[@uid="([a-z_]+:[a-z_]+)"\]$!', $sQuery, $aMatches)) {
+		} elseif (preg_match('!^//\*\[@uid="([a-zA-Z_]+:[a-zA-Z_]+)"\]$!', $sQuery, $aMatches)) {
 			$nodeCurrent = $this->getInstanceByUID($aMatches[1]);
 		} elseif (substr_count($sQuery, '/') > 0) {
 			$nodeCurrent = $this->getInstanceByPath($sQuery);
@@ -852,6 +852,7 @@ class sbCR_Session {
 			import($sModule.':'.$sLibrary);
 			$nodeSubject = new $sClass($elemSubject, $this);
 		} else {
+			throw new sbException('NO GENERIC! Should be: '.$aRow['fk_nodetype']);
 			$nodeSubject = new sbCR_Node($elemSubject, $this);
 		}
 		
@@ -876,8 +877,7 @@ class sbCR_Session {
 		// rights
 		$elemSubject->setAttribute('inheritrights', $aRow['b_inheritrights']);
 		$elemSubject->setAttribute('bequeathrights', $aRow['b_bequeathrights']);
-//		var_dumpp($elemSubject->getAttribute('bequeathrights'));
-//		var_dumpp($nodeSubject->getProperty('sbcr:inheritrights'));
+		
 		return ($nodeSubject);
 		
 	}

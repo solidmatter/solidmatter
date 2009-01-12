@@ -45,7 +45,7 @@ class sbInput_captcha extends sbInput {
 		}
 		
 		if ($mValue != $mSequence) {
-			$this->sErrorLabel = '$locale/system/formerrors/wrong_sequence';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/wrong_sequence';
 			$this->mValue = '-';
 		}
 		

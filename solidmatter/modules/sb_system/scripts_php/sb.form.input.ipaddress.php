@@ -30,17 +30,17 @@ class sbInput_ipaddress extends sbInput_string {
 		
 		for ($i=0; $i<4; $i++) {
 			if (!isset($aValues[$i]) || !is_numeric($aValues[$i])) {
-				$this->sErrorLabel = '$locale/system/formerrors/no_ipaddress';
+				$this->sErrorLabel = '$locale/sbSystem/formerrors/no_ipaddress';
 				return (FALSE);
 			} else {
 				if ($aValues[$i] < 0 || $aValues[$i] > 254) {
-					$this->sErrorLabel = '$locale/system/formerrors/no_ipaddress';
+					$this->sErrorLabel = '$locale/sbSystem/formerrors/no_ipaddress';
 					return (FALSE);
 				}
 			}
 		}
 		if (isset($aValues[4])) {
-			$this->sErrorLabel = '$locale/system/formerrors/no_ipaddress';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/no_ipaddress';
 			return (FALSE);
 		}
 		

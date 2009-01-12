@@ -2,13 +2,13 @@
 
 //------------------------------------------------------------------------------
 /**
-* @package	solidMatter:sb_system
+* @package	solidMatter:sbUtilities
 * @author	()((() [Oliver Müller]
 * @version	1.00.00
 */
 //------------------------------------------------------------------------------
 
-import('sb.node.imagefilter');
+import('sbUtilities:sb.node.imagefilter');
 
 //------------------------------------------------------------------------------
 /**

@@ -21,7 +21,7 @@ class sbView_reports_structure_nodetypes extends sbView {
 			
 			case 'overview':
 				
-				$stmtGetInfo = $this->nodeSubject->getSession()->prepareKnown('sb_system/reports_structure/nodetypes/overview');
+				$stmtGetInfo = $this->nodeSubject->getSession()->prepareKnown('sbSystem/reports_structure/nodetypes/overview');
 				$stmtGetInfo->execute();
 				$_RESPONSE->addData($stmtGetInfo->fetchDOM('nodetypes'));
 				// TODO: use funcion to get only module names

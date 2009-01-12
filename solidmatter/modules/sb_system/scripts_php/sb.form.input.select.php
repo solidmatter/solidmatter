@@ -33,7 +33,7 @@ class sbInput_select extends sbInput {
 	public function checkInput() {
 		
 		if (!isset($this->aOptions[$this->mValue])) {
-			$this->sErrorLabel = '$locale/system/formerrors/not_in_options';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/not_in_options';
 		}
 		
 		if ($this->sErrorLabel == '') {

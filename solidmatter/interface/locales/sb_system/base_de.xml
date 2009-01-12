@@ -14,113 +14,120 @@
 		<date_short>%d.%m.%y</date_short>
 	</formats>
 	
+	<actions>
+		<new>Neu</new>
+		<edit>Bearbeiten</edit>
+		<create>Erstellen</create>
+		<delete>Löschen</delete>
+		<save>Speichern</save>
+		<apply>Übernehmen</apply>
+		<accept>Akzeptieren</accept>
+		<accept_changes>Änderungen akzeptieren</accept_changes>
+		<submit>Übermitteln</submit>
+		<proceed>Weiter</proceed>
+		<ok>OK</ok>
+		<cancel>Abbrechen</cancel>
+		<export>Exportieren</export>
+		<import>Importieren</import>
+		<move_up>nach oben verschieben</move_up>
+		<move_down>nach unten verschieben</move_down>
+		<add>Hinzufügen</add>
+		<remove>Entfernen</remove>
+		<set_default>als Standard festlegen</set_default>
+		<set_favorite>als Favorit festlegen</set_favorite>
+		<empty>Entleeren</empty>
+		<view>Ansehen</view>
+		<clone>Klonen</clone>
+		<copy>Kopieren</copy>
+		<cut>Ausschneiden</cut>
+		<paste>Einfügen</paste>
+		<create_hardlink>Verknüpfung</create_hardlink>
+		<upload>Hochladen</upload>
+		<download>Herunterladen</download>
+		<activate>Aktivieren</activate>
+		<order_asc>aufsteigend sortieren</order_asc>
+		<order_desc>absteigend sortieren</order_desc>
+		<search>Suchen</search>
+		<find>Finden</find>
+		<filter>Filtern</filter>
+		<login>Einloggen</login>
+		<logout>Ausloggen</logout>
+		<refresh>Aktualisieren</refresh>
+		<send>Senden</send>
+	</actions>
+	
+	<labels>
+		<id>ID</id>
+		<created_at>Erstellt am</created_at>
+		<created_by>Erstellt von</created_by>
+		<modified_at>Bearbeitet am</modified_at>
+		<modified_by>Bearbeitet von</modified_by>
+		<deleted_at>Gelöscht am</deleted_at>
+		<deleted_by>Gelöscht von</deleted_by>
+		<login>Login</login>
+		<password>Passwort</password>
+		<options>Optionen</options>
+		<image>Bild</image>
+		<graphic>Grafik</graphic>
+		<smilie>Smilie</smilie>
+		<ip>IP-Adresse</ip>
+		<email>eMail</email>
+		<abbr_number>Nr.</abbr_number>
+		<description>Beschreibung</description>
+		<details>Details</details>
+		<notes>Notizen</notes>
+		<title>Titel</title>
+		<properties>Eigenschaften</properties>
+		<name>Name</name>
+		<label>Bezeichnung</label>
+		<module>Modul</module>
+		<nickname>Online-Name</nickname>
+		<shortname>Kurzname</shortname>
+		<longname>Langname</longname>
+		<urlname>URL-Name</urlname>
+		<mimetype>Mime-Typ</mimetype>
+		<type>Typ</type>
+		<event>Ereignis</event>
+		<events>Ereignisse</events>
+		<filter>Filter</filter>
+		<comment>Kommentar</comment>
+		<comments>Kommentare</comments>
+		<user>Benutzer</user>
+		<users>Benutzer</users>
+		<username>Benutzername</username>
+		<group>Gruppe</group>
+		<groups>Gruppen</groups>
+		<upload_files>Dateien hochladen</upload_files>
+		<file>Datei</file>
+		<files>Dateien</files>
+		<tags>Tags</tags>
+		<search>
+			<title>Suche</title>
+			<search_for>Suchen nach</search_for>
+			<results>Suchergebnisse</results>
+		</search>
+		<options>
+			<ascending>aufsteigend</ascending>
+			<descending>absteigend</descending>
+			<compact_view>kompakte Ansicht</compact_view>
+			<detailed_view>detaillierte Ansicht</detailed_view>
+		</options>
+		<security>
+			<current_rights>Aktuelle Berechtigungen</current_rights>
+			<add_entities>Benutzer oder Gruppen hinzufügen</add_entities>
+			<inheritance>Vererbung</inheritance>
+			<inherit_rights>Berechtigungen von übergeordneten Objekten übernehmen</inherit_rights>
+			<bequeath_rights>Berechtigungen an untergeordnete Objekte vererben</bequeath_rights>
+		</security>
+	</labels>
+	
+	<texts>
+		<no_subobjects>Dieses Objekt hat keine anzeigbaren Unterobjekte</no_subobjects>
+		<no_comments>Keine Kommentare vorhanden</no_comments>
+	</texts>
+	
 	<general>
 		<apptitle>sbSystem</apptitle>
-		<actions>
-			<new>Neu</new>
-			<edit>Bearbeiten</edit>
-			<create>Erstellen</create>
-			<delete>Löschen</delete>
-			<save>Speichern</save>
-			<apply>Übernehmen</apply>
-			<accept>Akzeptieren</accept>
-			<accept_changes>Änderungen akzeptieren</accept_changes>
-			<submit>Übermitteln</submit>
-			<proceed>Weiter</proceed>
-			<ok>OK</ok>
-			<cancel>Abbrechen</cancel>
-			<export>Exportieren</export>
-			<import>Importieren</import>
-			<move_up>nach oben verschieben</move_up>
-			<move_down>nach unten verschieben</move_down>
-			<add>Hinzufügen</add>
-			<remove>Entfernen</remove>
-			<set_default>als Standard festlegen</set_default>
-			<set_favorite>als Favorit festlegen</set_favorite>
-			<empty>Entleeren</empty>
-			<view>Ansehen</view>
-			<clone>Klonen</clone>
-			<copy>Kopieren</copy>
-			<cut>Ausschneiden</cut>
-			<paste>Einfügen</paste>
-			<create_hardlink>Verknüpfung</create_hardlink>
-			<upload>Hochladen</upload>
-			<download>Herunterladen</download>
-			<activate>Aktivieren</activate>
-			<order_asc>aufsteigend sortieren</order_asc>
-			<order_desc>absteigend sortieren</order_desc>
-			<search>Suchen</search>
-			<find>Finden</find>
-			<filter>Filtern</filter>
-			<login>Einloggen</login>
-			<logout>Ausloggen</logout>
-			<refresh>Aktualisieren</refresh>
-			<send>Senden</send>
-		</actions>
-		<labels>
-			<id>ID</id>
-			<created_at>Erstellt am</created_at>
-			<created_by>Erstellt von</created_by>
-			<modified_at>Bearbeitet am</modified_at>
-			<modified_by>Bearbeitet von</modified_by>
-			<deleted_at>Gelöscht am</deleted_at>
-			<deleted_by>Gelöscht von</deleted_by>
-			<login>Login</login>
-			<password>Passwort</password>
-			<options>Optionen</options>
-			<image>Bild</image>
-			<graphic>Grafik</graphic>
-			<smilie>Smilie</smilie>
-			<ip>IP-Adresse</ip>
-			<email>eMail</email>
-			<abbr_number>Nr.</abbr_number>
-			<description>Beschreibung</description>
-			<details>Details</details>
-			<notes>Notizen</notes>
-			<title>Titel</title>
-			<properties>Eigenschaften</properties>
-			<name>Name</name>
-			<label>Bezeichnung</label>
-			<module>Modul</module>
-			<nickname>Online-Name</nickname>
-			<shortname>Kurzname</shortname>
-			<longname>Langname</longname>
-			<urlname>URL-Name</urlname>
-			<mimetype>Mime-Typ</mimetype>
-			<type>Typ</type>
-			<event>Ereignis</event>
-			<events>Ereignisse</events>
-			<filter>Filter</filter>
-			<comment>Kommentar</comment>
-			<comments>Kommentare</comments>
-			<user>Benutzer</user>
-			<users>Benutzer</users>
-			<username>Benutzername</username>
-			<group>Gruppe</group>
-			<groups>Gruppen</groups>
-			<upload_files>Dateien hochladen</upload_files>
-			<file>Datei</file>
-			<files>Dateien</files>
-			<tags>Tags</tags>
-			<search>
-				<title>Suche</title>
-				<search_for>Suchen nach</search_for>
-				<results>Suchergebnisse</results>
-			</search>
-			<options>
-				<ascending>aufsteigend</ascending>
-				<descending>absteigend</descending>
-				<compact_view>kompakte Ansicht</compact_view>
-				<detailed_view>detaillierte Ansicht</detailed_view>
-			</options>
-			<security>
-				<current_rights>Aktuelle Berechtigungen</current_rights>
-				<add_entities>Benutzer oder Gruppen hinzufügen</add_entities>
-				<inheritance>Vererbung</inheritance>
-				<inherit_rights>Berechtigungen von übergeordneten Objekten übernehmen</inherit_rights>
-				<bequeath_rights>Berechtigungen an untergeordnete Objekte vererben</bequeath_rights>
-			</security>
-		</labels>
 		<pagination>
 			<full>Seite {CURRENT} von {TOTAL}: {BROWSE}</full>
 			<page>Seite</page>
@@ -133,10 +140,6 @@
 			<x_pages_forward>{PAGES} Seiten vor</x_pages_forward>
 			<x_pages_backward>{PAGES} Seiten zurück</x_pages_backward>
 		</pagination>
-		<texts>
-			<no_subobjects>Dieses Objekt hat keine anzeigbaren Unterobjekte</no_subobjects>
-			<no_comments>Keine Kommentare vorhanden</no_comments>
-		</texts>
 	</general>
 	
 	<tags>
@@ -162,41 +165,39 @@
 		<type id="sbSystem:Debug">Debug</type>
 		<type id="sbSystem:Logs">Logs</type>
 		<type id="sbSystem:Reports">Auswertungen</type>
-		<type id="sbSystem:Reports_db">Datenbank</type>
-		<type id="sbSystem:Reports_structure">Struktur</type>
+		<type id="sbSystem:Reports_DB">Datenbank</type>
+		<type id="sbSystem:Reports_Structure">Struktur</type>
 		<type id="sbSystem:Registry">Registry</type>
 		<type id="sbSystem:Tags">Tags</type>
 		<type id="sbSystem:Trashcan">Mülleimer</type>
 	</nodetypes>
 	
-	<nodes>
-		<user>
-			<properties_email label="eMail-Adresse" />
-			<properties_comment label="Kommentar" />
-			<config_hidestatus label="Onlinestatus verstecken" />
-			<security_stayloggedin label="Dauerhafter Login" />
-			<security_password label="Passwort" />
-			<security_activated label="aktiviert" />
-			<security_activationkey label="Aktivierungsschlüssel" />
-			<security_locked label="gesperrt" />
-			<security_failedlogins label="fehlgeschlagene Logins (aktuell)" />
-			<security_backendaccess label="Zugriff auf Backend erlaubt" />
-			<security_expires label="Account läuft aus am" />
-			<info_emailsent label="eMail verschickt" />
-			<info_successfullogins label="erfolgreiche Logins" />
-			<info_silentlogins label="stille Logins" />
-			<info_currentlogin label="aktueller Login" />
-			<info_lastlogin label="letzter Login" />
-			<info_totalfailedlogins label="fehlgeschlagene Logins" />
-			<info_activatedat label="Aktivierungsdatum" />
-		</user>
-		<usergroup>
-			<properties_description label="Beschreibung" />
-			<config_default label="Standardgruppe" />
-			<config_hidden label="versteckt" />
-		</usergroup>
-	</nodes>
-	
+	<User>
+		<properties_email label="eMail-Adresse" />
+		<properties_comment label="Kommentar" />
+		<config_hidestatus label="Onlinestatus verstecken" />
+		<security_stayloggedin label="Dauerhafter Login" />
+		<security_password label="Passwort" />
+		<security_activated label="aktiviert" />
+		<security_activationkey label="Aktivierungsschlüssel" />
+		<security_locked label="gesperrt" />
+		<security_failedlogins label="fehlgeschlagene Logins (aktuell)" />
+		<security_backendaccess label="Zugriff auf Backend erlaubt" />
+		<security_expires label="Account läuft aus am" />
+		<info_emailsent label="eMail verschickt" />
+		<info_successfullogins label="erfolgreiche Logins" />
+		<info_silentlogins label="stille Logins" />
+		<info_currentlogin label="aktueller Login" />
+		<info_lastlogin label="letzter Login" />
+		<info_totalfailedlogins label="fehlgeschlagene Logins" />
+		<info_activatedat label="Aktivierungsdatum" />
+	</User>
+	<Usergroup>
+		<properties_description label="Beschreibung" />
+		<config_default label="Standardgruppe" />
+		<config_hidden label="versteckt" />
+	</Usergroup>
+		
 	<views>
 		<view id="edit">Bearbeiten</view>
 		<view id="preview">Vorschau</view>

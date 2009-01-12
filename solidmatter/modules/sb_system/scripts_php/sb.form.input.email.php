@@ -27,7 +27,7 @@ class sbInput_email extends sbInput_string {
 	public function checkInput() {
 		
 		if (!preg_match('/^[-!#$%&\'*+\\.\/0-9=?A-Z^_`{|}~]+@([-0-9A-Z]+\.)+([0-9A-Z]){2,8}$/i', $this->mValue)) {
-			$this->sErrorLabel = '$locale/system/formerrors/no_email';
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/no_email';
 		}
 		
 		return (parent::checkInput());

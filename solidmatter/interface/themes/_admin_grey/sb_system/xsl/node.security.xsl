@@ -37,7 +37,7 @@
 			<tr>
 				<td width="50%">
 					<div class="eyecandy"><div class="left"><div class="right">
-						<h1><xsl:value-of select="$locale/system/general/labels/security/current_rights" /></h1>
+						<h1><xsl:value-of select="$locale/sbSystem/labels/security/current_rights" /></h1>
 						<ul class="invisible">
 							<xsl:for-each select="groups/row">
 								<xsl:variable name="id" select="uuid" />
@@ -68,10 +68,10 @@
 						</ul>
 					</div></div></div>
 					<div class="eyecandy"><div class="left"><div class="right">
-						<h1><xsl:value-of select="$locale/system/general/labels/security/add_entities" /></h1>
+						<h1><xsl:value-of select="$locale/sbSystem/labels/security/add_entities" /></h1>
 						<form action="/{$content/sbnode/@uuid}/security/addUser" method="post" accept-charset="UTF-8">
 							<select name="entity_uuid">
-								<optgroup label="{$locale/system/general/labels/groups}">
+								<optgroup label="{$locale/sbSystem/labels/groups}">
 									<xsl:for-each select="$content/groups/row">
 										<xsl:variable name="uuid" select="uuid" />
 										<xsl:if test="not($content/sbnode/local_authorisations/authorisation[@uuid=$uuid])">
@@ -79,7 +79,7 @@
 										</xsl:if>
 									</xsl:for-each>
 								</optgroup>
-								<optgroup label="{$locale/system/general/labels/users}">
+								<optgroup label="{$locale/sbSystem/labels/users}">
 									<xsl:for-each select="$content/users/row">
 										<xsl:variable name="uuid" select="uuid" />
 										<xsl:if test="not($content/sbnode/local_authorisations/authorisation[@uuid=$uuid])">
@@ -88,23 +88,23 @@
 									</xsl:for-each>
 								</optgroup>
 							</select><br/>
-							<input type="submit" value="{$locale/system/general/actions/add}" />
+							<input type="submit" value="{$locale/sbSystem/actions/add}" />
 						</form>
 					</div></div></div>
 					<div class="eyecandy"><div class="left"><div class="right">
-						<h1><xsl:value-of select="$locale/system/general/labels/security/inheritance" /></h1>
+						<h1><xsl:value-of select="$locale/sbSystem/labels/security/inheritance" /></h1>
 						<form action="/{$content/sbnode/@uuid}/security/changeInheritance" method="post" accept-charset="UTF-8">
 							<input type="checkbox" name="inheritrights">
 								<xsl:if test="/response/content/sbnode[@inheritrights = 'TRUE']">
 									<xsl:attribute name="checked">checked</xsl:attribute>
 								</xsl:if>
-							</input> <xsl:value-of select="$locale/system/general/labels/security/inherit_rights" /><br/>
+							</input> <xsl:value-of select="$locale/sbSystem/labels/security/inherit_rights" /><br/>
 							<input type="checkbox" name="bequeathrights">
 								<xsl:if test="/response/content/sbnode[@bequeathrights = 'TRUE']">
 									<xsl:attribute name="checked">checked</xsl:attribute>
 								</xsl:if>
-							</input> <xsl:value-of select="$locale/system/general/labels/security/bequeath_rights" /><br/>
-							<input type="submit" value="{$locale/system/general/actions/save}" />
+							</input> <xsl:value-of select="$locale/sbSystem/labels/security/bequeath_rights" /><br/>
+							<input type="submit" value="{$locale/sbSystem/actions/save}" />
 						</form>
 					</div></div></div>
 				</td>

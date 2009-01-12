@@ -150,9 +150,9 @@ class sbJukeboxView extends sbView {
 			$this->crSession
 		);
 		
-		$formSearch->addInput('title;string;minlength=2;maxlength=250;required=true;', '$locale/sbSystem/general/labels/title');
-		$formSearch->addInput('comment;text;minlength=3;maxlength=2000;required=true;', '$locale/sbSystem/general/labels/comment');
-		$formSearch->addSubmit('$locale/system/general/actions/save');
+		$formSearch->addInput('title;string;minlength=2;maxlength=250;required=true;', '$locale/sbSystem/labels/title');
+		$formSearch->addInput('comment;text;minlength=3;maxlength=2000;required=true;', '$locale/sbSystem/labels/comment');
+		$formSearch->addSubmit('$locale/sbSystem/actions/save');
 		
 		return ($formSearch);
 		
@@ -191,13 +191,13 @@ class sbJukeboxView extends sbView {
 		
 		$formSearch = new sbDOMForm(
 			$sID,
-			'$locale/system/general/labels/search/title',
+			'$locale/sbSystem/labels/search/title',
 			$sTarget,
 			$this->crSession
 		);
 		
-		$formSearch->addInput('searchstring;string;minlength=2;maxlength=20;', '$locale/sbSystem/general/labels/search/title');
-		$formSearch->addSubmit('$locale/sbSystem/general/actions/search');
+		$formSearch->addInput('searchstring;string;minlength=2;maxlength=20;', '$locale/sbSystem/labels/search/title');
+		$formSearch->addSubmit('$locale/sbSystem/actions/search');
 		
 		return ($formSearch);
 		

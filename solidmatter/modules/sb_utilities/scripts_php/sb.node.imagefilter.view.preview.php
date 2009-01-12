@@ -1,7 +1,16 @@
 <?php
 
-//import('sb.node.view');
+//------------------------------------------------------------------------------
+/**
+* @package	solidMatter:sbUtilities
+* @author	()((() [Oliver Müller]
+* @version	1.00.00
+*/
+//------------------------------------------------------------------------------
 
+//------------------------------------------------------------------------------
+/**
+*/
 class sbView_imagefilter_preview extends sbView {
 	
 	public function execute($sAction) {
