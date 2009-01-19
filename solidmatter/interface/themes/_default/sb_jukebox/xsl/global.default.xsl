@@ -254,17 +254,17 @@
 	
 	<xsl:template name="render_timesplayed">
 		<xsl:param name="times_played" select="@times_played" />
-		<span class="stars"><script type="text/javascript">render_timesplayed('<xsl:value-of select="$times_played" />', 30)</script></span>
+		<span class="stars"><script type="text/javascript">render_timesplayed('<xsl:value-of select="$times_played" />', 25)</script></span>
 	</xsl:template>
 	
 	<xsl:template name="comments">
 		<div class="comments">
-			<h2><xsl:value-of select="$locale/sbSystem/labels/comments" /></h2>
+			<h2><span class="type comment"><xsl:value-of select="$locale/sbSystem/labels/comments" /></span></h2>
 			<xsl:choose>
 				<xsl:when test="children[@mode='comments']/sbnode">
 					<xsl:for-each select="children[@mode='comments']/sbnode">
 						<div>
-							<h3><span style="float:right;"><xsl:value-of select="@username" /> - <xsl:value-of select="php:functionString('datetime_mysql2local', @createdat)" /></span><xsl:value-of select="@label" /></h3>
+							<h3><span style="float:right;"><xsl:value-of select="php:functionString('datetime_mysql2local', @createdat)" /></span><xsl:value-of select="@username" /></h3>
 							<p style="white-space:pre;"><xsl:value-of select="@comment" /></p>
 						</div>
 					</xsl:for-each>
@@ -279,39 +279,20 @@
 	</xsl:template>
 	
 	<xsl:template name="render_buttons">
-		<xsl:param name="nolabels" />
-		<xsl:param name="withlyrics" />
-		<xsl:choose>
-			<xsl:when test="$nolabels or boolean('true')">
-				<a class="type play icononly" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
-				<a class="type recommend icononly" href="/{@uuid}/recommend" title="{$locale/sbJukebox/actions/recommend}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
-				<xsl:if test="@nodetype='sbJukebox:Track'">
-					<a class="type lyrics icononly" href="http://www.google.de/search?q=lyrics {@label}" title="{$locale/sbJukebox/actions/search_lyrics}" target="_blank"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
-				</xsl:if>
-				<a class="type addToFavorites icononly" href="/-/favorites/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_favorites}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
-				<xsl:if test="$content/currentPlaylist">
-					<a class="type addToPlaylist icononly" href="/{$currentPlaylist/@uuid}/details/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_playlist}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
-				</xsl:if>
-				<xsl:if test="@nodetype='sbJukebox:Album'">
-				<!--  and $master/user_authorisations/authorisation[@name='download' and @grant_type='ALLOW'] -->
-					<a class="type download icononly" href="/{@uuid}/details/download" title="{$locale/sbJukebox/actions/download}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
-				</xsl:if>
-			</xsl:when>
-			<xsl:otherwise>
-				<a class="type recommend" href="/{@uuid}/recommend" title="{$locale/sbJukebox/actions/recommend}"><xsl:value-of select="$locale/sbJukebox/actions/recommend" /></a>
-				<a class="type play" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><xsl:value-of select="$locale/sbJukebox/actions/play" /></a>
-				<xsl:value-of select="' '" />
-				<xsl:if test="@nodetype='sbJukebox:Track'">
-					<a class="type lyrics" href="http://www.google.de/search?q=lyrics {@label}" title="{$locale/sbJukebox/actions/search_lyrics}">Lyrics</a>
-					<xsl:value-of select="' '" />
-				</xsl:if>
-				<a class="type addToFavorites" href="/-/favorites/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_favorites}"><xsl:value-of select="$locale/sbJukebox/actions/add_to_favorites" /></a>
-				<xsl:value-of select="' '" />
-				<xsl:if test="$content/currentPlaylist">
-					<a class="type addToPlaylist" href="/{$currentPlaylist/@uuid}/details/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_playlist}"><xsl:value-of select="$locale/sbJukebox/actions/add_to_playlist" /></a>
-				</xsl:if>
-			</xsl:otherwise>
-		</xsl:choose>
+		<a class="type play icononly" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+		<a class="type recommend icononly" href="/{@uuid}/recommend" title="{$locale/sbJukebox/actions/recommend}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+		<xsl:if test="@nodetype='sbJukebox:Track'">
+			<a class="type lyrics icononly" href="http://www.google.de/search?q=lyrics {@label}" title="{$locale/sbJukebox/actions/search_lyrics}" target="_blank"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+			<a class="type videos icononly" href="http://www.youtube.com/results?search_query={@label}" title="{$locale/sbJukebox/actions/search_videos}" target="_blank"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+		</xsl:if>
+		<a class="type addToFavorites icononly" href="/-/favorites/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_favorites}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+		<xsl:if test="$content/currentPlaylist">
+			<a class="type addToPlaylist icononly" href="/{$currentPlaylist/@uuid}/details/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_playlist}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+		</xsl:if>
+		<xsl:if test="@nodetype='sbJukebox:Album'">
+		<!--  and $master/user_authorisations/authorisation[@name='download' and @grant_type='ALLOW'] -->
+			<a class="type download icononly" href="/{@uuid}/details/download" title="{$locale/sbJukebox/actions/download}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template name="render_alphanum">

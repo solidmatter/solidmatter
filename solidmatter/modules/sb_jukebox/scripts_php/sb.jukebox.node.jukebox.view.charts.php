@@ -73,7 +73,6 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 						}
 						$iLimit = 100;
 					} else {
-//						$iLimit = 10;
 						$iLimit = Registry::getValue('sb.jukebox.charts.amount.default');
 					}
 					
@@ -90,38 +89,6 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 					$stmtGetTop->execute();
 					$_RESPONSE->addData($stmtGetTop->fetchElements(), $aCategory['resultset']);
 				}
-				/*
-				if () {
-					
-					$sCategory = $_REQUEST->getParam('expand');
-					
-					if (!isset($aCategories[$sCategory])) {
-						throw new ParameterException('unknown expand type "'.$sCategory.'"');
-					}
-					
-					$stmtGetTop->bindValue('jukebox_uuid', $this->getJukebox()->getProperty('jcr:uuid'), PDO::PARAM_STR);
-					$stmtGetTop->bindValue('limit', 100, PDO::PARAM_INT);
-					$stmtGetTop->bindValue('nodetype', $aCategories[$sCategory]['nodetype'], PDO::PARAM_STR);
-					$stmtGetTop->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
-					$stmtGetTop->execute();
-					$_RESPONSE->addData($stmtGetTop->fetchElements(), $aCategories[$sCategory]['resultset']);
-					
-				} else {
-					
-					
-					
-					$stmtGetMostPlayed->bindValue('jukebox_uuid', $this->getJukebox()->getProperty('jcr:uuid'), PDO::PARAM_STR);
-					$stmtGetMostPlayed->bindValue('limit', 10, PDO::PARAM_INT);
-					$stmtGetMostPlayed->bindValue('nodetype', $aCategory['nodetype'], PDO::PARAM_STR);
-					//$stmtGetMostPlayed->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
-					$stmtGetMostPlayed->execute();
-					$_RESPONSE->addData($stmtGetMostPlayed->fetchElements(), 'mostPlayed');
-				
-				}
-				*/
-				//var_dumpp(sbSession::$aData); die();
-				
-				
 				
 				break;
 			
@@ -174,16 +141,16 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 		
 		$sRootUUID = $this->crSession->getRootNode()->getProperty('jcr:uuid');
 		
-		$aOptions[$sRootUUID] = 'Average';
+		$aOptions[$sRootUUID] = '$locale/sbJukebox/labels/average';
 		foreach ($stmtVoters as $aRow) {
 			if ($aRow['fk_nodetype'] != 'sbSystem:Root') {
 				$aOptions[$aRow['uuid']] = $aRow['label'];
 			}
 		}
 		
-		$formPivot->addInput('target;select;', '$locale/system/general/labels/search/title');
+		$formPivot->addInput('target;select;', '$locale/sbSystem/labels/search/title');
 		$formPivot->setOptions('target', $aOptions);
-		$formPivot->addSubmit('$locale/system/general/actions/apply');
+		$formPivot->addSubmit('$locale/sbSystem/actions/apply');
 		
 		$sJukeboxUUID = $this->getJukebox()->getProperty('jcr:uuid');
 		$formPivot->setValue('target', $this->getPivotUUID());

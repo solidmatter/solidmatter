@@ -93,6 +93,11 @@ class sbCR_Node {
 	*/
 	protected $aAffectedUsers = array();
 	
+	//--------------------------------------------------------------------------
+	// property translation table
+	/**
+	* 
+	*/
 	protected $aPropertyTranslation = array(
 		'jcr:uuid'				=> 'uuid',
 		'jcr:created'			=> 'createdat',
@@ -1733,6 +1738,7 @@ class sbCR_Node {
 		$nodeNew = $this->crSession->createNode($sPrimaryNodeType, $sRelativePath, $sRelativePath, $this->getIdentifier());
 		$this->addChild($nodeNew);
 		$this->bIsModified = TRUE;
+//		var_dumpp($nodeNew->getProperty('query'));
 		return ($nodeNew);
 	}
 	

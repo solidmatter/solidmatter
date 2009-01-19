@@ -38,18 +38,19 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				$formComment->recieveInputs();
 				if ($formComment->checkInputs()) {
 					import('sb.tools.strings.conversion');
-					$nodeComment = $this->nodeSubject->addNode(str2urlsafe($_REQUEST->getParam('title')), 'sb_system:comment');
-					$nodeComment->setProperty('label', $_REQUEST->getParam('title'));
+					$nodeComment = $this->nodeSubject->addNode('changeme', 'sbSystem:Comment');
+					$nodeComment->setProperty('name', $nodeComment->getProperty('jcr:uuid'));
+					$nodeComment->setProperty('label', $nodeComment->getProperty('jcr:uuid'));
 					$nodeComment->setProperty('comment', $_REQUEST->getParam('comment'));
 					$this->nodeSubject->save();
 					if ($_REQUEST->getParam('silent') == NULL) {
 						switch($this->nodeSubject->getPrimaryNodeType()) {
 							case 'sbJukebox:Album':
 								$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'details');
-								break;	
+								break;
 							case 'sbJukebox:Artist':
 								$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'details');
-								break;	
+								break;
 							case 'sbJukebox:Track':
 								$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'details');
 								break;

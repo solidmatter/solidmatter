@@ -36,7 +36,7 @@
 			<xsl:apply-templates select="/response/errors" />
 			<xsl:if test="$content/taggedArtists">
 				<xsl:call-template name="renderResult">
-					<xsl:with-param name="label" select="'Artists'" />
+					<xsl:with-param name="label" select="$locale/sbJukebox/labels/artists_tagged" />
 					<xsl:with-param name="nodes" select="$content/taggedArtists/resultset/row" />
 					<xsl:with-param name="type" select="'artist'" />
 					<xsl:with-param name="expand" select="'artists'" />
@@ -44,7 +44,7 @@
 			</xsl:if>
 			<xsl:if test="$content/taggedAlbums">
 				<xsl:call-template name="renderResult">
-					<xsl:with-param name="label" select="'Albums'" />
+					<xsl:with-param name="label" select="$locale/sbJukebox/labels/albums_tagged" />
 					<xsl:with-param name="nodes" select="$content/taggedAlbums/resultset/row" />
 					<xsl:with-param name="type" select="'album'" />
 					<xsl:with-param name="expand" select="'albums'" />
@@ -52,7 +52,7 @@
 			</xsl:if>
 			<xsl:if test="$content/taggedTracks">
 				<xsl:call-template name="renderResult">
-					<xsl:with-param name="label" select="'Tracks'" />
+					<xsl:with-param name="label" select="$locale/sbJukebox/labels/tracks_tagged" />
 					<xsl:with-param name="nodes" select="$content/taggedTracks/resultset/row" />
 					<xsl:with-param name="type" select="'track'" />
 					<xsl:with-param name="expand" select="'tracks'" />
@@ -84,7 +84,7 @@
 							</xsl:choose>
 						</span>
 						<span class="type {$type}">
-							<xsl:value-of select="concat(' ', $label)" /> tagged "<xsl:value-of select="$content/currentTag"/>"
+							<xsl:value-of select="$label" /> "<xsl:value-of select="$content/currentTag"/>"
 						</span>
 					</th>
 				</tr>
@@ -100,6 +100,9 @@
 							</td>-->
 							<td>
 								<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
+							</td>
+							<td align="right">
+								<xsl:call-template name="render_buttons" />
 							</td>
 						</tr>
 					</xsl:for-each>

@@ -41,8 +41,10 @@
 			<thead>
 				<tr>
 					<th colspan="2">
-						<a style="float:right;" class="type create" href="/-/playlists/create">New Playlist</a>
-						<span class="type playlist">Playlists</span>
+						<a style="float:right;" class="type create" href="/-/playlists/create">
+							<xsl:value-of select="$locale/sbJukebox/labels/new_playlist"/>
+						</a>
+						<span class="type playlist"><xsl:value-of select="$locale/sbJukebox/menu/playlists"/></span>
 					</th>
 				</tr>
 			</thead>
@@ -56,14 +58,14 @@
 								<xsl:call-template name="render_stars" />
 							</td>
 							<td>
-								<span style="float: right;">
-									<a class="type play" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}">Play</a>
+								<span style="float:right;">
+									<a class="type play icononly" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 									<xsl:choose>
 										<xsl:when test="@uuid = $currentPlaylist/@uuid">
-											<a class="type activated" href="/{@uuid}/details/activate/">activate</a>
+											<a class="type activated icononly" href="/{@uuid}/details/activate" title="{$locale/sbJukebox/actions/activate}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 										</xsl:when>
 										<xsl:otherwise>
-											<a class="type activate" href="/{@uuid}/details/activate/">activate</a>
+											<a class="type activate icononly" href="/{@uuid}/details/activate" title="{$locale/sbJukebox/actions/activate}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 										</xsl:otherwise>
 									</xsl:choose>
 								</span>

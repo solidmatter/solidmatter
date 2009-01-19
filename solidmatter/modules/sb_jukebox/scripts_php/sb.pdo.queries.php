@@ -92,7 +92,7 @@ $_QUERIES['sbJukebox/history/getTop'] = '
 	SELECT		n.uuid,
 				n.s_label AS label,
 				n.s_name AS name,
-				COUNT(*) AS times_played 
+				COUNT(*) AS times_played
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_JB_HISTORY} hi
 		ON		n.uuid = hi.fk_track
@@ -145,9 +145,9 @@ $_QUERIES['sbJukebox/jukebox/gatherInfo'] = '
 ';
 $_QUERIES['sbJukebox/jukebox/search/anything/byLabel'] = '
 	SELECT		n.uuid,
+				n.fk_nodetype as nodetype,
 				n.s_label AS label,
-				n.s_name AS name,
-				n.fk_nodetype AS nodetype
+				n.s_name AS name
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
 		ON		n.fk_nodetype = nt.s_type
@@ -158,6 +158,7 @@ $_QUERIES['sbJukebox/jukebox/search/anything/byLabel'] = '
 ';
 $_QUERIES['sbJukebox/jukebox/search/various/byLabel'] = '
 	SELECT		n.uuid,
+				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
 				(SELECT 	n_vote 
@@ -173,6 +174,7 @@ $_QUERIES['sbJukebox/jukebox/search/various/byLabel'] = '
 ';
 $_QUERIES['sbJukebox/jukebox/search/various/numeric'] = '
 	SELECT		n.uuid,
+				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
 				(SELECT 	n_vote 
@@ -188,6 +190,7 @@ $_QUERIES['sbJukebox/jukebox/search/various/numeric'] = '
 ';
 $_QUERIES['sbJukebox/jukebox/search/albums/byLabel'] = '
 	SELECT		n.uuid,
+				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
 				a.b_coverexists,
@@ -206,6 +209,7 @@ $_QUERIES['sbJukebox/jukebox/search/albums/byLabel'] = '
 ';
 $_QUERIES['sbJukebox/jukebox/search/albums/numeric'] = '
 	SELECT		n.uuid,
+				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
 				a.b_coverexists,
@@ -224,6 +228,7 @@ $_QUERIES['sbJukebox/jukebox/search/albums/numeric'] = '
 ';
 $_QUERIES['sbJukebox/jukebox/albums/getRandom'] = '
 	SELECT		n.uuid,
+				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
 				a.b_coverexists,
@@ -241,6 +246,7 @@ $_QUERIES['sbJukebox/jukebox/albums/getRandom'] = '
 ';
 $_QUERIES['sbJukebox/jukebox/albums/getLatest'] = '
 	SELECT		n.uuid,
+				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
 				a.b_coverexists,
@@ -362,25 +368,6 @@ $_QUERIES['sbJukebox/album/properties/save/auxiliary'] = '
 				n_coverlightness = :ext_coverlightness,
 				s_relpath = :info_relpath
 ';
-/*$_QUERIES['sbJukebox/album/quilt/findCover'] = '
-	SELECT		n.uuid,
-				n.s_label AS label,
-				n.s_name AS name
-	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_JB_ALBUMS} a
-		ON		n.uuid = a.uuid
-				'.$sHierarchyComponent.'
-		AND		a.n_coverluminance > :luminance - :tolerance
-		AND		a.n_coverluminance < :luminance + :tolerance
-	ORDER BY 	RAND()
-	LIMIT		0, 1
-	
-	ROUND(ABS(a.n_coverlightness - :lightness) / 8),
-				ROUND(ABS(a.n_coverhue - :hue) / 8),
-				ABS(a.n_coverlightness - :lightness),
-				ABS(a.n_coverhue - :hue)
-	
-';*/
 $_QUERIES['sbJukebox/album/quilt/findCover'] = '
 	SELECT		n.uuid,
 				n.s_label AS label,
@@ -469,6 +456,7 @@ $_QUERIES['sbJukebox/track/properties/save/auxiliary'] = '
 
 $_QUERIES['sbJukebox/jukebox/various/getRandom'] = '
 	SELECT		n.uuid,
+				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
 				(SELECT		v.n_vote 

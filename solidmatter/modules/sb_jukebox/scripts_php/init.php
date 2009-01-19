@@ -8,7 +8,7 @@
 */
 //------------------------------------------------------------------------------
 
-import('sb_jukebox:sb.pdo.queries');
+import('sbJukebox:sb.pdo.queries');
 
 //------------------------------------------------------------------------------
 /**
@@ -118,6 +118,40 @@ class sbJukeboxView extends sbView {
 	
 	//--------------------------------------------------------------------------
 	/**
+	* Returns the full filesystem path for the current node 
+	* @param 
+	* @return 
+	*/
+	public function getFSPath($nodeSubject) {
+		
+		import('sbSystem:sb.tools.filesystem');
+		
+		switch ($nodeSubject->getPrimaryNodeType()) {
+			
+			case 'sbJukebox:Jukebox':
+				$sPath = $nodeSubject->getProperty('config_sourcepath');
+				break;
+			case 'sbJukebox:Artist':
+				$sPath = $nodeSubject->getParent()->getProperty('config_sourcepath');
+				break;
+			case 'sbJukebox:Album':
+				$sPath = normalize_path($this->getFSPath($nodeSubject->getParent()), FALSE);
+				$sPath .= $nodeSubject->getProperty('info_relpath');
+				break;
+			case 'sbJukebox:Track':
+				$sPath = normalize_path($this->getFSPath($nodeSubject->getParent()), FALSE);
+				$sPath .= $nodeSubject->getProperty('info_filename');
+				break;
+			default:
+				throw new sbException(__CLASS__.': getFSPath does not support the nodetype '.$nodeSubject->getPrimaryNodeType());			
+		}
+		
+		return ($sPath);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* 
 	* @param 
 	* @return 
@@ -150,7 +184,7 @@ class sbJukeboxView extends sbView {
 			$this->crSession
 		);
 		
-		$formSearch->addInput('title;string;minlength=2;maxlength=250;required=true;', '$locale/sbSystem/labels/title');
+		//$formSearch->addInput('title;string;minlength=2;maxlength=250;required=true;', '$locale/sbSystem/labels/title');
 		$formSearch->addInput('comment;text;minlength=3;maxlength=2000;required=true;', '$locale/sbSystem/labels/comment');
 		$formSearch->addSubmit('$locale/sbSystem/actions/save');
 		
@@ -210,11 +244,7 @@ class sbJukeboxView extends sbView {
 	* @return 
 	*/
 	protected function getCoverFilename($nodeAlbum) {
-		$nodeArtist = $nodeAlbum->getParent();
-		$nodeJukebox = $nodeArtist->getParent();
-		$sFilename = $nodeJukebox->getProperty('config_sourcepath');
-		$sFilename = normalize_path($sFilename);
-		$sFilename .= $nodeAlbum->getProperty('info_relpath');
+		$sFilename = $this->getFSPath($nodeAlbum);
 		$sFilename .= $nodeAlbum->getProperty('info_coverfilename');
 		$sFilename = iconv('UTF-8', System::getFilesystemEncoding(), $sFilename);
 		return ($sFilename);
@@ -432,24 +462,11 @@ class sbJukeboxView extends sbView {
 		switch ($nodeSubject->getPrimaryNodeType()) {
 			
 			case 'sbJukebox:Album':
-				$nodeAlbum = $nodeSubject;
-				$nodeArtist = $nodeAlbum->getParent();
-				$nodeJukebox = $nodeArtist->getParent();
-				$sFilename = $nodeJukebox->getProperty('config_sourcepath');
-				$sFilename = normalize_path($sFilename);
-				$sFilename .= $nodeAlbum->getProperty('info_relpath');
-				$sFilename = iconv('UTF-8', 'Windows-1252', $sFilename);
-				$aItems[] = $sFilename;
-				break;
-				
-			case 'sbJukebox:Track':
-				$nodeAlbum = $nodeSubject->getParent();
-				$nodeArtist = $nodeAlbum->getParent();
-				$nodeJukebox = $nodeArtist->getParent();
-				$sFilename = $nodeJukebox->getProperty('config_sourcepath');
-				$sFilename = normalize_path($sFilename);
-				$sFilename .= $nodeAlbum->getProperty('info_relpath');
-				$sFilename = iconv('UTF-8', 'Windows-1252', $sFilename);
+				$sFilename = $this->getFSPath($nodeSubject);
+//				$sFilename = substr($sFilename, 0, -1);
+//				var_dumpp($sFilename); die();
+//				$sFilename = str_replace('/', '\\', $sFilename);
+				$sFilename = iconv('UTF-8', System::getFilesystemEncoding(), $sFilename);
 				$aItems[] = $sFilename;
 				break;
 				

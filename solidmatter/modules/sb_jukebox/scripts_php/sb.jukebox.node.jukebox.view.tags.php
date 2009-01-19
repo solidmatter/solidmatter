@@ -134,13 +134,13 @@ class sbView_jukebox_jukebox_tags extends sbJukeboxView {
 			$this->crSession
 		);
 		
-		$aOptions['numItems'] = 'Number of Items';
-		$aOptions['popularity'] = 'Popularity';
+		$aOptions['numItems'] = '$locale/sbJukebox/labels/number_of_items';
+		$aOptions['popularity'] = '$locale/sbJukebox/labels/popularity';
 		//$aOptions['numItems'] = 'Number of Items';
 			
-		$formWeighting->addInput('target;select;', '$locale/system/general/labels/weighting/title');
+		$formWeighting->addInput('target;select;', '$locale/sbSystem/labels/weighting/title');
 		$formWeighting->setOptions('target', $aOptions);
-		$formWeighting->addSubmit('$locale/system/general/actions/apply');
+		$formWeighting->addSubmit('$locale/sbSystem/actions/apply');
 		
 		$formWeighting->setValue('target', $this->getWeighting());
 		

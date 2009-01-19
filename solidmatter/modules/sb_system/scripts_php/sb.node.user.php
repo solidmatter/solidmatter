@@ -19,6 +19,17 @@ class sbNode_user extends sbNode {
 		$this->aQueries['saveProperties']['auxiliary'] = 'sbSystem/user/saveProperties/auxiliary';
 	}
 	
+	public function saveNode() {
+		if ($this->isNew()) {
+			$this->setProperty('security_activationkey', uuid());
+			$this->setProperty('security_failedlogins', 0);
+			$this->setProperty('info_successfullogins', 0);
+			$this->setProperty('info_silentlogins', 0);
+			$this->setProperty('info_totalfailedlogins', 0);
+		}
+		parent::saveNode();
+	}
+	
 }
 
 	

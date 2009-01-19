@@ -84,7 +84,6 @@
 										<a href="/{ancestors/sbnode[@nodetype='sbJukebox:Album']/@uuid}"><xsl:value-of select="ancestors/sbnode[@nodetype='sbJukebox:Album']/@label" /></a>
 									</td>
 								</tr>
-								
 								<tr class="odd">
 									<td>
 										<xsl:value-of select="$locale/sbJukebox/labels/playtime" />:
@@ -103,7 +102,7 @@
 								</tr>
 								<tr class="odd">
 									<td>
-										<xsl:value-of select="$locale/system/general/labels/tags" />:
+										<xsl:value-of select="$locale/sbSystem/labels/tags" />:
 									</td>
 									<td>
 										<xsl:for-each select="tags/tag">

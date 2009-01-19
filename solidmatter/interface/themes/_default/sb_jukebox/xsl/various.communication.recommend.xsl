@@ -42,7 +42,7 @@
 		<div class="albumcontainer">
 			
 			<h2>
-				<span class="type ">Recommend: <xsl:value-of select="@label" /></span>
+				<span class="type recommendation"><xsl:value-of select="$locale/sbJukebox/actions/recommend"/>: <xsl:value-of select="@label" /></span>
 			</h2>
 			
 			<xsl:apply-templates select="//sbform[@id='recommendation']" />

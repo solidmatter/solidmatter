@@ -26,40 +26,39 @@
 		<view id="details">Details</view>
 	</views>
 	
-	<nodes>
-		<jukebox>
-			<config_description>Beschreibung</config_description>
-			<config_sourcepath>Pfad zu den MP3-Files (auf dem Server)</config_sourcepath>
-			<config_userealpath>direkten Pfad nutzen</config_userealpath>
-			<config_realpath>direkter Pfad für Zugriff von außen</config_realpath>
-			<config_islocked>Jukebox gesperrt</config_islocked>
-			<config_relyonmp3year>Jahr aus MP3s erzwingen</config_relyonmp3year>
-		</jukebox>
-		<album>
-			<info_artist>Künstler</info_artist>
-			<info_cdsinset>Anzahl CDs</info_cdsinset>
-			<info_coverexists>Cover vorhanden</info_coverexists>
-			<info_coverfilename>Cover Dateiname</info_coverfilename>
-			<info_defects>Defekte</info_defects>
-			<info_relpath>rel. Pfad zur Jukebox</info_relpath>
-			<info_published>Erscheinungsjahr</info_published>
-			<info_type>Albumtyp</info_type>
-			<info_title>Albumtitel</info_title>
-		</album>
-		<track>
-			<info_artist>Künstler</info_artist>
-			<info_index>Nummer</info_index>
-			<info_filename>Dateiname</info_filename>
-			<info_published>Erscheinungsjahr</info_published>
-			<info_playtime>Spieldauer</info_playtime>
-			<enc_playtime>Spieldauer (Sek.)</enc_playtime>
-			<enc_mode>Kodierung</enc_mode>
-			<enc_bitrate>Bitrate (kbit/s)</enc_bitrate>
-		</track>
-		<recommendation>
-			<subject>Empfehlung</subject>
-		</recommendation>
-	</nodes>
+	<Jukebox>
+		<config_description>Beschreibung</config_description>
+		<config_sourcepath>Pfad zu den MP3-Files (auf dem Server)</config_sourcepath>
+		<config_userealpath>direkten Pfad nutzen</config_userealpath>
+		<config_realpath>direkter Pfad für Zugriff von außen</config_realpath>
+		<config_islocked>Jukebox gesperrt</config_islocked>
+		<config_relyonmp3year>Jahr aus MP3s erzwingen</config_relyonmp3year>
+	</Jukebox>
+	<Album>
+		<info_artist>Künstler</info_artist>
+		<info_cdsinset>Anzahl CDs</info_cdsinset>
+		<info_coverexists>Cover vorhanden</info_coverexists>
+		<info_coverfilename>Cover Dateiname</info_coverfilename>
+		<info_defects>Defekte</info_defects>
+		<info_relpath>rel. Pfad zur Jukebox</info_relpath>
+		<info_published>Erscheinungsjahr</info_published>
+		<info_type>Albumtyp</info_type>
+		<info_title>Albumtitel</info_title>
+	</Album>
+	<Track>
+		<info_artist>Künstler</info_artist>
+		<info_title>Titel</info_title>
+		<info_index>Nummer</info_index>
+		<info_filename>Dateiname</info_filename>
+		<info_published>Erscheinungsjahr</info_published>
+		<info_playtime>Spieldauer</info_playtime>
+		<enc_playtime>Spieldauer (Sek.)</enc_playtime>
+		<enc_mode>Kodierung</enc_mode>
+		<enc_bitrate>Bitrate (kbit/s)</enc_bitrate>
+	</Track>
+	<Recommendation>
+		<subject>Empfehlung</subject>
+	</Recommendation>
 	
 	<authorisations>
 		<start_import>Import starten</start_import>
@@ -93,10 +92,20 @@
 		<top_artists>Top Künstler</top_artists>
 		<top_albums>Top Alben</top_albums>
 		<top_tracks>Top Titel</top_tracks>
+		<favorite_artists>Lieblingskünster</favorite_artists>
+		<favorite_albums>Lieblingsalben</favorite_albums>
+		<favorite_tracks>Lieblingstitel</favorite_tracks>
 		<most_played>am meisten gespielt</most_played>
 		<weighting>Gewichtung</weighting>
 		<all_tags>Alle Tags</all_tags>
 		<recommendations>Empfehlungen</recommendations>
+		<average>Durchschnitt</average>
+		<number_of_items>Anzahl Objekte</number_of_items>
+		<popularity>Popularität</popularity>
+		<artists_tagged>Künstler mit Tag</artists_tagged>
+		<albums_tagged>Alben mit Tag</albums_tagged>
+		<tracks_tagged>Titel mit Tag</tracks_tagged>
+		<new_playlist>neue Playlist</new_playlist>
 	</labels>
 	
 	<menu>
@@ -120,6 +129,8 @@
 		<collapse>zuklappen</collapse>
 		<recommend>empfehlen</recommend>
 		<download>herunterladen</download>
+		<activate>aktivieren</activate>
+		<remove>entfernen</remove>
 	</actions>
 	
 </sbJukebox>

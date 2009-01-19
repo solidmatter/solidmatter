@@ -191,8 +191,10 @@ function rmdirr($sPath) {
 * @param 
 * @return 
 */
-function normalize_path($sDirectory) {
-	$sDirectory = realpath($sDirectory);
+function normalize_path($sDirectory, $bUseRealpath = TRUE) {
+	if ($bUseRealpath) {
+		$sDirectory = realpath($sDirectory);
+	}
 	$sDirectory = str_replace('\\', '/', $sDirectory);
 	if ($sDirectory{strlen($sDirectory)-1} != '/') {
 		$sDirectory .= '/';	

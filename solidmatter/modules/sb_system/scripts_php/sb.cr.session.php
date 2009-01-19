@@ -846,10 +846,9 @@ class sbCR_Session {
 		$elemSubject->setAttribute('uuid', $aRow['uuid']);
 		
 		if (isset($this->aNodetypes[$aRow['fk_nodetype']])) {
-			$sModule = $this->aNodetypes[$aRow['fk_nodetype']]['fk_module'];
 			$sLibrary = $this->aNodetypes[$aRow['fk_nodetype']]['s_classfile'];
 			$sClass = $this->aNodetypes[$aRow['fk_nodetype']]['s_class'];
-			import($sModule.':'.$sLibrary);
+			import($sLibrary);
 			$nodeSubject = new $sClass($elemSubject, $this);
 		} else {
 			throw new sbException('NO GENERIC! Should be: '.$aRow['fk_nodetype']);
@@ -894,7 +893,7 @@ class sbCR_Session {
 			return (FALSE);
 		}
 		
-		$stmtLoad = $this->DB->prepareKnown('sbCR/loadNodetypes');
+		$stmtLoad = $this->DB->prepareKnown('sbCR/repository/getNodetypes');
 		$stmtLoad->execute();
 		
 		$aNodetypes = $stmtLoad->fetchAll(PDO::FETCH_ASSOC);

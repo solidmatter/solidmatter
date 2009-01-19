@@ -86,7 +86,7 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	*/
 	public function getDeclaredSupertypes() {
 		if (is_null($this->aDeclaredSupertypes)) {
-			$this->aDeclaredSupertypes = $this->crRepositoryStructure->getDeclaredSupertypes($this->sNodeTypeName);
+			$this->aDeclaredSupertypes = $this->crRepositoryStructure->getDeclaredSupertypes($this->aNodeTypeInformation['NodeTypeName']);
 		}
 		return ($this->aDeclaredSupertypes);
 	}
@@ -100,7 +100,7 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	*/
 	public function getSupertypes() {
 		if (is_null($this->aSupertypes)) {
-			$this->aSupertypes = $this->crRepositoryStructure->getSupertypes($this->sNodeTypeName);
+			$this->aSupertypes = $this->crRepositoryStructure->getSupertypes($this->aNodeTypeInformation['NodeTypeName']);
 		}
 		return ($this->aSupertypes);
 	}
@@ -112,7 +112,7 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	* @return java.lang.String[]
 	*/
 	public function getSupertypeNames() {
-		return ($this->crRepositoryStructure->getSupertypeNames($this->sNodeTypeName));
+		return ($this->crRepositoryStructure->getSupertypeNames($this->aNodeTypeInformation['NodeTypeName']));
 	}
 	
 	//--------------------------------------------------------------------------
@@ -133,8 +133,8 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	* @return boolean
 	*/
 	public function isNodeType($sNodeTypeName) {
-		if ($this->sNodeTypeName == $sNodeTypeName || in_array($sNodeTypeName, $this->getDeclaredSupertypeNames())) {
-			return (true);
+		if ($this->aNodeTypeInformation['NodeTypeName'] == $sNodeTypeName || in_array($sNodeTypeName, $this->getDeclaredSupertypeNames())) {
+			return (TRUE);
 		}
 		foreach ($this->getDeclaredSupertypes() as $crNodeType) {
 			if ($crNodeType->isNodeType($sNodeTypeName)) {
@@ -151,7 +151,7 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	* @return 
 	*/
 	public function getSupportedViews() {
-		return ($this->crRepositoryStructure->getSupportedViews($this->sNodeTypeName));
+		return ($this->crRepositoryStructure->getSupportedViews($this->aNodeTypeInformation['NodeTypeName']));
 	}
 	
 	//--------------------------------------------------------------------------
@@ -161,7 +161,7 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	* @return 
 	*/
 	public function getSupportedAuthorisations() {
-		return ($this->crRepositoryStructure->getSupportedAuthorisations($this->sNodeTypeName));
+		return ($this->crRepositoryStructure->getSupportedAuthorisations($this->aNodeTypeInformation['NodeTypeName']));
 	}
 	
 	//--------------------------------------------------------------------------

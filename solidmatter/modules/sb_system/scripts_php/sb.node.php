@@ -522,18 +522,16 @@ class sbNode extends sbCR_Node {
 		$aViews = $crNodeType->getSupportedViews();
 		
 		if (User::isAuthorised('grant', $this)) {
-			$aViews['security']['s_classfile'] = 'sb.node.view.security';
+			$aViews['security']['s_classfile'] = 'sbSystem:sb.node.view.security';
 			$aViews['security']['s_class'] = 'sbView_security';
-			$aViews['security']['s_module'] = 'sb_system';
 			$aViews['security']['b_default'] = 'FALSE';
 			$aViews['security']['b_display'] = 'TRUE';
 		}
 		
 		// TODO: improve debug stuff
 		if (Registry::getValue('sb.system.debug.tab.enabled') && User::isAdmin()) {
-			$aViews['debug']['s_classfile'] = 'sb.node.view.debug';
+			$aViews['debug']['s_classfile'] = 'sbSystem:sb.node.view.debug';
 			$aViews['debug']['s_class'] = 'sbView_debug';
-			$aViews['debug']['s_module'] = 'sb_system';
 			$aViews['debug']['b_default'] = 'TRUE';
 			$aViews['debug']['b_display'] = 'TRUE';
 		}
@@ -544,7 +542,6 @@ class sbNode extends sbCR_Node {
 			// TODO: find cleaner way to distinct non-display views
 			if ($aDetails['b_display'] == 'TRUE') {
 				$elemView->setAttribute('name', $sView);
-				$elemView->setAttribute('module', $aDetails['s_module']);
 				$elemViews->appendChild($elemView);
 			}
 		}
@@ -586,9 +583,6 @@ class sbNode extends sbCR_Node {
 	protected function getActionDetails($sView, $sAction = NULL) {
 		
 		if ($sView == 'debug' && Registry::getValue('sb.system.debug.tab.enabled')) {
-			$aRow['s_classfile'] = 'sb.node.view.debug';
-			$aRow['s_class'] = 'sbView_debug';
-			$aRow['s_module'] = 'sb_system';
 			$aRow['s_action'] = 'debug';
 			$aRow['e_outputtype'] = 'rendered';
 			$aRow['s_stylesheet'] = 'sb_system:node.debug.xsl';
@@ -600,9 +594,6 @@ class sbNode extends sbCR_Node {
 		if (User::isAuthorised('grant', $this) && $sView == 'security') {
 			$aActions = array(
 				'display' => array(
-					's_classfile' => 'sb.node.view.security',
-					's_class' => 'sbView_security',
-					's_module' => 'sb_system',
 					's_action' => 'display',
 					'e_outputtype' => 'rendered',
 					's_stylesheet' => 'sb_system:node.security.xsl',
@@ -610,9 +601,6 @@ class sbNode extends sbCR_Node {
 					'b_uselocale' => 'TRUE',
 				),
 				'changeInheritance' => array(
-					's_classfile' => 'sb.node.view.security',
-					's_class' => 'sbView_security',
-					's_module' => 'sb_system',
 					's_action' => 'changeInheritance',
 					'e_outputtype' => 'rendered',
 					's_stylesheet' => 'sb_system:node.security.xsl',
@@ -620,9 +608,6 @@ class sbNode extends sbCR_Node {
 					'b_uselocale' => 'TRUE',
 				),
 				'editAuthorisations' => array(
-					's_classfile' => 'sb.node.view.security',
-					's_class' => 'sbView_security',
-					's_module' => 'sb_system',
 					's_action' => 'editAuthorisations',
 					'e_outputtype' => 'rendered',
 					's_stylesheet' => 'sb_system:node.security.editauthorisations.xsl',
@@ -630,9 +615,6 @@ class sbNode extends sbCR_Node {
 					'b_uselocale' => 'TRUE',
 				),
 				'saveAuthorisations' => array(
-					's_classfile' => 'sb.node.view.security',
-					's_class' => 'sbView_security',
-					's_module' => 'sb_system',
 					's_action' => 'saveAuthorisations',
 					'e_outputtype' => 'rendered',
 					's_stylesheet' => 'sb_system:node.security.editauthorisations.xsl',
@@ -640,9 +622,6 @@ class sbNode extends sbCR_Node {
 					'b_uselocale' => 'TRUE',
 				),
 				'addUser' => array(
-					's_classfile' => 'sb.node.view.security',
-					's_class' => 'sbView_security',
-					's_module' => 'sb_system',
 					's_action' => 'addUser',
 					'e_outputtype' => 'rendered',
 					's_stylesheet' => 'sb_system:node.security.xsl',
@@ -650,9 +629,6 @@ class sbNode extends sbCR_Node {
 					'b_uselocale' => 'TRUE',
 				),
 				'removeUser' => array(
-					's_classfile' => 'sb.node.view.security',
-					's_class' => 'sbView_security',
-					's_module' => 'sb_system',
 					's_action' => 'removeUser',
 					'e_outputtype' => 'rendered',
 					's_stylesheet' => 'sb_system:node.security.xsl',
@@ -717,26 +693,25 @@ class sbNode extends sbCR_Node {
 			if ($aAction !== FALSE) {
 				
 				// process view & action info
-				$sClassfile = $this->aViews[$sView]['s_classfile'];
 				$sClass = $this->aViews[$sView]['s_class'];
-				$sModule = $this->aViews[$sView]['s_module'];
+				$sLibrary = $this->aViews[$sView]['s_classfile'];
 				$sAction = $aAction['s_action'];
 				if ($aAction['b_uselocale'] == 'TRUE') {
 					$bUseLocale = TRUE;
 				} else {
 					$bUseLocale = FALSE;
 				}
-				if ($aAction['s_classfile'] != NULL) {
-					$sClassfile = $aAction['s_classfile'];
+				if (isset($aAction['s_classfile']) && $aAction['s_classfile'] != NULL) {
 					$sClass = $aAction['s_class'];
-					$sModule = $aAction['s_module'];
+					$sLibrary = $aAction['s_classfile'];
 				}
 				
 				// init module
+				list($sModule, $sFile) = explode(':', $sLibrary);
 				import($sModule.':init', FALSE);
 				
 				// import class file and create instance
-				import($sModule.':'.$sClassfile);
+				import($sLibrary);
 				
 				if (!class_exists($sClass)) {
 					throw new sbException('Class does not exist: '.$sClass);

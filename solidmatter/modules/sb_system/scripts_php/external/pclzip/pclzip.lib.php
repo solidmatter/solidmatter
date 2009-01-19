@@ -5852,7 +5852,8 @@
   // Return Values :
   //   The path translated.
   // --------------------------------------------------------------------------------
-  function PclZipUtilTranslateWinPath($p_path, $p_remove_disk_letter=true)
+  // FIXME: changed default value of $p_remove_disk_letter
+  function PclZipUtilTranslateWinPath($p_path, $p_remove_disk_letter=false)
   {
     if (stristr(php_uname(), 'windows')) {
       // ----- Look for potential disk letter

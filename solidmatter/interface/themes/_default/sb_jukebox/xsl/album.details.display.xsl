@@ -97,7 +97,7 @@
 								</tr>
 								<tr class="odd">
 									<td>
-										<xsl:value-of select="$locale/system/general/labels/tags" />:
+										<xsl:value-of select="$locale/sbSystem/labels/tags" />:
 									</td>
 									<td>
 										<xsl:for-each select="tags/tag">
@@ -148,10 +148,7 @@
 									<xsl:value-of select="@info_playtime" />
 								</td>
 								<td width="150" style="text-align: right;">
-									<xsl:call-template name="render_buttons">
-										<xsl:with-param name="nolabels" select="'true'" />
-										<xsl:with-param name="withlyrics" select="'true'" />
-									</xsl:call-template>
+									<xsl:call-template name="render_buttons" />
 								</td>
 							</tr>
 						</xsl:for-each>

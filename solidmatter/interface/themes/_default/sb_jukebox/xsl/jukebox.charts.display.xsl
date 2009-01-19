@@ -78,7 +78,7 @@
 		<table class="default" width="100%" summary="CHANGEME">
 			<thead>
 				<tr>
-					<th colspan="3">
+					<th colspan="4">
 						<span style="float: right;">
 							<xsl:choose>
 								<xsl:when test="$content/@expand = $expand">
@@ -121,6 +121,9 @@
 							</td>
 							<td>
 								<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
+							</td>
+							<td align="right">
+								<xsl:call-template name="render_buttons" />
 							</td>
 						</tr>
 					</xsl:for-each>

@@ -8,14 +8,14 @@
 */
 //------------------------------------------------------------------------------
 
-define('NODE_MODULE', 1001);
+//define('NODE_MODULE', 1001);
 define('NODE_CLASS', 1002);
 define('NODE_CLASSFILE', 1003);
-define('NODE_CATEGORY', 1004);
+//define('NODE_CATEGORY', 1004);
 define('NODE_CSSTYPE', 1005);
-define('NODE_FRONTENDACCESS', 1006);
-define('NODE_EXTENSION', 1007);
-define('NODE_CUSTOM', 1008);
+//define('NODE_FRONTENDACCESS', 1006);
+//define('NODE_EXTENSION', 1007);
+//define('NODE_CUSTOM', 1008);
 define('NODE_ABSTRACT', 1009);
 define('NODE_TYPE', 1010);
 define('NODE_USESTAGS', 1011);
@@ -38,14 +38,14 @@ define('PROP_DESCRIPTIONPATH', 2017);
 define('VIEW_DEFAULT', 3001);
 define('VIEW_DISPLAY', 3002);
 define('VIEW_LABELPATH', 3003);
-define('VIEW_MODULE', 3004);
+//define('VIEW_MODULE', 3004);
 define('VIEW_CLASS', 3005);
 define('VIEW_CLASSFILE', 3006);
 define('VIEW_ORDER', 3007);
 
 define('ACT_TYPE', 4001);
 define('ACT_DEFAULT', 4002);
-define('ACT_MODULE', 4003);
+//define('ACT_MODULE', 4003);
 define('ACT_CLASS', 4004);
 define('ACT_CLASSFILE', 4005);
 define('ACT_OUTPUTTYPE', 4006);
@@ -637,7 +637,6 @@ class sbCR_RepositoryStructure {
 		foreach ($stmtViews as $aRow) {
 			$aViews[$aRow['s_view']]['s_classfile'] = $aRow['s_classfile'];
 			$aViews[$aRow['s_view']]['s_class'] = $aRow['s_class'];
-			$aViews[$aRow['s_view']]['s_module'] = $aRow['fk_module'];
 			$aViews[$aRow['s_view']]['b_default'] = $aRow['b_default'];
 			$aViews[$aRow['s_view']]['b_display'] = $aRow['b_display'];
 		}

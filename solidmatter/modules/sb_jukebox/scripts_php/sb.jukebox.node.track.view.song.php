@@ -13,7 +13,7 @@ import('sb.tools.filesystem');
 //------------------------------------------------------------------------------
 /**
 */
-class sbView_jukebox_track_song extends sbView {
+class sbView_jukebox_track_song extends sbJukeboxView {
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -30,15 +30,8 @@ class sbView_jukebox_track_song extends sbView {
 			
 			case 'play':
 				
-				$nodeAlbum = $this->nodeSubject->getParent();
-				$nodeArtist = $nodeAlbum->getParent();
-				$nodeJukebox = $nodeArtist->getParent();
-				$sFilename = $nodeJukebox->getProperty('config_sourcepath');
-				$sFilename = normalize_path($sFilename);
-				$sFilename .= $nodeAlbum->getProperty('info_relpath');
-				$sFilename .= $this->nodeSubject->getProperty('info_filename');
-				$sFilename = iconv('UTF-8', 'Windows-1252', $sFilename);
-				
+				$sFilename = $this->getFSPath($this->nodeSubject);
+				$sFilename = iconv('UTF-8', System::getFilesystemEncoding(), $sFilename);
 				$sSongTitle = $this->nodeSubject->getProperty('label');
 				$iFilesize = filesize($sFilename);
 				

@@ -40,8 +40,7 @@ $_QUERIES['sbCR/repository/loadViews/supported'] = '
 				v.s_classfile,
 				v.s_class,
 				v.b_default,
-				v.b_display,
-				v.fk_module
+				v.b_display
 	FROM		{TABLE_VIEWS} v
 	WHERE		v.fk_nodetype = :nodetype
 	ORDER BY	v.n_order
@@ -121,10 +120,10 @@ $_QUERIES['sb_system/cache/authorisation/empty'] = '
 ';
 
 //------------------------------------------------------------------------------
-// sbRepository
+// sbContentRepository
 //------------------------------------------------------------------------------
 
-$_QUERIES['sb_system/repository/getNodetypes'] = '
+$_QUERIES['sbCR/repository/getNodetypes'] = '
 	SELECT		*
 	FROM		{TABLE_NODETYPES} sn
 	ORDER BY	sn.s_type
@@ -161,12 +160,65 @@ $_QUERIES['sbCR/repository/getNodeTypeHierarchy'] = '
 	FROM		{TABLE_NTHIERARCHY}
 ';
 
+// repository administration ---------------------------------------------------
+
+$_QUERIES['sbCR/nodetype/save'] = '
+	INSERT INTO	{TABLE_NODETYPES}
+				(
+					s_type,
+					b_abstract,
+					e_type,
+					s_class,
+					s_classfile,
+					s_category,
+					s_csstype,
+					b_taggable
+				) VALUES (
+					:nodetype,
+					:abstract,
+					:type,
+					:class,
+					:classfile,
+					:category,
+					:displaytype,
+					:taggable
+				)
+	ON DUPLICATE KEY UPDATE
+				s_type = :nodetype,
+				b_abstract = :abstract,
+				e_type = :type,
+				s_class = :class,
+				s_classfile = :classfile,
+				s_category = :category,
+				s_csstype = :displaytype,
+				b_taggable = :taggable
+';
+$_QUERIES['sbCR/nodetype/remove'] = '
+	DELETE FROM	{TABLE_NODETYPES}
+	WHERE		s_type = :nodetype
+';
+$_QUERIES['sbCR/view/save'] = '
+	INSERT INTO	{TABLE_VIEWS}
+				(
+				
+				) VALUES (
+					
+				)
+	ON DUPLICATE KEY UPDATE
+';
+$_QUERIES['sbCR/action/save'] = '
+	INSERT INTO	{TABLE_ACTIONS}
+				(
+					
+				) VALUES (
+					
+				)
+	ON DUPLICATE KEY UPDATE
+';
+
 
 // node retrieval --------------------------------------------------------------
-$_QUERIES['sbCR/loadNodetypes'] = '
-	SELECT		*
-	FROM		{TABLE_NODETYPES}
-';
+
 $_QUERIES['sbCR/getNode/root'] = '
 	SELECT		n.uuid,
 				n.s_uid,
@@ -399,8 +451,7 @@ $_QUERIES['sbCR/node/getChild/byName'] = '
 	SELECT		n.uuid,
 				n.fk_nodetype,
 				n.s_name,
-				nt.s_csstype,
-				nt.s_extension
+				nt.s_csstype
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
 		ON		n.fk_nodetype = nt.s_type

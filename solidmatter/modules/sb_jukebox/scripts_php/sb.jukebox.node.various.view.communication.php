@@ -56,13 +56,13 @@ class sbView_jukebox_various_communication extends sbJukeboxView {
 	protected function buildRecommendationForm() {
 		$formRecommend = new sbDOMForm(
 			'recommendation',
-			'$locale/system/general/labels/recommend',
+			'$locale/sbSystem/labels/recommend',
 			System::getURL($this->nodeSubject, 'recommend', 'sendRecommendation'),
 			$this->crSession
 		);
-		$formRecommend->addInput('user;users;includeself=FALSE', '');
-		$formRecommend->addInput('comment;text', '');
-		$formRecommend->addSubmit('$locale/system/general/actions/send');
+		$formRecommend->addInput('user;users;includeself=FALSE', '$locale/sbSystem/labels/user');
+		$formRecommend->addInput('comment;text', '$locale/sbSystem/labels/comment');
+		$formRecommend->addSubmit('$locale/sbSystem/actions/send');
 		return ($formRecommend);
 	}
 	

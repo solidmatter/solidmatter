@@ -139,19 +139,17 @@ function import($sLibrary, $bRequired = TRUE) {
 			$bSuccess = FALSE;
 		}
 	}
-	/*$sFilename = "modules/$sModule/scripts_php/$sLibrary.php";
-	if ($bRequired) {
-		$bSuccess = @include_once($sFilename);
-		if (!$bSuccess) {
-			throw new LibraryNotFoundException('Library not found: "'.$sLibrary.'" in "'.$sModule.'"');
-		}
-	} else {
-		if (!file_exists($sFilename)) {
-			return (FALSE);	
-		} else {
-			$bSuccess = @include_once($sFilename);
-		}
-	}*/
+//	$sFilename = "modules/$sModule/scripts_php/$sLibrary.php";
+//	if ($bRequired) {
+//		$bSuccess = include_once($sFilename);
+//		if (!$bSuccess) {
+//			throw new LibraryNotFoundException('Library not found: "'.$sLibrary.'" in "'.$sModule.'"');
+//		}
+//	} else {
+//		if (!file_exists($sFilename)) {
+//			return (FALSE);	
+//		}
+//	}
 	
 	if ($bSuccess) {
 		$aAlreadyLoaded[$sModule][$sLibrary] = TRUE;

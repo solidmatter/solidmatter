@@ -356,6 +356,9 @@ a.imglink img {
 *.recommendations {
 	background-image: url(../icons/recommend_hover.png);
 }
+*.comment {
+	background-image: url(../icons/type_comment.png);
+}
 
 /* menu (has to be after 'type' definition) */
 
@@ -395,6 +398,12 @@ a.imglink img {
 *.lyrics:hover {
 	background-image: url(../icons/lyrics_hover.png);
 }
+*.videos {
+	background-image: url(../icons/videos.png);
+}
+*.videos:hover {
+	background-image: url(../icons/videos_hover.png);
+}
 *.create {
 	background-image: url(../icons/create.png);
 }
@@ -411,6 +420,9 @@ a.imglink img {
 	background-image: url(../icons/recommend.png);
 }
 *.recommend:hover {
+	background-image: url(../icons/recommend_hover.png);
+}
+*.recommendation {
 	background-image: url(../icons/recommend_hover.png);
 }
 *.addToPlaylist {
@@ -477,7 +489,7 @@ a.imglink img {
 div.albumcontainer {
 	background-color: white;
 	padding: 20px;
-	margin-bottom: 30px;
+	margin-bottom: 20px;
 }
 div.albumcontainer h2 {
 	font-size: 1.2em;

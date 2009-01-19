@@ -251,8 +251,13 @@ class System {
 	*/
 	public static function getEnvironment() {
 		
-		// TODO: actually check the server environment
-		return ('windows');
+		// $_ENV['OS']???
+		if (substr( PHP_OS, 0, 3 ) == 'WIN') {
+			return ('windows');
+		} else {
+			return ('linux');	
+		}
+
 		
 	}
 	

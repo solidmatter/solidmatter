@@ -13,11 +13,19 @@
 */
 class sbCR_NodeDefinition {
 	
-	protected $sNodeTypeName;
+	protected $aNodeTypeInformation = array(
+		'NodeTypeName' => '',
+		'PrimaryItemName' => NULL,
+		'isAbstract' => FALSE,
+		'isMixin' => FALSE,
+		'hasOrderableChildNodes' => TRUE,
+		'ChildNodeDefinitions' => array(),
+		'PropertyDefinitions' => array(),
+		'SupertypeNames' => array(),
+		'ViewDefinitions' => array(),
+	);
 	
 	protected $crRepositoryStructure = NULL;
-	
-	protected $aDeclaredSupertypeNames = array();
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -28,7 +36,7 @@ class sbCR_NodeDefinition {
 	public function __construct($crRepositoryStructure, $sNodeTypeName) {
 		
 		$this->crRepositoryStructure = $crRepositoryStructure;
-		$this->sNodeTypeName = $sNodeTypeName;
+		$this->aNodeTypeInformation['NodeTypeName'] = $sNodeTypeName;
 		
 	}
 	
@@ -39,7 +47,7 @@ class sbCR_NodeDefinition {
 	* @return NodeDefinition[]
 	*/
 	public function getDeclaredChildNodeDefinitions() {
-		//return ($this->aNodeTypeInformation['ChildNodeDefinitions']);
+		return ($this->aNodeTypeInformation['ChildNodeDefinitions']);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -50,27 +58,27 @@ class sbCR_NodeDefinition {
 	* @return PropertyDefinition[]
 	*/
 	public function getDeclaredPropertyDefinitions() {
-		//return ($this->aNodeTypeInformation['PropertyDefinitions']);
+		return ($this->aNodeTypeInformation['PropertyDefinitions']);
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
 	* Returns the names of the supertypes actually declared in this node type.
 	* @param 
-	* @return java.lang.String[]
+	* @return array of strings
 	*/
 	public function getDeclaredSupertypeNames() {
-		return ($this->crRepositoryStructure->getDeclaredSupertypeNames($this->sNodeTypeName));
+		return ($this->aNodeTypeInformation['SupertypeNames']);
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
 	* Returns the name of the node type.
 	* @param 
-	* @return java.lang.String
+	* @return string the name of the node type
 	*/
 	public function getName() {
-		return ($this->sNodeTypeName);
+		return ($this->aNodeTypeInformation['NodeTypeName']);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -80,7 +88,7 @@ class sbCR_NodeDefinition {
 	* @return java.lang.String
 	*/
 	public function getPrimaryItemName() {
-		//return ($this->aNodeTypeInformation['PrimaryItemName']);
+		return ($this->aNodeTypeInformation['PrimaryItemName']);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -90,7 +98,7 @@ class sbCR_NodeDefinition {
 	* @return boolean
 	*/
 	public function hasOrderableChildNodes() {
-		//return ($this->aNodeTypeInformation['hasOrderableChildNodes']);
+		return ($this->aNodeTypeInformation['hasOrderableChildNodes']);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -100,7 +108,7 @@ class sbCR_NodeDefinition {
 	* @return boolean
 	*/
 	public function isAbstract() {
-		//return ($this->aNodeTypeInformation['isAbstract']);
+		return ($this->aNodeTypeInformation['isAbstract']);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -110,7 +118,17 @@ class sbCR_NodeDefinition {
 	* @return boolean
 	*/
 	public function isMixin() {
-		//return ($this->aNodeTypeInformation['isMixin']);
+		return ($this->aNodeTypeInformation['isMixin']);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return ViewDefinition[]
+	*/
+	public function getDeclaredViewDefinitions() {
+		return ($this->aNodeTypeInformation['ViewDefinitions']);
 	}
 	
 }

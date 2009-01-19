@@ -105,7 +105,7 @@ class sbView_registry_edit extends sbView {
 		
 		$formRegistry = new sbDOMForm(
 			'registry',
-			'$locale/system/registry/label',
+			'$locale/sbSystem/registry/label',
 			'/'.$this->nodeSubject->getProperty('jcr:uuid').'/edit/save',
 			$this->crSession
 		);
@@ -144,7 +144,7 @@ class sbView_registry_edit extends sbView {
 			
 		}
 		
-		$formRegistry->addSubmit('$locale/system/general/actions/save');
+		$formRegistry->addSubmit('$locale/sbSystem/actions/save');
 		
 		$stmtGetData->closeCursor();
 		return ($formRegistry);

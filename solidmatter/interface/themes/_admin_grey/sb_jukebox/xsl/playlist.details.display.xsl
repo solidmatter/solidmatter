@@ -39,11 +39,11 @@
 		<table class="default" width="100%">
 			<thead>
 				<tr>
-					<th><xsl:value-of select="$locale/system/general/labels/name" /></th>
-					<th><xsl:value-of select="$locale/system/general/labels/type" /></th>
-					<th><xsl:value-of select="$locale/system/general/labels/created_at" /></th>
-					<th><xsl:value-of select="$locale/system/general/labels/modified_at" /></th>
-					<th><xsl:value-of select="$locale/system/general/labels/options" /></th>
+					<th><xsl:value-of select="$locale/sbSystem/labels/name" /></th>
+					<th><xsl:value-of select="$locale/sbSystem/labels/type" /></th>
+					<th><xsl:value-of select="$locale/sbSystem/labels/created_at" /></th>
+					<th><xsl:value-of select="$locale/sbSystem/labels/modified_at" /></th>
+					<th><xsl:value-of select="$locale/sbSystem/labels/options" /></th>
 				</tr>
 			</thead>
 			<tbody>

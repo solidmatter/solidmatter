@@ -400,7 +400,7 @@ class sbCR_Repository {
 		$aRepositoryInfo = array();
 		
 		// get nodetypes
-		$stmtNodetypes = $this->DB->prepareKnown('sb_system/repository/getNodetypes');
+		$stmtNodetypes = $this->DB->prepareKnown('sbCR/repository/getNodetypes');
 		$stmtNodetypes->execute();
 		$stmtNodetypes = $stmtNodetypes->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($stmtNodetypes as $aRow) {

@@ -70,7 +70,7 @@
 						<xsl:for-each select="children[@mode='tracks']/sbnode">
 							<li style="position:relative;top:0;left:0;" id="item_{@uuid}">
 								<xsl:call-template name="colorize" />
-								<a style="float: right;" class="type remove" href="javascript:remove('{@uuid}')">remove</a>
+								<a style="float: right;" class="type remove icononly" href="javascript:remove('{@uuid}')" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 								<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
 							</li>
 						</xsl:for-each>

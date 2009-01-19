@@ -118,6 +118,12 @@ class sbCR_Utilities {
 			$xwOutput->endElement();
 		}
 		
+		foreach ($nodeCurrent->getTags() as $sTag) {
+			$xwOutput->startElement('tag');
+			$xwOutput->text($sTag);
+			$xwOutput->endElement();
+		}
+		
 		$niChilren = $nodeCurrent->getNodes();
 		foreach ($niChilren as $nodeChild) {
 			sbCR_Utilities::serializeSlave($nodeChild, $xwOutput);

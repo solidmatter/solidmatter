@@ -88,6 +88,7 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 			case 'download':
 				import('sb_system:external:pclzip/pclzip.lib');
 				$sTempFile = Registry::getValue('sb.system.temp.dir').'/'.$this->nodeSubject->getProperty('name').'.zip';
+				// CAUTION: PCLZip (2.6) needs a modification because it strips away the drive letter part!!!
 				$zipAlbum = new PclZip($sTempFile);
 				$aFileList = $this->getDownloadItems($this->nodeSubject);
 				$zipAlbum->create($aFileList, PCLZIP_OPT_REMOVE_ALL_PATH, PCLZIP_OPT_NO_COMPRESSION);
@@ -95,6 +96,7 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 //				var_dumpp($aFileList);
 //				var_dumpp($sTempFile);
 //				var_dumpp($zipAlbum);
+//				die();
 				
 				$aOptions = array();
 				$aOptions['filename'] = $this->nodeSubject->getProperty('name').'.zip';

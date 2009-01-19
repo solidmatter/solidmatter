@@ -35,17 +35,17 @@
 		<div class="content">
 			<xsl:apply-templates select="/response/errors" />
 			<xsl:call-template name="renderResult">
-				<xsl:with-param name="label" select="'Artists'" />
+				<xsl:with-param name="label" select="$locale/sbJukebox/labels/favorite_artists" />
 				<xsl:with-param name="nodes" select="$content/favorites/sbnode[@nodetype='sbJukebox:Artist']" />
 				<xsl:with-param name="type" select="'artist'" />
 			</xsl:call-template>
 			<xsl:call-template name="renderResult">
-				<xsl:with-param name="label" select="'Albums'" />
+				<xsl:with-param name="label" select="$locale/sbJukebox/labels/favorite_albums" />
 				<xsl:with-param name="nodes" select="$content/favorites/sbnode[@nodetype='sbJukebox:Album']" />
 				<xsl:with-param name="type" select="'album'" />
 			</xsl:call-template>
 			<xsl:call-template name="renderResult">
-				<xsl:with-param name="label" select="'Tracks'" />
+				<xsl:with-param name="label" select="$locale/sbJukebox/labels/favorite_tracks" />
 				<xsl:with-param name="nodes" select="$content/favorites/sbnode[@nodetype='sbJukebox:Track']" />
 				<xsl:with-param name="type" select="'track'" />
 			</xsl:call-template>
@@ -73,7 +73,7 @@
 							</xsl:choose>
 						</span>-->
 						<span class="type {$type}">
-							Favorite <xsl:value-of select="concat(' ', $label)" />
+							<xsl:value-of select="concat(' ', $label)" />
 						</span>
 					</th>
 				</tr>
@@ -91,8 +91,8 @@
 								<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
 							</td>
 							<td style="text-align:right;">
-								<a class="type play" href="/{@uuid}/-/getM3U/playlist.m3u?sid={$sessionid}">play</a>
-								<a class="type remove" href="/-/favorites/removeItem/item={@uuid}">remove</a>
+								<a class="type play icononly" href="/{@uuid}/-/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+								<a class="type remove icononly" href="/-/favorites/removeItem/item={@uuid}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 							</td>
 						</tr>
 					</xsl:for-each>

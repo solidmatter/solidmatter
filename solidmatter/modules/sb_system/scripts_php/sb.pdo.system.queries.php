@@ -197,7 +197,7 @@ $_QUERIES['sbSystem/eventLog/getEntries/filtered'] = '
 	WHERE		el.fk_module LIKE :module
 		AND		el.e_type LIKE :type
 	ORDER BY	el.dt_created DESC
-	LIMIT		0, 500
+	LIMIT		0, 1000
 ';
 
 //------------------------------------------------------------------------------
@@ -506,19 +506,19 @@ $_QUERIES['sbSystem/module/saveProperties/auxiliary'] = '
 					:info_installedat,
 					:info_lastupdate,
 					:info_uninstallable,
-					:config_activated,
+					:config_active,
 					:node_id
 				)
 	ON DUPLICATE KEY UPDATE
-				s_name,
-				n_mainversion,
-				n_subversion,
-				n_bugfixversion,
-				s_versioninfo,
-				dt_installed,
-				dt_updated,
-				b_uninstallable,
-				b_active
+				s_name = :info_name,
+				n_mainversion = :version_main,
+				n_subversion = :version_sub,
+				n_bugfixversion = :version_bugfix,
+				s_versioninfo = :version_suffix,
+				dt_installed = :info_installedat,
+				dt_updated = :info_lastupdate,
+				b_uninstallable = :info_uninstallable,
+				b_active = :config_active
 ';
 
 //------------------------------------------------------------------------------
