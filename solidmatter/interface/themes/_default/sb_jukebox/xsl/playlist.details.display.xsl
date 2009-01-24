@@ -95,7 +95,7 @@
 				//
 				function remove(sUUID) {
 					
-					var sURL = "/<xsl:value-of select="$master/@uuid" />/details/removeItem/item=" + sUUID + '&amp;silent';
+					var sURL = "/<xsl:value-of select="$master/@uuid" />/details/removeItem/?item=" + sUUID + '&amp;silent';
 					var myAjaxRemover = new Ajax.Request(
 						sURL, 
 						{
@@ -179,7 +179,7 @@
 				//
 				function update (sSubject, sNextSibling) {
 					
-					sURL = "/<xsl:value-of select="$master/@uuid" />/details/orderBefore/subject=" + sSubject + "&amp;nextsibling=" + sNextSibling;
+					sURL = "/<xsl:value-of select="$master/@uuid" />/details/orderBefore/?subject=" + sSubject + "&amp;nextsibling=" + sNextSibling;
 					var myAjaxUpdater = new Ajax.Request(
 						sURL, 
 						{

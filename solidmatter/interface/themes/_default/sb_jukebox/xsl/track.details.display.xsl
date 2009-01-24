@@ -43,12 +43,12 @@
 		<div class="albumcontainer">
 			
 			<h2>
-				<div class="albumdetails" style="float:right;">
+				<span class="albumdetails" style="float:right;">
 					<xsl:call-template name="render_buttons" />
 					| <xsl:call-template name="render_stars">
 						<xsl:with-param name="voting" select="1" />
 					</xsl:call-template>
-				</div>
+				</span>
 				<span class="type track"><xsl:value-of select="@label" /></span>
 			</h2>
 			
@@ -56,16 +56,17 @@
 				<tbody>
 					<tr class="odd">
 						<td style="padding:10px;" width="160" rowspan="3">
-							<a class="imglink" target="_blank" href="/{@uuid}/details/getCover/{ancestors/sbnode[@nodetype='sbJukebox:Album']/@name}.jpg"><img height="150" width="150" src="/{@uuid}/details/getCover/size=150" alt="cover" /></a>
+							<a class="imglink" target="_blank" href="/{@uuid}/details/getCover/{ancestors/sbnode[@nodetype='sbJukebox:Album']/@name}.jpg"><img height="150" width="150" src="/{@uuid}/details/getCover/?size=150" alt="cover" /></a>
 						</td>
 						<td style="padding: 15px 15px 15px 0;">
 							<table width="100%">
 								<tr class="even">
-									<td>
+									<td width="25%">
 										<xsl:value-of select="$locale/sbJukebox/labels/artist" />:
 									</td>
-									<td>
-										<a href="/{ancestors/sbnode[@nodetype='sbJukebox:Artist']/@uuid}"><xsl:value-of select="ancestors/sbnode[@nodetype='sbJukebox:Artist']/@label" /></a>
+									<xsl:variable name="track_artist" select="$content/track_artist/sbnode" />
+									<td width="75%">
+										<a href="/{$track_artist/@uuid}"><xsl:value-of select="$track_artist/@label" /></a>
 									</td>
 								</tr>
 								<tr class="odd">
@@ -106,13 +107,16 @@
 									</td>
 									<td>
 										<xsl:for-each select="tags/tag">
-											<a href="/-/tags/listItems/tagid={@id}">
+											<a href="/-/tags/listItems/?tagid={@id}">
 												<xsl:value-of select="." />
 											</a>
 											<xsl:if test="position() != last()">
 												<xsl:value-of select="' - '" />
 											</xsl:if>
 										</xsl:for-each>
+										<xsl:call-template name="addtag">
+											<xsl:with-param name="form" select="$content/sbform[@id='addTag']" />
+										</xsl:call-template>
 									</td>
 								</tr>
 							</table>

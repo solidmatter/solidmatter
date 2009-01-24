@@ -60,13 +60,12 @@ class sbView_logs_events extends sbView {
 		
 		$formFilter = new sbDOMForm(
 			'filter_events',
-			'$locale/system/general/labels/filter',
-			//'/backend.view=login&action=login'
+			'$locale/sbSystem/labels/filter',
 			System::getURL($this->nodeSubject, 'events', 'filter'),
 			$this->crSession
 		);
 		
-		$formFilter->addInput('type;select;', '$locale/system/general/labels/type');
+		$formFilter->addInput('type;select;', '$locale/sbSystem/labels/type');
 		$aOptions = array(
 			'' => '',
 			'SECURITY' => 'SECURITY',
@@ -74,16 +73,16 @@ class sbView_logs_events extends sbView {
 			'WARNING' => 'WARNING',
 			'MAINTENANCE' => 'MAINTENANCE',
 			'INFO' => 'INFO',
-			'DEBUG' => 'DEBUG'
+			'DEBUG' => 'DEBUG',
 		);
 		$formFilter->setOptions('type', $aOptions);
-		$formFilter->addInput('module;select;', '$locale/system/general/labels/module');
+		$formFilter->addInput('module;select;', '$locale/sbSystem/labels/module');
 		$aOptions = array('' => '');
 		foreach (System::getModules() as $sKey => $unused) {
 			$aOptions[$sKey] = $sKey;
 		}
 		$formFilter->setOptions('module', $aOptions);
-		$formFilter->addSubmit('$locale/system/general/actions/filter');
+		$formFilter->addSubmit('$locale/sbSystem/actions/filter');
 		
 		return ($formFilter);
 		

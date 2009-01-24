@@ -65,7 +65,7 @@ class RSSFeed extends sbDOMDocument {
 	*/
 	public function __construct($aChannelInfo) {
 		
-		$this->domFeed = new DOMDocument('1.0', CHARSET);
+		$this->domFeed = new DOMDocument('1.0', 'UTF-8');
 		//$this->domFeed = new DOMDocument('1.0');
 		$this->domFeed->substituteEntities = TRUE;
 		$eRoot = $this->domFeed->createElement('rss');

@@ -99,6 +99,7 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 				break;
 				
 			case 'storeUGC':
+				import('sbJukebox:sb.jukebox.tools');
 				$this->logEvent(System::MAINTENANCE, 'STORE_UGC_STARTED', 'library path: '.$this->nodeSubject->getProperty('config_sourcepath'));
 				echo 'Preparing...<br>';
 				$niArtists = $this->nodeSubject->getChildren('storeUGC');
@@ -119,6 +120,7 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 				break;
 				
 			case 'removeUGC':
+				import('sbJukebox:sb.jukebox.tools');
 				$this->logEvent(System::MAINTENANCE, 'REMOVE_UGC_STARTED', 'library path: '.$this->nodeSubject->getProperty('config_sourcepath'));
 				echo 'Preparing...';
 				$niArtists = $this->nodeSubject->getChildren('storeUGC');
@@ -152,7 +154,7 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 		$domUGC = new sbDOMDocument();
 		$domUGC->appendChild($this->convertUGC($domUGC, $nodeCurrent));
 		
-		$sFilename = $this->getFSPath($nodeCurrent).'sbUGC.xml';
+		$sFilename = JukeboxTools::getFSPath($nodeCurrent).'sbUGC.xml';
 		
 		$domUGC->save($sFilename);
 		
@@ -166,7 +168,7 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 	*/
 	public function removeUGC($nodeCurrent) {
 		
-		$sFilename = $this->getFSPath($nodeCurrent).'sbUGC.xml';
+		$sFilename = JukeboxTools::getFSPath($nodeCurrent).'sbUGC.xml';
 		if (file_exists($sFilename)) {
 			unlink($sFilename);	
 		}
@@ -236,6 +238,22 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 		
 		return ($elemCurrent);
 		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function clearLibraryInfo() {
+		
+		$nodeJukebox = $this->getJukebox();
+		
+		$sCacheKey = 'JBINFO:'.$this->nodeSubject->getProperty('jcr:uuid');
+		$cacheData = CacheFactory::getInstance('misc');
+		$cacheData->clear($sCacheKey);
+	
 	}
 	
 }

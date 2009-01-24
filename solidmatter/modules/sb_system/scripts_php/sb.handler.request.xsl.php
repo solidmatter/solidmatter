@@ -6,9 +6,9 @@ class XSLRequestHandler {
 		
 		try {
 			
-			$sPath = $_REQUEST->getPath();
-			$sDomain = $_REQUEST->getDomain();
-			$aPath = explode('/', $sPath);
+			$sURI = $_REQUEST->getURI();
+			$aURI = parse_url($sURI);
+			$aPath = explode('/', $aURI['path']);
 			
 			//var_dumpp($_REQUEST->getLocation());
 			//var_dump($sPath);
@@ -17,7 +17,7 @@ class XSLRequestHandler {
 			$sMode = $aPath[2];
 			unset($aPath[2]);
 			
-			$sTemplatePath = '/'.$sDomain.'::'.implode('/', $aPath);
+			$sTemplatePath = '/'.$aURI['host'].'::'.implode('/', $aURI['path']);
 			//var_dumpp($sTemplatePath);
 			$nodeCurrent = $crSession->getNode($sTemplatePath);
 			
@@ -28,18 +28,6 @@ class XSLRequestHandler {
 			}
 			echo $sXSL;
 			exit();
-			
-			/*$sPath = $_REQUEST->getPath();
-			$aPath = explode('/', $sPath);
-			
-			$sUUID = $aPath[2];
-			$sMode = $aPath[3];
-			
-			$nodeCurrent = $crSession->getNode($sUUID);
-			
-			$domLayoutXSL = $nodeCurrent->getStylesheet($sMode);
-			echo $domLayoutXSL->saveXML();
-			exit();*/
 			
 		} catch (NodeNotFoundException $e) {
 			

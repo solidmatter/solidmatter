@@ -29,7 +29,7 @@
 				<xsl:with-param name="form" select="$content/sbform[@id='searchArtists']" />
 			</xsl:call-template>
 			<xsl:call-template name="render_alphanum">
-				<xsl:with-param name="url" select="'/-/artists/-/show='"/>
+				<xsl:with-param name="url" select="'/-/artists/-/?show='"/>
 			</xsl:call-template>
 		</div>
 		<div class="content">

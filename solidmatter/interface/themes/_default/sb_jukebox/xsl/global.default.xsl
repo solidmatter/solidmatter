@@ -32,6 +32,7 @@
 	<xsl:variable name="scripts_js_jb" select="'/theme/sb_jukebox/js'" />
 	<xsl:variable name="sessionid" select="/response/metadata/system/sessionid" />
 	<xsl:variable name="currentPlaylist" select="$content/currentPlaylist/sbnode" />
+	<xsl:variable name="auth" select="$master/user_authorisations/authorisation" />
 	
 	<xsl:template match="/response/locales"></xsl:template>
 	
@@ -216,19 +217,39 @@
 				PDO:<xsl:value-of select="pdo" />ms
 			</xsl:attribute>
 			<xsl:value-of select="execution_time" />ms | 
-			<a href="/{$content/@uuid}/{$content/@view}/{$content/@action}/debug" target="_blank">XML</a>
+			<a href="/{$content/@uuid}/{$content/@view}/{$content/@action}/?debug=1" target="_blank">XML</a>
 		</span>
 	</xsl:template>
 	
 	<xsl:template name="simplesearch">
 		<xsl:param name="form" />
 		<!--<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>-->
-		<form action="{$form/@action}" method="post" class="simplesearch">
+		<form action="{$form/@action}" name="simplesearch" method="get" class="simplesearch">
 			<xsl:value-of select="$locale/sbSystem/labels/search/title" />:
 			<xsl:apply-templates select="$form/sbinput[@type='string']" mode="inputonly" />
 			<xsl:value-of select="' '" />
 			<xsl:apply-templates select="$form/submit" mode="inputonly" />
 		</form>
+	</xsl:template>
+	
+	<xsl:template name="addtag">
+		<xsl:param name="form" />
+		<xsl:if test="$form" >
+			<script type="text/javascript" language="javascript">
+				function showTagForm() {
+					document.addTag.style.display='inline';
+					document.addTag.elements[0].focus();
+					document.addTag.previousSibling.style.display='none';
+				}
+			</script>
+			<!--<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>-->
+			<br /><a href="javascript:showTagForm();" style="line-height:25px;" class="type create"><xsl:value-of select="$locale/sbSystem/actions/new_tag" /></a>
+			<form action="{$form/@action}" name="addTag" method="post" class="addtag" style="display:none;">
+				<xsl:apply-templates select="$form/sbinput[@type='string']" mode="inputonly" />
+				<xsl:value-of select="' '" />
+				<xsl:apply-templates select="$form/submit" mode="inputonly" />
+			</form>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template name="colorize">
@@ -273,8 +294,12 @@
 					<div><xsl:value-of select="$locale/sbSystem/texts/no_comments" /></div>
 				</xsl:otherwise>
 			</xsl:choose>
-			<br /><br /><br />
-			<xsl:apply-templates select="$content/sbform[@id='addComment']" />
+			<xsl:if test="$content/sbform[@id='addComment']">
+				<br /><br /><br />
+				<xsl:apply-templates select="$content/sbform[@id='addComment']">
+					<xsl:with-param name="noLabel" select="true" />
+				</xsl:apply-templates>
+			</xsl:if>
 		</div>
 	</xsl:template>
 	
@@ -285,9 +310,9 @@
 			<a class="type lyrics icononly" href="http://www.google.de/search?q=lyrics {@label}" title="{$locale/sbJukebox/actions/search_lyrics}" target="_blank"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 			<a class="type videos icononly" href="http://www.youtube.com/results?search_query={@label}" title="{$locale/sbJukebox/actions/search_videos}" target="_blank"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
-		<a class="type addToFavorites icononly" href="/-/favorites/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_favorites}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
-		<xsl:if test="$content/currentPlaylist">
-			<a class="type addToPlaylist icononly" href="/{$currentPlaylist/@uuid}/details/addItem/item={@uuid}" title="{$locale/sbJukebox/actions/add_to_playlist}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+		<a class="type addToFavorites icononly" href="/-/favorites/addItem/?item={@uuid}" title="{$locale/sbJukebox/actions/add_to_favorites}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+		<xsl:if test="$content/currentPlaylist and (@nodetype='sbJukebox:Album' or @nodetype='sbJukebox:Track')">
+			<a class="type addToPlaylist icononly" href="/{$currentPlaylist/@uuid}/details/addItem/?item={@uuid}" title="{$locale/sbJukebox/actions/add_to_playlist}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
 		<xsl:if test="@nodetype='sbJukebox:Album'">
 		<!--  and $master/user_authorisations/authorisation[@name='download' and @grant_type='ALLOW'] -->
@@ -327,5 +352,7 @@
 			<a href="{$url}Z">Z</a>
 		</div>
 	</xsl:template>
+	
+	
 	
 </xsl:stylesheet>

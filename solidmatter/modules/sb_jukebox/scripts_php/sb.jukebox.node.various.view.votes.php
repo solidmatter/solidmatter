@@ -15,8 +15,8 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 	
 	protected $aRequiredAuthorisations = array(
 		'addComment' => array('comment'),
-		'placeVote' => array('vote'),
 		'addTag' => array('tag'),
+		'placeVote' => array('vote'),
 	);
 	
 	//--------------------------------------------------------------------------
@@ -67,45 +67,11 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				break;
 				
 			case 'placeVote':
-				//$iVote = $_REQUEST->getParam('vote');
 				$iVote = $this->requireParam('vote');
 				$nodeJukebox = $this->nodeSubject->getAncestorOfType('sbJukebox:Jukebox');
-				/*$iMin = Registry::getValue('sb.jukebox.voting.scale.min');
-				$iMax = Registry::getValue('sb.jukebox.voting.scale.max');
-				$iScale = $iMax - $iMin;
-				$iRealVote = round(100 / $iScale * ($iVote));*/
 				$iRealVote = $iVote;
-				/*var_dumpp($iVote);
-				var_dumpp($iRealVote);
-				die();*/
 				$this->nodeSubject->removeVote(User::getUUID());
 				$this->nodeSubject->placeVote(User::getUUID(), $iRealVote);
-				
-				// disabled - moved this stuff to ajax, header contains current vote 
-				/*if ($_REQUEST->getParam('silent') == NULL) {
-					if ($_REQUEST->getParam('target') != NULL) {
-						switch ($_REQUEST->getParam('target')) {
-							case 'parent':
-								$_RESPONSE->redirect($this->nodeSubject->getParent()->getProperty('jcr:uuid'), 'details');
-								break;
-						}
-					} else {
-						switch($this->nodeSubject->getPrimaryNodeType()) {
-							case 'sb_jukebox:album':
-								$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'details');
-								break;	
-							case 'sb_jukebox:artist':
-								$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'details');
-								break;	
-							case 'sb_jukebox:track':
-								$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'details');
-								break;
-							case 'sb_jukebox:playlist':
-								$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'details');
-								break;
-						}
-					}
-				}*/
 				$_RESPONSE->addHeader('X-Vote: '.$this->nodeSubject->getVote());
 				break;
 				
@@ -113,6 +79,7 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				$sTag = $this->requireParam('tag');
 				$this->nodeSubject->addTag($sTag);
 				$this->nodeSubject->save();
+				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));
 				break;
 				
 			default:

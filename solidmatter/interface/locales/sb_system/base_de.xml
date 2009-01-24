@@ -54,6 +54,7 @@
 		<logout>Ausloggen</logout>
 		<refresh>Aktualisieren</refresh>
 		<send>Senden</send>
+		<new_tag>neuer Tag</new_tag>
 	</actions>
 	
 	<labels>

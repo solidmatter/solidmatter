@@ -30,7 +30,9 @@ class sbView_jukebox_track_song extends sbJukeboxView {
 			
 			case 'play':
 				
-				$sFilename = $this->getFSPath($this->nodeSubject);
+				import('sbJukebox:sb.jukebox.tools');
+				
+				$sFilename = JukeboxTools::getFSPath($this->nodeSubject);
 				$sFilename = iconv('UTF-8', System::getFilesystemEncoding(), $sFilename);
 				$sSongTitle = $this->nodeSubject->getProperty('label');
 				$iFilesize = filesize($sFilename);
@@ -39,7 +41,7 @@ class sbView_jukebox_track_song extends sbJukeboxView {
 				$startArray = sscanf($_REQUEST->getServerValue('HTTP_RANGE'), 'bytes=%d-');
 				$start = $startArray[0];
 				
-				DEBUG('Play Track: SessionID', sbSession::getSessionID(), DEBUG::SESSIONID);
+				DEBUG('Play Track: SessionID = '.sbSession::getSessionID(), DEBUG::SESSION);
 				
 				header("Accept-Ranges: bytes" );
 				

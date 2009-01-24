@@ -96,12 +96,14 @@ class sbPDOStatement extends PDOStatement {
 	public function execute() {
 		global $_STOPWATCH;
 		$_STOPWATCH->checkGroup('php');
+		DEBUG::STARTCLOCK('statement');
 		try {
 			parent::execute();
 		} catch (Exception $e) {
 			$this->debug($e);
 			throw $e;
 		}
+		DEBUG('PDO: executed statement '.$this->aDebug['statementid'].' ('.DEBUG::STOPCLOCK('statement').'ms)', DEBUG::PDO);
 		$_STOPWATCH->checkGroup('pdo');
 	}
 	

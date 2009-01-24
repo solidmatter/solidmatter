@@ -73,7 +73,7 @@ function vote(oStarImage, iMaxStars) {
 	
 	//alert(iVote);
 	//alert(sUUID);
-	var sURL = '/' + sUUID + '/votes/placeVote/vote=' + iVote;
+	var sURL = '/' + sUUID + '/votes/placeVote/?vote=' + iVote;
 	var myAjaxVoter = new Ajax.Request( 
 		sURL, 
 		{

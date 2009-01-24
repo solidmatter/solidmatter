@@ -17,8 +17,7 @@ try {
 if (!defined('TIMEZONE'))			define('TIMEZONE', 'Europe/Berlin');
 if (!defined('USE_REGISTRYCACHE'))	define('USE_REGISTRYCACHE', TRUE);
 if (!defined('USE_SSL'))			define('USE_SSL', FALSE);
-if (!defined('CHARSET'))			define('CHARSET', 'UTF-8');
-if (!defined('DEBUG'))				define('DEBUG', TRUE);
+if (!defined('ERROR_REPORTING'))	define('ERROR_REPORTING', TRUE);
 if (!defined('TIER2_SEPARATED'))	define('TIER2_SEPARATED', TRUE);
 
 define('REPOSITORY_DEFINITION_FILE', '_config/repositories.xml');
@@ -65,9 +64,9 @@ $_CONTROLLERCONFIG		= simplexml_load_file('_config/controller.xml');
 $_RESPONSE				= ResponseFactory::getInstance('global');
 
 // configure
-DEBUG ? error_reporting(E_ALL|E_STRICT) : error_reporting(0);
-DEBUG ? $iDebuglevel = E_ALL : $iDebuglevel = 0;
-mb_internal_encoding(CHARSET);
+ERROR_REPORTING ? error_reporting(E_ALL|E_STRICT) : error_reporting(0);
+ERROR_REPORTING ? $iDebuglevel = E_ALL : $iDebuglevel = 0;
+mb_internal_encoding('UTF-8');
 System::init();
 
 $_STOPWATCH->check('tier2_init', 'php');
@@ -154,7 +153,7 @@ if (Registry::getValue('sb.system.log.access.enabled')) {
 // assign request handler
 
 $aHandler = match_handler($_CONTROLLERCONFIG, $_REQUEST->getHandler());
-DEBUG('Controller: Handler', $aHandler['class'].'('.$aHandler['module'].':'.$aHandler['library'].')', DEBUG::HANDLER);
+DEBUG('Controller: using Handler '.$aHandler['class'].'('.$aHandler['module'].':'.$aHandler['library'].')', DEBUG::HANDLER);
 import($aHandler['library'], $aHandler['module']);
 $hndProcessor = new $aHandler['class']();
 $hndProcessor->handleRequest($crSession);

@@ -48,9 +48,18 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 				$_RESPONSE->addData($formSearch);
 				
 				// comment form
-				$formComment = $this->buildCommentForm();
-				$formComment->saveDOM();
-				$_RESPONSE->addData($formComment);
+				if (User::isAuthorised('comment', $this->nodeSubject)) {
+					$formComment = $this->buildCommentForm();
+					$formComment->saveDOM();
+					$_RESPONSE->addData($formComment);
+				}
+				
+				// tag form
+				if (User::isAuthorised('tag', $this->nodeSubject)) {
+					$formTag = $this->buildTagForm();
+					$formTag->saveDOM();
+					$_RESPONSE->addData($formTag);
+				}
 				
 				// add tracks
 				$niTracks = $this->nodeSubject->loadChildren('tracks', TRUE, TRUE, TRUE);
@@ -75,22 +84,16 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 				return;
 				
 			case 'getM3U':
-				$sName = $this->nodeSubject->getProperty('name');
-				$sPlaylist = $this->getPlaylist($this->nodeSubject, FALSE, 'M3U');
-				headers('m3u', array(
-					'filename' => $sName.'.m3u',
-					'download' => false,
-					'size' => strlen($sPlaylist),
-				));
-				echo $sPlaylist;
-				exit();
+				$this->sendPlaylist();
+				break;
 			
 			case 'download':
-				import('sb_system:external:pclzip/pclzip.lib');
+				import('sbSystem:external:pclzip/pclzip.lib');
+				import('sbJukebox:sb.jukebox.tools');
 				$sTempFile = Registry::getValue('sb.system.temp.dir').'/'.$this->nodeSubject->getProperty('name').'.zip';
 				// CAUTION: PCLZip (2.6) needs a modification because it strips away the drive letter part!!!
 				$zipAlbum = new PclZip($sTempFile);
-				$aFileList = $this->getDownloadItems($this->nodeSubject);
+				$aFileList = JukeboxTools::getDownloadItems($this->nodeSubject);
 				$zipAlbum->create($aFileList, PCLZIP_OPT_REMOVE_ALL_PATH, PCLZIP_OPT_NO_COMPRESSION);
 				
 //				var_dumpp($aFileList);
@@ -112,11 +115,14 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 				break;
 			
 			case 'getCover':
-				parent::getCover($this->nodeSubject);
+				import('sbJukebox:sb.jukebox.tools');
+				JukeboxTools::sendCover($this->nodeSubject);
 				break;
 			
 			case 'buildQuilt':
-			
+				
+				throw new LazyBastardException('buildQuilt needs rework because of dependencies');
+				
 				// search form
 				$formSearch = $this->buildSearchForm('albums');
 				$formSearch->saveDOM();

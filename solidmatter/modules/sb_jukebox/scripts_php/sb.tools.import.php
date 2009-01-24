@@ -140,6 +140,7 @@ class JukeboxToolkit {
 			if ($this->aVerboseFlags['ARTIST_QUERY']) {
 				$this->echoInfo('info', '[note] new Artist: '.$sArtist);
 			}
+			$this->nodeJukebox->save();
 		} else {
 			$nodeArtist = $this->nodeJukebox->getNode($sArtistClean);
 			if ($this->aVerboseFlags['ARTIST_QUERY']) {

@@ -30,9 +30,18 @@ class sbView_jukebox_track_details extends sbJukeboxView {
 				$_RESPONSE->addData($formSearch);
 				
 				// comment form
-				$formComment = $this->buildCommentForm();
-				$formComment->saveDOM();
-				$_RESPONSE->addData($formComment);
+				if (User::isAuthorised('comment', $this->nodeSubject)) {
+					$formComment = $this->buildCommentForm();
+					$formComment->saveDOM();
+					$_RESPONSE->addData($formComment);
+				}
+				
+				// tag form
+				if (User::isAuthorised('tag', $this->nodeSubject)) {
+					$formTag = $this->buildTagForm();
+					$formTag->saveDOM();
+					$_RESPONSE->addData($formTag);
+				}
 				
 				// add comments
 				$niComments = $this->nodeSubject->loadChildren('comments', TRUE, TRUE, TRUE);
@@ -49,23 +58,19 @@ class sbView_jukebox_track_details extends sbJukeboxView {
 				// add vote
 				$this->nodeSubject->getVote(User::getUUID());
 				
+				// store track artist
+				$nodeArtist = $this->crSession->getNodeByIdentifier($this->nodeSubject->getProperty('info_artist'));
+				$_RESPONSE->addData($nodeArtist, 'track_artist');
 				return;
 				
 			case 'getCover':
-				$nodeAlbum = $this->nodeSubject->getParent();
-				parent::getCover($nodeAlbum);
+				import('sbJukebox:sb.jukebox.tools');
+				JukeboxTools::sendCover($this->nodeSubject->getParent());
 				break;
 				
 			case 'getM3U':
-				$sName = $this->nodeSubject->getProperty('name');
-				$sPlaylist = $this->getPlaylist($this->nodeSubject);
-				headers('m3u', array(
-					'filename' => $sName.'.m3u',
-					'download' => false,
-					'size' => strlen($sPlaylist),
-				));
-				echo $sPlaylist;
-				exit();
+				$this->sendPlaylist();
+				break;
 			
 			default:
 				throw new sbException(__CLASS__.': action not recognized ('.$sAction.')');

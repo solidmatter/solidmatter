@@ -86,7 +86,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:if test="1 or count($nodes) > 9">
-										<a class="type expand" href="/-/charts/-/expand={$expand}"><xsl:value-of select="$locale/sbJukebox/actions/expand" /></a>
+										<a class="type expand" href="/-/charts/-/?expand={$expand}"><xsl:value-of select="$locale/sbJukebox/actions/expand" /></a>
 									</xsl:if>
 								</xsl:otherwise>
 							</xsl:choose>

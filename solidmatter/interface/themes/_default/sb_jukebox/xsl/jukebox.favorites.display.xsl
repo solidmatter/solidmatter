@@ -92,7 +92,7 @@
 							</td>
 							<td style="text-align:right;">
 								<a class="type play icononly" href="/{@uuid}/-/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
-								<a class="type remove icononly" href="/-/favorites/removeItem/item={@uuid}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+								<a class="type remove icononly" href="/-/favorites/removeItem/?item={@uuid}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 							</td>
 						</tr>
 					</xsl:for-each>

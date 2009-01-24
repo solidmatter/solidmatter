@@ -14,7 +14,6 @@
 //------------------------------------------------------------------------------
 // config
 
-if (!defined('CHARSET'))			define('CHARSET', 'UTF-8');	
 if (!defined('PRETTYPRINT'))		define('PRETTYPRINT', TRUE);
 
 //------------------------------------------------------------------------------
@@ -28,18 +27,18 @@ $_STOPWATCH = new AdvancedStopwatch();
 
 require_once('modules/sb_system/scripts_php/sb.system.essentials.php');
 
-DEBUG('Interface: Request URI', $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], DEBUG::REQUEST);
-DEBUG('Client: User Agent', $_SERVER['HTTP_USER_AGENT'], DEBUG::CLIENT);
+DEBUG('Interface: Request URI = '.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], DEBUG::REQUEST);
+DEBUG('Client: User Agent = '.$_SERVER['HTTP_USER_AGENT'], DEBUG::CLIENT);
 
 session_start();
 $_SESSIONID = session_id();
 if (preg_match('/sid=([a-f0-9]{32})/', $_SERVER['REQUEST_URI'], $aMatches)) {
 	$_SESSIONID = $aMatches[1];
-	DEBUG('Interface: URL Session ID', $_SESSIONID, DEBUG::SESSIONID);
+	DEBUG('Interface: URL Session ID = '.$_SESSIONID, DEBUG::SESSION);
 }
 session_write_close();
 
-DEBUG('Interface: Session ID', $_SESSIONID, DEBUG::SESSIONID);
+DEBUG('Interface: Session ID = '.$_SESSIONID, DEBUG::SESSION);
 
 //------------------------------------------------------------------------------
 // switch according to site definition
@@ -57,7 +56,7 @@ $aSite = match_site($sxmlSites, $sRequestLocation);
 $elemSite = $aSite['site'];
 $elemController = $aSite['controller'];
 
-DEBUG('Interface: Site matched', (string) $elemSite['location'].' | '.(string) $elemSite['handler'], DEBUG::BASIC);
+DEBUG('Interface: Site matched ['.(string) $elemSite['location'].'] with handler ['.(string) $elemSite['handler'].']', DEBUG::BASIC);
 
 if ($elemSite == NULL) {
 	die('could not handle request, aborting.');
@@ -221,11 +220,11 @@ try {
 // prepare and enter tier2
 if (TIER2_SEPARATED) {
 	$_REQUEST->includeRequest($_SESSIONID, TRUE);
-	DEBUG('Interface: Flow', 'entering tier2 now (via http)', DEBUG::BASIC);
+	DEBUG('Interface: entering tier2 now (via http)', DEBUG::BASIC);
 	$_RESPONSE = $_REQUEST->send(TIER2_PATH, TIER2_HOST, TIER2_PORT);
 } else {
 	$_REQUEST->includeRequest($_SESSIONID);
-	DEBUG('Interface: Flow', 'entering tier2 now (via include())', DEBUG::BASIC);
+	DEBUG('Interface: entering tier2 now (via include())', DEBUG::BASIC);
 	include_once('controller.php');
 }
 
@@ -236,7 +235,7 @@ if ($_REQUEST->getParam('debug') != TRUE) {
 }
 
 // output
-DEBUG('Interface: Flow', 'processing output now', DEBUG::BASIC);
+DEBUG('Interface: processing output now', DEBUG::BASIC);
 $_RESPONSE->saveOutput();
 
 //------------------------------------------------------------------------------

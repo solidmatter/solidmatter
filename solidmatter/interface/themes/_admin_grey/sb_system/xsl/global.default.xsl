@@ -24,6 +24,7 @@
 	<xsl:variable name="images" select="'/theme/sb_system/images'" />
 	<xsl:variable name="master" select="$content/sbnode[@master]" />
 	<xsl:variable name="sessionid" select="/response/metadata/system/sessionid" />
+	<xsl:variable name="auth" select="$master/user_authorisations" />
 	
 	<xsl:template match="/response/locales"></xsl:template>
 	

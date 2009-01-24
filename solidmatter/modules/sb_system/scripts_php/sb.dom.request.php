@@ -26,7 +26,7 @@ class sbDOMRequest extends sbDOMDocument {
 	* Constructor, initializes basic DOM structure.
 	*/
 	public function __construct() {
-		parent::__construct('1.0', CHARSET);
+		parent::__construct('1.0', 'UTF-8');
 		$elemRoot = $this->createElement('request');
 		$this->appendChild($elemRoot);
 		$elemMetadata = $this->createElement('metadata');
@@ -302,7 +302,7 @@ class sbDOMRequest extends sbDOMDocument {
 			$elemParam->nodeValue = $sValue;
 		}
 		if (!$bExists) {
-			$elemParam = $this->createElement($sName, $sValue);
+			$elemParam = $this->createElement(htmlentities($sName), htmlentities($sValue));
 			$elemParams->appendChild($elemParam);
 		}
 	}
@@ -314,12 +314,13 @@ class sbDOMRequest extends sbDOMDocument {
 	* @return 
 	*/
 	public function getServerValue($sName) {
+		$sValue = NULL;
 		$elemServer = $this->getElementById('SERVER');
 		$nlParams = $elemServer->getElementsByTagName($sName);
 		foreach ($nlParams as $elemParam) {
-			$mValue = (string) $elemParam->nodeValue;
+			$sValue = (string) $elemParam->nodeValue;
 		}
-		return ($mValue);
+		return ($sValue);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -398,8 +399,17 @@ class sbDOMRequest extends sbDOMDocument {
 	* @param 
 	* @return 
 	*/
-	public function getURL() {
-		return ($this->getServerValue('HTTP_HOST').$this->getServerValue('REQUEST_URI'));
+	public function getURI() {
+		if (substr($this->getServerValue('SERVER_PROTOCOL'), 0, 4) == 'HTTP') {
+			if ($this->getServerValue('HTTPS') == NULL) {
+				$sProtocol = 'http';
+			} else {
+				$sProtocol = 'https';	
+			}	
+		} else {
+			$sProtocol = 'unknown';	
+		}
+		return ($sProtocol.'://'.$this->getServerValue('HTTP_HOST').$this->getServerValue('REQUEST_URI'));
 	}
 	
 	//--------------------------------------------------------------------------
@@ -409,7 +419,7 @@ class sbDOMRequest extends sbDOMDocument {
 	* @return 
 	*/
 	public function getPath() {
-		return ($this->getServerValue('REQUEST_URI'));	
+		return ($this->getServerValue('REQUEST_URI'));
 	}
 	
 	//--------------------------------------------------------------------------

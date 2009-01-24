@@ -123,6 +123,16 @@
 						</ul>
 					</div></div></div>
 					<div class="eyecandy"><div class="left"><div class="right">
+						<h1>User Authorisations</h1>
+						<ul>
+						<xsl:for-each select="user_authorisations/authorisation">
+							<li>
+								<xsl:value-of select="@name" /> (<xsl:value-of select="@grant_type" />)<br/>
+							</li>
+						</xsl:for-each>
+						</ul>
+					</div></div></div>
+					<div class="eyecandy"><div class="left"><div class="right">
 						<h1>Local Authorisations</h1>
 						<ul>
 						<xsl:for-each select="local_authorisations/*">

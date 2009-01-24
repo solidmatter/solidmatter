@@ -52,7 +52,7 @@
 							<xsl:for-each select="resultset/row">
 								<div class="albumcover_wall">
 									<a class="imglink" href="/{@uuid}" >
-										<img height="100" width="100" src="/{@uuid}/details/getCover/size=100" alt="{@label}" title="{@label}" />
+										<img height="100" width="100" src="/{@uuid}/details/getCover/?size=100" alt="{@label}" title="{@label}" />
 									</a><br />
 								</div>
 							</xsl:for-each>

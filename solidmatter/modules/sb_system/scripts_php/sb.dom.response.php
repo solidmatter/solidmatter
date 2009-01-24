@@ -29,7 +29,7 @@ class sbDOMResponse extends sbDOMDocument {
 	* @return 
 	*/
 	public function __construct() {
-		parent::__construct('1.0', CHARSET);
+		parent::__construct('1.0', 'UTF-8');
 		$elemRoot = $this->createElement('response');
 		$this->appendChild($elemRoot);
 		$this->__init();
@@ -665,7 +665,7 @@ class sbDOMResponse extends sbDOMDocument {
 				
 			case 'debug':
 				$this->formatOutput = TRUE;
-				header('Content-Type: text/html; charset='.CHARSET);
+				header('Content-Type: text/html; charset=utf-8');
 				echo '<html><body><pre style="font-size:9px;">'.htmlspecialchars($this->saveXML()).'</pre></body></html>';
 				break;
 				

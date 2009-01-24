@@ -42,10 +42,10 @@
 				<tr>
 					<th><xsl:value-of select="$locale/system/general/labels/event" /></th>
 					<!--<th><xsl:value-of select="$locale/system/general/labels/module" /></th>-->
-					<th width="50"><xsl:value-of select="$locale/system/general/labels/CHANGEME" /></th>
-					<th><xsl:value-of select="$locale/system/general/labels/message" /></th>
-					<th width="130"><xsl:value-of select="$locale/system/general/labels/created_at" /></th>
-					<th><xsl:value-of select="$locale/system/general/labels/options" /></th>
+					<th width="50"><xsl:value-of select="$locale/sbSystem/labels/CHANGEME" /></th>
+					<th><xsl:value-of select="$locale/sbSystem/labels/message" /></th>
+					<th width="130"><xsl:value-of select="$locale/sbSystem/labels/created_at" /></th>
+					<th><xsl:value-of select="$locale/sbSystem/labels/options" /></th>
 				</tr>
 			</thead>
 			<tbody>

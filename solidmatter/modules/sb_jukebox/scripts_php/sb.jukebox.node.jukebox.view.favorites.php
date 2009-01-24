@@ -49,20 +49,12 @@ class sbView_jukebox_jukebox_favorites extends sbJukeboxView {
 				break;
 				
 			case 'getM3U':
-				$sName = $nodeFavorites->getProperty('name');
 				$bRandom = FALSE;
 				if ($_REQUEST->getParam('random') != NULL) {
 					$bRandom = TRUE;	
 				}
-				$sPlaylist = $this->getPlaylist($nodeFavorites, $bRandom);
-				headers('m3u', array(
-					'filename' => $sName.'.m3u',
-					'download' => false,
-					'size' => strlen($sPlaylist),
-				));
-				echo $sPlaylist;
-				exit();
-				
+				$this->sendPlaylist($nodeFavorites, $bRandom);
+				break;
 				
 			default:
 				throw new sbException(__CLASS__.': action not recognized ('.$sAction.')');

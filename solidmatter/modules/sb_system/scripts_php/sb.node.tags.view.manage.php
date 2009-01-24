@@ -95,20 +95,20 @@ class sbView_tags_manage extends sbView {
 		
 		$formTag = new sbDOMForm(
 			'edit_tag',
-			'$locale/system/tags/edit_tag',
+			'$locale/sbSystem/tags/edit_tag',
 			'/'.$this->nodeSubject->getProperty('jcr:uuid').'/manage/save/tagid='.$iTagID,
 			$this->crSession
 		);
-		$formTag->addInput('tag;string;minlength=1;maxlength=100', '$locale/system/tags/tag');
-		$formTag->addInput('popularity;integer;minvalue=0;maxvalue=1000000000', '$locale/system/tags/popularity');
-		$formTag->addInput('customweight;integer;minvalue=0;maxvalue=1000000000', '$locale/system/tags/customweight');
-		$formTag->addInput('visibility;select;', '$locale/system/tags/visibility');
+		$formTag->addInput('tag;string;minlength=1;maxlength=100', '$locale/sbSystem/tags/tag');
+		$formTag->addInput('popularity;integer;minvalue=0;maxvalue=1000000000', '$locale/sbSystem/tags/popularity');
+		$formTag->addInput('customweight;integer;minvalue=0;maxvalue=1000000000', '$locale/sbSystem/tags/customweight');
+		$formTag->addInput('visibility;select;', '$locale/sbSystem/tags/visibility');
 		$aOptions = array(
 			'VISIBLE' => 'VISIBLE',
 			'HIDDEN' => 'HIDDEN',
 		);
 		$formTag->setOptions('visibility', $aOptions);
-		$formTag->addSubmit('$locale/system/general/actions/save');
+		$formTag->addSubmit('$locale/sbSystem/actions/save');
 		
 		$stmtGetData = $this->crSession->prepareKnown('sbSystem/tagging/tags/getTagData');
 		$stmtGetData->bindValue('tag_id', $iTagID, PDO::PARAM_INT);

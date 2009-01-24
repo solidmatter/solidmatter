@@ -8,12 +8,12 @@
 */
 //------------------------------------------------------------------------------
 
-import('sb_jukebox:sb.pdo.queries');
+import('sbJukebox:sb.jukebox.node');
 
 //------------------------------------------------------------------------------
 /**
 */
-class sbNode_jukebox_track extends sbNode {
+class sbNode_jukebox_track extends sbJukeboxNode {
 	
 	protected function __setQueries() {
 		parent::__setQueries();
@@ -29,13 +29,22 @@ class sbNode_jukebox_track extends sbNode {
 	*/
 	public function getRealPath() {
 		
-		$nodeAlbum = $this->getParent();
-		$nodeJukebox = $nodeAlbum->getParent()->getParent();
-		
+		$nodeJukebox = $this->getParent()->getParent()->getParent();
 		$sRealPath = $nodeJukebox->getProperty('config_realpath').$nodeAlbum->getProperty('info_relpath').$this->getProperty('info_filename');
 		
 		return ($sRealPath);
 		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function modifyForm($formCurrent, $sMode) {
+		$nodeJukebox = $this->getParent()->getParent()->getParent();
+		$this->fillArtists($formCurrent, $nodeJukebox);
 	}
 	
 }

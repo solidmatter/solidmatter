@@ -32,7 +32,7 @@
 				<xsl:with-param name="form" select="$content/sbform[@id='searchArtists']" />
 			</xsl:call-template>
 			<xsl:call-template name="render_alphanum">
-				<xsl:with-param name="url" select="'/-/artists/-/show='"/>
+				<xsl:with-param name="url" select="'/-/artists/-/?show='"/>
 			</xsl:call-template>
 		</div>
 		<div class="content">
@@ -69,7 +69,7 @@
 								<xsl:call-template name="colorize" />
 								<td width="50">
 									<a class="imglink" href="/{@uuid}/details">
-										<img height="50" width="50" src="/{@uuid}/details/getCover/size=50" alt="cover" />
+										<img height="50" width="50" src="/{@uuid}/details/getCover/?size=50" alt="cover" />
 									</a>
 								</td>
 								<td>

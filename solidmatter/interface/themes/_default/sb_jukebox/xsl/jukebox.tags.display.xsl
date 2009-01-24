@@ -77,7 +77,7 @@
 				<xsl:variable name="minitems" select="php:function('min_value', branchtags/tag/@numitems)" />
 				<xsl:for-each select="branchtags/tag">
 					<a>
-						<xsl:attribute name="href">/-/tags/listItems/tagid=<xsl:value-of select="@id" /></xsl:attribute>
+						<xsl:attribute name="href">/-/tags/listItems/?tagid=<xsl:value-of select="@id" /></xsl:attribute>
 						<xsl:attribute name="style">font-size:<xsl:value-of select="round(12 + 10 * (@numitems) div $maxitems)" />px;</xsl:attribute>
 						<xsl:value-of select="." />
 					</a>
@@ -91,7 +91,7 @@
 				<xsl:variable name="minpopularity" select="php:function('min_value', branchtags/tag/@popularity)" />
 				<xsl:for-each select="branchtags/tag">
 					<a>
-						<xsl:attribute name="href">/-/tags/listItems/tagid=<xsl:value-of select="@id" /></xsl:attribute>
+						<xsl:attribute name="href">/-/tags/listItems/?tagid=<xsl:value-of select="@id" /></xsl:attribute>
 						<xsl:attribute name="style">font-size:<xsl:value-of select="round(12 + 10 * (@popularity) div $maxpopularity)" />px;</xsl:attribute>
 						<xsl:value-of select="." />
 					</a>

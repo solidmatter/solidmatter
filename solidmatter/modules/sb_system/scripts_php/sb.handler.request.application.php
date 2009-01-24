@@ -24,44 +24,38 @@ class ApplicationRequestHandler {
 		global $_REQUEST;
 		global $_RESPONSE;
 		
+		$sURI = $_REQUEST->getURI();
+		$aURI = parse_url($sURI);
+		
+		DEBUG('ApplicationHandler: Request Path = '.$sURI, DEBUG::HANDLER);
+		
+		// compute requested node / view / action / (rest of path ignored)
 		$sNodeID = NULL;
 		$sView = NULL;
 		$sAction = NULL;
-		
-		$sPath = $_REQUEST->getPath();
-		
-		DEBUG('ApplicationHandler: Request Path', $sPath, DEBUG::HANDLER);
-		
-		$aStuff = explode('/', $sPath, 5);
-		
-		//var_dumpp($aStuff);
-		if (isset($aStuff[1]) && $aStuff[1] != '-' && $aStuff[1] != '') {
-			$sNodeID = $aStuff[1];
+		$aPath = explode('/', $aURI['path']);
+		if (isset($aPath[1]) && $aPath[1] != '-' && $aPath[1] != '') {
+			$sNodeID = $aPath[1];
 		}
-		if (isset($aStuff[2]) && $aStuff[2] != '-' && $aStuff[2] != '') {
-			$sView = $aStuff[2];
+		if (isset($aPath[2]) && $aPath[2] != '-' && $aPath[2] != '') {
+			$sView = $aPath[2];
 		}
-		if (isset($aStuff[3]) && $aStuff[3] != '-' && $aStuff[3] != '') {
-			$sAction = $aStuff[3];
+		if (isset($aPath[3]) && $aPath[3] != '-' && $aPath[3] != '') {
+			$sAction = $aPath[3];
 		}
-		// extract parameters
-		if (isset($aStuff[4]) && $aStuff[4] != '') {
-			// TODO: rework this hack intended to ignore filenames
-			if (substr_count($sPath, '?')) {
-				$aStuff[4] = substr($aStuff[4], strpos($aStuff[4], '?') + 1);
-			}
-			$aParams = explode('&', $aStuff[4]);
-			foreach ($aParams as $sParam) {
-				if (substr_count($sParam, '=') > 0) {
-					list($sKey, $sValue) = explode('=', $sParam);
-					//var_dump($sKey.'|'.$sValue);
-					$_REQUEST->setParam($sKey, $sValue);
-				} else {
-					$_REQUEST->setParam($sParam, TRUE);
-				}
+		
+		// store request parameters
+		if (isset($aURI['query'])) {
+			$aQuery = array();
+			parse_str($aURI['query'], $aQuery);
+//			var_dumpp($aURI['query']);
+//			var_dumpp($aQuery);
+			foreach ($aQuery as $sParam => $sValue) {
+				$_REQUEST->setParam($sParam, $sValue);
 			}
 		}
 		
+		// process request
 		if ($sNodeID === NULL) {
 			$nodeCurrent = $crSession->getRootNode()->getNode($_REQUEST->getSubject());
 		} else {

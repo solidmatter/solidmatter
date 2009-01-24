@@ -71,15 +71,8 @@ class sbView_jukebox_artist_details extends sbJukeboxView {
 				break;
 				
 			case 'getM3U':
-				$sName = $this->nodeSubject->getProperty('name');
-				$sPlaylist = $this->getPlaylist($this->nodeSubject);
-				headers('m3u', array(
-					'filename' => $sName.'.m3u',
-					'download' => false,
-					'size' => strlen($sPlaylist),
-				));
-				echo $sPlaylist;
-				exit();
+				$this->submitPlaylist();
+				break;
 			
 			default:
 				throw new sbException(__CLASS__.': action not recognized ('.$sAction.')');

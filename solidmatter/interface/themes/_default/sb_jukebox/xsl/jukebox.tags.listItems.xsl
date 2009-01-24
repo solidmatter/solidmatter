@@ -74,11 +74,11 @@
 						<span style="float: right;">
 							<xsl:choose>
 								<xsl:when test="$content/@expand = $expand">
-									<a class="type collapse" href="/-/tags/listItems/tagid={$content/@tagid}"><xsl:value-of select="$locale/sbJukebox/actions/collapse" /></a>
+									<a class="type collapse" href="/-/tags/listItems/?tagid={$content/@tagid}"><xsl:value-of select="$locale/sbJukebox/actions/collapse" /></a>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:if test="count($nodes) > 9">
-										<a class="type expand" href="/-/tags/listItems/tagid={$content/@tagid}&amp;expand={$expand}"><xsl:value-of select="$locale/sbJukebox/actions/expand" /></a>
+										<a class="type expand" href="/-/tags/listItems/?tagid={$content/@tagid}&amp;expand={$expand}"><xsl:value-of select="$locale/sbJukebox/actions/expand" /></a>
 									</xsl:if>
 								</xsl:otherwise>
 							</xsl:choose>

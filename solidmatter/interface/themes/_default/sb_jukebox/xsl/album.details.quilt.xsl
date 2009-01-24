@@ -60,7 +60,7 @@
 				<tbody>
 					<tr class="odd">
 						<td style="padding:10px;" width="160">
-							<a class="imglink" target="_blank" href="/{$master/@uuid}/details/getCover"><img height="150" width="150" src="/{$master/@uuid}/details/getCover/size=150" alt="cover" /></a>
+							<a class="imglink" target="_blank" href="/{$master/@uuid}/details/getCover"><img height="150" width="150" src="/{$master/@uuid}/details/getCover/?size=150" alt="cover" /></a>
 							<a href="/{$master/@uuid}/details">back</a>
 						</td>
 						<td style="padding:10px;">

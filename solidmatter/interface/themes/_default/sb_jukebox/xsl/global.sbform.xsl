@@ -16,9 +16,12 @@
 	/>
 	
 	<xsl:template name="sbform" match="//sbform">
+		<xsl:param name="noLabel" select="false" />
 		<form class="default" action="{@action}" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 			<table class="default" summary="form">
-				<tr><th colspan="2"><label><xsl:value-of select="dyn:evaluate(@label)" /></label></th></tr>
+				<xsl:if test="$noLabel != 'true'">
+					<tr><th colspan="2"><xsl:value-of select="dyn:evaluate(@label)" /></th></tr>
+				</xsl:if>
 				<xsl:if test="@errorlabel"><br/><xsl:value-of select="dyn:evaluate(@errorlabel)" /></xsl:if>
 				<xsl:apply-templates select="*" mode="complete" />
 			</table>
