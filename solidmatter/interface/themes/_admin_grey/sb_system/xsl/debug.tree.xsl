@@ -43,7 +43,7 @@
 		<li>
 			<xsl:value-of select="@level"/>.<xsl:value-of select="@order"/>
 			<xsl:value-of select="concat(' ', @name)"/>
-			(<xsl:value-of select="@left"/>, <xsl:value-of select="@right"/>)
+			(<xsl:value-of select="@mpath"/>)
 			<xsl:if test="sbnode">
 				<ul>
 					<xsl:apply-templates select="sbnode" />

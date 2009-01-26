@@ -503,24 +503,7 @@ $_QUERIES['sbCR/node/getParents/byNodetype'] = '
 	WHERE		h.fk_child = :child_uuid
 		AND		n.fk_nodetype = :nodetype
 ';
-$_QUERIES['sbCR/node/getAncestor'] = '
-	SELECT		h.fk_parent
-	FROM		{TABLE_HIERARCHY} h
-	WHERE		n_left < (
-					SELECT		n_left
-					FROM		{TABLE_HIERARCHY}
-					WHERE		fk_child = :child_uuid
-						AND		b_primary = \'TRUE\'
-				)
-		AND		n_right > (
-					SELECT		n_right
-					FROM		{TABLE_HIERARCHY}
-					WHERE		fk_child = :child_uuid
-						AND		b_primary = \'TRUE\'
-				)
-		AND		h.n_level = :depth + 1
-';
-$_QUERIES['sbCR/node/getAncestors'] = '
+/*$_QUERIES['sbCR/node/getAncestors'] = '
 	SELECT		h.fk_parent
 	FROM		{TABLE_HIERARCHY} h
 	WHERE		n_left < (
@@ -536,23 +519,17 @@ $_QUERIES['sbCR/node/getAncestors'] = '
 						AND		b_primary = \'TRUE\'
 				)
 	ORDER BY	h.n_left DESC
-';
-$_QUERIES['sbCR/node/getAncestor/byUUID'] = '
+';*/
+$_QUERIES['sbCR/node/checkDescendant'] = '
 	SELECT		h.fk_parent
 	FROM		{TABLE_HIERARCHY} h
-	WHERE		h.n_left <= (
-					SELECT		n_left
+	WHERE		h.fk_parent = :parent_uuid
+		AND		h.s_mpath LIKE (
+					SELECT		s_mpath
 					FROM		{TABLE_HIERARCHY}
 					WHERE		fk_child = :child_uuid
 						AND		b_primary = \'TRUE\'
 				)
-		AND		h.n_right >= (
-					SELECT		n_right
-					FROM		{TABLE_HIERARCHY}
-					WHERE		fk_child = :child_uuid
-						AND		b_primary = \'TRUE\'
-				)
-		AND		h.fk_parent = :parent_uuid
 ';
 // save/delete -----------------------------------------------------------------
 $_QUERIES['sbCR/node/save/new'] = '
@@ -607,8 +584,7 @@ $_QUERIES['sbCR/node/delete/forGood'] = '
 ';
 // linking ---------------------------------------------------------------------
 $_QUERIES['sbCR/node/addLink/getBasicInfo'] = '
-	SELECT		n_right,
-				n_level,
+	SELECT		n_level,
 				(SELECT	COUNT(*)
 					FROM	{TABLE_HIERARCHY}
 					WHERE	fk_parent = :parent_uuid
@@ -627,17 +603,7 @@ $_QUERIES['sbCR/node/addLink/getBasicInfo'] = '
 	FROM		{TABLE_HIERARCHY}
 	WHERE		fk_child = :parent_uuid
 		AND		b_primary = \'TRUE\'
-'; // uses getParent
-$_QUERIES['sbCR/node/addLink/updateRight'] = '
-	UPDATE		{TABLE_HIERARCHY}
-	SET			n_right = n_right + 2
-	WHERE		n_right >= :right
-'; // uses temp_right
-$_QUERIES['sbCR/node/addLink/updateLeft'] = '
-	UPDATE		{TABLE_HIERARCHY}
-	SET			n_left = n_left + 2
-	WHERE		n_left > :right
-'; // uses getAncestor ?
+';
 $_QUERIES['sbCR/node/addLink/insertNode'] = '
 	INSERT INTO	{TABLE_HIERARCHY}
 				(
@@ -645,49 +611,34 @@ $_QUERIES['sbCR/node/addLink/insertNode'] = '
 					fk_parent,
 					b_primary,
 					n_order,
-					n_left,
-					n_right,
-					n_level
+					n_level,
+					s_mpath
 				) VALUES (
 					:child_uuid,
 					:parent_uuid,
 					:is_primary,
 					:order,
-					:right,
-					:right+1,
-					:level+1
+					:level+1,
+					:mpath
 				)
 ';
 $_QUERIES['sbCR/node/hierarchy/getInfo'] = '
-	SELECT		n_left,
-				n_right,
-				n_level,
+	SELECT		n_level,
 				n_order,
 				b_primary
 	FROM		{TABLE_HIERARCHY}
 	WHERE		fk_parent = :parent_uuid
 		AND		fk_child = :child_uuid
 ';
-/*$_QUERIES['sbCR/node/hierarchy/updateLeft'] = '
-	UPDATE		{TABLE_HIERARCHY}
-	SET			n_left = n_left + :offset
-	WHERE		n_left > :boundary
-';*/
 $_QUERIES['sbCR/node/removeDescendantLinks'] = '
 	DELETE FROM	{TABLE_HIERARCHY}
-	WHERE		n_left > :left
+	WHERE		*****************n_left > :left
 		AND		n_right < :right;
 ';
 $_QUERIES['sbCR/node/removeLink'] = '
 	DELETE FROM	{TABLE_HIERARCHY}
 	WHERE		fk_parent = :parent_uuid
 		AND		fk_child = :child_uuid;
-';
-$_QUERIES['sbCR/node/removeLink/shiftLeft'] = '
-	UPDATE		{TABLE_HIERARCHY}
-	SET			n_left = n_left - :distance,
-				n_right = n_right - :distance
-		WHERE	n_left > :left
 ';
 $_QUERIES['sbCR/node/getLinkStatus'] = '
 	SELECT		h.b_primary
@@ -713,65 +664,46 @@ $_QUERIES['sbCR/node/setLinkStatus/newPrimary'] = '
 					LIMIT		0, 1
 				)
 ';
+$_QUERIES['sbCR/node/hierarchy/moveSiblings'] = '
+	UPDATE		{TABLE_HIERARCHY} h
+	SET			h.n_order = h.n_order + :offset
+	WHERE		h.fk_parent = :parent_uuid
+		AND		h.n_order >= :low_position
+		AND		h.n_order <= :high_position
+';
 $_QUERIES['sbCR/node/orderBefore/getInfo'] = '
-	SELECT		h.n_left,
-				h.n_right,
-				h.n_order,
-				h.n_level
+	SELECT		h.n_order,
+				n.uuid
 	FROM		{TABLE_HIERARCHY} h
 	INNER JOIN	{TABLE_NODES} n
 		ON		h.fk_child = n.uuid
-	WHERE		n.s_name = :child_name
-		AND		h.fk_parent = :parent_uuid
+	WHERE		h.fk_parent = :parent_uuid
+		AND		n.s_name = :child_name
 ';
-$_QUERIES['sbCR/node/orderBefore/setLock'] = '
-	UPDATE		{TABLE_HIERARCHY}
-	SET			b_positionlocked = :state
-	WHERE		n_left >= :left
-		AND		n_right <= :right
-';
-$_QUERIES['sbCR/node/orderBefore/writeNestedSet'] = '
+$_QUERIES['sbCR/node/orderBefore/writeOrder/node'] = '
 	UPDATE		{TABLE_HIERARCHY} h
-	SET			h.n_left = h.n_left + :offset_nestedset,
-				h.n_right = h.n_right + :offset_nestedset
-	WHERE		h.n_left >= :left
-		AND		h.n_right <= :right
-		AND		h.b_positionlocked = :state
-';
-$_QUERIES['sbCR/node/orderBefore/writeOrder'] = '
-	UPDATE		{TABLE_HIERARCHY} h
-	SET			h.n_order = h.n_order + :offset_order
-	WHERE		h.n_left >= :left
-		AND		h.n_right <= :right
-		AND		h.b_positionlocked = :state
+	SET			h.n_order = :target_position
+	WHERE		h.fk_child = :child_uuid
 		AND		h.fk_parent = :parent_uuid
 ';
 // move branch
 $_QUERIES['sbCR/node/moveBranch/getSourceInfo'] = '
-	SELECT		n_left,
-				n_right,
-				n_order,
+	SELECT		n_order,
 				n_level,
 				b_primary,
-				(SELECT		n_left
+				s_mpath,
+				(SELECT		MAX(n_order)
 					FROM	{TABLE_HIERARCHY}
-					WHERE	fk_child = :oldparent_uuid
-						AND	b_primary = \'TRUE\'
-				) as n_parentleft,
-				(SELECT		n_right
-					FROM	{TABLE_HIERARCHY}
-					WHERE	fk_child = :oldparent_uuid
-						AND	b_primary = \'TRUE\'
-				) as n_parentright
+					WHERE	fk_parent = :oldparent_uuid
+				) AS n_maxorder
 	FROM		{TABLE_HIERARCHY} h
 	WHERE		fk_child = :subject_uuid
 		AND		fk_parent = :oldparent_uuid
 ';
 $_QUERIES['sbCR/node/moveBranch/getDestinationInfo'] = '
-	SELECT		n_left,
-				n_right,
-				n_order,
+	SELECT		n_order,
 				n_level,
+				s_mpath,
 				(SELECT		COUNT(*)
 					FROM	{TABLE_HIERARCHY}
 					WHERE	fk_parent = :newparent_uuid
@@ -780,81 +712,24 @@ $_QUERIES['sbCR/node/moveBranch/getDestinationInfo'] = '
 	WHERE		fk_child = :newparent_uuid
 		AND		b_primary = \'TRUE\'
 ';
-$_QUERIES['sbCR/node/moveBranch/setLock'] = '
-	UPDATE		{TABLE_HIERARCHY}
-	SET			b_positionlocked = \'TRUE\'
-	WHERE		n_left >= :left
-		AND		n_right <= :right
-';
-$_QUERIES['sbCR/node/moveBranch/removeLock'] = '
-	UPDATE		{TABLE_HIERARCHY}
-	SET			b_positionlocked = \'FALSE\'
-	WHERE		b_positionlocked = \'TRUE\'
-';
 $_QUERIES['sbCR/node/moveBranch/updateBranch'] = '
 	UPDATE		{TABLE_HIERARCHY} h
-	SET			h.n_left = h.n_left + :offset_nestedset,
-				h.n_right = h.n_right + :offset_nestedset,
-				h.n_level = h.n_level + :offset_level
-	WHERE		h.b_positionlocked = \'TRUE\'
+	SET			h.n_level = h.n_level + :offset_level,
+				h.s_mpath = REPLACE(h.s_mpath, :old_mpath, :new_mpath)
+				/*CONCAT(
+					SUBSTRING(:new_mpath, ),
+					SUBSTRING(h.s_mpath, 0, STRLEN(:old_mpath))
+				)*/
+	WHERE		h.s_mpath LIKE CONCAT(:old_mpath, \'%\')
 ';
 $_QUERIES['sbCR/node/moveBranch/updateLink'] = '
 	UPDATE		{TABLE_HIERARCHY} h
 	SET			h.fk_parent = :newparent_uuid,
-				h.n_order = :order
+				h.n_order = :order,
+				h.s_mpath = :mpath
 	WHERE		h.fk_parent = :oldparent_uuid
 		AND		h.fk_child = :subject_uuid
 ';
-$_QUERIES['sbCR/node/moveBranch/shiftOrder'] = '
-	UPDATE		{TABLE_HIERARCHY} h
-	SET			n_order = n_order + :offset
-	WHERE		fk_parent = :parent_uuid
-		AND		n_order >= :boundary
-		AND		b_positionlocked = \'FALSE\'
-';
-$_QUERIES['sbCR/node/moveBranch/updateLeft'] = '
-	UPDATE		{TABLE_HIERARCHY} h
-	SET			n_left = n_left + :offset
-	WHERE		n_left > :boundary_left
-		AND		n_left < :boundary_right
-		AND		b_positionlocked = \'FALSE\'
-';
-$_QUERIES['sbCR/node/moveBranch/updateRight'] = '
-	UPDATE		{TABLE_HIERARCHY} h
-	SET			n_right = n_right + :offset
-	WHERE		n_right > :boundary_left
-		AND		n_right < :boundary_right
-		AND		b_positionlocked = \'FALSE\'
-';
-/*$_QUERIES['sbCR/node/moveBranch/shiftBoth/leftBoundary'] = '
-	UPDATE		{TABLE_HIERARCHY} h
-	SET			n_right = n_right + :offset,
-				n_left = n_left + :offset
-	WHERE		n_left >= :boundary
-		AND		b_positionlocked = \'FALSE\'
-';
-$_QUERIES['sbCR/node/moveBranch/shiftBoth/rightBoundary'] = '
-	UPDATE		{TABLE_HIERARCHY} h
-	SET			n_right = n_right + :offset,
-				n_left = n_left + :offset
-	WHERE		n_left <= :boundary
-		AND		b_positionlocked = \'FALSE\'
-';
-$_QUERIES['sbCR/node/moveBranch/shiftBoth/bothBoundaries'] = '
-	UPDATE		{TABLE_HIERARCHY} h
-	SET			n_right = n_right + :offset,
-				n_left = n_left + :offset
-	WHERE		n_left > :boundaryleft
-		AND		n_left < :boundaryright
-		AND		b_positionlocked = \'FALSE\'
-';
-$_QUERIES['sbCR/node/moveBranch/updateNewParent'] = '
-	UPDATE		{TABLE_HIERARCHY} h
-	SET			n_right = n_right + :offsetleft,
-				n_left = n_left + :offsetright
-	WHERE		fk_child = :newparent_uuid
-		AND		b_primary = \'TRUE\'
-';*/
 
 // references & softlinks ------------------------------------------------------
 $_QUERIES['sbCR/node/getReferences'] = '
@@ -1050,7 +925,7 @@ $_QUERIES['sbCR/test/loadChildren'] = '
 	WHERE		fk_parent = :fk_parent
 	ORDER BY	n_order
 ';
-$_QUERIES['sbCR/test/setCoordinates'] = '
+$_QUERIES['sbCR/test/setCoordinates/nestedSets'] = '
 	INSERT INTO	{TABLE_HIERARCHYMEM}
 				(
 					n_left,

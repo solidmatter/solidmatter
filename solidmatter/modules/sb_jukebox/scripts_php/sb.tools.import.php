@@ -330,8 +330,9 @@ class JukeboxToolkit {
 		
 		// begin import
 		$sDirName = iconv($dirAlbum->getEncoding(), 'UTF-8', $dirAlbum->getName());
-		echo ('<h1 id="album_'.md5($dirAlbum->getName()).'">'.$sDirName.'</h1><br>');
-		
+//		$sHash = 'album_'.md5($dirAlbum->getName());
+//		echo ('<h1 id="album_'.$sHash.'"><a href="javascript:toggle(\''.$sHash.'\')">'.$sDirName.'</a></h1><div id="album_'.$sHash.'" style="display: none;">');
+//		
 		// check if directory is marked to be skipped
 		if (substr_count($sDirName, '[SKIP]') > 0) {
 			throw new ImportException('[skipped] - directory is marked to be skipped', E_WARNING);
@@ -452,7 +453,7 @@ class JukeboxToolkit {
 		$aAlbumProps['info_relpath'] = iconv($dirAlbum->getEncoding(), 'UTF-8', $dirAlbum->getRelPath($this->nodeJukebox->getProperty('config_sourcepath')));
 		
 		$aAlbumInfo['properties'] = $aAlbumProps;
-		//var_dumpp($aAlbumInfo); die();
+		
 		return ($aAlbumInfo);
 		
 	}

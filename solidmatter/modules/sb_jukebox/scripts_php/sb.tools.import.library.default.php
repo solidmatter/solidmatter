@@ -8,11 +8,11 @@
 */
 //------------------------------------------------------------------------------
 
-import('sb.system.errors');
-import('sb_system:external:getid3/getid3');
-import('sb.tools.filesystem.directory');
-import('sb.tools.strings.conversion');
-import('sb_jukebox:sb.tools.import');
+import('sbSystem:sb.system.errors');
+import('sbSystem:external:getid3/getid3');
+import('sbSystem:sb.tools.filesystem.directory');
+import('sbSystem:sb.tools.strings.conversion');
+import('sbJukebox:sb.tools.import');
 
 //------------------------------------------------------------------------------
 /**
@@ -23,7 +23,7 @@ class DefaultJukeboxImporter {
 	protected $jbToolkit = NULL;
 	
 	protected $bVerbose = TRUE;
-	protected $iMaxAlbums = 1000;
+	protected $iMaxAlbums = 10000;
 	protected $iImportedAlbums = 0;
 	
 	// config
@@ -96,7 +96,12 @@ class DefaultJukeboxImporter {
 			h1 {
 				font-size: 1.2em;
 				margin-bottom: 5px;
-				padding: 15px 0 0 0;
+				padding: 5px 0 0 0;
+			}
+			h1 a {
+				text-decoration: none;
+				display: block;
+				color: black;
 			}
 			p.bad {
 				font-weight: bold;
@@ -117,17 +122,74 @@ class DefaultJukeboxImporter {
 			span.note {
 				color: #999;
 			}
+			h1.category {
+				background-color: #EEEECC;
+				padding: 5px;
+				margin-bottom: 0px;
+			}
+			div.albums {
+				background-color: #F8F8D8;
+				padding: 5px;
+				margin: 0;
+				display: none;
+			}
+			h1.album {
+				
+			}
+			div.albuminfo {
+				backgropund-color: #EEE;
+				padding: 5px;
+			}
+			
 			</style>
+			<script language="javascript" type="text/javascript">
+				
+				function toggle(sID) {
+					var oElement = document.getElementById(sID);
+					if (oElement.style.display == "none") {
+						oElement.style.display = "block";
+					} else {
+						oElement.style.display = "none";
+					}
+				}
+
+				function addItemToCategory(sCategory, sItemID) {
+					var oContainer = document.getElementById("albums_" + sCategory);
+					var oCounter = document.getElementById("counter_" + sCategory);
+					var oAlbum = document.getElementById("album_" + sItemID);
+					oContainer.appendChild(oAlbum);
+					//alert(oCounter.nodeValue);
+					var iCurrent = parseInt(oCounter.firstChild.nodeValue);
+					iCurrent++;
+					oCounter.firstChild.nodeValue = iCurrent.toString();
+				}
+			
+			</script>
 			</head>
 			<body>
+			<p>starting import...</p>
+			<h1 class="category"><a href="javascript:toggle(\'albums_good\')">Good: <span id="counter_good">0</span></a></h1>
+			<div id="albums_good" class="albums"></div>
+			<h1 class="category"><a href="javascript:toggle(\'albums_warning\')">Warning: <span id="counter_warning">0</span></a></h1>
+			<div id="albums_warning" class="albums"></div>
+			<h1 class="category"><a href="javascript:toggle(\'albums_error\')">Error: <span id="counter_error">0</span></a></h1>
+			<div id="albums_error" class="albums"></div>
+			
 		');
 		
 		// get all albums in import dir and cycle through
 		$dirAlbums = new sbDirectory($this->nodeJukebox->getProperty('config_sourcepath'));
 		foreach ($dirAlbums->getDirectories(TRUE) as $dirAlbum) {
 			
+			$sState = 'good';
+			$sDirName = iconv($dirAlbum->getEncoding(), 'UTF-8', $dirAlbum->getName());
+			$sAlbumHash = md5($dirAlbum->getName());
+			$sAlbumContainerID = 'album_'.$sAlbumHash;
+			$sAlbumInfoID = 'info_'.$sAlbumHash;
+			echo ('<div id="'.$sAlbumContainerID.'"><h1><a href="javascript:toggle(\''.$sAlbumInfoID.'\')">'.$sDirName.'</a></h1><div id="'.$sAlbumInfoID.'">');
+			
 			if ($this->iImportedAlbums > $this->iMaxAlbums) {
-				throw new ImportException('threshold of '.$this->iMaxAlbums.' reached', E_WARNING);	
+				throw new ImportException('threshold of '.$this->iMaxAlbums.' reached', E_WARNING);
 			}
 			
 			try {
@@ -142,18 +204,11 @@ class DefaultJukeboxImporter {
 						
 						$nodeArtist = $aResult['nodeAlbumArtist'];
 						$nodeAlbum = $aResult['nodeAlbum'];
-//						var_dumpp('startImport1:'.$nodeAlbum->getProperty('sbcr:inheritrights'));
 						
 						if (!$nodeArtist->isNew()) {
 							$nodeArtist->save();
-//							var_dumpp('startImport2:'.$nodeAlbum->getProperty('sbcr:inheritrights'));
 						}
 						$this->nodeJukebox->save();
-						
-//						var_dumpp('startImport3:'.$nodeAlbum->getProperty('sbcr:inheritrights'));
-		
-						//var_dumpp($nodeAlbum->getName().'-'.$nodeAlbum->getProperty('sbcr:inheritrights'));
-						//var_dumpp($nodeAlbum->getProperties());
 						
 						$aLibraryInfo['album_uuid'] = $nodeAlbum->getProperty('jcr:uuid');
 						$aLibraryInfo['state'] = 'imported';
@@ -175,6 +230,7 @@ class DefaultJukeboxImporter {
 				
 			} catch (ImportException $e) {
 				
+				// FIXME: incomplete albums (with errors) are saved regardless of exceptions!
 				$this->jbToolkit->dumpArtists();
 				$this->nodeJukebox->refresh(FALSE);
 				
@@ -185,19 +241,21 @@ class DefaultJukeboxImporter {
 				
 				if ($e->getCode() == E_WARNING) {
 					$this->echoInfo('info', $e->getMessage());
+					$sState = 'warning';
 				} else {
 					$this->echoInfo('bad', $e->getMessage());
+					$sState = 'error';
 				}
 				
 			}
 			
-			echo '<hr>';
+			echo '</div></div>';
 			
-			echo '<script language="javascript">window.location.hash = "album_'.md5($dirAlbum->getName()).'";</script>';
+			echo '<script language="javascript">toggle(\''.$sAlbumInfoID.'\'); addItemToCategory("'.$sState.'", "'.$sAlbumHash.'");</script>';
 			
 		}
 		
-		echo '</body></html>';
+		echo '<p>Import ended</p></body></html>';
 		
 	}
 	

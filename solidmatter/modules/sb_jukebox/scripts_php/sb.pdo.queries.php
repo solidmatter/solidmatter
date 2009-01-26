@@ -19,21 +19,6 @@ $_QUERIES['MAPPING']['{TABLE_JB_BLACKLIST}']		= '{PREFIX_WORKSPACE}_jukebox_blac
 $_QUERIES['MAPPING']['{TABLE_JB_NOWPLAYING}']		= '{PREFIX_WORKSPACE}_jukebox_nowplaying';
 $_QUERIES['MAPPING']['{TABLE_JB_HISTORY}']			= '{PREFIX_WORKSPACE}_jukebox_history';
 
-$sHierarchyComponent = '
-	INNER JOIN	{TABLE_HIERARCHY} h
-		ON		n.uuid = h.fk_child
-	WHERE		h.n_left > (SELECT n_left
-					FROM	{TABLE_HIERARCHY}
-					WHERE	fk_child = :jukebox_uuid
-						AND	b_primary = \'TRUE\'
-				)
-		AND		h.n_right < (SELECT n_right
-					FROM	{TABLE_HIERARCHY}
-					WHERE	fk_child = :jukebox_uuid
-						AND	b_primary = \'TRUE\'
-				)
-';
-
 //------------------------------------------------------------------------------
 // nowplaying / history
 //------------------------------------------------------------------------------
@@ -88,6 +73,39 @@ $_QUERIES['sbJukebox/history/set'] = '
 					NOW()
 				)
 ';
+
+//------------------------------------------------------------------------------
+// charts
+//------------------------------------------------------------------------------
+
+$_QUERIES['sbJukebox/jukebox/getVoters'] = '
+	SELECT		n.uuid,
+				n.s_label AS label,
+				n.fk_nodetype
+	FROM		{TABLE_NODES} n
+	INNER JOIN	{TABLE_VOTES} v
+		ON		n.uuid = v.fk_user
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		v.fk_subject = h.fk_child
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
+	ORDER BY	n.s_label
+';
+$_QUERIES['sbJukebox/jukebox/various/getTop'] = '
+	SELECT		n.uuid,
+				n.s_label AS label,
+				n.s_name AS name,
+				v.n_vote AS vote
+	FROM		{TABLE_NODES} n
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	INNER JOIN	{TABLE_VOTES} v
+		ON		n.uuid = v.fk_subject
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
+		AND		n.fk_nodetype = :nodetype
+		AND		v.fk_user = :user_uuid
+	ORDER BY	n_vote DESC
+	LIMIT		0, :limit
+';
 $_QUERIES['sbJukebox/history/getTop'] = '
 	SELECT		n.uuid,
 				n.s_label AS label,
@@ -96,13 +114,14 @@ $_QUERIES['sbJukebox/history/getTop'] = '
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_JB_HISTORY} hi
 		ON		n.uuid = hi.fk_track
-				'.$sHierarchyComponent.'
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(hi.dt_played) < 60*60*24*7
 	GROUP BY	hi.fk_track
 	ORDER BY	COUNT(*) DESC
 	LIMIT		0, :limit
 ';
-
 
 //------------------------------------------------------------------------------
 // jukebox
@@ -110,38 +129,33 @@ $_QUERIES['sbJukebox/history/getTop'] = '
 
 $_QUERIES['sbJukebox/jukebox/gatherInfo'] = '
 	SELECT		(SELECT COUNT(*)
-					FROM		{TABLE_HIERARCHY} h1
+					FROM		{TABLE_HIERARCHY} h
 					INNER JOIN	{TABLE_NODES} n
-						ON		h1.fk_child = n.uuid
-					WHERE		h1.n_left > h.n_left
-						AND		h1.n_right < h.n_right
-						AND		n.fk_nodetype = \'sbJukebox:Album\'
+						ON		h.fk_child = n.uuid
+					WHERE		n.fk_nodetype = \'sbJukebox:Album\'
+						AND		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 				) AS n_numalbums,
 				(SELECT COUNT(*)
-					FROM		{TABLE_HIERARCHY} h1
+					FROM		{TABLE_HIERARCHY} h
 					INNER JOIN	{TABLE_NODES} n
-						ON		h1.fk_child = n.uuid
-					WHERE		fk_parent = :jukebox_uuid
-						AND		n.fk_nodetype = \'sbJukebox:Artist\'
+						ON		h.fk_child = n.uuid
+					WHERE		n.fk_nodetype = \'sbJukebox:Artist\'
+						AND		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 				) AS n_numartists,
 				(SELECT COUNT(*)
-					FROM		{TABLE_HIERARCHY} h1
+					FROM		{TABLE_HIERARCHY} h
 					INNER JOIN	{TABLE_NODES} n
-						ON		h1.fk_child = n.uuid
-					WHERE		h1.n_left > h.n_left
-						AND		h1.n_right < h.n_right
-						AND		n.fk_nodetype = \'sbJukebox:Track\'
+						ON		h.fk_child = n.uuid
+					WHERE		n.fk_nodetype = \'sbJukebox:Track\'
+						AND		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 				) AS n_numtracks,
 				(SELECT COUNT(*)
-					FROM		{TABLE_HIERARCHY} h1
+					FROM		{TABLE_HIERARCHY} h
 					INNER JOIN	{TABLE_NODES} n
-						ON		h1.fk_child = n.uuid
-					WHERE		h1.n_left > h.n_left
-						AND		h1.n_right < h.n_right
-						AND		n.fk_nodetype = \'sbJukebox:Playlist\'
+						ON		h.fk_child = n.uuid
+					WHERE		n.fk_nodetype = \'sbJukebox:Playlist\'
+						AND		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 				) AS n_numplaylists
-	FROM		{TABLE_HIERARCHY} h
-	WHERE		h.fk_child = :jukebox_uuid
 ';
 $_QUERIES['sbJukebox/jukebox/search/anything/byLabel'] = '
 	SELECT		n.uuid,
@@ -151,7 +165,9 @@ $_QUERIES['sbJukebox/jukebox/search/anything/byLabel'] = '
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
 		ON		n.fk_nodetype = nt.s_type
-				'.$sHierarchyComponent.'
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		n.s_label LIKE :searchstring
 	ORDER BY	n.fk_nodetype,
 				n.s_label
@@ -167,7 +183,9 @@ $_QUERIES['sbJukebox/jukebox/search/various/byLabel'] = '
 						AND	v.fk_user = :user_uuid
 				) AS vote
 	FROM		{TABLE_NODES} n
-				'.$sHierarchyComponent.'
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		n.fk_nodetype = :nodetype
 		AND		n.s_label LIKE :searchstring
 	ORDER BY	n.s_label
@@ -183,7 +201,9 @@ $_QUERIES['sbJukebox/jukebox/search/various/numeric'] = '
 						AND	v.fk_user = :user_uuid
 				) AS vote
 	FROM		{TABLE_NODES} n
-				'.$sHierarchyComponent.'
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		n.fk_nodetype = :nodetype
 		AND		n.s_label REGEXP \'^[0-9]\'
 	ORDER BY	n.s_label
@@ -203,7 +223,9 @@ $_QUERIES['sbJukebox/jukebox/search/albums/byLabel'] = '
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_JB_ALBUMS} a
 		ON		n.uuid = a.uuid
-				'.$sHierarchyComponent.'
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		n.s_label LIKE :searchstring
 	ORDER BY	n.s_label
 ';
@@ -222,27 +244,36 @@ $_QUERIES['sbJukebox/jukebox/search/albums/numeric'] = '
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_JB_ALBUMS} a
 		ON		n.uuid = a.uuid
-				'.$sHierarchyComponent.'
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		n.s_label REGEXP \'^[0-9]\'
 	ORDER BY	n.s_label
 ';
+// NOTE: optimized via RAND() on well-indexed column (see example below or http://www.paperplanes.de/archives/2008/4/24/mysql_nonos_order_by_rand/)
+//SELECT USERS.* FROM (SELECT ID FROM USERS WHERE IS_ACTIVE = 1
+//ORDER BY RAND() LIMIT 20)  
+//AS RANDOM_USERS JOIN USERS ON USERS.ID = RANDOM_USERS.ID
 $_QUERIES['sbJukebox/jukebox/albums/getRandom'] = '
 	SELECT		n.uuid,
 				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
-				a.b_coverexists,
 				(SELECT 	n_vote 
 					FROM	{TABLE_VOTES} v
 					WHERE	v.fk_subject = n.uuid
 						AND	v.fk_user = :user_uuid
 				) AS vote
-	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_JB_ALBUMS} a
-		ON		n.uuid = a.uuid
-				'.$sHierarchyComponent.'
-	ORDER BY	RAND()
-	LIMIT		0, :limit
+	FROM		(SELECT			uuid
+					FROM		{TABLE_JB_ALBUMS} a
+					INNER JOIN	{TABLE_HIERARCHY} h
+						ON		a.uuid = h.fk_child
+					WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
+					ORDER BY 	RAND() 
+					LIMIT :limit
+				) as rand
+	INNER JOIN	{TABLE_NODES} n
+		ON		rand.uuid = n.uuid
 ';
 $_QUERIES['sbJukebox/jukebox/albums/getLatest'] = '
 	SELECT		n.uuid,
@@ -258,7 +289,9 @@ $_QUERIES['sbJukebox/jukebox/albums/getLatest'] = '
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_JB_ALBUMS} a
 		ON		n.uuid = a.uuid
-				'.$sHierarchyComponent.'
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		a.uuid = h.fk_child
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		n.fk_nodetype = :nodetype
 	ORDER BY	n.dt_createdat DESC
 	LIMIT		0, :limit
@@ -271,10 +304,89 @@ $_QUERIES['sbJukebox/jukebox/albums/getAll'] = '
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_JB_ALBUMS} a
 		ON		n.uuid = a.uuid
-				'.$sHierarchyComponent.'
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		a.uuid = h.fk_child
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 	ORDER BY	n.s_label ASC
 ';
-
+$_QUERIES['sbJukebox/jukebox/artists/getAll'] = '
+	SELECT		n.uuid,
+				n.s_label AS label
+	FROM		{TABLE_NODES} n
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	WHERE		h.fk_parent = :jukebox_uuid
+		AND		n.fk_nodetype = \'sbJukebox:Artist\'
+	ORDER BY	n.s_label ASC
+';
+$_QUERIES['sbJukebox/jukebox/artists/getRandom'] = '
+	SELECT		n.uuid,
+				n.fk_nodetype as nodetype,
+				n.s_label AS label,
+				n.s_name AS name,
+				(SELECT			v.n_vote
+					FROM		{TABLE_VOTES} v
+					WHERE		v.fk_user = :user_uuid
+						AND		v.fk_subject = n.uuid
+				) AS vote
+	FROM		(SELECT 		n1.uuid
+					FROM		{TABLE_NODES} n1
+					INNER JOIN	{TABLE_HIERARCHY} h1
+						ON		n1.uuid = h1.fk_child
+					WHERE		n1.fk_nodetype = :nodetype
+						AND		h1.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
+					ORDER BY	RAND() LIMIT :limit
+				) as rand
+	INNER JOIN	{TABLE_NODES} n
+		ON		rand.uuid = n.uuid
+';
+/*$_QUERIES['sbJukebox/jukebox/artists/getRandom'] = '
+	SELECT		n.uuid,
+				n.fk_nodetype as nodetype,
+				n.s_label AS label,
+				n.s_name AS name,
+				v.n_vote AS vote
+				
+	FROM		(SELECT 		n1.uuid
+					FROM		{TABLE_NODES} n1
+					INNER JOIN	{TABLE_HIERARCHY} h1
+						ON		n1.uuid = h1.fk_child
+					WHERE		n1.fk_nodetype = :nodetype
+						AND		h1.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
+					ORDER BY	RAND() LIMIT :limit
+				) as rand
+	INNER JOIN	{TABLE_NODES} n
+		ON		rand.uuid = n.uuid
+	LEFT JOIN	{TABLE_VOTES} v
+		ON		n.uuid = v.fk_subject
+		AND		v.fk_user = :user_uuid
+	
+';
+/*$_QUERIES['sbJukebox/jukebox/artists/getRandom'] = '
+	SELECT		n.uuid,
+				n.fk_nodetype as nodetype,
+				n.s_label AS label,
+				n.s_name AS name,
+				(SELECT			v.n_vote
+					FROM		{TABLE_VOTES} v
+					WHERE		v.fk_user = :user_uuid
+						AND		v.fk_subject = n.uuid
+				) AS vote
+	FROM		(
+					SELECT 		fk_child as uuid
+					FROM		(
+									SELECT 		n1.uuid
+									FROM 		{TABLE_NODES} n1
+									WHERE		n1.fk_nodetype = :nodetype
+								) as filtered
+					INNER JOIN	{TABLE_HIERARCHY} h
+						ON		filtered.uuid = h.fk_child
+					WHERE		s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
+					ORDER BY	RAND() LIMIT :limit
+				) as rand
+	INNER JOIN	{TABLE_NODES} n
+		ON		rand.uuid = n.uuid
+';*/
 //------------------------------------------------------------------------------
 // artist
 //------------------------------------------------------------------------------
@@ -294,16 +406,7 @@ $_QUERIES['sbJukebox/artist/getTracks/differentAlbums'] = '
 		ON		n2.uuid = h.fk_parent
 	INNER JOIN	{TABLE_JB_TRACKS} t
 		ON		n.uuid = t.uuid
-	WHERE		h.n_left > (SELECT n_left
-					FROM	{TABLE_HIERARCHY}
-					WHERE	fk_child = :jukebox_uuid
-						AND	b_primary = \'TRUE\'
-				)
-		AND		h.n_right < (SELECT n_right
-					FROM	{TABLE_HIERARCHY}
-					WHERE	fk_child = :jukebox_uuid
-						AND	b_primary = \'TRUE\'
-				)
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		jt.fk_artist = :artist_uuid
 		AND		n2.fk_nodetype = \'sbJukebox:Album\'
 		AND		h.fk_parent NOT IN (
@@ -375,7 +478,7 @@ $_QUERIES['sbJukebox/album/quilt/findCover'] = '
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_JB_ALBUMS} a
 		ON		n.uuid = a.uuid
-				'.$sHierarchyComponent.'
+	WHERE		h.s_mpath LIKE :jukebox_mpath
 	ORDER BY 	ROUND(ABS(a.n_coverlightness - :lightness) / 4) + 
 				ROUND(ABS(a.n_coverhue - :hue) / 8) + 
 				ROUND(ABS(a.n_coversaturation - :saturation) / 12),
@@ -448,81 +551,6 @@ $_QUERIES['sbJukebox/track/properties/save/auxiliary'] = '
 				n_playtime = :enc_playtime,
 				s_mode = :enc_mode,
 				n_bitrate = :enc_bitrate
-';
-
-//------------------------------------------------------------------------------
-// various
-//------------------------------------------------------------------------------
-
-$_QUERIES['sbJukebox/jukebox/various/getRandom'] = '
-	SELECT		n.uuid,
-				n.fk_nodetype as nodetype,
-				n.s_label AS label,
-				n.s_name AS name,
-				(SELECT		v.n_vote 
-					FROM	{TABLE_VOTES} v
-					WHERE	v.fk_user = :user_uuid
-						AND	v.fk_subject = n.uuid
-				) AS vote
-	FROM		{TABLE_NODES} n
-				'.$sHierarchyComponent.'
-		AND		n.fk_nodetype = :nodetype
-	ORDER BY	RAND()
-	LIMIT		0, :limit
-';
-/*$_QUERIES['sbJukebox/jukebox/various/getRandom'] = '
-	SELECT		n.uuid,
-				n.s_label AS label,
-				n.s_name AS name,
-				v.n_vote AS vote
-	FROM		{TABLE_NODES} n
-	LEFT JOIN	{TABLE_VOTES} v
-		ON		n.uuid = v.fk_subject
-				'.$sHierarchyComponent.'
-		AND		n.fk_nodetype = :nodetype
-		AND		v.fk_user = :user_uuid
-	ORDER BY	RAND()
-	LIMIT		0, :limit
-';*/
-$_QUERIES['sbJukebox/jukebox/various/getTop'] = '
-	SELECT		n.uuid,
-				n.s_label AS label,
-				n.s_name AS name,
-				v.n_vote AS vote
-	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_VOTES} v
-		ON		n.uuid = v.fk_subject
-				'.$sHierarchyComponent.'
-		AND		n.fk_nodetype = :nodetype
-		AND		v.fk_user = :user_uuid
-	ORDER BY	n_vote DESC
-	LIMIT		0, :limit
-';
-
-//------------------------------------------------------------------------------
-// temp?
-//------------------------------------------------------------------------------
-
-$_QUERIES['sbJukebox/jukebox/getVoters'] = '
-	SELECT		n.uuid,
-				n.s_label AS label,
-				n.fk_nodetype
-	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_VOTES} v
-		ON		n.uuid = v.fk_user
-	INNER JOIN	{TABLE_HIERARCHY} h
-		ON		v.fk_subject = h.fk_child
-	WHERE		h.n_left > (SELECT n_left
-					FROM	{TABLE_HIERARCHY}
-					WHERE	fk_child = :jukebox_uuid
-						AND	b_primary = \'TRUE\'
-				)
-		AND		h.n_right < (SELECT n_right
-					FROM	{TABLE_HIERARCHY}
-					WHERE	fk_child = :jukebox_uuid
-						AND	b_primary = \'TRUE\'
-				)
-	ORDER BY	n.s_label
 ';
 
 ?>

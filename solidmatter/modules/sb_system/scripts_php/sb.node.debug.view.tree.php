@@ -64,10 +64,9 @@ class sbView_debug_tree extends sbView {
 				$elemChild = $_RESPONSE->createElement('sbnode');
 				$elemChild->setAttribute('level', $aRow['n_level']);
 				$elemChild->setAttribute('order', $aRow['n_order']);
-				$elemChild->setAttribute('left', $aRow['n_left']);
-				$elemChild->setAttribute('right', $aRow['n_right']);
 				$elemChild->setAttribute('name', $aRow['s_name']);
 				$elemChild->setAttribute('type', $aRow['s_type']);
+				$elemChild->setAttribute('mpath', $aRow['s_mpath']);
 				$elemParent->appendChild($elemChild);
 				
 				if ($aRow['n_numchildren'] != 0) {

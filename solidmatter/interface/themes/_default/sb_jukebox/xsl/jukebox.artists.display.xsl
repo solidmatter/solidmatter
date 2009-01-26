@@ -61,6 +61,10 @@
 		<xsl:param name="data" />
 		<xsl:param name="label" />
 		<table class="default" width="100%" summary="">
+			<colgroup>
+				<col width="50" />
+				<col width="" />
+			</colgroup>
 			<thead>
 				<tr>
 					<th colspan="2"><span class="type artist"><xsl:value-of select="$label" /></span></th>

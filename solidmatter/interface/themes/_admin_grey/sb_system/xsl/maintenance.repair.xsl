@@ -26,6 +26,7 @@
 		<xsl:call-template name="views" />
 		<div class="workbench">
 			<xsl:apply-templates select="response/errors" />
+			<a href="/{$subjectid}/repair/rebuildMaterializedPaths">Rebuild MaterializedPath</a><br/>
 			<a href="/{$subjectid}/repair/rebuildNestedSets">Rebuild NestedSets</a><br/>
 			<a href="/{$subjectid}/repair/rebuildNestedSetsMemory">Rebuild NestedSets (Memory)</a><br/>
 			<a href="/{$subjectid}/repair/rebuildAuthorisationCache">Rebuild AuthorisationCache</a><br/>

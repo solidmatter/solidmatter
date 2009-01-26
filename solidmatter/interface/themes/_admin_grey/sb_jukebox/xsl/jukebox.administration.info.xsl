@@ -38,9 +38,11 @@
 			<br/>
 			<a href="/{$subjectid}/administration/startImport" target="_blank">Import starten</a><br/>
 			<a href="/{$subjectid}/administration/startImport/dry=true" target="_blank">Import starten (Trockenlauf)</a><br/>
+			<a href="/{$subjectid}/administration/clearLibrary">Bibliothek löschen</a>
+			<br/>
+			<br/>
 			<a href="/{$subjectid}/administration/storeUGC" target="_blank">User Generated Content speichern</a><br/>
 			<a href="/{$subjectid}/administration/removeUGC" target="_blank">User Generated Content entfernen</a><br/>
-			<a href="/{$subjectid}/administration/clearLibrary">Bibliothek löschen</a>
 		</div>
 	</body>
 	</html>

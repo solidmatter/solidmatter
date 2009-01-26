@@ -9,7 +9,7 @@
 */
 //------------------------------------------------------------------------------
 
-function rebuild_nestedsets($iNodeID = NULL, $iCounter = 1) {
+/*function rebuild_nestedsets($iNodeID = NULL, $iCounter = 1) {
 	
 	global $DB;
 	
@@ -48,7 +48,7 @@ function rebuild_nestedsets($iNodeID = NULL, $iCounter = 1) {
 	}
 	
 	
-}
+}*/
 
 function rebuild_positions($iNodeID = NULL) {
 	

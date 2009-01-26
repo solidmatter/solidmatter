@@ -7,6 +7,7 @@
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:sbform="http://www.solidbytes.net/sbform"
 	xmlns:dyn="http://exslt.org/dynamic"
+	xmlns:php="http://php.net/xsl"
 	extension-element-prefixes="dyn">
 
 	<xsl:import href="global.default.xsl" />
@@ -136,11 +137,13 @@
 								<a href="/{@item_uuid}"><xsl:value-of select="@label" /></a>
 							</td>
 							<td>
-								<span style="white-space:nowrap;"><xsl:value-of select="@comment" /></span>
+								<xsl:call-template name="break">
+									<xsl:with-param name="text" select="@comment" />
+								</xsl:call-template>
 							</td>
-							<td width="1%">
-								<a class="type play" href="/{@item_uuid}/-/getM3U/playlist.m3u?sid={$sessionid}">play</a>
-								<a class="type remove" href="/{@uuid}/actions/remove">remove</a>
+							<td width="1%" style="white-space:nowrap;">
+								<a class="type play icononly" href="/{@item_uuid}/-/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+								<a class="type remove icononly" href="/{@uuid}/actions/remove" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 							</td>
 						</tr>
 					</xsl:for-each>

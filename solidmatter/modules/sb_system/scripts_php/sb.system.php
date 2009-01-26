@@ -133,7 +133,7 @@ class System {
 	* @param 
 	* @return 
 	*/
-	public static function logg($sText, $eType = System::INFO, $eContext = System::SYSTEM, $bIncludeHeader = FALSE) {
+	public static function LOGG($sText, $eType = System::INFO, $eContext = System::SYSTEM, $bIncludeHeader = FALSE) {
 		if (!(self::$iLogLevel & $eType)) {
 			return (FALSE);
 		}

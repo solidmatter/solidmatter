@@ -410,7 +410,7 @@ class sbCR_Session {
 	
 	//------------------------------------------------------------------------------
 	/**
-	* 
+	* CUSTOM:
 	* @param 
 	* @return 
 	*/
@@ -502,6 +502,12 @@ class sbCR_Session {
 							return (TRUE);
 						}
 						
+						// check hierarchy violation
+						// TODO: check violations based on shared sets!
+						if ($nodeNewParent->isDescendantOf($nodeSubject)) {
+							throw new RepositoryException('new parent is child of subject');	
+						}
+						
 						// get position info
 						$stmtGetData = $this->prepareKnown('sbCR/node/moveBranch/getSourceInfo');
 						$stmtGetData->bindValue('subject_uuid', $sSubjectUUID, PDO::PARAM_STR);
@@ -523,116 +529,35 @@ class sbCR_Session {
 						$aDestinationInfo = $aDestinationInfo[0];
 						
 						// update position info (preparation)
-						$iOldLeft				= $aSourceInfo['n_left'];
-						$iOldRight				= $aSourceInfo['n_right'];
 						$iOldOrder				= $aSourceInfo['n_order'];
-						$iOldParentLeft			= $aSourceInfo['n_parentleft'];
-						$iOldParentRight		= $aSourceInfo['n_parentright'];
 						$iOldParentLevel		= $aSourceInfo['n_level'] - 1;
-						$iNewParentLeft			= $aDestinationInfo['n_left'];
-						$iNewParentRight		= $aDestinationInfo['n_right'];
-						$iNewParentLevel		= $aDestinationInfo['n_level'];
 						$iNewOrder				= $aDestinationInfo['n_numchildren']; // starts at 0
+						$iNewParentLevel		= $aDestinationInfo['n_level'];
 						$iOffsetLevel			= $iNewParentLevel - $iOldParentLevel;
-						$iOffsetNestedset		= 0; // calculate later, more info needed
-						$iBranchSize			= $iOldRight - $iOldLeft + 1;
-						
-						// calculate new position
-						if ($iOldParentLeft < $iNewParentLeft && $iOldParentRight > $iNewParentRight) { // new parent is descendant of old parent
-							if ($iOldLeft < $iNewParentLeft ) {
-								$iNewLeft = $iNewParentRight - $iBranchSize;
-							} else {
-								$iNewLeft = $iNewParentRight;
-							}
-						} elseif ($iOldParentLeft < $iNewParentLeft && $iOldParentRight < $iNewParentRight) { // new parent is left of old parent
-							$iNewLeft = $iNewParentRight - $iBranchSize;
-						} elseif ($iOldParentLeft > $iNewParentLeft && $iOldParentRight > $iNewParentRight) { // new parent is right of old parent
-							$iNewLeft = $iNewParentRight;
-						} else { // new parent is ancestor of old parent
-							$iNewLeft = $iNewParentRight - $iBranchSize;
-						}
-						$iNewRight = $iNewLeft + $iBranchSize - 1;
-						$iOffsetNestedset		= $iNewLeft - $iOldLeft;
-						
-						// check hierarchy violation
-						// TODO: check violations based on shared sets!
-						if ($iNewParentLeft >= $iOldLeft && $iNewParentLeft < $iOldRight) {
-							throw new RepositoryException('new parent is child of subject');	
-						}
-						
-						// lock subject branch
-						$stmtLock = $this->prepareKnown('sbCR/node/moveBranch/setLock');
-						$stmtLock->bindValue('left', $iOldLeft, PDO::PARAM_INT);
-						$stmtLock->bindValue('right', $iOldRight, PDO::PARAM_INT);
-						$stmtLock->execute();
 						
 						// shift following siblings order
-						$iOffset				= - 1; // always shift by i position
-						$iBoundary				= $iOldOrder + 1; // start here (inclusive)
-						$sParentUUID			= $sOldParentUUID; // all children of this
-						$stmtShift = $this->prepareKnown('sbCR/node/moveBranch/shiftOrder');
-						$stmtShift->bindValue('offset', $iOffset, PDO::PARAM_INT);
-						$stmtShift->bindValue('boundary', $iBoundary, PDO::PARAM_INT);
-						$stmtShift->bindValue('parent_uuid', $sParentUUID, PDO::PARAM_STR);
-						$stmtShift->execute();
+						$stmtOrder = $this->prepareKnown('sbCR/node/hierarchy/moveSiblings');
+						$stmtOrder->bindValue('offset', -1, PDO::PARAM_INT);
+						$stmtOrder->bindValue('low_position', $aSourceInfo['n_order'], PDO::PARAM_INT);
+						$stmtOrder->bindValue('high_position', $aSourceInfo['n_maxorder'], PDO::PARAM_INT);
+						$stmtOrder->bindValue('parent_uuid', $sOldParentUUID, PDO::PARAM_STR);
+						$stmtOrder->execute();
 						
-						// TODO: moving below old parent not handled right
-						// update rest of tree
-						if ($iNewLeft > $iOldLeft) { // source node left of destination
-							
-							$stmtShift = $this->prepareKnown('sbCR/node/moveBranch/updateLeft');
-							$stmtShift->bindValue('offset', 0 - $iBranchSize, PDO::PARAM_INT);
-							$stmtShift->bindValue('boundary_left', $iOldLeft, PDO::PARAM_INT);
-							$stmtShift->bindValue('boundary_right', $iNewRight, PDO::PARAM_INT);
-							$stmtShift->execute();
-							
-						} else { // source node right of destination
-							
-							$stmtShift = $this->prepareKnown('sbCR/node/moveBranch/updateLeft');
-							$stmtShift->bindValue('offset', $iBranchSize, PDO::PARAM_INT);
-							$stmtShift->bindValue('boundary_left', $iNewLeft - 1, PDO::PARAM_INT);
-							$stmtShift->bindValue('boundary_right', $iOldLeft, PDO::PARAM_INT);
-							$stmtShift->execute();
-							
-						}
-						
-						if ($iNewRight > $iOldRight) {
-							
-							$stmtShift = $this->prepareKnown('sbCR/node/moveBranch/updateRight');
-							$stmtShift->bindValue('offset', 0 - $iBranchSize, PDO::PARAM_INT);
-							$stmtShift->bindValue('boundary_left', $iOldRight, PDO::PARAM_INT);
-							$stmtShift->bindValue('boundary_right', $iNewRight + 1, PDO::PARAM_INT);
-							$stmtShift->execute();
-						
-						} else {
-							
-							$stmtShift = $this->prepareKnown('sbCR/node/moveBranch/updateRight');
-							$stmtShift->bindValue('offset', $iBranchSize, PDO::PARAM_INT);
-							$stmtShift->bindValue('boundary_left', $iNewLeft - 1, PDO::PARAM_INT);
-							$stmtShift->bindValue('boundary_right', $iOldLeft, PDO::PARAM_INT);
-							$stmtShift->execute();
-							
-						}
-						
-						
-						
-						// update subject branch
-						$stmtUpdate = $this->prepareKnown('sbCR/node/moveBranch/updateBranch');
-						$stmtUpdate->bindValue('offset_nestedset', $iOffsetNestedset, PDO::PARAM_INT);
-						$stmtUpdate->bindValue('offset_level', $iOffsetLevel, PDO::PARAM_INT);
-						$stmtUpdate->execute();
+						// update moved branch
+						$stmtMoveBranch = $this->prepareKnown('sbCR/node/moveBranch/updateBranch');
+						$stmtMoveBranch->bindValue('old_mpath', $nodeSubject->getMPath(), PDO::PARAM_INT);
+						$stmtMoveBranch->bindValue('new_mpath', $nodeNewParent->getMPath().substr($nodeSubject->getMPath(), -5), PDO::PARAM_INT);
+						$stmtMoveBranch->bindValue('offset_level', $iOffsetLevel, PDO::PARAM_INT);
+						$stmtMoveBranch->execute();
 						
 						// update subject node
-						$stmtUpdate = $this->prepareKnown('sbCR/node/moveBranch/updateLink');
-						$stmtUpdate->bindValue('newparent_uuid', $sNewParentUUID, PDO::PARAM_STR);
-						$stmtUpdate->bindValue('oldparent_uuid', $sOldParentUUID, PDO::PARAM_STR);
-						$stmtUpdate->bindValue('subject_uuid', $sSubjectUUID, PDO::PARAM_STR);
-						$stmtUpdate->bindValue('order', $iNewOrder, PDO::PARAM_INT);
-						$stmtUpdate->execute();
-						
-						// unlock source tree
-						$stmtUnlock = $this->prepareKnown('sbCR/node/moveBranch/removeLock');
-						$stmtUnlock->execute();
+						$stmtUpdateLink = $this->prepareKnown('sbCR/node/moveBranch/updateLink');
+						$stmtUpdateLink->bindValue('newparent_uuid', $sNewParentUUID, PDO::PARAM_STR);
+						$stmtUpdateLink->bindValue('oldparent_uuid', $sOldParentUUID, PDO::PARAM_STR);
+						$stmtUpdateLink->bindValue('subject_uuid', $sSubjectUUID, PDO::PARAM_STR);
+						$stmtUpdateLink->bindValue('order', $iNewOrder, PDO::PARAM_INT);
+						$stmtUpdateLink->bindValue('mpath', $nodeNewParent->getMPath(), PDO::PARAM_INT);
+						$stmtUpdateLink->execute();
 					
 					}
 					
@@ -747,11 +672,9 @@ class sbCR_Session {
 		// helper array
 		$aMatches = array();
 		
-		// TODO: find damn bug that uses empty query on root contexmenu
+		// TODO: find damn bug that uses empty query on root contextmenu
 		if ($sQuery == '/' || $sQuery == '') {
 			$nodeCurrent = $this->getRootNode();
-		//} elseif (preg_match('/^[a-z_]+:[a-z_]+$/', $sQuery)) {
-			//$nodeCurrent = $this->getInstanceByUID($sQuery);
 		} elseif (preg_match('!^//\*\[@uid="([a-zA-Z_]+:[a-zA-Z_]+)"\]$!', $sQuery, $aMatches)) {
 			$nodeCurrent = $this->getInstanceByUID($aMatches[1]);
 		} elseif (substr_count($sQuery, '/') > 0) {
@@ -805,7 +728,6 @@ class sbCR_Session {
 			$stmtInfo = $this->DB->prepareKnown('sbCR/getNode/byUUID');
 			$stmtInfo->bindParam('id', $iNodeID, PDO::PARAM_STR);
 			$stmtInfo->execute();
-			//var_dump($stmtInfo);
 			return ($this->generateInstance($stmtInfo, $sQuery));
 		} else {
 			throw new NodeNotFoundException('a node with this query does not exist: "'.$sQuery.'"');
@@ -840,40 +762,39 @@ class sbCR_Session {
 	*/
 	private function generateInstanceFromRow($aRow, $sQuery) {
 		
+		// init
 		$this->loadNodetypes();
 		$elemSubject = ResponseFactory::createElement('sbnode');
-		$elemSubject->setAttribute('nodetype', $aRow['fk_nodetype']);
-		$elemSubject->setAttribute('uuid', $aRow['uuid']);
 		
+		// create appropriate class instance
 		if (isset($this->aNodetypes[$aRow['fk_nodetype']])) {
 			$sLibrary = $this->aNodetypes[$aRow['fk_nodetype']]['s_classfile'];
 			$sClass = $this->aNodetypes[$aRow['fk_nodetype']]['s_class'];
 			import($sLibrary);
 			$nodeSubject = new $sClass($elemSubject, $this);
 		} else {
-			throw new sbException('NO GENERIC! Should be: '.$aRow['fk_nodetype']);
 			$nodeSubject = new sbCR_Node($elemSubject, $this);
 		}
 		
+		// prepare special properties
+		// TODO: get more standards-compliant
+		if (!isset($aRow['b_taggable'])) {
+			$aRow['b_taggable'] = 'FALSE';
+		}
+		if ($aRow['s_customcsstype'] != NULL) {
+			$aRow['s_csstype'] = $aRow['s_customcsstype'];
+		}
+		
+		// set properties
+		$elemSubject->setAttribute('nodetype', $aRow['fk_nodetype']);
+		$elemSubject->setAttribute('uuid', $aRow['uuid']);
 		$elemSubject->setAttribute('name', $aRow['s_name']);
 		$elemSubject->setAttribute('label', $aRow['s_label']);
 		$elemSubject->setAttribute('uid', $aRow['s_uid']);
 		$elemSubject->setAttribute('query', $sQuery);
 		$elemSubject->setAttribute('csstype', $aRow['s_csstype']);
-		if (isset($aRow['b_taggable'])) {
-			$elemSubject->setAttribute('taggable', $aRow['b_taggable']);
-		} else {
-			$elemSubject->setAttribute('taggable', 'FALSE');
-		}
-		if ($aRow['s_customcsstype'] != NULL) {
-			$elemSubject->setAttribute('csstype', $aRow['s_customcsstype']);
-		}
-		// parent node!
-		/*if (!isset($aRow['fk_parent'])) {
-			$aRow['fk_parent'] = 'PRIMARY';
-		}*/
+		$elemSubject->setAttribute('taggable', $aRow['b_taggable']);
 		$elemSubject->setAttribute('parent', $aRow['fk_parent']);
-		// rights
 		$elemSubject->setAttribute('inheritrights', $aRow['b_inheritrights']);
 		$elemSubject->setAttribute('bequeathrights', $aRow['b_bequeathrights']);
 		
@@ -921,15 +842,10 @@ class sbCR_Session {
 		$cachePaths = CacheFactory::getInstance('paths');
 		$sUUID = $cachePaths->loadData($sPath);
 		if ($sUUID !== FALSE) {
-			//var_dump($sUUID);
 			return ($sUUID);
 		}
 		
 		$aPath = explode('/', $sPath);
-		
-		/*if ($aPath[count($aPath)-1] == '/') {
-			unset($aPath[count($aPath)-1]);
-		}*/
 		
 		unset($aPath[0]);
 		

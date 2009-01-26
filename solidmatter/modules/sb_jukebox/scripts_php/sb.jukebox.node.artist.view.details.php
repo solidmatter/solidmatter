@@ -59,7 +59,7 @@ class sbView_jukebox_artist_details extends sbJukeboxView {
 				
 				// add tracks
 				$stmtGetTitles = $this->crSession->prepareKnown('sbJukebox/artist/getTracks/differentAlbums');
-				$stmtGetTitles->bindValue('jukebox_uuid', $this->getJukebox()->getProperty('jcr:uuid'), PDO::PARAM_STR);
+				$stmtGetTitles->bindValue('jukebox_mpath', $this->getJukebox()->getMPath(), PDO::PARAM_STR);
 				$stmtGetTitles->bindValue('artist_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
 				$stmtGetTitles->bindValue('limit', 100, PDO::PARAM_INT);
 				$stmtGetTitles->execute();
@@ -71,7 +71,7 @@ class sbView_jukebox_artist_details extends sbJukeboxView {
 				break;
 				
 			case 'getM3U':
-				$this->submitPlaylist();
+				$this->sendPlaylist();
 				break;
 			
 			default:

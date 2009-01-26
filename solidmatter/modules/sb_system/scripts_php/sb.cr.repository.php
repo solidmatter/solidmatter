@@ -15,6 +15,7 @@ import('sb.pdo.repository');
 import('sb.cr.propertydefinitioncache');
 
 if (!defined('REPOSITORY_DEFINITION_FILE')) { define('REPOSITORY_DEFINITION_FILE', 'repositories.xml'); }
+define ('REPOSITORY_MPHASH_SIZE', 5);
 
 //------------------------------------------------------------------------------
 /**

@@ -21,6 +21,9 @@
 	<html>
 	<head>
 		<xsl:apply-templates select="response/metadata" />
+		<xsl:comment><![CDATA[[if IE]>
+			<link rel="stylesheet" href="/theme/sb_system/css/fixes_ie.css" type="text/css" media="all" />
+		<![endif]]]></xsl:comment>
 	</head>
 	<body>
 		<xsl:call-template name="views" />

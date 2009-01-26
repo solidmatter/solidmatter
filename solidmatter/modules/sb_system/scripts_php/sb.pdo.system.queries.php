@@ -286,16 +286,7 @@ $_QUERIES['sbSystem/tagging/node/getBranchTags'] = '
 						ON		n.uuid = nt2.fk_subject
 					INNER JOIN	{TABLE_HIERARCHY} h
 						ON		n.uuid = h.fk_child
-					WHERE		h.n_left > (SELECT n_left
-									FROM	{TABLE_HIERARCHY}
-									WHERE	fk_child = :root_uuid
-										AND	b_primary = \'TRUE\'
-								)
-						AND		h.n_right < (SELECT n_right
-									FROM	{TABLE_HIERARCHY}
-									WHERE	fk_child = :root_uuid
-										AND	b_primary = \'TRUE\'
-								)
+					WHERE		h.s_mpath LIKE :root_mpath
 				)
 		AND		t.e_visibility <> \'HIDDEN\'
 	GROUP BY	t.id
@@ -365,16 +356,7 @@ $_QUERIES['sbSystem/tagging/getItems/byTagID'] = '
 		ON		n.uuid = nt.fk_subject
 	INNER JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child
-	WHERE		h.n_left > (SELECT n_left
-					FROM	{TABLE_HIERARCHY}
-					WHERE	fk_child = :root_uuid
-						AND	b_primary = \'TRUE\'
-				)
-		AND		h.n_right < (SELECT n_right
-					FROM	{TABLE_HIERARCHY}
-					WHERE	fk_child = :root_uuid
-						AND	b_primary = \'TRUE\'
-				)
+	WHERE		h.s_mpath LIKE CONCAT(:root_mpath, \'%\')
 		AND		nt.fk_tag = :tag_id
 ';
 $_QUERIES['sbSystem/tagging/getItems/byTagID/all'] = $_QUERIES['sbSystem/tagging/getItems/byTagID'].'
@@ -638,10 +620,18 @@ $_QUERIES['sbSystem/maintenance/view/repair/loadChildren'] = '
 		AND		fk_child <> \'00000000000000000000000000000000\'
 	ORDER BY	n_order
 ';
-$_QUERIES['sbSystem/maintenance/view/repair/setCoordinates'] = '
+$_QUERIES['sbSystem/maintenance/view/repair/setCoordinates/nestedSets'] = '
 	UPDATE 		{TABLE_HIERARCHY}
 	SET			n_left = :left,
 				n_right = :right,
+				n_level = :level,
+				n_order = :order
+	WHERE		fk_child = :fk_child
+		AND		fk_parent = :fk_parent
+';
+$_QUERIES['sbSystem/maintenance/view/repair/setCoordinates/MPath'] = '
+	UPDATE 		{TABLE_HIERARCHY}
+	SET			s_mpath = :mpath,
 				n_level = :level,
 				n_order = :order
 	WHERE		fk_child = :fk_child
@@ -870,10 +860,9 @@ $_QUERIES['sb_system/root/view/login/successfulLogin'] = '
 $_QUERIES['sbSystem/debug/gatherTree'] = '
 	SELECT		n.uuid,
 				n.s_name,
-				h.n_left,
-				h.n_right,
 				h.n_level,
 				h.n_order,
+				h.s_mpath,
 				nt.s_type,
 				(SELECT COUNT(*)
 					FROM	{TABLE_HIERARCHY}
@@ -888,7 +877,7 @@ $_QUERIES['sbSystem/debug/gatherTree'] = '
 		ON		h.fk_parent = n2.uuid*/
 	WHERE		h.fk_parent = :parent_uuid
 		AND		h.fk_child <> \'00000000000000000000000000000000\'
-	ORDER BY	h.n_left ASC
+	ORDER BY	h.n_order ASC
 ';
 
 ?>

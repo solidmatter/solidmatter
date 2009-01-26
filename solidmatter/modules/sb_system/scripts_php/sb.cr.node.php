@@ -49,6 +49,10 @@ class sbCR_Node {
 	* 
 	*/
 	protected $sPath				= '';
+	/**
+	* cache for the materialized path of this node
+	*/
+	protected $sMPath				= '';
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -161,21 +165,18 @@ class sbCR_Node {
 		
 		// hierarchy related
 		$this->aQueries['hierarchy/getSharedSet']			= 'sbCR/node/getSharedSet';
-		$this->aQueries['getAncestor']['byUUID']			= 'sbCR/node/getAncestor/byUUID';
+		$this->aQueries['hierarchy/isAncestorOf']			= 'sbCR/node/checkAncestor';
 		
 		// linking / nested set stuff
 		$this->aQueries['addLink']['getBasicInfo']			= 'sbCR/node/addLink/getBasicInfo';
-		$this->aQueries['addLink']['updateRight']			= 'sbCR/node/addLink/updateRight';
-		$this->aQueries['addLink']['updateLeft']			= 'sbCR/node/addLink/updateLeft';
 		$this->aQueries['addLink']['insertNode']			= 'sbCR/node/addLink/insertNode';
 		$this->aQueries['delete']['getBasicInfo']			= 'sbCR/node/hierarchy/getInfo';
 		$this->aQueries['delete']['shift']					= 'sbCR/node/removeLink/shiftLeft';
 		$this->aQueries['removeLink']						= 'sbCR/node/removeLink';
 		$this->aQueries['removeDescendantLinks']			= 'sbCR/node/removeDescendantLinks';
 		$this->aQueries['reorder']['getBasicInfo']			= 'sbCR/node/orderBefore/getInfo';
-		$this->aQueries['reorder']['writeNestedSet']		= 'sbCR/node/orderBefore/writeNestedSet';
-		$this->aQueries['reorder']['writeOrder']			= 'sbCR/node/orderBefore/writeOrder';
-		$this->aQueries['reorder']['setLock']				= 'sbCR/node/orderBefore/setLock';
+		$this->aQueries['reorder']['moveSiblings']			= 'sbCR/node/hierarchy/moveSiblings';
+		$this->aQueries['reorder']['moveNode']				= 'sbCR/node/orderBefore/writeOrder/node';
 		$this->aQueries['getLinkStatus']					= 'sbCR/node/getLinkStatus';
 		$this->aQueries['setLinkStatus']['normal']			= 'sbCR/node/setLinkStatus';
 		$this->aQueries['setLinkStatus']['newPrimary']		= 'sbCR/node/setLinkStatus/newPrimary';
@@ -412,7 +413,9 @@ class sbCR_Node {
 	*/
 	protected function isDescendantOf($nodeSubject) {
 		
-		$stmtCheck = $this->crSession->prepareKnown($this->aQueries['getAncestor']['byUUID']);
+		return ($nodeSubject->isAncestorOf($this));
+		
+		/*$stmtCheck = $this->crSession->prepareKnown($this->aQueries['hierarchy/isAncestorOf']);
 		$stmtCheck->bindValue(':child_uuid', $this->getIdentifier(), PDO::PARAM_STR);
 		$stmtCheck->bindValue(':parent_uuid', $nodeSubject->getIdentifier(), PDO::PARAM_STR);
 		$stmtCheck->execute();
@@ -424,7 +427,7 @@ class sbCR_Node {
 		
 		$stmtCheck->closeCursor();
 		
-		return ($bCheck);
+		return ($bCheck);*/
 		
 	}
 	
@@ -435,12 +438,37 @@ class sbCR_Node {
 	* @return 
 	*/
 	protected function isAncestorOf($nodeSubject) {
-		return ($nodeSubject->isDescendantOf($this));
+		
+		try {
+			$nodeParent = $nodeSubject->getParent();
+			if ($nodeParent->isSame($this)) {
+				return (TRUE);
+			} else {
+				return ($this->isAncestorOf($nodeParent));
+			}
+		} catch (ItemNotFoundException $e) {
+			return (FALSE);
+		}
+		
 	}
 	
-	
-	
-	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getMPath() {
+		if ($this->sMPath != '') {
+			return ($this->sMPath);
+		}
+		$sMPath = substr(md5($this->getIdentifier()), -5);
+		if ($this->isNodeType('sbSystem:Root')) {
+			return ($sMPath);
+		} else {
+			return ($this->getParent()->getMPath().$sMPath);
+		}
+	}
 	
 	
 	
@@ -563,22 +591,24 @@ class sbCR_Node {
 				$sChildUUID = $nodeChild->getIdentifier();
 				
 				// get basic info
-				$stmtChild = $this->crSession->prepareKnown($this->aQueries['addLink']['getBasicInfo']);
-				$stmtChild->bindValue('parent_uuid', $sParentUUID, PDO::PARAM_STR);
-				$stmtChild->bindValue('child_uuid', $sChildUUID, PDO::PARAM_STR);
-				$stmtChild->bindValue('child_name', $nodeChild->getProperty('name'), PDO::PARAM_STR);
-				$stmtChild->execute();
-				foreach ($stmtChild as $aRow) {
-					$iRight = $aRow['n_right'];
+				$stmtInfo = $this->crSession->prepareKnown($this->aQueries['addLink']['getBasicInfo']);
+				$stmtInfo->bindValue('parent_uuid', $sParentUUID, PDO::PARAM_STR);
+				$stmtInfo->bindValue('child_uuid', $sChildUUID, PDO::PARAM_STR);
+				$stmtInfo->bindValue('child_name', $nodeChild->getProperty('name'), PDO::PARAM_STR);
+				$stmtInfo->execute();
+				//var_dumpp($stmtInfo->fetchAll());
+				$bFound = FALSE;
+				foreach ($stmtInfo as $aRow) {
+					$bFound = TRUE;
 					$iLevel = $aRow['n_level'];
 					$iPosition = $aRow['n_position'];
 					$iNumParents = $aRow['n_numparents'];
 					$iNumSameNameSiblings = $aRow['n_numsamenamesiblings'];
 				}
-				$stmtChild->closeCursor();
+				$stmtInfo->closeCursor();
 				
-				if (!isset($iRight)) {
-					throw new RepositoryException('no info found on node '.$this->getProperty('label').' ('.$this->getIdentifier().')');	
+				if (!$bFound) {
+					throw new RepositoryException('no info found on node '.$this->getProperty('label').' ('.$this->getIdentifier().')');
 				}
 				if ($iNumSameNameSiblings != 0) {
 					throw new RepositoryException('a node with the name "'.$nodeChild->getProperty('name').'" already exists under '.$this->getProperty('label').' ('.$this->getProperty('jcr:uuid').')');	
@@ -589,24 +619,14 @@ class sbCR_Node {
 					$sIsPrimary = 'TRUE';
 				}
 				
-				// update nested sets - right
-				$stmtChild = $this->crSession->prepareKnown($this->aQueries['addLink']['updateRight']);
-				$stmtChild->bindParam('right', $iRight, PDO::PARAM_STR);
-				$stmtChild->execute();
-				
-				// update nested sets - left
-				$stmtChild = $this->crSession->prepareKnown($this->aQueries['addLink']['updateLeft']);
-				$stmtChild->bindParam('right', $iRight, PDO::PARAM_STR);
-				$stmtChild->execute();
-				
 				// insert new link for node
 				$stmtChild = $this->crSession->prepareKnown($this->aQueries['addLink']['insertNode']);
-				$stmtChild->bindParam('child_uuid', $sChildUUID, PDO::PARAM_STR);
-				$stmtChild->bindParam('parent_uuid', $sParentUUID, PDO::PARAM_STR);
-				$stmtChild->bindParam('is_primary', $sIsPrimary, PDO::PARAM_STR);
-				$stmtChild->bindParam('right', $iRight, PDO::PARAM_INT);
-				$stmtChild->bindParam('order', $iPosition, PDO::PARAM_INT);
-				$stmtChild->bindParam('level', $iLevel, PDO::PARAM_INT);
+				$stmtChild->bindValue('child_uuid', $sChildUUID, PDO::PARAM_STR);
+				$stmtChild->bindValue('parent_uuid', $sParentUUID, PDO::PARAM_STR);
+				$stmtChild->bindValue('is_primary', $sIsPrimary, PDO::PARAM_STR);
+				$stmtChild->bindValue('order', $iPosition, PDO::PARAM_INT);
+				$stmtChild->bindValue('level', $iLevel, PDO::PARAM_INT);
+				$stmtChild->bindValue('mpath', $this->getMPath(), PDO::PARAM_INT);
 				$stmtChild->execute();
 				
 				$nodeChild->save();
@@ -623,6 +643,7 @@ class sbCR_Node {
 		
 		// finally reorder the children
 		if (isset($this->aSaveTasks['order_before'])) {
+			
 			foreach ($this->aSaveTasks['order_before'] as $iTaskNumber => $aOptions) {
 				
 				// same node? then do nothing
@@ -633,94 +654,40 @@ class sbCR_Node {
 				$sUUID = $this->getIdentifier();
 				
 				// get position info
-				$stmtGetData = $this->crSession->prepareKnown($this->aQueries['reorder']['getBasicInfo']);
+				$stmtGetInfo = $this->prepareKnown($this->aQueries['reorder']['getBasicInfo']);
 				
-				$stmtGetData->bindParam('child_name', $aOptions['SourceNode'], PDO::PARAM_STR);
-				$stmtGetData->bindParam('parent_uuid', $sUUID, PDO::PARAM_STR);
-				$stmtGetData->execute();
-				$aSourceInfo = $stmtGetData->fetchAll(PDO::FETCH_ASSOC);
+				$stmtGetInfo->bindValue(':parent_uuid', $sUUID, PDO::PARAM_STR);
+				$stmtGetInfo->bindValue(':child_name', $aOptions['SourceNode'], PDO::PARAM_STR);
+				$stmtGetInfo->execute();
+				$aSourceInfo = $stmtGetInfo->fetchAll(PDO::FETCH_ASSOC);
 				if (count($aSourceInfo) == 0) {
 					throw new ItemNotFoundException(__CLASS__.': source node does not exist ('.$aOptions['SourceNode'].')');
 				}
 				$aSourceInfo = $aSourceInfo[0];
 				
-				$stmtGetData->bindParam('child_name', $aOptions['DestinationNode'], PDO::PARAM_STR);
-				$stmtGetData->bindParam('parent_uuid', $sUUID, PDO::PARAM_STR);
-				$stmtGetData->execute();
-				$aDestinationInfo = $stmtGetData->fetchAll(PDO::FETCH_ASSOC);
+				$stmtGetInfo->bindValue(':parent_uuid', $sUUID, PDO::PARAM_STR);
+				$stmtGetInfo->bindValue(':child_name', $aOptions['DestinationNode'], PDO::PARAM_STR);
+				$stmtGetInfo->execute();
+				$aDestinationInfo = $stmtGetInfo->fetchAll(PDO::FETCH_ASSOC);
 				if (count($aDestinationInfo) == 0) {
 					throw new ItemNotFoundException(__CLASS__.': destination node does not exist ('.$aOptions['DestinationNode'].')');
 				}
 				$aDestinationInfo = $aDestinationInfo[0];
 				
-				// update position info (preparation)
-				$iOffsetNestedset = 0;
-				$iOffsetOrder = 0;
-				$iLeft = 0;
-				$iRight = 0;
-				$sState = '';
-				
-				$stmtMove = $this->crSession->prepareKnown($this->aQueries['reorder']['writeNestedSet']);
-				$stmtMove->bindParam('offset_nestedset', $iOffsetNestedset, PDO::PARAM_INT);
-				$stmtMove->bindParam('left', $iLeft, PDO::PARAM_INT);
-				$stmtMove->bindParam('right', $iRight, PDO::PARAM_INT);
-				$stmtMove->bindParam('state', $sState, PDO::PARAM_INT);
-				
-				$stmtOrder = $this->crSession->prepareKnown($this->aQueries['reorder']['writeOrder']);
-				$stmtOrder->bindParam('offset_order', $iOffsetOrder, PDO::PARAM_INT);
-				$stmtOrder->bindParam('left', $iLeft, PDO::PARAM_INT);
-				$stmtOrder->bindParam('right', $iRight, PDO::PARAM_INT);
-				$stmtOrder->bindParam('parent_uuid', $sUUID, PDO::PARAM_STR);
-				$stmtOrder->bindParam('state', $sState, PDO::PARAM_INT);
-				
-				$stmtLock = $this->crSession->prepareKnown($this->aQueries['reorder']['setLock']);
-				$stmtLock->bindParam('state', $sState, PDO::PARAM_STR);
-				$stmtLock->bindParam('left', $iLeft, PDO::PARAM_INT);
-				$stmtLock->bindParam('right', $iRight, PDO::PARAM_INT);
-				
-				// lock source tree
-				$sState = 'TRUE';
-				$iLeft = $aSourceInfo['n_left'];
-				$iRight = $aSourceInfo['n_right'];
-				$stmtLock->execute();
-				//var_dumpp($stmtLock->rowCount());
-				
-				// update destination and siblings
-				$sState = 'FALSE';
-				$iSourceRange = $aSourceInfo['n_right'] - $aSourceInfo['n_left'] + 1;
-				if ($aSourceInfo['n_order'] < $aDestinationInfo['n_order']) { // source node left of destination
-					$iLeft = $aSourceInfo['n_right'] + 1;
-					$iRight = $aDestinationInfo['n_left'] - 1;
-					$iOffsetOrder = -1;
-					$iOffsetNestedset = 0 - $iSourceRange;
-				} else { // source node right of destination
-					$iLeft = $aDestinationInfo['n_left'];
-					$iRight = $aSourceInfo['n_left'] - 1;
-					$iOffsetOrder = 1;
-					$iOffsetNestedset = $iSourceRange;
-				}
+				// update position info on moved siblings
+				$stmtOrder = $this->crSession->prepareKnown($this->aQueries['reorder']['moveSiblings']);
+				$stmtOrder->bindValue('offset', 1, PDO::PARAM_INT);
+				$stmtOrder->bindValue('low_position', $aDestinationInfo['n_order'], PDO::PARAM_INT);
+				$stmtOrder->bindValue('high_position', $aSourceInfo['n_order'], PDO::PARAM_INT);
+				$stmtOrder->bindValue('parent_uuid', $sUUID, PDO::PARAM_STR);
 				$stmtOrder->execute();
-				$stmtMove->execute();
 				
-				// move source tree
-				$sState = 'TRUE';
-				if ($aSourceInfo['n_order'] < $aDestinationInfo['n_order']) { // source node left of destination
-					$iOffsetNestedset = $aDestinationInfo['n_left'] - $aSourceInfo['n_right'] - 1;
-					$iOffsetOrder = $aDestinationInfo['n_order'] - $aSourceInfo['n_order'] - 1;
-				} else { // source node right of destination
-					$iOffsetNestedset = $aDestinationInfo['n_left'] - $aSourceInfo['n_left'];
-					$iOffsetOrder = $aDestinationInfo['n_order'] - $aSourceInfo['n_order'];
-				}
-				$iLeft = $aSourceInfo['n_left'];
-				$iRight = $aSourceInfo['n_right'];
+				// update position info on moved node
+				$stmtOrder = $this->crSession->prepareKnown($this->aQueries['reorder']['moveNode']);
+				$stmtOrder->bindValue('target_position', $aDestinationInfo['n_order'], PDO::PARAM_INT);
+				$stmtOrder->bindValue('parent_uuid', $sUUID, PDO::PARAM_STR);
+				$stmtOrder->bindValue('child_uuid', $aSourceInfo['uuid'], PDO::PARAM_STR);
 				$stmtOrder->execute();
-				$stmtMove->execute();
-				
-				// unlock source tree
-				$sState = 'FALSE';
-				$iLeft = $aSourceInfo['n_left'] + $iOffsetNestedset;
-				$iRight = $aSourceInfo['n_right'] + $iOffsetNestedset;
-				$stmtLock->execute();
 				
 				// remove task
 				unset($this->aSaveTasks['order_before'][$iTaskNumber]);
@@ -801,14 +768,11 @@ class sbCR_Node {
 	protected function saveProperties($sType = 'FULL') {
 		
 		$this->initPropertyDefinitions();
-//		var_dumpp($this->crPropertyDefinitionCache);
 		if ($sType == 'FULL') {
 			// check if aux or ext properties have changed
 			$bChangedAux = FALSE;
 			$bChangedExt = FALSE;
 			foreach ($this->aModifiedProperties as $sProperty => $mValue) {
-				//var_dumpp($sProperty.':'.$mValue);
-				//var_dumpp($this->crPropertyDefinitionCache->getStorageType($sProperty));
 				if ($this->crPropertyDefinitionCache->getStorageType($sProperty) == 'AUXILIARY') {
 					$bChangedAux = TRUE;
 				}
@@ -816,8 +780,6 @@ class sbCR_Node {
 					$bChangedExt = TRUE;
 				}
 			}
-			//var_dumpp($this->crPropertyDefinitionCache->usesStorage('AUXILIARY'));
-			//var_dumpp($bChangedAux);
 			if ($bChangedAux && $this->crPropertyDefinitionCache->usesStorage('AUXILIARY')) {
 				$this->saveProperties('AUXILIARY');
 			}
@@ -847,28 +809,15 @@ class sbCR_Node {
 		} elseif ($sType == 'AUXILIARY') {
 			$stmtSave = $this->crSession->prepareKnown($this->aQueries['saveProperties']['auxiliary']);
 			$stmtSave->bindValue(':node_id', $this->getIdentifier(), PDO::PARAM_INT);
-			//var_dumpp($this->crPropertyDefinitionCache);
 			foreach ($this->crPropertyDefinitionCache as $sName => $aDetails) {
 				if ($aDetails['e_storagetype'] == 'AUXILIARY') {
-					//var_dumpp($this->isNew());
 					if ($this->isNew() && $aDetails['b_protectedoncreation'] == 'TRUE') {
-						//echo 'new&protectedoncreation ';
-						//var_dumpp($sName); var_dumpp($aDetails['s_defaultvalues']); 
 						$mValue = $aDetails['s_defaultvalues'];
 					} elseif (!$this->isNew() && $aDetails['b_protected'] == 'TRUE') {
-						//echo 'notnew&protected ';
-						//continue;
 						$mValue = $this->elemSubject->getAttribute($sName);
 					} else {
 						$mValue = $this->elemSubject->getAttribute($sName);
 					}
-					//var_dumpp($sName.'|'.$this->elemSubject->getAttribute($sName));
-					/*if ($sName == 'security_expires') {
-						var_dumpp($aDetails);
-						var_dumpp($this->elemSubject->getAttribute($sName));
-					}*/
-					
-					
 					if (strlen(trim($mValue)) == 0) {
 						$mValue = NULL;
 						$eParam = PDO::PARAM_NULL;
@@ -921,8 +870,6 @@ class sbCR_Node {
 		$stmtGetInfo->bindValue(':child_uuid', $sChildUUID, PDO::PARAM_STR);
 		$stmtGetInfo->execute();
 		foreach ($stmtGetInfo as $aRow) {
-			$aInfo['left'] = $aRow['n_left'];
-			$aInfo['right'] = $aRow['n_right'];
 			$aInfo['level'] = $aRow['n_level'];
 			$aInfo['order'] = $aRow['n_order'];
 			$aInfo['primary'] = constant($aRow['b_primary']);
@@ -974,8 +921,7 @@ class sbCR_Node {
 		
 		// delete link to parent
 		$stmtRemoveLink = $this->crSession->prepareKnown($this->aQueries['removeDescendantLinks']);
-		$stmtRemoveLink->bindValue('left', $aInfo['left'], PDO::PARAM_STR);
-		$stmtRemoveLink->bindValue('right', $aInfo['right'], PDO::PARAM_STR);
+		$stmtRemoveLink->bindValue('mpath', $aInfo['left'], PDO::PARAM_STR);
 		$stmtRemoveLink->execute();
 		
 	}
@@ -1067,7 +1013,7 @@ class sbCR_Node {
 	*/
 	public function getAncestors($aChildNodes = array()) {
 		
-		if (Registry::getValue('sb.system.repository.mode.dependable')) { // climb tree
+		if (TRUE || Registry::getValue('sb.system.repository.mode.dependable')) { // climb tree
 			try {
 				$nodeParent = $this->getParent();
 				$aChildNodes[] = $nodeParent;
@@ -1076,7 +1022,7 @@ class sbCR_Node {
 				$niAncestors = new sbCR_NodeIterator($aChildNodes);
 				return ($niAncestors);
 			}
-		} else { // get all ancestors at once
+		} /*else { // get all ancestors at once
 			$stmtGetAncestors = $this->crSession->prepareKnown('sb_system/node/getAncestors');
 			$stmtGetAncestors->bindValue(':child_uuid', $this->getIdentifier(), PDO::PARAM_STR);
 			$stmtGetAncestors->execute();
@@ -1088,7 +1034,7 @@ class sbCR_Node {
 			}
 			$niAncestors = new sbCR_NodeIterator($aAncestors);
 			return ($niAncestors);
-		}
+		}*/
 	}
 	
 	//--------------------------------------------------------------------------
@@ -1735,7 +1681,7 @@ class sbCR_Node {
 		if ($sPrimaryNodeType == NULL) {
 			throw new RepositoryException('adding nodes without nodetype not supported');
 		}
-		$nodeNew = $this->crSession->createNode($sPrimaryNodeType, $sRelativePath, $sRelativePath, $this->getIdentifier());
+		$nodeNew = $this->crSession->createNode($sPrimaryNodeType, $sRelativePath, $sRelativePath, $this->getIdentifier(), $this);
 		$this->addChild($nodeNew);
 		$this->bIsModified = TRUE;
 //		var_dumpp($nodeNew->getProperty('query'));
@@ -2197,9 +2143,6 @@ class sbCR_Node {
 		
 		if ($sType == 'EXTERNAL') {
 			foreach ($stmtGetProperties as $aRow) {
-//				if ($bOnlyProperties && $aPropDef[$aRow['s_attributename']]['b_showinproperties'] == 'FALSE') {
-//					continue;
-//				}
 				if (!isset($this->aModifiedAttributes[$aRow['s_attributename']])) {
 					$this->elemSubject->setAttribute($aRow['s_attributename'], $aRow['s_value']);
 				}
@@ -2210,11 +2153,8 @@ class sbCR_Node {
 			$stmtGetProperties->closeCursor();
 			// TODO: $aProperties != null because of a bug when reading newly saved nodes (investigate!!!)
 			if ($sType == 'EXTENDED' && $aProperties != NULL) {
-				//var_dumpp($aProperties);
 				foreach ($this->crPropertyDefinitionCache as $sName => $aDetails) {
-					//DEBUG('loadProperties:Extended:before', $sName.'='.$this->elemSubject->getAttribute($sName));
 					if (!isset($this->aModifiedAttributes[$sName]) && $aDetails['e_storagetype'] == 'EXTENDED') {
-						//DEBUG('loadProperties:Extended:after', $sName.'='.$aProperties[$aDetails['s_auxname']]);
 						$this->elemSubject->setAttribute($sName, $aProperties[$aDetails['s_auxname']]);
 					}
 				}

@@ -51,7 +51,7 @@ class sbJukeboxView extends sbView {
 		
 		// query and build data array
 		$stmtInfo = $this->crSession->prepareKnown('sbJukebox/jukebox/gatherInfo');
-		$stmtInfo->bindValue('jukebox_uuid', $nodeJukebox->getProperty('jcr:uuid'), PDO::PARAM_STR);
+		$stmtInfo->bindValue('jukebox_mpath', $nodeJukebox->getMPath(), PDO::PARAM_STR);
 		$stmtInfo->execute();
 		
 		foreach ($stmtInfo as $aRow) {

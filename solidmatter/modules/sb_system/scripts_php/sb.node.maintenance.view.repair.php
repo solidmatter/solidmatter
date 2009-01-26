@@ -23,6 +23,12 @@ class sbView_maintenance_repair extends sbView {
 				
 				break;
 			
+			case 'rebuildMaterializedPaths':
+				$this->logEvent(System::MAINTENANCE, 'REBUILD_NESTEDSETS_STARTED', 'starting to fix materialized paths');
+				$this->rebuildMaterializedPaths();
+				$this->logEvent(System::MAINTENANCE, 'REBUILD_NESTEDSETS_ENDED', 'done with rebuilding materialized paths');
+				break;
+			
 			case 'rebuildNestedSets':
 				$this->logEvent(System::MAINTENANCE, 'REBUILD_NESTEDSETS_STARTED', 'starting to fix nested set values');
 				$this->rebuildNestedSets();
@@ -77,6 +83,39 @@ class sbView_maintenance_repair extends sbView {
 		
 	}
 	
+	private function rebuildMaterializedPaths($sCurrentUUID = NULL, $sMPath = '', $iLevel = 0) {
+		
+		if ($sCurrentUUID == NULL) {
+			$stmtLoadChildren = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/loadRoot');
+		} else {
+			$stmtLoadChildren = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/loadChildren');
+			$stmtLoadChildren->bindParam('fk_parent', $sCurrentUUID, PDO::PARAM_STR);
+		}
+		$stmtLoadChildren->execute();
+		$aResultset = $stmtLoadChildren->fetchALL(PDO::FETCH_ASSOC);
+		$stmtLoadChildren->closeCursor();
+		
+		if ($sCurrentUUID == NULL) {
+			$sMPath = '';	
+		} else {
+			$sMPath = $sMPath.substr(md5($sCurrentUUID), -5);
+		}
+		
+		$iOrder = 0;
+		foreach ($aResultset as $aRow) {
+			$this->rebuildMaterializedPaths($aRow['uuid'], $sMPath, $iLevel+1);
+			$stmtSetCoordinates = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/setCoordinates/MPath');
+			$stmtSetCoordinates->bindParam('fk_child', $aRow['uuid'], PDO::PARAM_STR);
+			$stmtSetCoordinates->bindParam('fk_parent', $sCurrentUUID, PDO::PARAM_STR);
+			$stmtSetCoordinates->bindParam('level', $iLevel, PDO::PARAM_INT);
+			$stmtSetCoordinates->bindParam('order', $iOrder, PDO::PARAM_INT);
+			$stmtSetCoordinates->bindParam('mpath', $sMPath, PDO::PARAM_INT);
+			$stmtSetCoordinates->execute();
+			$iOrder++;
+		}
+		
+	}
+	
 	private function rebuildNestedSets($sCurrentUUID = NULL, $iCounter = 1, $iLevel = 0) {
 		
 		if ($sCurrentUUID == NULL) {
@@ -95,7 +134,7 @@ class sbView_maintenance_repair extends sbView {
 			$iLeft = $iCounter++;
 			$this->rebuildNestedSets($aRow['uuid'], &$iCounter, $iLevel+1);
 			$iRight = $iCounter++;
-			$stmtSetCoordinates = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/setCoordinates');
+			$stmtSetCoordinates = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/setCoordinates/nestedSets');
 			$stmtSetCoordinates->bindParam('fk_child', $aRow['uuid'], PDO::PARAM_STR);
 			$stmtSetCoordinates->bindParam('fk_parent', $sCurrentUUID, PDO::PARAM_STR);
 			$stmtSetCoordinates->bindParam('left', $iLeft, PDO::PARAM_INT);

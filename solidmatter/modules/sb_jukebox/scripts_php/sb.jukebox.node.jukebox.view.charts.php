@@ -79,13 +79,13 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 					if ($aCategory['query'] == 'getTop') {
 						$stmtGetTop = $stmtGetTopVoted;
 						$stmtGetTop->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
+						$stmtGetTop->bindValue('nodetype', $aCategory['nodetype'], PDO::PARAM_STR);
 					} else {
 						$stmtGetTop = $stmtGetMostPlayed;
 					}
 					
-					$stmtGetTop->bindValue('jukebox_uuid', $this->getJukebox()->getProperty('jcr:uuid'), PDO::PARAM_STR);
+					$stmtGetTop->bindValue('jukebox_mpath', $this->getJukebox()->getMPath(), PDO::PARAM_STR);
 					$stmtGetTop->bindValue('limit', $iLimit, PDO::PARAM_INT);
-					$stmtGetTop->bindValue('nodetype', $aCategory['nodetype'], PDO::PARAM_STR);
 					$stmtGetTop->execute();
 					$_RESPONSE->addData($stmtGetTop->fetchElements(), $aCategory['resultset']);
 				}
@@ -136,7 +136,7 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 		);
 		
 		$stmtVoters = $this->crSession->prepareKnown('sbJukebox/jukebox/getVoters');
-		$stmtVoters->bindValue(':jukebox_uuid', $this->getJukebox()->getProperty('jcr:uuid'), PDO::PARAM_STR);
+		$stmtVoters->bindValue(':jukebox_mpath', $this->getJukebox()->getMPath(), PDO::PARAM_STR);
 		$stmtVoters->execute();
 		
 		$sRootUUID = $this->crSession->getRootNode()->getProperty('jcr:uuid');

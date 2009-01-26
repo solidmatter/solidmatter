@@ -617,7 +617,8 @@ class sbDOMResponse extends sbDOMDocument {
 					'datetime_mysql2local',
 					'max_value',
 					'min_value',
-					'avg_value'
+					'avg_value',
+					'nl2br',
 				);
 				$procGenerator->registerPHPFunctions($aAllowedFunctions);
 				
@@ -845,5 +846,8 @@ function avg_value($aElements) {
 	}
 	return ($flSum / $iCounter);
 }
+
+
+
 
 ?>

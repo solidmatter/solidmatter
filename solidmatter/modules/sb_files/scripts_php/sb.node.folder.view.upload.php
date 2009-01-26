@@ -13,7 +13,7 @@ class sbView_folder_upload extends sbView {
 			
 			case 'display':
 				
-				$formUpload = $this->buildForm();
+				$formUpload = $this->buildUploadForm();
 				$formUpload->saveDOM();
 				
 				$_RESPONSE->addData($formUpload);
@@ -72,16 +72,16 @@ class sbView_folder_upload extends sbView {
 		
 	}
 	
-	private function buildForm() {
+	private function buildUploadForm() {
 		
 		$formUpload = new sbDOMForm(
 			'upload',
-			'$locale/system/general/labels/upload_files',
+			'$locale/sbSystem/labels/upload_files',
 			'/'.$this->nodeSubject->getProperty('jcr:uuid').'/upload/send',
 			$this->crSession
 		);
-		$formUpload->addInput('files;multifileupload;maxfiles=20', '$locale/system/general/labels/files');
-		$formUpload->addSubmit('$locale/system/general/actions/upload');
+		$formUpload->addInput('files;multifileupload;maxfiles=20', '$locale/sbSystem/labels/files');
+		$formUpload->addSubmit('$locale/sbSystem/actions/upload');
 		
 		//$this->extendForm($formUpload);
 		

@@ -31,13 +31,13 @@ function display_tree_structure($sParentUUID = NULL) {
 	$aRows = $stmtGetChildInfo->fetchAll(PDO::FETCH_ASSOC);
 	//var_dump($aRows);
 	foreach ($aRows as $aRow) {
-		echo '<li>'.$aRow['n_level'].'.'.$aRow['n_order'].' '.$aRow['s_name'].' ('.$aRow['n_left'].', ';
+		echo '<li>'.$aRow['n_level'].'.'.$aRow['n_order'].' '.$aRow['s_name'].' ('.$aRow['s_mpath'].', ';
 		if ($aRow['n_numchildren'] != 0) {
 			echo '<ul>';
 			display_tree_structure($aRow['uuid']);
 			echo '</ul>';
 		}
-		echo $aRow['n_right'].')</li>';
+		echo '</li>';
 	}
 	
 }

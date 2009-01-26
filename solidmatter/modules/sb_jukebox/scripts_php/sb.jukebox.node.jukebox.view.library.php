@@ -34,7 +34,7 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 				
 				// add latest albums
 				$stmtGetLatest = $this->crSession->prepareKnown('sbJukebox/jukebox/albums/getLatest');
-				$stmtGetLatest->bindValue('jukebox_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
+				$stmtGetLatest->bindValue('jukebox_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);
 				$stmtGetLatest->bindValue('limit', 8, PDO::PARAM_INT);
 				$stmtGetLatest->bindValue('nodetype', 'sbJukebox:Album', PDO::PARAM_STR);
 				$stmtGetLatest->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
@@ -78,7 +78,7 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 					$sSearchString = '%'.$_REQUEST->getParam('searchstring').'%';
 					if (true) { // search everything
 						$stmtSearch = $this->nodeSubject->getSession()->prepareKnown('sbJukebox/jukebox/search/anything/byLabel');
-						$stmtSearch->bindValue('jukebox_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
+						$stmtSearch->bindValue('jukebox_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);
 						$stmtSearch->bindValue('searchstring', $sSearchString, PDO::PARAM_STR);
 						$stmtSearch->execute();
 						$_RESPONSE->addData($stmtSearch->fetchElements(), 'searchresult');
@@ -91,7 +91,7 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 			case 'displayCoverWall':
 				// get all albums and store in response 
 				$stmtGetAlbums = $this->nodeSubject->getSession()->prepareKnown('sbJukebox/jukebox/albums/getAll');
-				$stmtGetAlbums->bindValue('jukebox_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
+				$stmtGetAlbums->bindValue('jukebox_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);
 				$stmtGetAlbums->execute();
 				$_RESPONSE->addData($stmtGetAlbums->fetchElements(), 'allAlbums');
 				// add default search form

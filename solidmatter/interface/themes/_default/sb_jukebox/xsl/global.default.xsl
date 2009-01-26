@@ -286,7 +286,10 @@
 					<xsl:for-each select="children[@mode='comments']/sbnode">
 						<div>
 							<h3><span style="float:right;"><xsl:value-of select="php:functionString('datetime_mysql2local', @createdat)" /></span><xsl:value-of select="@username" /></h3>
-							<p style="white-space:pre;"><xsl:value-of select="@comment" /></p>
+							<p><xsl:call-template name="break">
+								<xsl:with-param name="text" select="@comment" />
+							</xsl:call-template></p>
+							<!--<p style="white-space:pre;"><xsl:value-of select="@comment" /></p>-->
 						</div>
 					</xsl:for-each>
 				</xsl:when>
@@ -353,6 +356,25 @@
 		</div>
 	</xsl:template>
 	
-	
+	<!-- break arbeitet nur mit n -->
+	<xsl:template name="break">
+		<xsl:param name="text" select="."/>
+		<xsl:choose>
+		<xsl:when test="contains($text, '&#x0D;')">
+			<xsl:if test="string-length(substring-before($text, '&#x0D;')) > 0">
+				<xsl:value-of select="substring-before($text, '&#x0D;')"/>
+			</xsl:if>
+			<br/>
+			<xsl:call-template name="break">
+			<xsl:with-param name="text" select="substring-after($text,'&#x0D;')"/>
+			</xsl:call-template>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:if test="string-length($text) > 0">
+				<xsl:value-of select="$text"/>
+			</xsl:if>
+		</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 	
 </xsl:stylesheet>

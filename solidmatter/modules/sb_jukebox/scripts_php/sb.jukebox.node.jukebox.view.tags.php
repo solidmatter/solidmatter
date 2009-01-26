@@ -91,7 +91,7 @@ class sbView_jukebox_jukebox_tags extends sbJukeboxView {
 					}
 					
 					$stmtGetItems->bindValue('tag_id', $iTagID, PDO::PARAM_INT);
-					$stmtGetItems->bindValue('root_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
+					$stmtGetItems->bindValue('root_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);
 					$stmtGetItems->bindValue('limit', 300, PDO::PARAM_INT);
 					$stmtGetItems->bindValue('nodetype', $aCategories[$sCategory]['nodetype'], PDO::PARAM_STR);
 					$stmtGetItems->execute();
@@ -101,7 +101,7 @@ class sbView_jukebox_jukebox_tags extends sbJukeboxView {
 					
 					foreach ($aCategories as $aCategory) {
 						$stmtGetItems->bindValue('tag_id', $iTagID, PDO::PARAM_INT);
-						$stmtGetItems->bindValue('root_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
+						$stmtGetItems->bindValue('root_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);
 						$stmtGetItems->bindValue('limit', 10, PDO::PARAM_INT);
 						$stmtGetItems->bindValue('nodetype', $aCategory['nodetype'], PDO::PARAM_STR);
 						$stmtGetItems->execute();

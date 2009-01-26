@@ -48,7 +48,7 @@ class sbView_jukebox_jukebox_albums extends sbJukeboxView {
 					$stmtGetAlbums = $this->crSession->prepareKnown('sbJukebox/jukebox/albums/getRandom');
 					$stmtGetAlbums->bindValue('limit', 10, PDO::PARAM_INT);
 				}
-				$stmtGetAlbums->bindValue('jukebox_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
+				$stmtGetAlbums->bindValue('jukebox_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);
 				$stmtGetAlbums->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
 				$stmtGetAlbums->execute();
 				
@@ -66,7 +66,7 @@ class sbView_jukebox_jukebox_albums extends sbJukeboxView {
 					$sSearchString = '%'.$_REQUEST->getParam('searchstring').'%';
 					if (true) { // search everything
 						$stmtSearch = $this->nodeSubject->getSession()->prepareKnown('sbJukebox/jukebox/search/albums/byLabel');
-						$stmtSearch->bindValue('jukebox_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
+						$stmtSearch->bindValue('jukebox_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);
 						$stmtSearch->bindValue('searchstring', $sSearchString, PDO::PARAM_STR);
 						$stmtSearch->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
 						$stmtSearch->execute();

@@ -692,6 +692,8 @@ class sbNode extends sbCR_Node {
 			
 			if ($aAction !== FALSE) {
 				
+				DEBUG('Node: calling view "'.$sView.'" and action "'.$sAction.'" on node '.$this->getName().' ('.$this->getIdentifier().')', DEBUG::NODE);
+				
 				// process view & action info
 				$sClass = $this->aViews[$sView]['s_class'];
 				$sLibrary = $this->aViews[$sView]['s_classfile'];
@@ -953,7 +955,7 @@ class sbNode extends sbCR_Node {
 					
 					// add standard inputs for node properties
 					foreach ($this->crPropertyDefinitionCache as $sName => $aDetails) {
-						if ($aDetails['b_showinproperties'] == 'TRUE') {
+						if ($aDetails['b_showinproperties'] == 'TRUE' && !$this->crPropertyDefinitionCache->isProtected($sName, $this->isNew())) {
 							$formProperties->addInput($sName.';'.$aDetails['s_internaltype'], $aDetails['s_labelpath']);
 							try {
 								$formProperties->setValue($sName, $this->getProperty($sName));
@@ -1379,7 +1381,7 @@ class sbNode extends sbCR_Node {
 			return ($this->aBranchTags);
 		}
 		$stmtGetTags = $this->prepareKnown('tagging/getAllBranchTags');
-		$stmtGetTags->bindValue('root_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+		$stmtGetTags->bindValue('root_mpath', $this->getMpath().'%', PDO::PARAM_STR);
 		$stmtGetTags->execute();
 		foreach ($stmtGetTags as $aRow) {
 			$this->aBranchTags[$aRow['id']] = array(
@@ -1572,7 +1574,7 @@ class sbNode extends sbCR_Node {
 	//--------------------------------------------------------------------------
 	/**
 	* 
-	* The Aoutorisation aggregation path looks like:
+	* The Autorisation aggregation path looks like:
 	* - walk up tree for all entities separately, until root is reached or a 
 	* non-inheriting node (gives local auth for all entities, DENY outweights 
 	* ALLOW, LOCAL outweights PARENT)
@@ -1616,56 +1618,71 @@ class sbNode extends sbCR_Node {
 			$sUserUUID = 'sb_system:guests';
 		}
 		
-		/*if (Registry::getValue('sb.system.cache.authorisations.enabled')) {
-			$cacheAuth = CacheFactory::getInstance('authorisations');
-			$this->aUserAuthorisations = $cacheAuth->loadAuthorisations($this->getProperty('jcr:uuid'), $sUserUUID, AuthorisationCache::AUTH_EFFECTIVE);
-			if ($bSaveToElement) {
-				$this->storeUserAuthorisations();
-			}
-			if ($this->aUserAuthorisations != NULL) {
-				return ($this->aUserAuthorisations);	
-			}
-		}*/
-		
-		// compute authorisations if necessaary
+		// compute authorisations if necessary
 		if ($this->aUserAuthorisations == NULL) {
 			
-			// hierarchy-centric preparations
 			$this->storeSupportedAuthorisations();
-			$this->loadInheritedAuthorisations();
-			$this->loadLocalAuthorisations();
-			$this->aMergedAuthorisations = $this->mergeAuthInherited($this->aLocalAuthorisations, $this->aInheritedAuthorisations);
 			
-			// group-centric authorisation stuff
-			$aGroupAuth = array();
-			foreach (User::getGroupUUIDs() as $sGroupUUID) {
-				if (isset($this->aMergedAuthorisations[$sGroupUUID])) {
-					$aGroupAuth = $this->mergeAuthGroups($aGroupAuth, $this->aMergedAuthorisations[$sGroupUUID]);
+//			// check cache
+//			if (Registry::getValue('sb.system.cache.authorisations.enabled')) {
+//				$cacheAuth = CacheFactory::getInstance('authorisations');
+//				$aUserAuth = $cacheAuth->loadAuthorisations($this->getProperty('jcr:uuid'), $sUserUUID, AuthorisationCache::AUTH_EFFECTIVE);
+//				if (count($aUserAuth) > 0) {
+//					$this->aUserAuthorisations = $aUserAuth;
+//				}
+//			}
+			
+			// check again, might be loaded from cache
+			if ($this->aUserAuthorisations == NULL) {
+				
+				if (User::isAdmin()) {
+					
+					$this->aUserAuthorisations = $this->loadSupportedAuthorisations();
+					foreach($this->aUserAuthorisations as $sAuthorisation => $unused) {
+						$this->aUserAuthorisations[$sAuthorisation] = 'ALLOW';
+					}
+					
+				} else {
+					
+					// hierarchy-centric preparations
+					$this->loadInheritedAuthorisations();
+					$this->loadLocalAuthorisations();
+					$this->aMergedAuthorisations = $this->mergeAuthInherited($this->aLocalAuthorisations, $this->aInheritedAuthorisations);
+					
+					// group-centric authorisation stuff
+					$aGroupAuth = array();
+					foreach (User::getGroupUUIDs() as $sGroupUUID) {
+						if (isset($this->aMergedAuthorisations[$sGroupUUID])) {
+							$aGroupAuth = $this->mergeAuthGroups($aGroupAuth, $this->aMergedAuthorisations[$sGroupUUID]);
+						}
+					}
+					
+					// user-centric authorisation stuff
+					$aUserAuth = array();
+					if (isset($this->aMergedAuthorisations[$sUserUUID])) {
+						$aUserAuth = $this->aMergedAuthorisations[$sUserUUID];
+					}
+					$aUserAuth = $this->mergeAuthUserGroup($aUserAuth, $aGroupAuth);
+					$aUserAuth = $this->mergeAuthHierarchy($aUserAuth);
+					
+					// store in member for further use
+					$this->aUserAuthorisations = $aUserAuth;
+					
+//					// store in cache
+//					if (Registry::getValue('sb.system.cache.authorisations.enabled')) {
+//						$cacheAuth = CacheFactory::getInstance('authorisations');
+//						$cacheAuth->storeAuthorisations($this->getProperty('jcr:uuid'), $sUserUUID, AuthorisationCache::AUTH_EFFECTIVE, $aUserAuth);
+//					}
+					
 				}
+				
 			}
 			
-			// user-centric authorisation stuff
-			$aUserAuth = array();
-			if (isset($this->aMergedAuthorisations[$sUserUUID])) {
-				$aUserAuth = $this->aMergedAuthorisations[$sUserUUID];
-			}
-			$aUserAuth = $this->mergeAuthUserGroup($aUserAuth, $aGroupAuth);
-			$aUserAuth = $this->mergeAuthHierarchy($aUserAuth);
-			
-			// store in member for further use
-			$this->aUserAuthorisations = $aUserAuth;
-		
 		}
-		
 		
 		if ($bSaveToElement) {
 			$this->storeUserAuthorisations();
 		}
-		
-		/*if (Registry::getValue('sb.system.cache.authorisations.enabled')) {
-			$cacheAuth = CacheFactory::getInstance('authorisations');
-			$cacheAuth->storeAuthorisations($this->getProperty('jcr:uuid'), $sUserUUID, AuthorisationCache::AUTH_EFFECTIVE, $aUserAuth);
-		}*/
 		
 		/*echo 'local ';
 		var_dumpp($this->aLocalAuthorisations);
@@ -1678,6 +1695,7 @@ class sbNode extends sbCR_Node {
 		echo 'user '; 
 		var_dumpp($aUserAuth);*/
 		//exit();
+		
 		return ($this->aUserAuthorisations);
 	}
 	
@@ -1700,55 +1718,6 @@ class sbNode extends sbCR_Node {
 			$this->elemSubject->appendChild($elemContainer);
 			$bAlreadyStored = TRUE;
 		}
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	/*protected function aggregateAuthorisations($sEntityUUID) {
-		
-		if ($this->aSupportedAuthorisations == NULL) {
-			$this->loadSupportedAuthorisations();
-		}
-		
-		$aLocalAuth = array();
-		$nodeEntity = $this->crSession->getNode($sEntityUUID);
-		
-		// get effective local authorisations
-		if ($nodeEntity->getPrimaryNodetype() == 'sb_system:user') {
-			$aGroupAuth = array();
-			$niGroups = $nodeEntity->getParentsByNodetype('sb_system:usergroup');
-			foreach ($niGroups as $nodeGroup) {
-				//merge_auth_groups($aGroupAuth, $this->aggregateAuthorisations($nodeGroup->getProperty('jcr:uuid')));
-				$aGroupAuth = $this->mergeAuthGroups($aGroupAuth, $this->aggregateAuthorisations($nodeGroup->getProperty('jcr:uuid')));
-			}
-			$aUserAuth = $this->getLocalEntityAuthorisations($sEntityUUID);
-			$aUserAuth = $this->mergeAuthUserGroup($aUserAuth, $aGroupAuth);
-			$aLocalAuth = $aUserAuth;
-		} else {
-			$aLocalAuth = $this->getLocalEntityAuthorisations($sEntityUUID);
-		}
-		
-		// merge with parent authorisations
-		if ($this->getProperty('inheritrights') == 'TRUE') {
-			try {
-				$nodeParent = $this->getParent();
-				if ($nodeParent->getProperty('bequeathrights') == 'TRUE') {
-					$aParentAuth = $nodeParent->aggregateAuthorisations($sEntityUUID);
-					//$aLocalAuth = merge_auth_local_parent($aLocalAuth, $aParentAuth);
-					$aLocalAuth = $this->mergeAuthLocalInherited($aLocalAuth, $aParentAuth);
-				}
-			} catch (ItemNotFoundException $e) {
-				// ignore
-			}
-		}
-		
-		$this->aAggregateAuthorisations[$sEntityUUID] = $aLocalAuth;
-		return ($aLocalAuth);
-		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -1790,7 +1759,6 @@ class sbNode extends sbCR_Node {
 		}
 				
 		$aMerged = array();
-		//$this->loadProperties('extended');
 		
 		if ($this->getProperty('sbcr:inheritrights') == 'TRUE') {
 			$_CACHE = CacheFactory::getInstance('system');
@@ -1805,8 +1773,8 @@ class sbNode extends sbCR_Node {
 						$aMerged = $this->mergeAuthInherited($aLocal, $aInherited);
 						//$_CACHE->storeData('authorisations:array/'.$this->elemSubject->getAttribute('uuid'), $aMerged);
 					}
-				} catch (Exception $e) {
-					// ignore
+				} catch (ItemNotFoundException $e) {
+					// ignore and and proceed, root is reached
 				}
 			}
 		}
@@ -1997,7 +1965,6 @@ class sbNode extends sbCR_Node {
 	*/
 	protected function mergeAuthHierarchy($aUserAuth) {
 		$this->loadSupportedAuthorisations();
-		//var_dumpp($this->aSupportedAuthorisations); exit();
 		foreach ($this->aSupportedAuthorisations as $sAuth => $sParentAuth) {
 			if ($sParentAuth != NULL && isset($aUserAuth[$sParentAuth]) && $aUserAuth[$sParentAuth] == 'ALLOW' && (!isset($aUserAuth[$sAuth]) || $aUserAuth[$sAuth] != 'DENY')) {
 				$aUserAuth[$sAuth] = 'ALLOW';

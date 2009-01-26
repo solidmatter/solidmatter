@@ -50,7 +50,7 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 				$_RESPONSE->addData($formComment);
 				
 				// add tracks
-				$niTracks = $this->nodeSubject->loadChildren('tracks', TRUE, TRUE, TRUE);
+				$niTracks = $this->nodeSubject->loadChildren('tracks', TRUE, TRUE, FALSE);
 				foreach ($niTracks as $nodeTrack) {
 					$nodeTrack->getVote($this->getPivotUUID());
 				}

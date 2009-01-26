@@ -76,7 +76,7 @@ $_AUTOLOAD = array(
 */
 abstract class DEBUG {
 	
-	const ENABLED		= TRUE;
+	const ENABLED		= FALSE;
 	
 	const BASIC			= TRUE;
 	const CLIENT		= FALSE;

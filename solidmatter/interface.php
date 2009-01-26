@@ -228,7 +228,7 @@ if (TIER2_SEPARATED) {
 	include_once('controller.php');
 }
 
-$_STOPWATCH->stop('execution_time');
+DEBUG('Interface: request processing took '.($_STOPWATCH->stop('execution_time')*1000).'ms', DEBUG::BASIC);
 $_RESPONSE->addStopwatchTimes($_STOPWATCH->getTaskTimes());
 if ($_REQUEST->getParam('debug') != TRUE) {
 	$_RESPONSE->importLocales();
