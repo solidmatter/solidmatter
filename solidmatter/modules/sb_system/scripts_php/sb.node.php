@@ -1278,9 +1278,15 @@ class sbNode extends sbCR_Node {
 	*/
 	public function hasTag($sTag) {
 		$this->initTags();
-		$sTag = trim($sTag);
-		if (isset($this->aTags[$sTag]) || isset($this->aNewTags[$sTag])) {
-			return (TRUE);
+		$sCheckTag = strtolower(trim($sTag));
+		$aCheckTags = $this->aTags;
+		if (count($this->aNewTags) > 0) {
+			$aCheckTags = array_merge($this->aTags, $this->aNewTags);
+		}
+		foreach ($aCheckTags as $sTag => $iID) {
+			if (strtolower($sTag) == $sCheckTag) {
+				return (TRUE);
+			}
 		}
 		return (FALSE);
 	}
@@ -1749,7 +1755,6 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	// TODO: implement 2 variants
 	protected function loadInheritedAuthorisations($bSaveToElement = TRUE) {
 		
 		static $bAlreadyStored = FALSE;
@@ -1921,12 +1926,14 @@ class sbNode extends sbCR_Node {
 	* @return 
 	*/
 	protected function mergeAuthGroups($aGroup1Auth, $aGroup2Auth) {
+		// no authorisations in one group? nothing to merge then... 
 		if (count($aGroup1Auth) == 0) {
 			return ($aGroup2Auth);
 		} elseif (count($aGroup2Auth) == 0) {
 			return ($aGroup1Auth);
 		}
 		foreach ($aGroup2Auth as $sAuthorisation => $sGrantType) {
+			// DENY outweights ALLOW
 			if (isset($aGroup1Auth[$sAuthorisation]) && $aGroup1Auth[$sAuthorisation] == 'DENY') {
 				continue;
 			} else {

@@ -9,13 +9,12 @@
 //------------------------------------------------------------------------------
 
 import('sb.pdo.repository');
-//import('sb.pdo.repository.queries');
-//import('sb.cr.workspace');
-//import('sb.cr.namespaceregistry');
 import('sb.cr.propertydefinitioncache');
 
-if (!defined('REPOSITORY_DEFINITION_FILE')) { define('REPOSITORY_DEFINITION_FILE', 'repositories.xml'); }
-define ('REPOSITORY_MPHASH_SIZE', 5);
+// xml file containing all information on repositories this SBCR instance supports
+if (!defined('REPOSITORY_DEFINITION_FILE')) {	define('REPOSITORY_DEFINITION_FILE', 'repositories.xml'); }
+// number of characters to use for the pseudo-materialized path on each level
+if (!defined('REPOSITORY_MPHASH_SIZE')) {		define('REPOSITORY_MPHASH_SIZE', 5); }
 
 //------------------------------------------------------------------------------
 /**

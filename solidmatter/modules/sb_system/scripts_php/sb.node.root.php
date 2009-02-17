@@ -20,7 +20,6 @@ class sbNode_root extends sbNode {
 	* @return 
 	*/
 	public function getPath($sProperty = 'name') {
-		// TODO: implement property stuff
 		return ('/');
 	}
 	

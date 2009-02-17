@@ -29,7 +29,7 @@ class sbView_tags_manage extends sbView {
 			case 'list':
 				$stmtGetTags = $this->crSession->prepareKnown('sbSystem/tagging/tags/getAllTags/orderByTag');
 				$stmtGetTags->execute();
-				$_RESPONSE->addData($stmtGetTags->fetchDOM('tags'));
+				$_RESPONSE->addData($stmtGetTags->fetchElements('tags'));
 				return;
 			
 			// display form to edit tag details

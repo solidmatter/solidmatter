@@ -22,8 +22,6 @@ $_QUERIES['MAPPING']['{TABLE_BINPROPERTIES}']	= '{PREFIX_WORKSPACE}_system_nodes
 $_QUERIES['MAPPING']['{TABLE_LOCKS}']			= '{PREFIX_WORKSPACE}_system_nodes_locks';
 $_QUERIES['MAPPING']['{TABLE_AUTH}']			= '{PREFIX_WORKSPACE}_system_nodes_authorisation';
 
-$_QUERIES['MAPPING']['{TABLE_HIERARCHYMEM}']	= '{PREFIX_WORKSPACE}_system_nodes_parents_mem';
-
 //------------------------------------------------------------------------------
 // sbNodeType
 //------------------------------------------------------------------------------
@@ -284,6 +282,7 @@ $_QUERIES['sbCR/getNode/byUID'] = '
 ';
 
 // maintenance -----------------------------------------------------------------
+
 $_QUERIES['sbCR/maintenance/getNodes/unconnected'] = '
 	SELECT		uuid 
 	FROM		{TABLE_NODES}
@@ -328,43 +327,7 @@ $_QUERIES['sbCR/NamespaceRegistry/loadNamespaces'] = '
 //------------------------------------------------------------------------------
 
 // hierarchy -------------------------------------------------------------------
-$_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'] = '
-	SELECT		n.uuid,
-				n.s_label
-	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_NODETYPES} nt
-		ON		n.fk_nodetype = nt.s_type
-	INNER JOIN	{TABLE_HIERARCHY} h
-		ON		n.uuid = h.fk_child
-	INNER JOIN	{TABLE_NODES} n2
-		ON		h.fk_parent = n2.uuid
-	WHERE		h.fk_parent = :parent_uuid
-		AND		n.fk_nodetype IN (
-					SELECT		fk_nodetype
-					FROM		{TABLE_MODES}
-					WHERE		s_mode = :mode
-						AND		fk_parentnodetype = n2.fk_nodetype
-				)
-		AND		h.fk_child != :parent_uuid /* prevent root finding itself */
-';
-$_QUERIES['sbCR/node/countChildren/mode'] = '
-	SELECT		COUNT(*) as num_children
-	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_NODETYPES} nt
-		ON		n.fk_nodetype = nt.s_type
-	INNER JOIN	{TABLE_HIERARCHY} h
-		ON		n.uuid = h.fk_child
-	INNER JOIN	{TABLE_NODES} n2
-		ON		h.fk_parent = n2.uuid
-	WHERE		h.fk_parent = :parent_uuid
-		AND		n.fk_nodetype IN (
-					SELECT		fk_nodetype
-					FROM		{TABLE_MODES}
-					WHERE		s_mode = :mode
-						AND		fk_parentnodetype = n2.fk_nodetype
-				)
-		AND		h.fk_child != :parent_uuid /* prevent root finding itself */
-';
+
 /*$_QUERIES['sb_system/node/countDescendentsWithRight/mode'] = '
 	SELECT		COUNT(*) as num_children
 	FROM		{PREFIX_WORKSPACE}_system_nodes sn
@@ -393,28 +356,41 @@ $_QUERIES['sbCR/node/countChildren/mode'] = '
 						AND		sna_check.e_granttype = \'ALLOW\'
 				) > 0
 ';*/
-$_QUERIES['sbCR/node/loadChildren/mode/standard/byOrder'] = 
-$_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
+$_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'] = '
+	SELECT		n.uuid,
+				n.s_label
+	FROM		{TABLE_NODES} n
+	INNER JOIN	{TABLE_NODETYPES} nt
+		ON		n.fk_nodetype = nt.s_type
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	INNER JOIN	{TABLE_NODES} n2
+		ON		h.fk_parent = n2.uuid
+	WHERE		h.fk_parent = :parent_uuid
+		AND		n.fk_nodetype IN (
+					SELECT		fk_nodetype
+					FROM		{TABLE_MODES}
+					WHERE		s_mode = :mode
+						AND		fk_parentnodetype = n2.fk_nodetype
+				)
+		AND		h.fk_child != :parent_uuid /* prevent root finding itself */
+';
+$_QUERIES['sbCR/node/loadChildren/mode/standard/byOrder'] = $_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
 	ORDER BY	h.n_order
 ';
-$_QUERIES['sbCR/node/loadChildren/mode/standard/byLabel'] = 
-$_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
+$_QUERIES['sbCR/node/loadChildren/mode/standard/byLabel'] = $_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
 	ORDER BY	n.s_label
 ';
-$_QUERIES['sbCR/node/loadChildren/mode/standard/byNodetype'] = 
-$_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
+$_QUERIES['sbCR/node/loadChildren/mode/standard/byNodetype'] = $_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
 	ORDER BY	n.fk_nodetype
 ';
-$_QUERIES['sbCR/node/loadChildren/mode/standard/byNodetypeAndLabel'] = 
-$_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
+$_QUERIES['sbCR/node/loadChildren/mode/standard/byNodetypeAndLabel'] = $_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
 	ORDER BY	n.fk_nodetype, n.label
 ';
-$_QUERIES['sbCR/node/loadChildren/mode/standard/byCreationDate/ASC'] = 
-$_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
+$_QUERIES['sbCR/node/loadChildren/mode/standard/byCreationDate/ASC'] = $_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
 	ORDER BY	n.dt_created
 ';
-$_QUERIES['sbCR/node/loadChildren/mode/standard/byCreationDate/DESC'] = 
-$_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
+$_QUERIES['sbCR/node/loadChildren/mode/standard/byCreationDate/DESC'] = $_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
 	ORDER BY	n.dt_created DESC
 ';
 $_QUERIES['sbCR/node/loadChildren/debug'] = '
@@ -439,6 +415,25 @@ $_QUERIES['sbCR/node/countChildren/debug'] = '
 	FROM		{TABLE_HIERARCHY} h
 	WHERE		h.fk_parent = :parent_uuid
 ';
+$_QUERIES['sbCR/node/countChildren/mode'] = '
+	SELECT		COUNT(*) as num_children
+	FROM		{TABLE_NODES} n
+	INNER JOIN	{TABLE_NODETYPES} nt
+		ON		n.fk_nodetype = nt.s_type
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	INNER JOIN	{TABLE_NODES} n2
+		ON		h.fk_parent = n2.uuid
+	WHERE		h.fk_parent = :parent_uuid
+		AND		n.fk_nodetype IN (
+					SELECT		fk_nodetype
+					FROM		{TABLE_MODES}
+					WHERE		s_mode = :mode
+						AND		fk_parentnodetype = n2.fk_nodetype
+				)
+		AND		h.fk_child != :parent_uuid /* prevent root finding itself */
+';
+
 $_QUERIES['sbCR/node/countChildrenByName/debug'] = '
 	SELECT		COUNT(*) as num_children
 	FROM		{TABLE_HIERARCHY} h
@@ -475,7 +470,6 @@ $_QUERIES['sbSystem/node/getAllowedSubtypes'] = '
 					WHERE	uuid = :parent_uuid
 				)
 		AND		m.b_display = \'TRUE\'
-		
 ';
 $_QUERIES['sbCR/node/getSharedSet'] = '
 	SELECT		fk_parent,
@@ -531,7 +525,9 @@ $_QUERIES['sbCR/node/checkDescendant'] = '
 						AND		b_primary = \'TRUE\'
 				)
 ';
+
 // save/delete -----------------------------------------------------------------
+
 $_QUERIES['sbCR/node/save/new'] = '
 	INSERT INTO	{TABLE_NODES}
 				(
@@ -582,7 +578,9 @@ $_QUERIES['sbCR/node/delete/forGood'] = '
 	DELETE FROM	{TABLE_NODES}
 	WHERE		uuid = :uuid
 ';
+
 // linking ---------------------------------------------------------------------
+
 $_QUERIES['sbCR/node/addLink/getBasicInfo'] = '
 	SELECT		n_level,
 				(SELECT	COUNT(*)
@@ -632,8 +630,7 @@ $_QUERIES['sbCR/node/hierarchy/getInfo'] = '
 ';
 $_QUERIES['sbCR/node/removeDescendantLinks'] = '
 	DELETE FROM	{TABLE_HIERARCHY}
-	WHERE		*****************n_left > :left
-		AND		n_right < :right;
+	WHERE		h.s_mpath LIKE CONCAT(:mpath, \'%\')
 ';
 $_QUERIES['sbCR/node/removeLink'] = '
 	DELETE FROM	{TABLE_HIERARCHY}
@@ -686,7 +683,9 @@ $_QUERIES['sbCR/node/orderBefore/writeOrder/node'] = '
 	WHERE		h.fk_child = :child_uuid
 		AND		h.fk_parent = :parent_uuid
 ';
-// move branch
+
+// move branch -----------------------------------------------------------------
+
 $_QUERIES['sbCR/node/moveBranch/getSourceInfo'] = '
 	SELECT		n_order,
 				n_level,
@@ -716,10 +715,6 @@ $_QUERIES['sbCR/node/moveBranch/updateBranch'] = '
 	UPDATE		{TABLE_HIERARCHY} h
 	SET			h.n_level = h.n_level + :offset_level,
 				h.s_mpath = REPLACE(h.s_mpath, :old_mpath, :new_mpath)
-				/*CONCAT(
-					SUBSTRING(:new_mpath, ),
-					SUBSTRING(h.s_mpath, 0, STRLEN(:old_mpath))
-				)*/
 	WHERE		h.s_mpath LIKE CONCAT(:old_mpath, \'%\')
 ';
 $_QUERIES['sbCR/node/moveBranch/updateLink'] = '
@@ -732,6 +727,7 @@ $_QUERIES['sbCR/node/moveBranch/updateLink'] = '
 ';
 
 // references & softlinks ------------------------------------------------------
+
 $_QUERIES['sbCR/node/getReferences'] = '
 	SELECT		DISTINCT p.fk_node
 	FROM		{TABLE_PROPERTIES} p
@@ -756,7 +752,9 @@ $_QUERIES['sbCR/node/getSoftlinks'] = '
 	WHERE		pd.e_type = \'WEAKREFERENCE\'
 		AND		p.m_content = :uuid
 ';
+
 // property-related ------------------------------------------------------------
+
 $_QUERIES['sbCR/node/getPropertyDefinitions'] = '
 	SELECT		pd.s_attributename,
 				pd.e_type,
@@ -831,7 +829,9 @@ $_QUERIES['sbCR/node/loadBinaryProperty'] = '
 	WHERE		fk_node = :node_id
 		AND		fk_attributename = :property
 ';
+
 // locking ---------------------------------------------------------------------
+
 $_QUERIES['sbCR/node/locking/clearLocks'] = '
 	DELETE FROM	{TABLE_LOCKS} l
 	WHERE		UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(l.ts_placed) > l.n_timetolive
@@ -894,7 +894,9 @@ $_QUERIES['sbCR/node/locking/removeLock/byUser'] = '
 //------------------------------------------------------------------------------
 // node:default
 //------------------------------------------------------------------------------
+
 // view:security ---------------------------------------------------------------
+
 $_QUERIES['sb_system/node/view/security/addAuthorisation'] = '
 	INSERT INTO	{TABLE_AUTH}
 				(
@@ -925,38 +927,5 @@ $_QUERIES['sbCR/test/loadChildren'] = '
 	WHERE		fk_parent = :fk_parent
 	ORDER BY	n_order
 ';
-$_QUERIES['sbCR/test/setCoordinates/nestedSets'] = '
-	INSERT INTO	{TABLE_HIERARCHYMEM}
-				(
-					n_left,
-					n_right,
-					n_level,
-					n_order,
-					fk_child,
-					fk_parent
-				) VALUES (
-					:left,
-					:right,
-					:level,
-					:order,
-					:fk_child,
-					:fk_parent
-				)
-	ON DUPLICATE KEY UPDATE
-				n_left = :left,
-				n_right = :right,
-				n_level = :level,
-				n_order = :order
-';
-
-
-
-
-
-
-
-
-
-
 		
 ?>

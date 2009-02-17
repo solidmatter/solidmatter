@@ -102,6 +102,8 @@ class sbView_security extends sbView {
 			case 'editAuthorisations':
 				$this->nodeSubject->loadSecurityAuthorisations();
 				$this->nodeSubject->setAttribute('subjectid', $_REQUEST->getParam('userentity'));
+				$nodeUserEntity = $this->crSession->getNodeByIdentifier($_REQUEST->getParam('userentity'));
+				$_RESPONSE->addData($nodeUserEntity, 'userentity');
 				//$_RESPONSE->addData($this->nodeSubject);
 				break;
 				

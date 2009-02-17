@@ -454,15 +454,18 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Returns the materialized path of this node.
+	* Generation is based on taking the last X chars of the respective node's
+	* uuid, climbing up the hierarchy to get the full path. X is defined in
+	* sbCR_Repository class file.
+	* @return string the full materialized path
 	*/
 	public function getMPath() {
 		if ($this->sMPath != '') {
 			return ($this->sMPath);
 		}
-		$sMPath = substr(md5($this->getIdentifier()), -5);
+		// use last 5 chars
+		$sMPath = substr(sha1($this->getIdentifier()), -REPOSITORY_MPHASH_SIZE);
 		if ($this->isNodeType('sbSystem:Root')) {
 			return ($sMPath);
 		} else {
@@ -897,14 +900,15 @@ class sbCR_Node {
 		$stmtRemoveLink->bindValue('child_uuid', $this->getIdentifier(), PDO::PARAM_STR);
 		$stmtRemoveLink->bindValue('parent_uuid', $nodeParent->getIdentifier(), PDO::PARAM_STR);
 		$stmtRemoveLink->execute();
-		//$stmtRemoveLink->closeCursor();
 		
 		// shift following nodes
-		$stmtShift = $this->crSession->prepareKnown('sbCR/node/removeLink/shiftLeft');
-		$stmtShift->bindValue('left', $aInfo['left'], PDO::PARAM_INT);
-		$stmtShift->bindValue('distance', $aInfo['right'] - $aInfo['left'] + 1, PDO::PARAM_INT);
+		$stmtShift = $this->crSession->prepareKnown('sbCR/node/hierarchy/moveSiblings');
+		$stmtShift->bindValue('parent_uuid', $nodeParent->getIdentifier(), PDO::PARAM_STR);
+		$stmtShift->bindValue('offset', -1, PDO::PARAM_INT);
+		$stmtShift->bindValue('low_position', $aInfo['order'], PDO::PARAM_INT);
+		// FIXME: don't use static value!
+		$stmtShift->bindValue('high_position', 1000000, PDO::PARAM_INT);
 		$stmtShift->execute();
-		//$stmtShift->closeCursor();
 		
 	}
 	

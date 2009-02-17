@@ -166,8 +166,9 @@ class sbView_root_login extends sbView {
 			
 			// used to access all generated captchas
 			case 'getCaptcha':
-				import('sb.image.captcha');
-				if ($_REQUEST->getParam('uid') == 'login_backend') {
+				import('sbSystem:sb.image.captcha');
+				// FIXME: in sbJukebox the URL/Request scheme is different!!!
+				if (true || $_REQUEST->getParam('uid') == 'login_backend') {
 					$sType = Registry::getValue('sb.system.security.login.captcha.type');
 					$imgChallenge = new CaptchaImage(200, 80, 4);
 					$imgChallenge->generate();

@@ -302,7 +302,7 @@ class sbDOMRequest extends sbDOMDocument {
 			$elemParam->nodeValue = $sValue;
 		}
 		if (!$bExists) {
-			$elemParam = $this->createElement(htmlentities($sName), htmlentities($sValue));
+			$elemParam = $this->createElement(htmlspecialchars($sName), htmlspecialchars($sValue));
 			$elemParams->appendChild($elemParam);
 		}
 	}

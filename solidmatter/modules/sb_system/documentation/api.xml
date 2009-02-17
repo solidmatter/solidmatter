@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="html.xsl"?>
 <doc type="api" version="1.00.00">
 
 	<chapter title="Introduction" id="intro">
@@ -51,16 +50,70 @@ If you hate to read manuals and are more the learning-by-doing type of person, y
 
 	<chapter title="Modes of Operation" id="">
 		<section title="JCR API only" id="">
-			
+			<p>
+				You may incorporate the sbCR classes to access the repository via the JCR API in the context of your application.
+			</p>
+			<caution>
+				Not tested yet, there may be some unwanted dependencies. Also it's not the whole JCR API implemented, and there are things handled differently in sbCR!
+			</caution>
 		</section>
 		<section title="sbCR Infrastructure" id="">
-			
+			<p>
+				You may incorporate the sbCR classes to access the repository via the full sbCR API (including extensions) in the context of your application.
+			</p>
+			<caution>
+				Not tested yet, there may be some unwanted dependencies.
+			</caution>
 		</section>
 		<section title="Full solidMatter API" id="">
 			
+			
 		</section>
 	</chapter>
-
+	
+	<chapter title="solidMatter" id="">
+		<section title="Application Layers" id="">
+			<subsection title="Interface">
+				
+			</subsection>
+			<subsection title="Controller">
+				
+			</subsection>
+			<subsection title="Data Storage">
+				
+			</subsection>
+		</section>
+		<section title="Application Flow" id="">
+			<subsection title="From Request to Response">
+				
+			</subsection>
+			<subsection title="Handlers">
+				
+			</subsection>
+		</section>
+		<section title="Data Transport" id="">
+			<subsection title="$_REQUEST / $_RESPONSE">
+				
+			</subsection>
+			<subsection title="Handlers">
+				
+			</subsection>
+			
+		</section>
+		<section title="Form Building" id="">
+			<subsection title="The sbDOMForm Class">
+				
+			</subsection>
+			<subsection title="Inputs">
+				
+			</subsection>
+			<subsection title="Form Validation">
+				
+			</subsection>
+		</section>
+	</chapter>
+	
+	
 	<chapter title="Content Repository (sbCR)" id="sbcr">
 		<section title="What is a Content Repository?" id="whatiscr">
 			<subsection title="Purpose" id="">
@@ -87,11 +140,17 @@ If you hate to read manuals and are more the learning-by-doing type of person, y
 				- does not support same name siblings
 			</subsection>
 			<subsection title="Shared Sets" id="">
-				- Shared nodes have to have the same name
-				- only one instance of all nodes is created (problem with getSharedSet)
+				<p>
+					sbCR supports shared nodes according to the JCR API. However, they always have the same name as it is stored in the node itself, and nodes are managed separately from the workspace hierarchy.
+				</p>
+				<caution>
+					As there is only one instance of a node created in the repository, a name change applies to all nodes in the shared set.
+				</caution>
 			</subsection>
 			<subsection title="Mixin Types" id="mixin">
-				All nodes have (at least) the following mixin types:
+				<p>
+					All nodes have (at least) the following mixin types:
+				</p>
 				<ul>
 					<li>mix:created</li>
 					<li>mix:lastModified</li>
@@ -104,9 +163,13 @@ If you hate to read manuals and are more the learning-by-doing type of person, y
 				</ul>
 			</subsection>
 			<subsection title="Properties" id="">
-				- doesn't implement items
-				- all properties are returned as sensible php types
-				- properties mandatory (?)
+				<p>
+					Because of the mandatory mixin types, several properties are mandatory.
+				</p>
+				<caution>sbCR properties are currently NOT handled as repository items!
+					Instead, properties obtained via getProperty() and the like are treated as scalar php variable types.
+					This is mainly for performance reasons and for easier handling
+				</caution>
 			</subsection>
 			<subsection title="" id="">
 				
@@ -125,11 +188,15 @@ If you hate to read manuals and are more the learning-by-doing type of person, y
 			<subsection title="Shared Nodes" id="">
 				
 			</subsection>
-			<subsection title="" id="">
-				
+			<subsection title="Web 2.0 - Votes" id="web2.0">
+				<p>
+					
+				</p>
 			</subsection>
-			<subsection title="" id="">
-				
+			<subsection title="Web 2.0 - Tags" id="tags">
+				<p>
+					
+				</p>
 			</subsection>
 			<subsection title="" id="">
 				
@@ -163,43 +230,181 @@ If you hate to read manuals and are more the learning-by-doing type of person, y
 	<chapter title="Custom Features" id="viewsactions">
 		<section title="Views and Actions" id="concept">
 			<subsection title="Content vs. Application Logic?" id="contentlogic">
-			
+				<p>
+					JCR itself only deals with the data structures stored in the repository, and to some extent also with the content logic (via constraints, references and the like).
+					sbCR uses a slightly different approach, it also couples application logic with the nodes.
+					This is achieved by describing the different actions that can be 'called' upon the nodes.
+				</p>
+				<p>
+					Actions are what drives any application, may it be the click on a button/link or submitting of a form.
+					Every action results in a request sent to the server which sends a corresponding response.
+					In a REST environment like the web, everything is built of actions a user can take, even if they are called (periodically) by an AJAX event.
+				</p>
+				<p>
+					The application design should be built according to this premise.
+					You are free to use a different approach (TODO: see other chapters), but it is strongly recommended that you describe the objects of the application domain in terms of data and logic.
+				</p>
 			</subsection>
 			<subsection title="What is a View?" id="view">
-				
+				<p>
+					A view in itself is first and formeost nothing more than a conceptual idea of different means to approach an object.
+					For example, think of a folder in an operating system: you can list the files contained in the folder, you can view them in a thumbnail view, or you could take a look at the folder properties.
+					This is the exact same object-centric approach solidMatter uses to build up an application.
+					But it doesn't stop there, a view may use several actions, e.g. a folder's properties may be displayed, edited or saved.
+				</p>
+				<p>
+					In the application context, views provide a way to group actions together logically, but also in regard of the codebase.
+					Usually, there is one class for each view, and this class handles all actions that can called upon a node.
+				</p>
+				<info>
+					Each view defined on a nodetype MAY be displayed in the backend automatically (as a flag TODO: consider authorisation).
+					This doesn't make sense on all possible views, so it's up to you to decide which views should be invisible, and what's the most sensible order to display the views in.
+				</info>
 			</subsection>
 			<subsection title="What is an Action?" id="action">
-			
+				
 			</subsection>
 		</section>
 	</chapter>
 	
 	<chapter title="Coding Guidelines" id="codingguidelines">
+		<p>
+			In order to keep the code readable and consistent, there are a number of coding guidelines described in this chapter.
+			You MUST stick to these rules if you are contributing to the solidMatter core or any of the sb*-modules (provided respectively under development lead by solidbytes). 
+			You SHOULD stick to these rules if you are developing a 3rd-party-module for solidMatter.
+		</p>
+		<info>
+			Rules exist to be broken. No, seriously, there are exceptions from these rules, but keep in mind that they are very rare, and MUST serve the readability or have a really good reason.
+		</info>
+		<section title="Versioning" id="code_versioning">
+			<p>
+				There are 5 types of versions to be maintained in solidMatter, Module- resp. release-, API-, locale-, theme- and file-versions.
+				Versioning uses a fixed scheme, which MUST be followed even for 3rd-party-modules.
+				The scheme contains information on major version, features, bugfixes and release states.
+				Module (=release), API, locale and theme versions are not coupled in any way to source code versions.
+			</p>
+			<ul>
+				<li>Version: 0-# (# is not limited)</li>
+				<li>Subversion: 00-99 (increased with every release that contains added features or API changes)</li>
+				<li>Bugfixversion: 00-99 (increased with every release that contains bugfixes, this number is reset on changes to version or subversion)</li>
+				<li>Release State (optional): one of the following - alpha, beta, rc# (# is not limited)</li>
+			</ul>
+			<p>
+				Examples:
+			</p>
+			<ul>
+				<li>0.04.02alpha</li>
+				<li>1.00.00</li>
+				<li>1.02.04beta</li>
+				<li>1.02.07rc2</li>
+				<li>1.05.13</li>
+				<li>12.08.00</li>
+			</ul>
+		</section>
 		<section title="Variable Naming" id="variablenaming">
-			Variables should indicate their proposed type as lowercase prefix, followed by the self explanatory name: "$prefixExplanatoryName.
-			The well-known Prefixes for scalar types are:
+			<p>Variables SHOULD always indicate their proposed type as lowercase prefix, followed by the self explanatory name: "$prefixSelfExplanatoryName".
+			The well-known Prefixes for scalar types are:</p>
 			<ul>
 				<li>i: Integer</li>
 				<li>s: String</li>
 				<li>f: Float</li>
 				<li>a: Array</li>
-				<li></li>
+				<li>h: Ressource Handle</li>
 			</ul>
-			For objects:
+			<p>For objects:</p>
 			<ul>
-				<li>node: a sbNode or sbCRNode</li>
+				<li>node: sbNode or sbCRNode</li>
 				<li>cache: any kind of cache object</li>
-				<li>o: unspecified object</li>
-			</ul> 
+				<li>elem: DOMElement</li>
+				<li>dom: DOMDocument or derived class</li>
+				<li>form: sbDOMForm</li>
+				<li>view: sbView or derived class</li>
+				<li>o: unknown/unspecified object</li>
+			</ul>
+			<info>
+				Exceptions:
+				<ul>
+					<li>$_REQUEST/$_RESPONSE: global request/response in solidMatter</li>
+					<li>$i, $j, etc.: loop iterators</li>
+					<li>$e: catched exception</li>
+				</ul>
+			</info>
 		</section>
 		<section title="Code Formatting" id="codeformatting">
-			
+			<subsection title="Indenting" id="">
+				<p>
+					Indenting should always be done according to best-practices (indenting codeblocks) using tabs.
+					Each tab uses the equivalent space to 4 spaces.
+				</p>
+			</subsection>
+			<subsection title="Bracketing" id="">
+				<p>
+					All code blocks MUST be contained in brackets, even if they only consist of one command.
+					The opening bracket SHOULD be on the same line as the control flow structure (for, if, while...).
+					Correct:
+				</p>
+				<code>while (!$asleep) {
+	$sheep++;
+}</code>
+				<p>
+					Wrong:
+				</p>
+				<code>while (!$asleep)
+{
+	$sheep++;
+}
+
+while (!$asleep)
+	$sheep++;</code>
+				<info>
+					There may be sensible exceptions to that rule, when a series of short commands (e.g. defines) occur or when the unary operator is used.
+				</info>
+			</subsection>
+			<subsection title="Bracketing" id=""></subsection>
+			<subsection title="Comments and File Structure" id="">
+				<p>
+					The file structure, and along with it the basic commenting structure applies to all files that contain only one class.
+				</p>
+				<code><![CDATA[<?php
+
+//------------------------------------------------------------------------------
+/**
+* @package	{package name}[{subpackage name}]
+* @author	{author's name}
+* @version	{version}
+*/
+//------------------------------------------------------------------------------
+
+import("myModule:foo");
+import("myModule:bar");
+				
+//------------------------------------------------------------------------------
+/**
+*/
+class sbView_{nodetype}_{view} extends sbView {
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function myMethod() {
+		
+		// some code
+		
+	}
+	
+}
+
+?>]]></code>
+			</subsection>
 		</section>
 		<section title="Session Usage" id="sessionusage">
 			<p>The session can be used to store various information. This chapter explains what different modes of access exist.</p>
 			<subsection title="Per Nodetype Settings" id="pernodetype">
-				The keys for the information should be named like this: "module:nodetype:setting".
-				Example:
+				<p>The keys for the information should be named like this: "module:nodetype:setting".
+				Example:</p>
 				<code>sbSession::addData('sb_system:folder:defaultView', $sView);</code>
 			</subsection>
 		</section>
@@ -208,6 +413,17 @@ If you hate to read manuals and are more the learning-by-doing type of person, y
 	<chapter title="Appendix" id="appendix">
 		<section title="Additional Documentation" id="add_docu">
 		
+		</section>
+		<section title="History" id="history">
+			<subsection title="0.50.00 alpha" id="05alpha">
+				<ul>
+					<li>[STATE] initial state, work in progress</li>
+					<li>[FEATURE] ~50% JSR-283 compliant API</li>
+					<li>[FEATURE] ability to define views and actions on nodetypes</li>
+					<li>[FEATURE] each node may have tags assigned to it, tags are workspace-global</li>
+					<li>[FEATURE] each node may be rated, rates are stored with user information</li>
+				</ul>
+			</subsection>
 		</section>
 	</chapter>
 	

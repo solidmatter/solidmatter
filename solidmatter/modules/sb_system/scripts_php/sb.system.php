@@ -235,7 +235,7 @@ class System {
 				foreach ($aParams as $sKey => $sValue) {
 					$aTemp[] = $sKey.'='.$sValue;	
 				}
-				$sURL .= implode('&', $aTemp);
+				$sURL .= '?'.implode('&', $aTemp);
 			}
 			
 		}

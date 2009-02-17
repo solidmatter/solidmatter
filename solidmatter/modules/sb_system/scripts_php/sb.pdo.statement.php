@@ -121,24 +121,31 @@ class sbPDOStatement extends PDOStatement {
 	//--------------------------------------------------------------------------
 	/**
 	* 
-	* @param 
+	* @param string the name of the resultset root element
+	* @param boolean 
+	* @param array a set of mapping instructions for node building
 	* @return 
 	*/
-	public function fetchDOM($sRootNodeName = 'resultset', $bIncludeMetadata = FALSE) {
+	public function fetchDOM($sRootNodeName = 'resultset', $aMapping = FALSE, $bIncludeMetadata = FALSE) {
 		
 		$domGlobal = new DOMDocument('1.0', 'UTF-8');
 		$elemResultset = $domGlobal->createElement($sRootNodeName);
-		//$elemRows = $domGlobal->createElement('rows');
+		
+		$sRowElementName = 'row';
+		if (isset($aMapping['!row_element_name'])) {
+			$sRowElementName = $aMapping['!row_element_name'];
+		}
 		
 		$i = 0;
 		while ($aRow = $this->fetch(PDO::FETCH_ASSOC)) {
-			$elemRow = $domGlobal->createElement('row');
+			$elemRow = $domGlobal->createElement($sRowElementName);
 			//$elemRow->setAttribute('number', $i);
 			$i++;
 			foreach ($aRow as $sName => $sData) {
-				/*if (substr_count($sData, '&') > 0) {
-					$sData = str_replace('&', '&amp;', $sData);
-				}*/
+				// don't use db-columname if a mapping is provided
+				if (isset($aMapping[$sName])) {
+					$sName = $aMapping[$sName];	
+				}
 				$sData = htmlspecialchars($sData);
 				$elemColumn = $domGlobal->createElement($sName, $sData);
 				$elemRow->appendChild($elemColumn);
@@ -153,8 +160,6 @@ class sbPDOStatement extends PDOStatement {
 			$elemResultset->appendChild($elemMetadata);
 		}
 		
-		//$elemResultset->appendChild($elemRows);
-		//$elemResultset->appendChild($elemResultset);
 		return ($elemResultset);
 		
 	}
@@ -178,21 +183,27 @@ class sbPDOStatement extends PDOStatement {
 	* @param 
 	* @return 
 	*/
-	public function fetchElements($sRootNodeName = 'resultset', $bIncludeMetadata = FALSE) {
+	public function fetchElements($sRootNodeName = 'resultset', $aMapping = FALSE, $bIncludeMetadata = FALSE) {
 		
 		$domGlobal = new DOMDocument('1.0', 'UTF-8');
 		$elemResultset = $domGlobal->createElement($sRootNodeName);
 		
+		$sRowElementName = 'row';
+		if (isset($aMapping['!row_element_name'])) {
+			$sRowElementName = $aMapping['!row_element_name'];
+		}
+		
 		$i = 0;
 		while ($aRow = $this->fetch(PDO::FETCH_ASSOC)) {
-			$elemRow = $domGlobal->createElement('row');
+			$elemRow = $domGlobal->createElement($sRowElementName);
 			//$elemRow->setAttribute('number', $i);
 			$i++;
 			foreach ($aRow as $sName => $sData) {
-				/*if (substr_count($sData, '&') > 0) {
-					$sData = str_replace('&', '&amp;', $sData);
-				}*/
-				//$sData = htmlspecialchars($sData);
+				// don't use db-columname if a mapping is provided
+				if (isset($aMapping[$sName])) {
+					$sName = $aMapping[$sName];	
+				}
+				//htmlspecialchars($sData)
 				$elemRow->setAttribute($sName, $sData);
 			}
 			$elemResultset->appendChild($elemRow);
@@ -205,8 +216,6 @@ class sbPDOStatement extends PDOStatement {
 			$elemResultset->appendChild($elemMetadata);
 		}
 		
-		//$elemResultset->appendChild($elemRows);
-		//$elemResultset->appendChild($elemResultset);
 		return ($elemResultset);
 		
 	}

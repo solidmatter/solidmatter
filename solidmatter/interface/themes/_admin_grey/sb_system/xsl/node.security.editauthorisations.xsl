@@ -36,7 +36,7 @@
 		<!--<xsl:variable name="subjecttype" select="sbnode/@subjecttype" />
 		<xsl:variable name="subjectid" select="sbnode/@subjectid" />-->
 		<div class="eyecandy"><div class="left"><div class="right">
-			<h1>Berechtigungen von XYZ</h1>
+			<h1>Berechtigungen von <xsl:value-of select="$content/userentity/sbnode/@label" /></h1>
 			<form action="/{$master/@uuid}/security/saveAuthorisations" method="post">
 				<input type="hidden" name="userentity" value="{$content/@userentity}" />
 				<table>

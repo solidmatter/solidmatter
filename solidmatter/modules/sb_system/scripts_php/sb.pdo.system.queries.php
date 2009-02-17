@@ -247,6 +247,7 @@ $_QUERIES['sbSystem/voting/getVotes'] = '
 // Tagging
 //------------------------------------------------------------------------------
 
+// FIXME: shouldn't need to update to same value --> bug in hasTag()
 $_QUERIES['sbSystem/tagging/node/addTag'] = '
 	INSERT INTO	{TABLE_NODETAGS}
 				(
@@ -256,6 +257,8 @@ $_QUERIES['sbSystem/tagging/node/addTag'] = '
 					:subject_uuid,
 					:tag_id
 				)
+	ON DUPLICATE KEY UPDATE
+				fk_tag = :tag_id
 ';
 $_QUERIES['sbSystem/tagging/node/removeTag'] = '
 	DELETE FROM	{TABLE_NODETAGS}
@@ -269,6 +272,7 @@ $_QUERIES['sbSystem/tagging/node/getTags'] = '
 	INNER JOIN	{TABLE_NODETAGS} nt
 		ON		t.id = nt.fk_tag
 	WHERE		nt.fk_subject = :subject_uuid
+	ORDER BY 	t.s_tag
 ';
 $_QUERIES['sbSystem/tagging/node/getBranchTags'] = '
 	SELECT		t.id,
@@ -338,7 +342,7 @@ $_QUERIES['sbSystem/tagging/tags/getAllTags'] = '
 				(SELECT 	COUNT(*) 
 					FROM	{TABLE_NODETAGS} nt
 					WHERE	nt.fk_tag = t.id
-				)AS n_numitemstagged
+				) AS n_numitemstagged
 	FROM		{TABLE_TAGS} t
 ';
 $_QUERIES['sbSystem/tagging/tags/getAllTags/orderByTag'] = $_QUERIES['sbSystem/tagging/tags/getAllTags'].'
@@ -356,8 +360,8 @@ $_QUERIES['sbSystem/tagging/getItems/byTagID'] = '
 		ON		n.uuid = nt.fk_subject
 	INNER JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child
-	WHERE		h.s_mpath LIKE CONCAT(:root_mpath, \'%\')
-		AND		nt.fk_tag = :tag_id
+	WHERE		nt.fk_tag = :tag_id
+		AND		h.s_mpath LIKE CONCAT(:root_mpath, \'%\')
 ';
 $_QUERIES['sbSystem/tagging/getItems/byTagID/all'] = $_QUERIES['sbSystem/tagging/getItems/byTagID'].'
 	ORDER BY	n.s_label
@@ -729,7 +733,9 @@ $_QUERIES['sbSystem/reports_db/tables/overview'] = '
 $_QUERIES['sb_system/reports_db/tables/details'] = '
 	SHOW TABLE STATUS LIKE :table_name
 ';*/
+
 // view:status -----------------------------------------------------------------
+
 $_QUERIES['sbSystem/reports_db/status/variables'] = '
 	SHOW VARIABLES
 ';
@@ -778,7 +784,9 @@ $_QUERIES['sbSystem/node/trashcan/getAbandonedNodes'] = '
 //------------------------------------------------------------------------------
 // node:registry
 //------------------------------------------------------------------------------
+
 // view:edit -------------------------------------------------------------------
+
 $_QUERIES['sbSystem/registry/getAllEntries'] = '
 	SELECT		*
 	FROM		{TABLE_REGISTRY}
@@ -802,7 +810,9 @@ $_QUERIES['sbSystem/registry/setValue'] = '
 //------------------------------------------------------------------------------
 // node:root 
 //------------------------------------------------------------------------------
+
 // view:welcome ----------------------------------------------------------------
+
 $_QUERIES['sb_system/root/view/welcome/loadUserdata'] = '
 	SELECT		n.s_label AS s_nickname,
 				u.b_activated,
@@ -817,6 +827,7 @@ $_QUERIES['sb_system/root/view/welcome/loadUserdata'] = '
 ';
 
 // view:login ------------------------------------------------------------------
+
 $_QUERIES['sb_system/root/view/login/loadUserdata'] = '
 	SELECT		u.uuid,
 				n.s_label AS s_nickname,
@@ -857,6 +868,7 @@ $_QUERIES['sb_system/root/view/login/successfulLogin'] = '
 //------------------------------------------------------------------------------
 // node:debug 
 //------------------------------------------------------------------------------
+
 $_QUERIES['sbSystem/debug/gatherTree'] = '
 	SELECT		n.uuid,
 				n.s_name,

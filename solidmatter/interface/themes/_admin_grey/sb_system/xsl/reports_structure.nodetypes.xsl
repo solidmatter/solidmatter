@@ -43,7 +43,7 @@
 				<th>Anzahl</th>
 			</tr>
 			<xsl:for-each select="nodetypes/row">
-				<xsl:variable name="nodetype" select="s_type" />
+				<xsl:variable name="nodetype" select="@s_type" />
 				<tr>
 					<xsl:choose>
 						<xsl:when test="position() mod 2 = 1">
@@ -53,9 +53,9 @@
 							<xsl:attribute name="class">even</xsl:attribute>
 						</xsl:otherwise>
 					</xsl:choose>
-					<td><span class="type {s_csstype}"><xsl:value-of select="$locale//nodetypes/type[@id=$nodetype]" /></span></td>
-					<td><xsl:value-of select="s_type" /></td>
-					<td><xsl:value-of select="num_nodes" /></td>
+					<td><span class="type {@s_csstype}"><xsl:value-of select="$locale//nodetypes/type[@id=$nodetype]" /></span></td>
+					<td><xsl:value-of select="@s_type" /></td>
+					<td><xsl:value-of select="@num_nodes" /></td>
 				</tr>
 			</xsl:for-each>
 		</table>

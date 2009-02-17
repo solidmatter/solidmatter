@@ -13,6 +13,12 @@
 */
 class sbView_maintenance_repair extends sbView {
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function execute($sAction) {
 		
 		global $_RESPONSE;
@@ -24,29 +30,9 @@ class sbView_maintenance_repair extends sbView {
 				break;
 			
 			case 'rebuildMaterializedPaths':
-				$this->logEvent(System::MAINTENANCE, 'REBUILD_NESTEDSETS_STARTED', 'starting to fix materialized paths');
+				$this->logEvent(System::MAINTENANCE, 'REBUILD_MPATHS_STARTED', 'starting to fix materialized paths');
 				$this->rebuildMaterializedPaths();
-				$this->logEvent(System::MAINTENANCE, 'REBUILD_NESTEDSETS_ENDED', 'done with rebuilding materialized paths');
-				break;
-			
-			case 'rebuildNestedSets':
-				$this->logEvent(System::MAINTENANCE, 'REBUILD_NESTEDSETS_STARTED', 'starting to fix nested set values');
-				$this->rebuildNestedSets();
-				$this->logEvent(System::MAINTENANCE, 'REBUILD_NESTEDSETS_ENDED', 'done with rebuilding nested set values');
-				break;
-				
-			case 'rebuildNestedSetsMemory':
-				$this->logEvent(System::MAINTENANCE, 'REBUILD_NESTEDSETSMEM_STARTED', 'starting to fix nested set values');
-				$this->rebuildNestedSetsMemory();
-				$this->logEvent(System::MAINTENANCE, 'REBUILD_NESTEDSETSMEM_ENDED', 'done with rebuilding nested set values');
-				break;
-				
-			case 'rebuildPositions':
-				
-				break;
-			
-			case 'check':
-				
+				$this->logEvent(System::MAINTENANCE, 'REBUILD_MPATHS_ENDED', 'done with rebuilding materialized paths');
 				break;
 			
 			case 'removeAbandonedProperties':
@@ -83,6 +69,12 @@ class sbView_maintenance_repair extends sbView {
 		
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	private function rebuildMaterializedPaths($sCurrentUUID = NULL, $sMPath = '', $iLevel = 0) {
 		
 		if ($sCurrentUUID == NULL) {
@@ -96,9 +88,9 @@ class sbView_maintenance_repair extends sbView {
 		$stmtLoadChildren->closeCursor();
 		
 		if ($sCurrentUUID == NULL) {
-			$sMPath = '';	
+			$sMPath = '';
 		} else {
-			$sMPath = $sMPath.substr(md5($sCurrentUUID), -5);
+			$sMPath = $sMPath.substr(sha1($sCurrentUUID), -REPOSITORY_MPHASH_SIZE);
 		}
 		
 		$iOrder = 0;
@@ -116,68 +108,6 @@ class sbView_maintenance_repair extends sbView {
 		
 	}
 	
-	private function rebuildNestedSets($sCurrentUUID = NULL, $iCounter = 1, $iLevel = 0) {
-		
-		if ($sCurrentUUID == NULL) {
-			$stmtLoadChildren = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/loadRoot');
-		} else {
-			$stmtLoadChildren = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/loadChildren');
-			$stmtLoadChildren->bindParam('fk_parent', $sCurrentUUID, PDO::PARAM_STR);
-		}
-		$stmtLoadChildren->execute();
-		$aResultset = $stmtLoadChildren->fetchALL(PDO::FETCH_ASSOC);
-		$stmtLoadChildren->closeCursor();
-		
-		$iOrder = 0;
-		
-		foreach ($aResultset as $iRownumber => $aRow) {
-			$iLeft = $iCounter++;
-			$this->rebuildNestedSets($aRow['uuid'], &$iCounter, $iLevel+1);
-			$iRight = $iCounter++;
-			$stmtSetCoordinates = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/setCoordinates/nestedSets');
-			$stmtSetCoordinates->bindParam('fk_child', $aRow['uuid'], PDO::PARAM_STR);
-			$stmtSetCoordinates->bindParam('fk_parent', $sCurrentUUID, PDO::PARAM_STR);
-			$stmtSetCoordinates->bindParam('left', $iLeft, PDO::PARAM_INT);
-			$stmtSetCoordinates->bindParam('right', $iRight, PDO::PARAM_INT);
-			$stmtSetCoordinates->bindParam('level', $iLevel, PDO::PARAM_INT);
-			$stmtSetCoordinates->bindParam('order', $iOrder, PDO::PARAM_INT);
-			$stmtSetCoordinates->execute();
-			$iOrder++;
-		}
-	}
-	
-	private function rebuildNestedSetsMemory($sCurrentUUID = NULL, $iCounter = 1, $iLevel = 0) {
-		if ($sCurrentUUID == NULL) {
-			$stmtLoadChildren = $this->crSession->prepareKnown('sbCR/test/loadRoot');
-		} else {
-			$stmtLoadChildren = $this->crSession->prepareKnown('sbCR/test/loadChildren');
-			$stmtLoadChildren->bindParam('fk_parent', $sCurrentUUID, PDO::PARAM_STR);
-		}
-		$stmtLoadChildren->execute();
-		$aResultset = $stmtLoadChildren->fetchALL(PDO::FETCH_ASSOC);
-		$stmtLoadChildren->closeCursor();
-		
-		$iOrder = 0;
-		
-		foreach ($aResultset as $iRownumber => $aRow) {
-			$iLeft = $iCounter++;
-			$this->rebuildNestedSetsMemory($aRow['uuid'], &$iCounter, $iLevel+1);
-			$iRight = $iCounter++;
-			$stmtSetCoordinates = $this->crSession->prepareKnown('sbCR/test/setCoordinates');
-			$stmtSetCoordinates->bindParam('fk_child', $aRow['uuid'], PDO::PARAM_STR);
-			$stmtSetCoordinates->bindParam('fk_parent', $sCurrentUUID, PDO::PARAM_STR);
-			$stmtSetCoordinates->bindParam('left', $iLeft, PDO::PARAM_INT);
-			$stmtSetCoordinates->bindParam('right', $iRight, PDO::PARAM_INT);
-			$stmtSetCoordinates->bindParam('level', $iLevel, PDO::PARAM_INT);
-			$stmtSetCoordinates->bindParam('order', $iOrder, PDO::PARAM_INT);
-			if ($sCurrentUUID != NULL) {
-				$stmtSetCoordinates->execute();
-			}
-			$iOrder++;
-		}
-	}
-	
 }
-
 
 ?>

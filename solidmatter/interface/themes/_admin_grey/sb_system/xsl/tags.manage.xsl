@@ -53,12 +53,12 @@
 			<xsl:for-each select="row">
 				<tr>
 					<xsl:call-template name="colorize" />
-					<td width="20%"><xsl:value-of select="s_tag" /></td>
-					<td width="20%"><xsl:value-of select="n_numitemstagged" /></td>
-					<td width="20%"><xsl:value-of select="n_popularity" /></td>
-					<td width="20%"><xsl:value-of select="n_customweight" /></td>
-					<td width="20%"><xsl:value-of select="e_visibility" /></td>
-					<td width="0%"><a href="/{$master/@uuid}/manage/edit/tagid={id}" class="option"><img src="/theme/sb_system/icons/doc_edit.gif" /></a></td>
+					<td width="20%"><xsl:value-of select="@s_tag" /></td>
+					<td width="20%"><xsl:value-of select="@n_numitemstagged" /></td>
+					<td width="20%"><xsl:value-of select="@n_popularity" /></td>
+					<td width="20%"><xsl:value-of select="@n_customweight" /></td>
+					<td width="20%"><xsl:value-of select="@e_visibility" /></td>
+					<td width="0%"><a href="/{$master/@uuid}/manage/edit/tagid={@id}" class="option"><img src="/theme/sb_system/icons/doc_edit.gif" /></a></td>
 				</tr>
 			</xsl:for-each>
 		</table>

@@ -19,7 +19,7 @@ class sbView_reports_system extends sbView {
 		
 		$stmtModules = $this->prepareKnown('sbSystem/modules/getInfo');
 		$stmtModules->execute();
-		$_RESPONSE->addData($stmtModules->fetchDOM('modules'));
+		$_RESPONSE->addData($stmtModules->fetchElements('modules'));
 		
 		$domInfo = new DOMDocument();
 		$domInfo->load('modules/sb_system/properties.xml');

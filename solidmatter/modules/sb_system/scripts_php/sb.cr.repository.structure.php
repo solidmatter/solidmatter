@@ -457,7 +457,7 @@ class sbCR_RepositoryStructure {
 			if ($cacheRepos->exists('NodeTypeHierarchy')) {
 				$this->aNodeTypeHierarchy = $cacheRepos->loadData('NodeTypeHierarchy');
 				//echo ('nodetypehierarchy cache hit');
-				return;	
+				return;
 			}
 		}
 		

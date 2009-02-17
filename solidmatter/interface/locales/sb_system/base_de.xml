@@ -226,6 +226,7 @@
 		<view id="events">Ereignisse</view>
 		<view id="administration">Administration</view>
 		<view id="manage">Verwalten</view>
+		<view id="documentation">Dokumentation</view>
 	</views>
 	
 	<config>

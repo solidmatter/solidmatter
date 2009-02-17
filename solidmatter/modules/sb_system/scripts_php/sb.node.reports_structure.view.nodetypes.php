@@ -23,7 +23,7 @@ class sbView_reports_structure_nodetypes extends sbView {
 				
 				$stmtGetInfo = $this->nodeSubject->getSession()->prepareKnown('sbSystem/reports_structure/nodetypes/overview');
 				$stmtGetInfo->execute();
-				$_RESPONSE->addData($stmtGetInfo->fetchDOM('nodetypes'));
+				$_RESPONSE->addData($stmtGetInfo->fetchElements('nodetypes'));
 				// TODO: use funcion to get only module names
 				$aModules = System::getModules();
 				foreach ($aModules as $sModule => $unused) {
