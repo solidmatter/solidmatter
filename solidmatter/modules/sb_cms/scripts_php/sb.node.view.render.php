@@ -32,7 +32,7 @@ class sbView_render extends sbView {
 				
 				// gather primary content
 				$this->nodeSubject->gatherContent();
-				$_RESPONSE->addData($this->nodeSubject->getElement(TRUE, TRUE), 'content');
+				$_RESPONSE->addData($this->nodeSubject->getElement(TRUE, TRUE), 'page_content');
 				
 				// gather path data
 				$niAncestors = $this->nodeSubject->getAncestors();
@@ -55,7 +55,7 @@ class sbView_render extends sbView {
 					
 					// include layout data
 					$nodeTemplate->gatherContent();
-					$_RESPONSE->addData($nodeTemplate->getElement(TRUE, TRUE), 'layout');
+					$_RESPONSE->addData($nodeTemplate->getElement(TRUE, TRUE), 'page_layout');
 					
 					/*$sStylesheetURL = 'http://'.$_REQUEST->getDomain().'/'.$this->nodeSubject->getProperty('uuid').'/preview/getStylesheet';
 					$_RESPONSE->setRenderMode('rendered', 'text/html', $sStylesheetURL);

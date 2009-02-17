@@ -22,7 +22,6 @@ class sbNode_page extends sbNode {
 	public function getStylesheetURL($sView, $sAction = NULL, $sMode = NULL) {
 		
 		$sURL = FALSE;
-		
 		$sLayoutUUID = sbCR_Utilities::getPropertyFromAncestors($this, 'theme_layout');
 		
 		if ($sLayoutUUID != FALSE) {
@@ -44,6 +43,14 @@ class sbNode_page extends sbNode {
 			}
 			
 			$sURL = 'http://'.$sPath;
+			
+		}
+		
+		$sTemplateUUID = $this->getProperty('theme_template');
+		
+		if ($sTemplateUUID != FALSE) {
+			
+			$sURL .= '/?template='.$sTemplateUUID;
 			
 		}
 		

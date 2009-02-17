@@ -38,7 +38,7 @@ class sbView_preview extends sbView {
 				
 				// gather primary content
 				$this->nodeSubject->gatherContent();
-				$_RESPONSE->addData($this->nodeSubject->getElement(TRUE, TRUE), 'content');
+				$_RESPONSE->addData($this->nodeSubject->getElement(TRUE, TRUE), 'page_content');
 				
 				// gather path data
 				$niAncestors = $this->nodeSubject->getAncestors();
@@ -49,7 +49,7 @@ class sbView_preview extends sbView {
 				$sLayoutUUID = sbCR_Utilities::getPropertyFromAncestors($this->nodeSubject, 'theme_layout');
 				$nodeTemplate = $this->getNode($sLayoutUUID);
 				$nodeTemplate->gatherContent();
-				$_RESPONSE->addData($nodeTemplate->getElement(TRUE, TRUE), 'layout');
+				$_RESPONSE->addData($nodeTemplate->getElement(TRUE, TRUE), 'page_layout');
 				
 				$sTemplateURL = $this->nodeSubject->getStylesheetURL('preview');
 				if ($sTemplateURL !== FALSE) {
