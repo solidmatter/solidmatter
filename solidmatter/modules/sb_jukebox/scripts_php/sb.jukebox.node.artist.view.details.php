@@ -32,16 +32,27 @@ class sbView_jukebox_artist_details extends sbJukeboxView {
 		switch ($sAction) {
 			
 			case 'display':
-			
+				
+				$this->nodeSubject->getTags();
+				
 				// search form
 				$formSearch = $this->buildSearchForm('artists');
 				$formSearch->saveDOM();
 				$_RESPONSE->addData($formSearch);
 				
+				// tag form
+				if (User::isAuthorised('tag', $this->nodeSubject)) {
+					$formTag = $this->buildTagForm();
+					$formTag->saveDOM();
+					$_RESPONSE->addData($formTag);
+				}
+				
 				// comment form
-				$formComment = $this->buildCommentForm();
-				$formComment->saveDOM();
-				$_RESPONSE->addData($formComment);
+				if (User::isAuthorised('comment', $this->nodeSubject)) {
+					$formComment = $this->buildCommentForm();
+					$formComment->saveDOM();
+					$_RESPONSE->addData($formComment);
+				}
 				
 				// add albums & comments
 				$niAlbums = $this->nodeSubject->loadChildren('albums', TRUE, TRUE, TRUE);

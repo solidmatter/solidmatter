@@ -77,6 +77,9 @@
 								<td>
 									<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
 								</td>
+								<td align="right">
+									<xsl:call-template name="render_buttons" />
+								</td>
 							</tr>
 						</xsl:for-each>
 					</xsl:when>

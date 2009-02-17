@@ -114,6 +114,7 @@
 												<xsl:value-of select="' - '" />
 											</xsl:if>
 										</xsl:for-each>
+										<br />
 										<xsl:call-template name="addtag">
 											<xsl:with-param name="form" select="$content/sbform[@id='addTag']" />
 										</xsl:call-template>

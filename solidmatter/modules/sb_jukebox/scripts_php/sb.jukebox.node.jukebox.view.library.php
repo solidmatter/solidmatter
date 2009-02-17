@@ -33,9 +33,13 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 				$_RESPONSE->addData($formSearch);
 				
 				// add latest albums
+				$iLimit = 8;
+				if ($_REQUEST->getParam('expand') == 'latest') {
+					$iLimit = 32;	
+				}
 				$stmtGetLatest = $this->crSession->prepareKnown('sbJukebox/jukebox/albums/getLatest');
 				$stmtGetLatest->bindValue('jukebox_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);
-				$stmtGetLatest->bindValue('limit', 8, PDO::PARAM_INT);
+				$stmtGetLatest->bindValue('limit', $iLimit, PDO::PARAM_INT);
 				$stmtGetLatest->bindValue('nodetype', 'sbJukebox:Album', PDO::PARAM_STR);
 				$stmtGetLatest->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
 				$stmtGetLatest->execute();

@@ -52,7 +52,7 @@ class sbView_jukebox_jukebox_albums extends sbJukeboxView {
 				$stmtGetAlbums->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
 				$stmtGetAlbums->execute();
 				
-				$_RESPONSE->addData($stmtGetAlbums->fetchElements(), 'random');
+				$_RESPONSE->addData($stmtGetAlbums->fetchElements('albums'));
 				
 				break;
 				
@@ -70,7 +70,7 @@ class sbView_jukebox_jukebox_albums extends sbJukeboxView {
 						$stmtSearch->bindValue('searchstring', $sSearchString, PDO::PARAM_STR);
 						$stmtSearch->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
 						$stmtSearch->execute();
-						$_RESPONSE->addData($stmtSearch->fetchElements(), 'searchresult');
+						$_RESPONSE->addData($stmtSearch->fetchElements('albums'));
 					}
 				}
 				$formSearch->saveDOM();

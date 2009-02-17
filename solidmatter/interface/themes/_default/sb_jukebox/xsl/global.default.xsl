@@ -243,8 +243,8 @@
 				}
 			</script>
 			<!--<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>-->
-			<br /><a href="javascript:showTagForm();" style="line-height:25px;" class="type create"><xsl:value-of select="$locale/sbSystem/actions/new_tag" /></a>
-			<form action="{$form/@action}" name="addTag" method="post" class="addtag" style="display:none;">
+			<a href="javascript:showTagForm();" style="line-height:25px;" class="type create"><xsl:value-of select="$locale/sbSystem/actions/new_tag" /></a>
+			<form action="{$form/@action}" name="addTag" id="addTag" method="post" class="addtag" style="display:none;">
 				<xsl:apply-templates select="$form/sbinput[@type='string']" mode="inputonly" />
 				<xsl:value-of select="' '" />
 				<xsl:apply-templates select="$form/submit" mode="inputonly" />
@@ -354,6 +354,50 @@
 			<a href="{$url}Y">Y</a>
 			<a href="{$url}Z">Z</a>
 		</div>
+	</xsl:template>
+	
+	<xsl:template name="render_albumlist">
+		<xsl:param name="albumlist" />
+		<xsl:choose>
+			<xsl:when test="$albumlist">
+				<xsl:for-each select="$albumlist/child::*">
+					<tr>
+						<xsl:call-template name="colorize" />
+						<td width="60">
+							<a class="imglink" href="/{@uuid}">
+								<img height="50" width="50" src="/{@uuid}/details/getCover/?size=50" alt="cover" />
+							</a>
+						</td>
+						<td>
+							<a href="/{@uuid}">
+								<xsl:value-of select="@label" />
+								<xsl:if test="@published">
+									[<xsl:value-of select="@published" />]
+								</xsl:if>
+								<xsl:if test="@info_published">
+									[<xsl:value-of select="@info_published" />]
+								</xsl:if>
+							</a>
+							<br />
+							<xsl:call-template name="render_stars" />
+						</td>
+						<td align="right">
+							<xsl:call-template name="render_buttons" />
+							<br /><br />
+							<a href="javascript:toggle_albumdetails('{@uuid}');">more...</a>
+						</td>
+					</tr>
+					<tr style="display:none;">
+						<xsl:call-template name="colorize" />
+						<td></td>
+						<td colspan="2" id="details_{@uuid}"></td>
+					</tr>
+				</xsl:for-each>
+			</xsl:when>
+			<xsl:otherwise>
+				<tr><td colspan="5"><xsl:value-of select="$locale/sbJukebox/texts/no_albums" /></td></tr>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 	<!-- break arbeitet nur mit n -->

@@ -36,3 +36,30 @@ function remove_playbutton(oCover) {
 	
 }
 
+//------------------------------------------------------------------------------
+/**
+* 
+*/
+function toggle_albumdetails(sAlbumUUID) {
+	
+	var oContainer = $('details_' + sAlbumUUID).parentNode;
+	
+	if (oContainer.style.display != 'none') {
+		oContainer.style.display = 'none';
+	} else {
+		oContainer.style.display = 'table-row';
+		if (!oContainer.loaded) {
+			var sUrl = '/' + sAlbumUUID + '/details/displayInline';
+			var sID = 'details_' + sAlbumUUID;
+			var myAjaxOpener = new Ajax.Updater( 
+				sID,
+				sUrl,
+				{
+					method: 'get', 
+					parameters: null 
+				}
+			);
+			oContainer.loaded = true;
+		}
+	}
+}

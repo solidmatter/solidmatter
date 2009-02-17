@@ -44,7 +44,7 @@
 				<xsl:when test="$content/@action = 'search'">
 					<xsl:call-template name="renderArtists">
 						<xsl:with-param name="data" select="$content/searchresult/resultset/row" />
-						<xsl:with-param name="label" select="$locale/system/general/labels/search/results" />
+						<xsl:with-param name="label" select="$locale/sbSystem/labels/search/results" />
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:otherwise>

@@ -55,6 +55,21 @@
 				<span class="type artist"><xsl:value-of select="$content/sbnode/@label" /></span>
 			</h2>
 			
+			<xsl:value-of select="$locale/sbSystem/labels/tags" />:
+			<xsl:for-each select="tags/tag">
+				<a href="/-/tags/listItems/?tagid={@id}">
+					<xsl:value-of select="." />
+				</a>
+				<xsl:if test="position() != last()">
+					<xsl:value-of select="' - '" />
+				</xsl:if>
+			</xsl:for-each>
+			<br />
+			<xsl:call-template name="addtag">
+				<xsl:with-param name="form" select="$content/sbform[@id='addTag']" />
+			</xsl:call-template>
+			<br />
+			
 			<table class="default" width="100%">
 				<thead>
 					<tr>
@@ -62,31 +77,9 @@
 					</tr>
 				</thead>
 				<tbody>
-				<xsl:choose>
-					<xsl:when test="children[@mode='albums']/sbnode">
-						<xsl:for-each select="children[@mode='albums']/sbnode">
-							<tr>
-								<xsl:call-template name="colorize" />
-								<td width="50">
-									<a class="imglink" href="/{@uuid}/details">
-										<img height="50" width="50" src="/{@uuid}/details/getCover/?size=50" alt="cover" />
-									</a>
-								</td>
-								<td>
-									<span style="float: right;">
-										<xsl:call-template name="render_buttons" />
-									</span>
-									<a href="/{@uuid}"><xsl:value-of select="@label" /> [<xsl:value-of select="@info_published"/>]</a><br />
-									<xsl:call-template name="render_stars" />
-								</td>
-							</tr>
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:otherwise>
-						<tr><td colspan="5"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>
-					</xsl:otherwise>
-				</xsl:choose>
-				
+				<xsl:call-template name="render_albumlist">
+					<xsl:with-param select="children[@mode='albums']" name="albumlist" />
+				</xsl:call-template>
 				</tbody>
 			</table>
 		

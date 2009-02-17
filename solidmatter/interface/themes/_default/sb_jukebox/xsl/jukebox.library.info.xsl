@@ -27,10 +27,10 @@
 	
 	<xsl:template name="content">
 		<div class="nav">
+			<span style="float:right;  margin-top:5px;"><a class="type coverwall" href="/-/-/displayCoverWall">Cover Wall</a></span>
 			<xsl:call-template name="simplesearch">
 				<xsl:with-param name="form" select="$content/sbform[@id='searchJukebox']" />
 			</xsl:call-template>
-			
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="response/errors" />
@@ -46,7 +46,18 @@
 			<thead>
 				<tr>
 					<th colspan="2">
-						<span style="float:right"><a class="type coverwall" href="/-/-/displayCoverWall">Cover Wall</a></span>
+						<span style="float:right;">
+							<xsl:choose>
+								<xsl:when test="$content/@expand = 'latest'">
+									<a class="type collapse" href="/"><xsl:value-of select="$locale/sbJukebox/actions/collapse" /></a>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:if test="1 or count($nodes) > 9">
+										<a class="type expand" href="/-/-/-/?expand=latest"><xsl:value-of select="$locale/sbJukebox/actions/expand" /></a>
+									</xsl:if>
+								</xsl:otherwise>
+							</xsl:choose>
+						</span>
 						<span class="type album"><xsl:value-of select="$locale/sbJukebox/labels/latest_albums" /></span>
 					</th>
 				</tr>
@@ -82,7 +93,7 @@
 			<thead>
 				<tr>
 					<th colspan="3">
-						<span class="type track"><xsl:value-of select="$locale/sbJukebox/labels/now_playing" /></span>
+						<span class="type ear"><xsl:value-of select="$locale/sbJukebox/labels/now_playing" /></span>
 					</th>
 				</tr>
 			</thead>
@@ -102,6 +113,9 @@
 							</td>
 							<td>
 								<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
+							</td>
+							<td width="1%" style="white-space:nowrap;">
+								<xsl:call-template name="render_buttons" />
 							</td>
 						</tr>
 					</xsl:for-each>

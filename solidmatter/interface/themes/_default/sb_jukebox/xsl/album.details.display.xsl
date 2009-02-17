@@ -60,7 +60,7 @@
 					<tr class="odd">
 						<td style="padding:10px;" width="160" rowspan="3">
 							<a class="imglink" target="_blank" href="/{@uuid}/details/getCover/{@name}.jpg"><img height="150" width="150" src="/{@uuid}/details/getCover/?size=150" alt="cover" /></a>
-							<a href="/{@uuid}/details/buildQuilt">Quilt</a>
+							<!--<a href="/{@uuid}/details/buildQuilt">Quilt</a>-->
 						</td>
 						<td style="padding: 15px 15px 15px 0;">
 							<table width="100%">
@@ -108,6 +108,7 @@
 												<xsl:value-of select="' - '" />
 											</xsl:if>
 										</xsl:for-each>
+										<br />
 										<xsl:call-template name="addtag">
 											<xsl:with-param name="form" select="$content/sbform[@id='addTag']" />
 										</xsl:call-template>
@@ -133,6 +134,9 @@
 					<xsl:when test="children[@mode='tracks']/sbnode">
 						<xsl:for-each select="children[@mode='tracks']/sbnode">
 							<!--<xsl:sort select="format-number('0000.00', @info_index)" />-->
+							<xsl:if test="@info_index = 1 and position() != 1">
+								<tr><th colspan="5"><hr style="border:1px solid white;" /></th></tr>
+							</xsl:if>
 							<tr>
 								<xsl:call-template name="colorize" />
 								<td width="80">

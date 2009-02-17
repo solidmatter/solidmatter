@@ -27,11 +27,11 @@
 	</xsl:template>
 	
 	<xsl:template name="content">
-		<!--<div class="nav">
+		<div class="nav">
 			<xsl:call-template name="simplesearch">
-				<xsl:with-param name="form" select="$content/sbform[@id='searchArtists']" />
+				<xsl:with-param name="form" select="$content/sbform[@id='searchTagSpecific']" />
 			</xsl:call-template>
-		</div>-->
+		</div>
 		<div class="content">
 			<xsl:apply-templates select="/response/errors" />
 			<xsl:if test="$content/taggedArtists">

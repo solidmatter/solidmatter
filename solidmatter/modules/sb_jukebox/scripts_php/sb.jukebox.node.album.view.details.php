@@ -61,20 +61,24 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 					$_RESPONSE->addData($formTag);
 				}
 				
-				// add tracks
-				$niTracks = $this->nodeSubject->loadChildren('tracks', TRUE, TRUE, TRUE);
-				foreach ($niTracks as $nodeTrack) {
-					$nodeTrack->getVote($this->getPivotUUID());
-				}
-				
+				// comments
 				$niComments = $this->nodeSubject->loadChildren('comments', TRUE, TRUE, TRUE);
 				foreach ($niComments as $nodeComment) {
 					// TODO: check user existence, might be deleted
 					$nodeUser = $this->crSession->getNodeByIdentifier($nodeComment->getProperty('jcr:createdBy'));
 					$nodeComment->setAttribute('username', $nodeUser->getProperty('label'));
 				}
-				$this->nodeSubject->storeChildren();
 				
+			
+			case 'displayInline':
+				
+				// add tracks
+				$niTracks = $this->nodeSubject->loadChildren('tracks', TRUE, TRUE, TRUE);
+				foreach ($niTracks as $nodeTrack) {
+					$nodeTrack->getVote($this->getPivotUUID());
+				}
+				
+				$this->nodeSubject->storeChildren();
 				$this->nodeSubject->loadProperties();
 				$this->nodeSubject->getTags();
 				

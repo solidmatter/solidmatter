@@ -45,7 +45,8 @@ $_QUERIES['sbJukebox/nowPlaying/get'] = '
 	SELECT		p.fk_track AS uuid,
 				n.s_label AS label,
 				p.fk_user AS useruuid,
-				n2.s_label AS username
+				n2.s_label AS username,
+				\'sbJukebox:Track\' as nodetype
 	FROM		{TABLE_JB_NOWPLAYING} p
 	INNER JOIN	{TABLE_NODES} n
 		ON		n.uuid = p.fk_track
@@ -94,7 +95,8 @@ $_QUERIES['sbJukebox/jukebox/various/getTop'] = '
 	SELECT		n.uuid,
 				n.s_label AS label,
 				n.s_name AS name,
-				v.n_vote AS vote
+				v.n_vote AS vote,
+				:nodetype as nodetype
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child
@@ -110,14 +112,15 @@ $_QUERIES['sbJukebox/history/getTop'] = '
 	SELECT		n.uuid,
 				n.s_label AS label,
 				n.s_name AS name,
-				COUNT(*) AS times_played
+				COUNT(*) AS times_played,
+				\'sbJukebox:Track\' as nodetype
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_JB_HISTORY} hi
 		ON		n.uuid = hi.fk_track
 	INNER JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child
 	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
-		AND		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(hi.dt_played) < 60*60*24*7
+		AND		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(hi.dt_played) < :timeframe
 	GROUP BY	hi.fk_track
 	ORDER BY	COUNT(*) DESC
 	LIMIT		0, :limit
@@ -213,8 +216,8 @@ $_QUERIES['sbJukebox/jukebox/search/albums/byLabel'] = '
 				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
-				a.b_coverexists,
-				a.n_published,
+				/*a.b_coverexists AS coverexists,*/
+				a.n_published AS published,
 				(SELECT 	n_vote 
 					FROM	{TABLE_VOTES} v
 					WHERE	v.fk_subject = n.uuid
@@ -234,8 +237,8 @@ $_QUERIES['sbJukebox/jukebox/search/albums/numeric'] = '
 				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
-				a.b_coverexists,
-				a.n_published,
+				/*a.b_coverexists AS coverexists,*/
+				a.n_published AS published,
 				(SELECT 	n_vote 
 					FROM	{TABLE_VOTES} v
 					WHERE	v.fk_subject = n.uuid
@@ -259,21 +262,24 @@ $_QUERIES['sbJukebox/jukebox/albums/getRandom'] = '
 				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
+				a.n_published AS published,
 				(SELECT 	n_vote 
 					FROM	{TABLE_VOTES} v
 					WHERE	v.fk_subject = n.uuid
 						AND	v.fk_user = :user_uuid
 				) AS vote
 	FROM		(SELECT			uuid
-					FROM		{TABLE_JB_ALBUMS} a
+					FROM		{TABLE_JB_ALBUMS} a2
 					INNER JOIN	{TABLE_HIERARCHY} h
-						ON		a.uuid = h.fk_child
+						ON		a2.uuid = h.fk_child
 					WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 					ORDER BY 	RAND() 
 					LIMIT :limit
 				) as rand
 	INNER JOIN	{TABLE_NODES} n
 		ON		rand.uuid = n.uuid
+	INNER JOIN	{TABLE_JB_ALBUMS} a
+		ON		a.uuid = n.uuid
 ';
 $_QUERIES['sbJukebox/jukebox/albums/getLatest'] = '
 	SELECT		n.uuid,

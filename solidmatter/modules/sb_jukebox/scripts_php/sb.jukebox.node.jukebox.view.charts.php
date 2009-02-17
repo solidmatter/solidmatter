@@ -82,6 +82,8 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 						$stmtGetTop->bindValue('nodetype', $aCategory['nodetype'], PDO::PARAM_STR);
 					} else {
 						$stmtGetTop = $stmtGetMostPlayed;
+						$iTimeframe = 60*60*24*7; // TODO: make this customizable (even on session scope?)
+						$stmtGetTop->bindValue('timeframe', $iTimeframe, PDO::PARAM_INT);
 					}
 					
 					$stmtGetTop->bindValue('jukebox_mpath', $this->getJukebox()->getMPath(), PDO::PARAM_STR);

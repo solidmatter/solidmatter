@@ -146,10 +146,10 @@ class DefaultJukeboxImporter {
 				
 				function toggle(sID) {
 					var oElement = document.getElementById(sID);
-					if (oElement.style.display == "none") {
-						oElement.style.display = "block";
-					} else {
+					if (oElement.style.display == "block") {
 						oElement.style.display = "none";
+					} else {
+						oElement.style.display = "block";
 					}
 				}
 
@@ -178,7 +178,12 @@ class DefaultJukeboxImporter {
 		');
 		
 		// get all albums in import dir and cycle through
-		$dirAlbums = new sbDirectory($this->nodeJukebox->getProperty('config_sourcepath'));
+		if ($_REQUEST->getParam('dry') != 'true') {
+			$dirAlbums = new sbDirectory($this->nodeJukebox->getProperty('config_sourcepath'));
+		} else {
+			$dirAlbums = new sbDirectory($this->nodeJukebox->getProperty('config_checkpath'));
+		}
+		
 		foreach ($dirAlbums->getDirectories(TRUE) as $dirAlbum) {
 			
 			$sState = 'good';
@@ -218,6 +223,8 @@ class DefaultJukeboxImporter {
 						
 					} catch (Exception $e) {
 						$this->nodeJukebox->getSession()->rollback();
+						// FIXME: newly created (and aborted) albums should be removed from memory, artist and session
+						$this->jbToolkit->dumpArtists();
 						throw $e;
 					}
 					

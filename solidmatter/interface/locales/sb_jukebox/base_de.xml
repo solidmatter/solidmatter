@@ -28,7 +28,8 @@
 	
 	<Jukebox>
 		<config_description>Beschreibung</config_description>
-		<config_sourcepath>Pfad zu den MP3-Files (auf dem Server)</config_sourcepath>
+		<config_sourcepath>Pfad zu den MP3s (Produktivverzeichnis)</config_sourcepath>
+		<config_checkpath>Pfad zu den MP3s (Testverzeichnis)</config_checkpath>
 		<config_userealpath>direkten Pfad nutzen</config_userealpath>
 		<config_realpath>direkter Pfad für Zugriff von außen</config_realpath>
 		<config_islocked>Jukebox gesperrt</config_islocked>
@@ -132,5 +133,9 @@
 		<activate>aktivieren</activate>
 		<remove>entfernen</remove>
 	</actions>
+	
+	<texts>
+		<no_albums>Keine Alben vorhanden</no_albums>
+	</texts>
 	
 </sbJukebox>

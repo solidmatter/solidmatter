@@ -22,6 +22,9 @@ class sbJukeboxView extends sbView {
 	* @return 
 	*/
 	protected function __init() {
+		if ($this->getJukebox()->getProperty('config_islocked') == 'TRUE') {
+			throw new sbException('this jukebox is currently locked');
+		}
 		$this->storeLibraryInfo();
 		$this->storeNowPlaying();
 		$this->storeCurrentPlaylist();
@@ -219,6 +222,12 @@ class sbJukeboxView extends sbView {
 			case 'tracks':
 				$sID = 'searchTracks';
 				$sTarget = System::getURL('-', 'library', 'search');
+				break;
+			case 'tagspecific':
+				$aParams = array();
+				$aParams['tagid'] = $_REQUEST->getParam('tagid');
+				$sID = 'searchTagSpecific';
+				$sTarget = System::getURL('-', 'tags', 'listItems', $aParams);
 				break;
 			default:
 				throw new sbException('searchform subject not recognized: "'.$sSubject.'"');

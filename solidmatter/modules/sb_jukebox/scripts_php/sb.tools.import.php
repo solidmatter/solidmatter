@@ -555,7 +555,7 @@ class JukeboxToolkit {
 		error_reporting(0);
 		$aInfo = $oGetID3->analyze($sAlbumPath.$sRelPath);
 		error_reporting(E_STRICT | E_ALL);
-		
+//		var_dumpp($aInfo); die();
 		// check premises ------------------------------------------------------
 		
 		if (!isset($aInfo['tags']['id3v2'])) {
@@ -601,6 +601,8 @@ class JukeboxToolkit {
 			throw new ImportException('[abort] - encoding or bitrate missing in '.$sRelPath);
 		}
 		
+		// set genres ----------------------------------------------------------
+		
 		//var_dumpp($aSource['content_type'][0]);
 		if (isset($aSource['content_type'][0]) && $aSource['content_type'][0] != '') {
 			$sGenres = iconv($oGetID3->encoding, 'UTF-8', $aSource['content_type'][0]);
@@ -635,7 +637,36 @@ class JukeboxToolkit {
 			}
 		}
 		
-		// finish
+		// set UFID in file if necessary ---------------------------------------
+		// FIXME: currently broken, Mp3Tag removes them, doesn't seem to be null-terminated of something -.-
+//		if (isset($aInfo['UFID']['http://www.solidbytes.de/sm/sbJukebox']['data'])) {
+//			// $aNodeProps['UUID']
+//		} else {
+//			
+//			$oGetID3 = new getID3;
+//			getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'write.id3v2.php', __FILE__, true);
+//			
+//			$oTagWriter = new getid3_write_id3v2();
+//			$oTagWriter->filename = $sAlbumPath.$sRelPath;
+//			$oTagWriter->tagformats = array('id3v1', 'id3v2.3');
+//			
+//			// set various options (optional)
+//			//$oTagWriter->overwrite_tags = FALSE;
+//			//$oTagWriter->tag_encoding = 'UTF-8';
+//			$oTagWriter->merge_existing_data = TRUE;
+//			
+//			$sUFID = uuid();
+//			$aTagData['UFID'][0]['ownerid'] = 'http://www.solidbytes.de/sm/sbJukebox';
+//			$aTagData['UFID'][0]['data'] = $sUFID;
+//			
+//			$oTagWriter->tag_data = $aTagData;
+//			$oTagWriter->WriteID3v2();
+//			$aInfo['UFID']['http://www.solidbytes.de/sm/sbJukebox']['data'] = $sUFID;
+//			echo 'added UFID tag';
+//		}
+		
+		// set properties and finish -------------------------------------------
+		
 		$aTrackInfo['artist'] 			= iconv($oGetID3->encoding, 'UTF-8', $sArtist);
 		
 		$aNodeProps['label']			= iconv($oGetID3->encoding, 'UTF-8', $sArtist.' - '.$sTitle);

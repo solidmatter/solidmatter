@@ -62,7 +62,7 @@
 				<xsl:call-template name="renderResult">
 					<xsl:with-param name="label" select="$locale/sbJukebox/labels/most_played" />
 					<xsl:with-param name="nodes" select="$content/mostPlayed/resultset/row" />
-					<xsl:with-param name="type" select="'track'" />
+					<xsl:with-param name="type" select="'ear'" />
 					<xsl:with-param name="expand" select="'mostPlayed'" />
 				</xsl:call-template>
 			</xsl:if>

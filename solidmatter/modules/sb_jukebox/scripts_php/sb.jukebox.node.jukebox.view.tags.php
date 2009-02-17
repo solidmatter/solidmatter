@@ -27,7 +27,7 @@ class sbView_jukebox_jukebox_tags extends sbJukeboxView {
 			
 			case 'display':
 				
-				$formWeighting = $this->buildForm();
+				$formWeighting = $this->buildWeightingForm();
 				$formWeighting->saveDOM();
 				$_RESPONSE->addData($formWeighting);
 				
@@ -39,7 +39,7 @@ class sbView_jukebox_jukebox_tags extends sbJukeboxView {
 				
 			case 'changeWeighting':
 				
-				$formWeighting = $this->buildForm();
+				$formWeighting = $this->buildWeightingForm();
 				$formWeighting->recieveInputs();
 				if ($formWeighting->checkInputs()) {
 					$sJukeboxUUID = $this->getJukebox()->getProperty('jcr:uuid');
@@ -64,6 +64,10 @@ class sbView_jukebox_jukebox_tags extends sbJukeboxView {
 				if ($this->checkTimeout($iTagID)) {
 					$this->nodeSubject->increaseTagPopularity($iTagID);
 				}
+				
+				$formSearch = $this->buildSearchForm('tagspecific');
+				$formSearch->saveDOM();
+				$_RESPONSE->addData($formSearch);
 				
 				$aCategories = array(
 					'artists' => array(
@@ -125,7 +129,7 @@ class sbView_jukebox_jukebox_tags extends sbJukeboxView {
 	* @param 
 	* @return 
 	*/
-	protected function buildForm() {
+	protected function buildWeightingForm() {
 		
 		$formWeighting = new sbDOMForm(
 			'changeWeighting',

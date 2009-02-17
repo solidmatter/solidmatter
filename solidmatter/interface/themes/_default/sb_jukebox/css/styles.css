@@ -267,7 +267,7 @@ table.default tr.th2 th {
 	background-color: #334;
 }*/
 table.default tr.odd, li.odd {
-	background-color: #E0E0E8;
+	background-color: #EFEFF3;
 }
 table.default tr.even, li.even {
 	background-color: white;
@@ -284,6 +284,10 @@ ul.sortable li {
 	display: block;
 	padding: 2px;
 	cursor: n-resize;
+}
+
+table.hidden tr td {
+	padding: 0;
 }
 
 /* album covers --------------------------------------------------------------*/
@@ -358,6 +362,9 @@ a.imglink img {
 }
 *.comment {
 	background-image: url(../icons/type_comment.png);
+}
+*.ear {
+	background-image: url(../icons/ear_hover.png);
 }
 
 /* menu (has to be after 'type' definition) */
