@@ -196,7 +196,7 @@ function normalize_path($sDirectory, $bUseRealpath = TRUE) {
 		$sDirectory = realpath($sDirectory);
 	}
 	$sDirectory = str_replace('\\', '/', $sDirectory);
-	if ($sDirectory{strlen($sDirectory)-1} != '/') {
+	if (substr($sDirectory, -1) != '/') {
 		$sDirectory .= '/';	
 	}
 	return ($sDirectory);

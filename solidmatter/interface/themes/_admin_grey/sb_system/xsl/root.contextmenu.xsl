@@ -35,9 +35,6 @@
 				</li>
 			</xsl:if>
 			
-			<xsl:if test="@empty='TRUE'">
-				<li><a href="#"><span class="type delete"><xsl:value-of select="$locale/sbSystem/actions/empty" /></span></a></li>
-			</xsl:if>
 			<xsl:if test="@clipboard='TRUE' and new">
 				<hr />
 			</xsl:if>
@@ -72,7 +69,11 @@
 				<hr />
 				<li><a href="javascript:sbMenu.deleteItem('{@parent}', '{@uuid}');"><span class="type delete"><xsl:value-of select="$locale/sbSystem/actions/delete" /></span></a></li>
 			</xsl:if>
-			
+			<xsl:if test="@purge='TRUE'">
+				<hr />
+				<!--<li><a href="javascript:sbMenu.purgeTrash('{@uuid}');"><span class="type delete"><xsl:value-of select="$locale/sbSystem/actions/purge" /></span></a></li>-->
+				<li><a href="javascript:sbMenu.purge('{@uuid}');"><span class="type delete"><xsl:value-of select="$locale/sbSystem/actions/purge" /></span></a></li>
+			</xsl:if>
 		</ul>
 	</xsl:template>
 	

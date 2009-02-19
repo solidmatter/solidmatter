@@ -1298,7 +1298,7 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* FIXME: current crSession should know that this node is about to be removed! (crSession->save())
 	* @param 
 	* @return 
 	*/
@@ -1956,14 +1956,15 @@ class sbCR_Node {
 				'sbSystem:Reports',
 				'sbSystem:Maintenance',
 				'sbSystem:Modules',
-				'sbSystem:Reports_db',
-				'sbSystem:Reports_structure',
+				'sbSystem:Reports_DB',
+				'sbSystem:Reports_Structure',
 				'sbSystem:Trashcan',
 				'sbSystem:Useraccounts',
 				'sbSystem:Registry',
 				'sbSystem:Module',
 				'sbSystem:Debug',
-				'sbSystem:Logs'
+				'sbSystem:Logs',
+				'sbSystem:Tags',
 			);
 			if (in_array($this->getProperty('jcr:primaryType'), $aKnownMandatoryNodes, TRUE)) {
 				return (FALSE);

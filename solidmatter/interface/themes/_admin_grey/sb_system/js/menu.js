@@ -132,8 +132,15 @@ var sbMenu = {
 	//
     cut : function (sParentUUID, sChildUUID) {
 		top.sbUtilities.execute('/-/structure/cut/parentnode=' + sParentUUID + '&childnode=' + sChildUUID);
-	}
-
+	},
+	
+	//--------------------------------------------------------------------------
+	// purge trashcan
+	//
+    purge : function (sTrashcanUUID) {
+		top.sbUtilities.execute('/' + sTrashcanUUID + '/content/purge');
+    }
+	
 }
 
 //------------------------------------------------------------------------------

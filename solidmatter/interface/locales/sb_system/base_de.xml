@@ -35,7 +35,7 @@
 		<remove>Entfernen</remove>
 		<set_default>als Standard festlegen</set_default>
 		<set_favorite>als Favorit festlegen</set_favorite>
-		<empty>Entleeren</empty>
+		<empty>Leeren</empty>
 		<view>Ansehen</view>
 		<clone>Klonen</clone>
 		<copy>Kopieren</copy>
@@ -55,6 +55,7 @@
 		<refresh>Aktualisieren</refresh>
 		<send>Senden</send>
 		<new_tag>neuer Tag</new_tag>
+		<purge>Entleeren</purge>
 	</actions>
 	
 	<labels>
@@ -227,6 +228,7 @@
 		<view id="administration">Administration</view>
 		<view id="manage">Verwalten</view>
 		<view id="documentation">Dokumentation</view>
+		<view id="content">Inhalt</view>
 	</views>
 	
 	<config>

@@ -32,7 +32,7 @@ class sbView_folder_upload extends sbView {
 						if (isset($aMimetypeMapping[$aFile['type']])) {
 							$sNodetype = $aMimetypeMapping[$aFile['type']];
 						} else {
-							$sNodetype = 'sb_system:asset';
+							$sNodetype = 'sbFiles:Asset';
 						}
 						
 						// TODO: behave differently if already existing node is a folder

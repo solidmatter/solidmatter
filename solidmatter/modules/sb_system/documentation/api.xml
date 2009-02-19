@@ -314,6 +314,7 @@ If you hate to read manuals and are more the learning-by-doing type of person, y
 			<p>For objects:</p>
 			<ul>
 				<li>node: sbNode or sbCRNode</li>
+				<li>ni: sbNodeIterator</li>
 				<li>cache: any kind of cache object</li>
 				<li>elem: DOMElement</li>
 				<li>dom: DOMDocument or derived class</li>

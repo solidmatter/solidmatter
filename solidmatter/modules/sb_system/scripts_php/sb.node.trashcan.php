@@ -57,6 +57,21 @@ class sbNode_trashcan extends sbNode {
 		
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* TODO: implement user-specific purging
+	* @param 
+	* @return 
+	*/
+	public function purge($sUserID = NULL) {
+		
+		$niTrash = $this->getChildren();
+		foreach ($niTrash as $nodeTrash) {
+			$nodeTrash->remove();
+			$nodeTrash->save();
+		}
+	}
+	
 	
 }
 

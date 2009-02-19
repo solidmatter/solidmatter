@@ -870,6 +870,11 @@ class sbNode extends sbCR_Node {
 		$elemContextMenu->setAttribute('parent', $sParentUUID);
 		$elemContextMenu->setAttribute('refresh', 'TRUE');
 		
+		// trash
+		if ($this->getPrimaryNodeType() == 'sbSystem:Trashcan') {
+			$elemContextMenu->setAttribute('purge', 'TRUE');	
+		}
+		
 		// clipboard data
 		if (isset(sbSession::$aData['clipboard'])) {
 			// TODO: remove this hack, it might be that the node in clipboard is already deleted
