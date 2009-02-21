@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbUtilities>
+	
+	<nodetypes>
+		<type id="sbUtilities:Imageprocessing">Imageporcessing</type>
+		<type id="sbUtilities:Imagefilterstack">Filterstack</type>
+		<type id="sbUtilities:Imagefilter_resize">Resize</type>
+		<type id="sbUtilities:Imagefilter_crop">Crop</type>
+		<type id="sbUtilities:Imagefilter_colorize">Colorize</type>
+		<type id="sbUtilities:Imagefilter_negative">Negative</type>
+		<type id="sbUtilities:Imagefilter_lightness">Brightness/Contrast</type>
+		<type id="sbUtilities:Imagefilter_greyscale">Greyscale</type>
+		<type id="sbUtilities:Imagefilter_roundededges">Rounded Edges</type>
+		<type id="sbUtilities:Imagefilter_merge">Merge</type>
+	</nodetypes>
+	
+	<Imagefilterstack>
+		<config_reverse label="Reverse direction" />
+	</Imagefilterstack>
+	<Imagefilter_resize>
+		<config_width label="Width" />
+		<config_height label="Height" />
+		<config_mode label="Mode">
+			<keepaspect label="keep aspect" />
+			<loseaspect label="lose aspect" />
+		</config_mode>
+		<config_direction label="Scale direction">
+			<upsample label="only scale up" />
+			<downsample label="only scale down" />
+			<both label="both" />
+		</config_direction>
+	</Imagefilter_resize>
+	<Imagefilter_colorize>
+		<config_color label="Color" />
+		<config_strength label="Effect strength" />
+	</Imagefilter_colorize>
+	<Imagefilter_crop>
+		<config_origin label="Positioning">
+			<topleft label="top left" />
+			<topcenter label="top center" />
+			<topright label="top right" />
+			<bottomleft label="bottom left" />
+			<bottomcenter label="bottom center" />
+			<bottomright label="bottom right" />
+			<leftcenter label="left center" />
+			<rightcenter label="right center" />
+			<center label="center" />
+		</config_origin>
+		<config_width label="Width" />
+		<config_height label="Height" />
+		<config_offsetx label="X-Offset" />
+		<config_offsety label="Y-Offset" />
+	</Imagefilter_crop>
+	<Imagefilter_greyscale>
+		<config_strength label="Effect strength" />
+	</Imagefilter_greyscale>
+	<Imagefilter_lightness>
+		<config_brightness label="Brightness" />
+		<config_contrast label="Contrast" />
+		<config_contrastfirst label="Apply contrast first" />
+	</Imagefilter_lightness>
+	<Imagefilter_negative>
+		<config_strength label="Effect strength" />
+	</Imagefilter_negative>
+	<Imagefilter_roundededges>
+		<config_mode label="Mode" />
+		<config_radius label="Radius" />
+	</Imagefilter_roundededges>
+	
+</sbUtilities>

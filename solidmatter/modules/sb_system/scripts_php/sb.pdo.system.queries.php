@@ -593,6 +593,7 @@ $_QUERIES['sbSystem/user/saveProperties/auxiliary'] = '
 				n_successfullogins = :info_successfullogins,
 				n_silentlogins = :info_silentlogins,
 				n_totalfailedlogins = :info_totalfailedlogins,
+				b_backendaccess = :security_backendaccess,
 				dt_expires = :security_expires
 ';
 

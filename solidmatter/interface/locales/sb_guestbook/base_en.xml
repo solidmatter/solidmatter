@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guestbook>
+	
+	<nodetypes>
+		<type id="sbGuestbook:Guestbook">Guestbook</type>
+		<type id="sbGuestbook:Entry">Guestbookentry</type>
+		<type id="sbGuestbook:TPL_Entries">Guestbookentries</type>
+	</nodetypes>
+	
+	<!--<general>
+		<apptitle>Gästebuch</apptitle>
+		<information>
+			<title>Gästebuchinformationen</title>
+			<num_entries>Anzahl Einträge</num_entries>
+			<newest_entry>Neuester Eintrag</newest_entry>
+			<oldest_entry>Ältester Eintrag</oldest_entry>
+		</information>
+		<config>
+			<entries_per_page>Einträge pro Seite</entries_per_page>
+			<sortdirection>Sortierrichtung</sortdirection>
+			<allow_smilies>Smilies erlauben</allow_smilies>
+			<allow_icons>Icons erlauben</allow_icons>
+			<allow_links>Links erlauben</allow_links>
+			<allow_images>Bilder erlauben</allow_images>
+			<embed_cutoff>max. Zeichen bei Einbettung</embed_cutoff>
+		</config>
+		<permissions>
+			<view_info>Informationen anzeigen</view_info>
+			<edit_entries>Einträge bearbeiten</edit_entries>
+			<edit_config>Konfiguration ändern</edit_config>
+		</permissions>
+	</general>
+	
+	<entries>
+		<labels>
+			<entry>Eintrag Nr.</entry>
+			<name>Name</name>
+			<email>eMail</email>
+			<homepage>Homepage</homepage>
+			<comment>Kommentar</comment>
+			<reply>Admin-Kommentar</reply>
+			<commentor_nickname>Kommentator</commentor_nickname>
+			<random_entry>zufälliger Gästebuch- eintrag</random_entry>
+			<random_entries>zufällige Gästebuch- einträge</random_entries>
+			<latest_entry>neuester Gästebuch- eintrag</latest_entry>
+			<latest_entries>neueste Gästebuch- einträge</latest_entries>
+			<more>mehr...</more>
+		</labels>
+		<actions>
+			<new_entry>Neuer Eintrag</new_entry>
+			<edit_entry>Eintrag bearbeiten</edit_entry>
+			<delete_entry>Eintrag löschen</delete_entry>
+		</actions>
+		<texts>
+			<no_entries>Momentan sind keine Einträge vorhanden</no_entries>
+			<entry_will_be_deleted>Der Eintrag wird unwiderruflich gelöscht werden!</entry_will_be_deleted>
+			<entry_deleted>Der Eintrag wurde gelöscht!</entry_deleted>
+			<entry_saved>Der Eintrag wurde gespeichert!</entry_saved>
+		</texts>
+	</entries>-->
+	
+	<nodes>
+		<guestbook>
+			<config_maxlength>Max. length for entries</config_maxlength>
+		</guestbook>
+	</nodes>
+	
+</guestbook>

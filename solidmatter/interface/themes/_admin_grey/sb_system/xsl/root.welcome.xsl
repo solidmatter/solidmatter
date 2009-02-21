@@ -48,7 +48,7 @@
 	<xsl:template match="response/content/userinfo/row">
 		<div class="eyecandy"><div class="left"><div class="right">
 			<h1>Welcome <xsl:value-of select="s_nickname"/></h1>
-			your last login was on <xsl:value-of select="php:functionString('datetime_mysql2local', string(dt_lastlogin), string($locale/system/formats/datetime_long))"/>
+			your last login was on <xsl:value-of select="php:functionString('datetime_mysql2local', string(@dt_lastlogin), string($locale/system/formats/datetime_long))"/>
 			, you have <xsl:value-of select="n_totalfailedlogins"/> failed logins and 
 			<xsl:value-of select="n_successfullogins"/> successful logins
 			<br/><br/><a href="/-/login/logout" target="_top">Logout</a>

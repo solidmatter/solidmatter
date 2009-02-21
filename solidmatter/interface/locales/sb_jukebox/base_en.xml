@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbJukebox>
+
+	<nodetypes>
+		<type id="sbJukebox:Jukebox">Jukebox</type>
+		<type id="sbJukebox:Playlist">Playlist</type>
+		<type id="sbJukebox:Album">Album</type>
+		<type id="sbJukebox:Artist">Artist</type>
+		<type id="sbJukebox:Track">Track</type>
+		<type id="sbJukebox:Recommendation">Recommendation</type>
+		<type id="sbJukebox:TPL_MostHeard">Jukebox: Popular</type>
+		<type id="sbJukebox:TPL_Favorites">Jukebox: Favorites</type>
+		<type id="sbJukebox:TPL_TopRated">Jukebox: Charts</type>
+		<type id="sbJukebox:TPL_NowPlaying">Jukebox: On Air</type>
+	</nodetypes>
+	
+	<views>
+		<view id="library">Library</view>
+		<view id="albums">Albums</view>
+		<view id="artists">Artists</view>
+		<view id="charts">Charts</view>
+		<view id="tags">Tags</view>
+		<view id="favorites">Favorites</view>
+		<view id="playlists">Playlists</view>
+		<view id="details">Details</view>
+	</views>
+	
+	<Jukebox>
+		<config_description>Description</config_description>
+		<config_sourcepath>Path to MP3s (production directory)</config_sourcepath>
+		<config_checkpath>Path to MP3s (test directory)</config_checkpath>
+		<config_userealpath>Use direct path</config_userealpath>
+		<config_realpath>Direct path for remote access</config_realpath>
+		<config_islocked>Jukebox locked</config_islocked>
+		<config_relyonmp3year>Force years in MP3s</config_relyonmp3year>
+	</Jukebox>
+	<Album>
+		<info_artist>Artist</info_artist>
+		<info_cdsinset>CDs in set</info_cdsinset>
+		<info_coverexists>Cover exists</info_coverexists>
+		<info_coverfilename>Cover filename</info_coverfilename>
+		<info_defects>Defects</info_defects>
+		<info_relpath>Relative path to jukebox</info_relpath>
+		<info_published>Published</info_published>
+		<info_type>Albumtype</info_type>
+		<info_title>Albumtitle</info_title>
+	</Album>
+	<Track>
+		<info_artist>Artist</info_artist>
+		<info_title>Title</info_title>
+		<info_index>Index</info_index>
+		<info_filename>Filename</info_filename>
+		<info_published>Published</info_published>
+		<info_playtime>Playtime</info_playtime>
+		<enc_playtime>Playtime (in seconds)</enc_playtime>
+		<enc_mode>Encoding</enc_mode>
+		<enc_bitrate>Bitrate (kbit/s)</enc_bitrate>
+	</Track>
+	<Recommendation>
+		<subject>Recommendation</subject>
+	</Recommendation>
+	
+	<authorisations>
+		<start_import>Start import</start_import>
+		<clear_library>Clear library</clear_library>
+		<add_playlists>Add playlists</add_playlists>
+		<add_titles>Add titles</add_titles>
+	</authorisations>
+	
+	<labels>
+		<artist>Artist</artist>
+		<artists>Artists</artists>
+		<album>Album</album>
+		<albums>Albums</albums>
+		<published>Published</published>
+		<title>Track</title>
+		<tracks>Tracks</tracks>
+		<playtime>Playtime</playtime>
+		<bitrate>Bitrate</bitrate>
+		<tracks_on_other_albums>Titles on other Albums</tracks_on_other_albums>
+		<source_album>Sourcealbum</source_album>
+		<latest_albums>Newest albums</latest_albums>
+		<all_albums>All albums</all_albums>
+		<now_playing>Now playing</now_playing>
+		<random_artists>Random artists</random_artists>
+		<random_albums>Random albums</random_albums>
+		<artists_beginning_with>Artists beginning with</artists_beginning_with>
+		<albums_beginning_with>Albums beginning with</albums_beginning_with>
+		<artists_containing>Artists containing</artists_containing>
+		<albums_containing>Albums containing</albums_containing>
+		<pivot>Pivot</pivot>
+		<top_artists>Top Artists</top_artists>
+		<top_albums>Top Albums</top_albums>
+		<top_tracks>Top Titles</top_tracks>
+		<favorite_artists>Favorite artists</favorite_artists>
+		<favorite_albums>Favorite albums</favorite_albums>
+		<favorite_tracks>Favorite tracks</favorite_tracks>
+		<most_played>Most played</most_played>
+		<weighting>Weighting</weighting>
+		<all_tags>All tags</all_tags>
+		<recommendations>Recommendations</recommendations>
+		<average>Average</average>
+		<number_of_items>Number of items</number_of_items>
+		<popularity>Popularity</popularity>
+		<artists_tagged>Artists with tag</artists_tagged>
+		<albums_tagged>Albums with tag</albums_tagged>
+		<tracks_tagged>Tracks with tag</tracks_tagged>
+		<new_playlist>New playlist</new_playlist>
+	</labels>
+	
+	<menu>
+		<library>Library</library>
+		<albums>Albums</albums>
+		<artists>Artists</artists>
+		<charts>Charts</charts>
+		<tags>Tags</tags>
+		<favorites>Favorites</favorites>
+		<playlists>Playlists</playlists>
+		<profile>Profile</profile>
+	</menu>
+	
+	<actions>
+		<play>play</play>
+		<search_lyrics>search lyrics</search_lyrics>
+		<add_to_favorites>add to favorites</add_to_favorites>
+		<add_to_playlist>add to playlist</add_to_playlist>
+		<vote>rate</vote>
+		<expand>expand</expand>
+		<collapse>collapse</collapse>
+		<recommend>recommend</recommend>
+		<download>download</download>
+		<activate>activate</activate>
+		<remove>remove</remove>
+	</actions>
+	
+	<texts>
+		<no_albums>No albums available</no_albums>
+	</texts>
+	
+</sbJukebox>

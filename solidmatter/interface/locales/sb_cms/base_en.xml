@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbCMS>
+	
+	<nodetypes>
+		<type id="sbCMS:Site">Website</type>
+		<type id="sbCMS:Page">Page</type>
+		<type id="sbCMS:Templatemanager">Templatemanager</type>
+		<type id="sbCMS:Templategroup">Templategroup</type>
+		<type id="sbCMS:Layout">Layout</type>
+		<type id="sbCMS:Template">Template</type>
+		<type id="sbCMS:CTN_Container">Container</type>
+		<type id="sbCMS:CTN_Image">Image</type>
+		<type id="sbCMS:CTN_Plaintext">Text</type>
+		<type id="sbCMS:CTN_Richtext">Richtext</type>
+		<type id="sbCMS:TPL_Image">Image</type>
+		<type id="sbCMS:TPL_Plaintext">Text</type>
+		<type id="sbCMS:TPL_Container">Container</type>
+		<type id="sbCMS:TPL_Richtext">Richtext</type>
+		<type id="sbCMS:TPL_Menu">Menu</type>
+		<type id="sbCMS:TPL_Script">Script</type>
+	</nodetypes>
+	
+	<Site>
+		<config_defaultpage label="Default page" />
+		<config_isclosed label="Website is closed" />
+		<config_language label="Language" />
+		<config_notes label="Notes" />
+		<config_boundtemplates label="Bound templates" />
+		<config_defaultlayout label="Default layout" />
+		<config_defaulttemplate label="Default template" />
+	</Site>
+	<Page>
+		<properties_pagetitle label="Page title" />
+		<properties_additionaltitle label="Additional title" />
+		<properties_keywords label="Keywords" />
+		<properties_notes label="Notes" />
+		<config_showinmenu label="Show in menu" />
+		<config_active label="Publish" />
+		<display_template label="Template" />
+		<display_layout label="Layout" />
+	</Page>
+	<Layout>
+		<xsl_frontend label="Frontend-code" />
+		<xsl_backend label="Backend-code" />
+	</Layout>
+	<Template>
+		<xsl_frontend label="Frontend-code" />
+		<xsl_backend label="Backend-code" />
+	</Template>
+	<TPL_Menu>
+		<config_numlevels label="Number of levels" />
+		<config_menuroot label="Menu root" />
+	</TPL_Menu>
+	<TPL_Image>
+		<config_filterstack label="Filterstack (optional)" />
+		<config_allowlinking label="Linking allowed" />
+	</TPL_Image>
+	
+</sbCMS>

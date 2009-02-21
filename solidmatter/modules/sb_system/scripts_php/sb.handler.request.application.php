@@ -73,8 +73,8 @@ class ApplicationRequestHandler {
 		}
 		
 		$_RESPONSE->addData($nodeCurrent);
-		$_RESPONSE->addLocale('sb_system', 'de');
-		$_RESPONSE->addSystemMeta('lang', 'de');
+		$_RESPONSE->addLocale('sb_system', Registry::getValue('sb.system.language'));
+		$_RESPONSE->addSystemMeta('lang', Registry::getValue('sb.system.language'));
 		$_RESPONSE->setTheme('_default');
 		
 		// output debug if desired 

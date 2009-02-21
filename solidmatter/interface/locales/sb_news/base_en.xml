@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shop>
+
+	<nodetypes>
+		<type id="sbNews:Channel">Channel</type>
+		<type id="sbNews:Category">Newscategory</type>
+		<type id="sbNews:Post">Post</type>
+		<type id="sbNews:TPL_Teaser">Teaserblock</type>
+		<type id="sbNews:TPL_Calendar">Calendar</type>
+	</nodetypes>
+	
+</shop>

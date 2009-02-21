@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbSystem>
+	
+	<lang>English</lang>
+	
+	<formats>
+		<decimal_separator>,</decimal_separator>
+		<decimal_point>.</decimal_point>
+		<datetime_long>%a, %d. %b %Y, %H:%M:%S</datetime_long>
+		<datetime_middle>%d.%m.%Y, %H:%M:%S</datetime_middle>
+		<datetime_short>%d.%m.%y, %H:%M:%S</datetime_short>
+		<date_long>%a, %d. %b %Y</date_long>
+		<date_middle>%d.%m.%Y</date_middle>
+		<date_short>%d.%m.%y</date_short>
+	</formats>
+	
+	<actions>
+		<new>New</new>
+		<edit>Edit</edit>
+		<create>Create</create>
+		<delete>Delete</delete>
+		<save>Save</save>
+		<apply>Apply</apply>
+		<accept>Accept</accept>
+		<accept_changes>Accept changes</accept_changes>
+		<submit>Submit</submit>
+		<proceed>Proceed</proceed>
+		<ok>OK</ok>
+		<cancel>Cancel</cancel>
+		<export>Export</export>
+		<import>Import</import>
+		<move_up>move up</move_up>
+		<move_down>move down</move_down>
+		<add>Add</add>
+		<remove>Remove</remove>
+		<set_default>set as default</set_default>
+		<set_favorite>set as favorite</set_favorite>
+		<empty>Empty</empty>
+		<view>View</view>
+		<clone>Clone</clone>
+		<copy>Copy</copy>
+		<cut>Cut</cut>
+		<paste>Paste</paste>
+		<create_hardlink>Hardlink</create_hardlink>
+		<upload>Upload</upload>
+		<download>Download</download>
+		<activate>Activate</activate>
+		<order_asc>sort ascending</order_asc>
+		<order_desc>sort descending</order_desc>
+		<search>Search</search>
+		<find>Find</find>
+		<filter>Filter</filter>
+		<login>Login</login>
+		<logout>Logout</logout>
+		<refresh>Refresh</refresh>
+		<send>Send</send>
+		<new_tag>New tag</new_tag>
+	</actions>
+	
+	<labels>
+		<id>ID</id>
+		<created_at>Created on</created_at>
+		<created_by>Created by</created_by>
+		<modified_at>Modified on</modified_at>
+		<modified_by>Modified by</modified_by>
+		<deleted_at>Deleted on</deleted_at>
+		<deleted_by>Deleted by</deleted_by>
+		<login>Login</login>
+		<password>Password</password>
+		<options>Options</options>
+		<image>Image</image>
+		<graphic>Graphic</graphic>
+		<smilie>Smilie</smilie>
+		<ip>IP-Address</ip>
+		<email>eMail</email>
+		<abbr_number>Nr.</abbr_number>
+		<description>Description</description>
+		<details>Details</details>
+		<notes>Notes</notes>
+		<title>Title</title>
+		<properties>Properties</properties>
+		<name>Name</name>
+		<label>Label</label>
+		<module>Module</module>
+		<nickname>Nickname</nickname>
+		<shortname>Shortname</shortname>
+		<longname>Longname</longname>
+		<urlname>URL-Name</urlname>
+		<mimetype>Mimetype</mimetype>
+		<type>Type</type>
+		<event>Event</event>
+		<events>Events</events>
+		<filter>Filter</filter>
+		<comment>Comment</comment>
+		<comments>Comments</comments>
+		<user>User</user>
+		<users>Users</users>
+		<username>Username</username>
+		<group>Group</group>
+		<groups>Groups</groups>
+		<upload_files>Upload files</upload_files>
+		<file>File</file>
+		<files>Files</files>
+		<tags>Tags</tags>
+		<search>
+			<title>Search</title>
+			<search_for>Search for</search_for>
+			<results>Search results</results>
+		</search>
+		<options>
+			<ascending>ascending</ascending>
+			<descending>descending</descending>
+			<compact_view>Compact view</compact_view>
+			<detailed_view>Detailed view</detailed_view>
+		</options>
+		<security>
+			<current_rights>Current rights</current_rights>
+			<add_entities>Add user or group</add_entities>
+			<inheritance>Inheritance</inheritance>
+			<inherit_rights>Inherit rights from ancestors</inherit_rights>
+			<bequeath_rights>Bequeath rights to descendants</bequeath_rights>
+		</security>
+	</labels>
+	
+	<texts>
+		<no_subobjects>This object has no vsisible subobjects</no_subobjects>
+		<no_comments>No comments available</no_comments>
+	</texts>
+	
+	<general>
+		<apptitle>sbSystem</apptitle>
+		<pagination>
+			<full>Page {CURRENT} of {TOTAL}: {BROWSE}</full>
+			<page>Page</page>
+			<first_page>first page</first_page>
+			<last_page>last page</last_page>
+			<next_page>next page</next_page>
+			<previous_page>previous page</previous_page>
+			<browse_forward>browse forward</browse_forward>
+			<browse_backwards>browse backward</browse_backwards>
+			<x_pages_forward>{PAGES} pages forward</x_pages_forward>
+			<x_pages_backward>{PAGES} pages backward</x_pages_backward>
+		</pagination>
+	</general>
+	
+	<tags>
+		<edit_tag>Edit tag</edit_tag>
+		<tag>Tag</tag>
+		<popularity>Popularity</popularity>
+		<customweight>Custom Weighting</customweight>
+		<visibility>Visibility</visibility>
+	</tags>
+	
+	<nodetypes>
+		<type id="sbSystem:Root">Root</type>
+		<type id="sbSystem:Comment">Comment</type>
+		<type id="sbSystem:Preferences">Preferences</type>
+		<type id="sbSystem:Useraccounts">Users &amp; Groups</type>
+		<type id="sbSystem:Usergroup">Usergroup</type>
+		<type id="sbSystem:User">User</type>
+		<type id="sbSystem:Inbox">Inbox</type>
+		<type id="sbSystem:Tasks">Tasks</type>
+		<type id="sbSystem:Modules">Modules</type>
+		<type id="sbSystem:Module">Module</type>
+		<type id="sbSystem:Maintenance">Maintenance</type>
+		<type id="sbSystem:Debug">Debug</type>
+		<type id="sbSystem:Logs">Logs</type>
+		<type id="sbSystem:Reports">Reports</type>
+		<type id="sbSystem:Reports_DB">Database</type>
+		<type id="sbSystem:Reports_Structure">Structure</type>
+		<type id="sbSystem:Registry">Registry</type>
+		<type id="sbSystem:Tags">Tags</type>
+		<type id="sbSystem:Trashcan">Trashcan</type>
+	</nodetypes>
+	
+	<User>
+		<properties_email label="eMail-Address" />
+		<properties_comment label="Comment" />
+		<config_hidestatus label="Hide onlinestatus" />
+		<security_stayloggedin label="Persistant login" />
+		<security_password label="Password" />
+		<security_activated label="Aktivated" />
+		<security_activationkey label="Aktivationkey" />
+		<security_locked label="Locked" />
+		<security_failedlogins label="Failed logins" />
+		<security_backendaccess label="Backend access allowed" />
+		<security_expires label="Account expires on" />
+		<info_emailsent label="eMail sent" />
+		<info_successfullogins label="Successful logins" />
+		<info_silentlogins label="Silent logins" />
+		<info_currentlogin label="Current login" />
+		<info_lastlogin label="Last login" />
+		<info_totalfailedlogins label="Total failed logins" />
+		<info_activatedat label="Activated on" />
+	</User>
+	<Usergroup>
+		<properties_description label="Description" />
+		<config_default label="Default group" />
+		<config_hidden label="Hidden" />
+	</Usergroup>
+		
+	<views>
+		<view id="edit">Edit</view>
+		<view id="preview">Preview</view>
+		<view id="properties">Properties</view>
+		<view id="list">List</view>
+		<view id="security">Security</view>
+		<view id="information">Information</view>
+		<view id="overview">Overview</view>
+		<view id="debug">Debug</view>
+		<view id="welcome">Welcome</view>
+		<view id="repair">Repair</view>
+		<view id="cache">Caches</view>
+		<view id="sysinfo">Systeminformation</view>
+		<view id="nodetypes">Nodetypes</view>
+		<view id="repository">Repository</view>
+		<view id="tables">Tables</view>
+		<view id="status">Status</view>
+		<view id="tree">Tree</view>
+		<view id="session">Session</view>
+		<view id="system">System</view>
+		<view id="users">Users</view>
+		<view id="authorisations">Authorisations</view>
+		<view id="scripts">Scripts</view>
+		<view id="tests">Tests</view>
+		<view id="events">Events</view>
+		<view id="administration">Administration</view>
+		<view id="manage">Manage</view>
+		<view id="documentation">Documentation</view>
+	</views>
+	
+	<!-- <config>
+		<security>
+			<title>Sicherheitseinstellungen</title>
+			<login_required>Login erzwingen</login_required>
+			<use_captcha_login>Login mit Captcha-Code</use_captcha_login>
+			<registration_allowed>Benutzer-Registrierung erlauben</registration_allowed>
+			<use_captcha_registration>Registrierung mit Captcha-Code</use_captcha_registration>
+			<nickname_allowed_chars>Erlaubte Zeichen in Bildschirmnamen</nickname_allowed_chars>
+			<nickname_allow_space>Leerzeichen erlauben</nickname_allow_space>
+			<failed_logins_num_allowed>Anzahl erlaubter misslungener Loginversuche</failed_logins_num_allowed>
+			<failed_logins_locktime>Sperrzeit nach Erreichen in Min.</failed_logins_locktime>
+			<users_may_change_email>Benutzer dürfen eMail-Adresse ändern</users_may_change_email>
+			<stay_loggedin_allowed>Benutzer dürfen eingeloggt bleiben</stay_loggedin_allowed>
+			<log_ips>IP-Adressen speichern</log_ips>
+			<use_sessionip>IP in Session speichern &amp; überwachen</use_sessionip>
+			<ips_allowed_site>erlaubte IP-Bereiche (Site)</ips_allowed_site>
+			<ips_allowed_backend>erlaubte IP-Bereiche (Administration)</ips_allowed_backend>
+			<ips_denied_site>verweigerte IP-Bereiche (Site)</ips_denied_site>
+			<ips_denied_backend>verweigerte IP-Bereiche (Administration)</ips_denied_backend>
+		</security>
+		<mail>
+			<title>eMail-Einstellungen</title>
+			<sendmode>Sendemodus</sendmode>
+			<from_name>Absender (Name)</from_name>
+			<from_address>Absender (eMail-Adresse)</from_address>
+			<reply_address>Antwortadresse</reply_address>
+			<smtp_server>SMTP-Server</smtp_server>
+			<smtp_port>SMTP-Port</smtp_port>
+			<smtp_authentication>SMTP-Authentifizierung</smtp_authentication>
+			<smpt_login>SMTP-Login</smpt_login>
+			<smtp_password>SMTP-Passwort</smtp_password>
+		</mail>
+	</config>-->
+	
+	<authorisations>
+		<full>Full</full>
+		<read>Read</read>
+		<write>Write</write>
+		<special>Special</special>
+		<grant>Grant</grant>
+		<list>List</list>
+		<delete_page>Delete page</delete_page>
+		<edit_page>Edit Page</edit_page>
+		<upload_files>Upload files</upload_files>
+		<publish>Publish</publish>
+		<rate>Rate</rate>
+		<comment>Comment</comment>
+		<tag>Tag</tag>
+		<download>Download</download>
+	</authorisations>
+	
+	<registry>
+		<label>Registry</label>
+	</registry>
+	
+	<formerrors>
+		<not_null>This field is required</not_null>
+		<string_too_short>Input too short</string_too_short>
+		<string_too_long>Input too long</string_too_long>
+		<not_a_number>This is not a number</not_a_number>
+		<only_integer>This is not an integer</only_integer>
+		<too_many_decimals>Too many decimal digits</too_many_decimals>
+		<not_in_range>Out of valid range</not_in_range>
+		<no_hexcolor>This is no color (format: RRGGBB)</no_hexcolor>
+		<no_email>This is no email-address</no_email>
+		<no_url>This is no URL</no_url>
+		<no_date>This is no valid date (format: YYYY-MM-DD)</no_date>
+		<no_datetime>This is no valid datetime (format: YYYY-MM-DD HH:MM:SS)</no_datetime>
+		<no_timeframe>First date must be before last date</no_timeframe>
+		<no_domain>This is no valid domain</no_domain>
+		<no_ipaddress>This is no valid IP-address</no_ipaddress>
+		<no_iprange>This is no valid IP-range</no_iprange>
+		<no_ipranges>Dies sind keine IP-Adressbereiche</no_ipranges>
+		<not_identical>No match, please check</not_identical>
+		<not_urlsafe>Not URL-safe (use only a-z0-9._)</not_urlsafe>
+		<no_siteformat>No siteformat, (use only a-z0-9._, format "domain::directory"</no_siteformat>
+		<upload_failure>Upload failure</upload_failure>
+		<file_too_big>The file is too big</file_too_big>
+		<file_is_wrong_type>The file is of a wrong type</file_is_wrong_type>
+		<image_too_big>This image is too big</image_too_big>
+		<invalid_chars>These characters are not allowed: </invalid_chars>
+		<only_alphanumeric>Please use only alphanumeric characters and \'_\'</only_alphanumeric>
+		<no_trailing_underscore>The first character may not be \'_\'</no_trailing_underscore>
+		<too_many_chosen>There are too many options chosen</too_many_chosen>
+		<no_space_allowed>Please do not enter spaces</no_space_allowed>
+		<wrong_format>This input uses a wrong format</wrong_format>
+		<already_exists>Already exists</already_exists>
+		<user_does_not_exist>The user does not exist</user_does_not_exist>
+		<wrong_password>Wrong password</wrong_password>
+		<wrong_logindata>Login or password wrong</wrong_logindata>
+		<wrong_sequence>The sequence does not match</wrong_sequence>
+		<account_locked>This account is locked</account_locked>
+		<account_inaktive>This account is not activated</account_inaktive>
+		<account_expired>This account is expired</account_expired>
+		<account_temp_locked>This account is temporarily locked</account_temp_locked>
+		<not_in_options>The submitted value is not in the options</not_in_options>
+		<wrong_nodetype>Wrong type chosen</wrong_nodetype>
+	</formerrors>
+	
+</sbSystem>

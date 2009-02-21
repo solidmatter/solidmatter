@@ -22,7 +22,6 @@
 		<view id="tags">Tags</view>
 		<view id="favorites">Favoriten</view>
 		<view id="playlists">Playlisten</view>
-		<view id="favorites">Favoriten</view>
 		<view id="details">Details</view>
 	</views>
 	

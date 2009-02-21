@@ -15,8 +15,9 @@
 					In this documentation, you will find several types of formatting words and paragraphs, the meaning is as follows:
 				</p>
 				<action>
-					This box contains actions that you should take, e.g. edit files, add values to the database and such. Used everytime you have to do something...
-If you hate to read manuals and are more the learning-by-doing type of person, you can just follow the instructions in these boxes, ignore the rest and you should have a fully running module in the end. You'll miss something then, though...
+					This box contains actions that you should take, e.g. edit files, add values to the database and such.
+					Used everytime you have to do something...
+					If you hate to read manuals and are more the learning-by-doing type of person, you can just follow the instructions in these boxes, ignore the rest and you should have a fully running module in the end. You'll miss something then, though...
 				</action>
 				<caution>
 					This box provides information that can prevent you from screwing something up. Used when there are common errors to be made or where i myself are constantly implementing oversights...
@@ -267,10 +268,170 @@ If you hate to read manuals and are more the learning-by-doing type of person, y
 		</section>
 	</chapter>
 	
+	<chapter id="sample_application" title="Building A Sample Application">
+		<section id="samp_started" title="Getting started">
+			
+			<subsection id="samp_think" title="Think...">
+				<p>
+					So, what are you trying to achieve?
+					You want to build a simple blog, therefore the required functionality is easily imaginable:
+				</p>
+				<ul>
+					<li>Admins should be able to create, edit and delete blog entries</li>
+					<li>Readers should be able to comment</li>
+				</ul>
+				<p>
+					There's also a small, well defined set of things you deal with:
+				</p>
+				<ul>
+					<li>Blog entries</li>
+					<li>Comments</li>
+				</ul>
+			</subsection>
+			<subsection id="samp_objects" title="Application Domain Objects">
+				<p>
+					In order to build this application, you have to model the domain objects you are dealing with, as well as the operations performed on them.
+					So let's take a look at the details...
+				</p>
+				<p>
+					A simple blog entry should at least contain the following information:
+				</p>
+				<ul>
+					<li>the title</li>
+					<li>the content</li>
+					<li>the creator (if we assume it's a blog run by several people)</li>
+					<li>the date and time the post was created</li>
+					<li>a unique identifier</li>
+				</ul>
+				<p>
+					It should also be viewable, editable, and deletable by the admins in terms of use cases.
+					Also anyone can view an entry in the blog.
+				</p>
+				<p>
+					A comment has even less information attached to it in the simplest version:
+				</p>
+				<ul>
+					<li>the comment itself</li>
+				</ul>
+				<p>
+					In terms of functionality, anyone can post a comment, and admins should be able to view, edit and delete comments.
+				</p>
+				<p>
+					As we have seen, there are two objects in the applications domain we have to model.
+					But wait, haven't we forgot something?
+					As solidMatter is able to run several blogs, we have to model the application itself, too.
+					This is just as easy, a blog doesn't need much information for a start:
+				</p>
+				<ul>
+					<li>a title</li>
+				</ul>
+				<p>
+					The blog itself should be able to list all entries, so you can click on a topic and view all details and comments.
+				</p>
+			</subsection>
+			<subsection id="samp_next" title="Next Step">
+				<p>
+					So now you know what you're dealing with.
+					Ideally, you'd now write down all requirements and think about details e.g., how long may a blog entry get?
+					But we want to get something on the screen, so we'll skip this part and deal with the details later.
+					Time to move to the implementation...
+				</p>
+			</subsection>
+		</section>
+		<section id="samp_prepare" title="Preparation">
+			<p>
+				As you are implementing a new application and not an extension module, you have to put all new stuff into a new namespace to seperate it from the other modules.
+				Namespaces should start with a lowercase prefix that applies only to one entity (a person, a company, an organisation).
+				Remember, you might not be the only one creating a blog application, e.g. all modules "owned" by the solidMatter project will start with "sb" (for "solidbytes").
+				"my" would be a badly chosen prefix in reality, but let's just call the application "myBlog" for now.
+			</p>
+			<p>
+				So you got the namespace, but you need a 'safe' name (all lowercase plus underscore) for it, too.
+				This would be "my_blog" according to the guidelines.
+			</p>
+			<p>
+				A module has to provide several mandatory things, e.g. you have to store the scripts, locales etc. in specific folders.
+			</p>
+			<action>
+				Create the following folders:
+				<ul>
+					<li>&lt;solidMatter&gt;/modules/my_blog</li>
+					<li>&lt;solidMatter&gt;/modules/my_blog/scripts_php</li>
+					<li>&lt;solidMatter&gt;/interface/locales/my_blog</li>
+					<li>&lt;solidMatter&gt;/interface/themes/_default/my_blog/</li>
+					<li>&lt;solidMatter&gt;/interface/themes/_default/my_blog/xsl/</li>
+				</ul>
+			</action>	
+			<info>
+				You might need to create more folders depending on what you need to provide (custom icons, CSS stylesheets and the like).
+				More details on the default directory structure can be found in $CHAPTER
+			</info>
+		</section>
+		<section id="samp_repository" title="Setting up the Repository items">
+			<p>
+				The necessary repository set-up is done best in these steps (subject to change, when we support the JCR API for repository administration):
+			</p>
+			<ul>
+				<li>creating the nodetypes</li>
+				<li>creating the nodetype's properties</li>
+				<li>creating the nodetype's views</li>
+				<li>creating the nodetype's actions</li>
+				<li>associating modes with the nodetypes</li>
+				<li>more...</li>
+			</ul>
+			<subsection id="samp_nodetypes" title="Nodetypes">
+				<p>
+					First, you should create the nodetypes for your application. Luckily, there is already a comment nodetype that meets our expectations, sbSystem:Comment, so we'll leave that one out.
+				</p>
+				<info>
+					In order to not interfere with other modules, you might like to build your own comment nodetype, just in case requirements change and you need things the internal comment doesn't provide.
+				</info>
+				<action>
+					Insert the following entries into the nodetypes table:
+					<ul>
+						<li>myBlog:Blog</li>
+						<li>myBlog:Entry</li>
+					</ul>
+				</action>
+			</subsection>
+			<subsection id="samp_properties" title="Properties">
+				<p>
+					Next on the list should be the properties that are associated with the nodetypes.
+					Again, luckily solidMatter provides us with a set of prepared set of properties (see $CHAPTER).
+					As the nodetype already stores most of the needed information, we are just left with the content property.
+				</p>
+				<action>
+					Insert the following entries into the properties table:
+					<ul>
+						<li>myBlog:Entry content</li>
+					</ul>
+				</action>
+			</subsection>
+			<subsection id="samp_views" title="Views">
+				
+				<action>
+					Insert the following entries into the views table:
+					<ul>
+						<li>myBlog:Blog properties</li>
+						<li>myBlog:Blog index</li>
+						<li>myBlog:Entry properties</li>
+						<li>myBlog:Entry comments</li>
+					</ul>
+				</action>
+			</subsection>
+			<subsection id="samp_actions" title="Actions">
+				
+			</subsection>
+		</section>
+		<section id="" title="">
+			
+		</section>
+	</chapter>
+	
 	<chapter title="Coding Guidelines" id="codingguidelines">
 		<p>
 			In order to keep the code readable and consistent, there are a number of coding guidelines described in this chapter.
-			You MUST stick to these rules if you are contributing to the solidMatter core or any of the sb*-modules (provided respectively under development lead by solidbytes). 
+			You MUST stick to these rules if you are contributing to the solidMatter core or any of the sb*-modules (provided by respectively under development lead by solidbytes). 
 			You SHOULD stick to these rules if you are developing a 3rd-party-module for solidMatter.
 		</p>
 		<info>
@@ -334,27 +495,25 @@ If you hate to read manuals and are more the learning-by-doing type of person, y
 		<section title="Code Formatting" id="codeformatting">
 			<subsection title="Indenting" id="">
 				<p>
-					Indenting should always be done according to best-practices (indenting codeblocks) using tabs.
+					Indenting SHOULD always be done according to best-practices (indenting codeblocks) using tabs.
 					Each tab uses the equivalent space to 4 spaces.
 				</p>
 			</subsection>
 			<subsection title="Bracketing" id="">
 				<p>
-					All code blocks MUST be contained in brackets, even if they only consist of one command.
+					All code blocks SHOULD be contained in brackets, even if they only consist of one command.
 					The opening bracket SHOULD be on the same line as the control flow structure (for, if, while...).
-					Correct:
 				</p>
-				<code>while (!$asleep) {
+				<code>// Correct
+while (!$asleep) {
 	$sheep++;
-}</code>
-				<p>
-					Wrong:
-				</p>
-				<code>while (!$asleep)
+}
+					
+// Wrong
+while (!$asleep)
 {
 	$sheep++;
 }
-
 while (!$asleep)
 	$sheep++;</code>
 				<info>
@@ -406,7 +565,7 @@ class sbView_{nodetype}_{view} extends sbView {
 			<subsection title="Per Nodetype Settings" id="pernodetype">
 				<p>The keys for the information should be named like this: "module:nodetype:setting".
 				Example:</p>
-				<code>sbSession::addData('sb_system:folder:defaultView', $sView);</code>
+				<code>sbSession::addData('sbSystem:Folder:defaultView', $sView);</code>
 			</subsection>
 		</section>
 	</chapter>

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbForum>
+
+	<nodetypes>
+		<type id="sbForum:Forum">Forum</type>
+		<type id="sbForum:Category">Category</type>
+		<type id="sbForum:Thread">Thread</type>
+		<type id="sbForum:Post">Post</type>
+	</nodetypes>
+	
+	<!--<general>
+		<apptitle>Forum</apptitle>
+		<viewtitles>
+			<forumindex>Forumindex</forumindex>
+			<topics>Forum</topics>
+			<posts>Posts</posts>
+		</viewtitles>
+		<menu>
+			<forums>Foren</forums>
+			<users>Mitglieder</users>
+			<moderators>Moderatoren</moderators>
+		</menu>
+		<information>
+			<title>Forumsinformationen</title>
+			<num_users>Benutzer</num_users>
+			<num_forums>Foren</num_forums>
+			<num_categories>Kategorien</num_categories>
+			<num_topics>Themen</num_topics>
+			<num_posts>Nachrichten</num_posts>
+			<num_views>Themenansichten</num_views>
+		</information>
+		<config>
+			<config>Konfiguration</config>
+			<appearance>Darstellungsoptionen</appearance>
+			<defaults>Standardwerte</defaults>
+			<forum_title>Forumsbezeichnung</forum_title>
+			<forum_closed>Forum geschlossen</forum_closed>
+			<require_login>nur registrierte Benutzer zulassen</require_login>
+			<hide_urls_from_guests>URLs vor Gästen verstecken</hide_urls_from_guests>
+			<log_ips>IPs speichern</log_ips>
+			<replace_simple_smilies>einfache Smilies ersetzen</replace_simple_smilies>
+			<attachments>
+				<enabled>Dateianhänge aktiviert</enabled>
+				<max_number>max. Anhanganzahl pro Post/Nachricht/Thema</max_number>
+				<max_filesize>max. Dateigröße für Anhänge (KB)</max_filesize>
+				<restrict_types>Anhänge auf diese Typen beschränken</restrict_types>
+			</attachments>
+			<avatars>
+				<enabled>Avatare erlauben</enabled>
+				<max_filesize>max. Dateigröße für Avatare (KB)</max_filesize>
+				<max_xsize>max. X-Größe für Avatare</max_xsize>
+				<max_ysize>max. Y-Größe für Avatare</max_ysize>
+			</avatars>
+			<rss>
+				<config>RSS-Feed Einstellungen</config>
+				<enabled>RSS aktiviert</enabled>
+				<ttl>Gültigkeitsdauer (Min.)</ttl>
+				<numtopics>Anzahl Themen</numtopics>
+				<include_category>Kategorietitel anzeigen</include_category>
+			</rss>
+		</config>
+		<errors>
+			<attachment_not_found>Der Dateianhang wurde nicht gefunden</attachment_not_found>
+			<forum_closed>Das Forum ist zur Zeit wegen Wartungsarbeiten geschlossen</forum_closed>
+			<login_required>Sie müssen eingeloggt sein um auf das Forum zuzugreifen</login_required>
+		</errors>
+	</general>-->
+	
+	<Forum>
+		<attachments_allowed>Attachments allowed</attachments_allowed>
+		<attachments_allowedmimetypes>Allowed mimetypes</attachments_allowedmimetypes>
+		<attachments_maxfilesize>Max. filesize</attachments_maxfilesize>
+		<attachments_maxnumallowed>Max. number of attachments</attachments_maxnumallowed>
+		<avatars_allow>Avatars allowed</avatars_allow>
+		<avatars_maxfilesize>Max. avatar-filesize</avatars_maxfilesize>
+		<avatars_maxxsize>Max. avatar-width</avatars_maxxsize>
+		<avatars_maxysize>Max. avatar-height</avatars_maxysize>
+		<maintenance_forumclosed>Forum closed</maintenance_forumclosed>
+		<messages_perpage>Posts per page</messages_perpage>
+		<security_hideurlsfromguests>Hide URLs from guests</security_hideurlsfromguests>
+		<security_requireregistration>Require registration</security_requireregistration>
+		<security_saveips>Save IPs</security_saveips>
+		<threads_perpage>Threads per page</threads_perpage>
+		<threads_sortcriteria>Sortcriteria for threads</threads_sortcriteria>
+		<threads_sortdirection>Sortdirection for threads</threads_sortdirection>
+	</Forum>
+		
+	<authorisations>
+		<edit_config>Edit config</edit_config>
+		<manage_forums>Manage forums</manage_forums>
+		<conduct_maintenance>Conduct maintenance</conduct_maintenance>
+		<access_forum>Access forum</access_forum>
+		<add_posts>Add posts</add_posts>
+		<edit_posts>Edit posts</edit_posts>
+		<delete_posts>Delet posts</delete_posts>
+		<edit_own_posts>Edit own posts</edit_own_posts>
+		<delete_own_posts>Delet own posts</delete_own_posts>
+		<add_topics>Add threads</add_topics>
+		<edit_topics>Edit threads</edit_topics>
+		<move_topics>Move threads</move_topics>
+		<delete_topics>Delete threads</delete_topics>
+		<upload_attachments>Upload attachments</upload_attachments>
+		<access_attachments>Access attachments</access_attachments>
+		<view_urls>View URLs</view_urls>
+	</authorisations>
+	
+	
+	
+	
+	<!--<forumindex>
+		<forumindex_title>Forenindex</forumindex_title>
+		<categories>Kategorie</categories>
+		<topics>Themen</topics>
+		<posts>Nachrichten</posts>
+		<views>Angesehen</views>
+		<latest_post>Neueste Nachricht</latest_post>
+		<latest_topic>Neuestes Thema</latest_topic>
+		<new_posts>Neue Nachrichten seit letztem Login</new_posts>
+		<no_new_posts>Keine neuen Nachrichten seit letztem Login</no_new_posts>
+		<no_categories>Es wurden noch keine Foren eingerichtet!</no_categories>
+	</forumindex>
+	
+	<forums>
+		<actions>
+			<new_forum>Neues Forum</new_forum>
+			<edit_forum>Forum bearbeiten</edit_forum>	
+			<delete_forum>Forum löschen</delete_forum>
+		</actions>
+		<texts>
+			<forum_will_be_deleted>Beim Löschen eines Forums werden alle untergeordneten Kategorien sowie die in diesen enthaltenen Themen und Nachrichten samt Anhängen unwiderruflich gelöscht! Wenn sie nur das Forum löschen wollen, sollten sie die Kategorien vor dem Löschen in ein anderes Forum verschieben.</forum_will_be_deleted>
+			<forum_deleted>Das Forum wurde gelöscht.</forum_deleted>
+		</texts>
+	</forums>
+	
+	<categories>
+		<actions>
+			<new_category>Neue Kategorie</new_category>
+			<edit_category>Kategorie bearbeiten</edit_category>
+			<delete_category>Kategorie löschen</delete_category>
+		</actions>
+		<labels>
+			<category_title>Titel</category_title>
+			<parent_forum>Übergeordnetes Forum</parent_forum>
+		</labels>
+		<texts>
+			<category_will_be_deleted>Beim Löschen einer Kategorie werden alle in ihr enthaltenen Themen und Nachrichten samt Anhängen unwiderruflich gelöscht!</category_will_be_deleted>
+			<category_deleted>Die Kategorie wurde gelöscht.</category_deleted>
+		</texts>
+	</categories>
+	
+	<topics>
+		<actions>
+			<new_topic>neues Thema</new_topic>
+			<edit_topic>Thema bearbeiten</edit_topic>
+			<delete_topic>Thema löschen</delete_topic>
+		</actions>
+		<labels>
+			<topic_title>Thema</topic_title>
+			<type>Thementyp</type>
+			<message>Nachrichtentext</message>
+			<started_by>erstellt von</started_by>
+			<include_sig>Signatur anhängen</include_sig>
+			<use_formats>Formatierung nutzen</use_formats>
+			<use_smilies>Smilies nutzen</use_smilies>
+			<topic_closed>Thema geschlossen</topic_closed>
+			<attachments>Dateianhänge</attachments>
+			<attachment>Anhang</attachment>
+		</labels>
+		<texts>
+			<no_topics>In dieser Kategorie gibt es noch keine Themen!</no_topics>
+			<num_topics_of>Themen {START} - {END} von {TOTAL}</num_topics_of>
+		</texts>
+		<types>
+			<normal>normal</normal>
+			<anouncement>Bekanntmachung</anouncement>
+			<sticky>Klebrig</sticky>
+		</types>
+		<icon>
+			<title>Icon</title>
+			<none>keins</none>
+		</icon>
+	</topics>
+	
+	<posts>
+		<actions>
+			<new_post>neue Nachricht</new_post>
+			<edit_post>Nachricht bearbeiten</edit_post>
+			<quote_post>Nachricht zitieren</quote_post>
+			<reply_to_post>Auf Nachricht antworten</reply_to_post>
+			<delete_post>Nachricht löschen</delete_post>
+		</actions>
+		<labels>
+			<guest>Gast</guest>
+			<post>Nachricht</post>
+			<poster>Autor</poster>
+			<post_title>Nachrichtentitel</post_title>
+			<message>Nachrichtentext</message>
+			<no_avatar>kein Avatar</no_avatar>
+			<your_name>Ihr Name</your_name>
+			<paragraphs>
+				<quote>Zitat</quote>
+				<quote_by>Zitat von {USER}</quote_by>
+				<spoiler>Spoiler</spoiler>
+				<code>Code</code>
+				<php>PHP</php>
+			</paragraphs>
+		</labels>
+		<texts>
+			<reply_abbreviation>AW: </reply_abbreviation>
+			<last_edit>zuletzt bearbeitet von {EDITOR}</last_edit>
+			<num_posts_of>Nachrichten {START} - {END} von {TOTAL}</num_posts_of>
+		</texts>
+		<hidden>
+			<login_to_see_links>um Links zu sehen, müssen sie eingeloggt sein!</login_to_see_links>
+		</hidden>
+		<icon>
+			<title>Icon</title>
+			<none>keins</none>
+		</icon>
+	</posts>
+	
+	<profile>
+		<label>Forumsdaten</label>
+		<labels>
+			<email>eMail</email>
+			<email_public>eMail veröffentlichen</email_public>
+			<homepage>Homepage</homepage>
+			<icq>ICQ</icq>
+			<aim>AIM</aim>
+			<yahoo>Yahoo Messager</yahoo>
+			<msn>MSN Messager</msn>
+			<residence>Wohnort</residence>
+			<interests>Interessen</interests>
+			<signature>Signatur</signature>
+			<preferences>Einstellungen</preferences>
+			<topics_per_page>Themen pro Seite</topics_per_page>
+			<topics_sortdirection>Themen Sortierrichtung</topics_sortdirection>
+			<topics_sortcriterium>Themen Sortierkriterium</topics_sortcriterium>
+			<posts_per_page>Nachrichten pro Seite</posts_per_page>
+			<posts_sortdirection>Nachrichten Sortierrichtung</posts_sortdirection>
+			<default_viewtype>Standardansicht</default_viewtype>
+			<viewtype_threshold>Schwellwert für Threadansicht</viewtype_threshold>
+			<options>
+				<topic_age>Themenalter</topic_age>
+				<latestpost>neueste Nachricht</latestpost>
+				<postcount>Nachrichtenanzahl</postcount>
+				<thread_view>Threadansicht</thread_view>
+				<classic_view>klassische Ansicht</classic_view>
+			</options>
+		</labels>
+		<avatar>
+			<label>Avatar</label>
+			<no_avatar>Kein Avatar vorhanden</no_avatar>
+			<remove_avatar>Avatar entfernen</remove_avatar>
+			<upload_avatar>Avatar hochladen</upload_avatar>
+		</avatar>
+	</profile>
+	
+	<members>
+		<actions>
+			<send_pm>PM senden</send_pm>
+		</actions>
+		<labels>
+			<title>Mitglieder</title>
+			<memberinfo>Mitgliedsinformationen</memberinfo>
+			<membersince>Mitglied seit</membersince>
+			<posts>Forumsbeiträge</posts>
+		</labels>
+		<texts>
+			<no_members>Das Forum hat noch keine Mitglieder</no_members>
+			<num_members_of>Mitglieder {START} - {END} von {TOTAL}</num_members_of>
+			<numposts>{USERPOSTS} von insgesamt {TOTALPOSTS} ({PERCENTAGE} %)</numposts>
+		</texts>
+	</members>-->
+	
+</sbForum>
