@@ -36,14 +36,14 @@
 		<!--<xsl:variable name="subjecttype" select="sbnode/@subjecttype" />
 		<xsl:variable name="subjectid" select="sbnode/@subjectid" />-->
 		<div class="eyecandy"><div class="left"><div class="right">
-			<h1>Berechtigungen von <xsl:value-of select="$content/userentity/sbnode/@label" /></h1>
+			<h1><xsl:value-of select="$locale/sbSystem/labels/security/authorisations_of" /> <xsl:value-of select="$content/userentity/sbnode/@label" /></h1>
 			<form action="/{$master/@uuid}/security/saveAuthorisations" method="post">
 				<input type="hidden" name="userentity" value="{$content/@userentity}" />
 				<table>
 					<tr>
-						<th>Berechtigung</th>
-						<th colspan="2">Erl.</th>
-						<th colspan="2">Verw.</th>
+						<th><xsl:value-of select="$locale/sbSystem/labels/security/authorisation" /></th>
+						<th colspan="2" style="text-align:center;"><xsl:value-of select="$locale/sbSystem/labels/security/allow" /></th>
+						<th colspan="2" style="text-align:center;"><xsl:value-of select="$locale/sbSystem/labels/security/deny" /></th>
 					</tr>
 					<xsl:apply-templates select="sbnode/supported_authorisations/authorisation[1]" />
 					<tr>

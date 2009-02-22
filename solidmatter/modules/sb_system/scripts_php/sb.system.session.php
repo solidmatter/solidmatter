@@ -15,10 +15,14 @@
 */
 class sbSession {
 	
-	private static $sSessionID = '';
 	public static $aData = array();
 	
-	private static $bStoreOnDestruct = TRUE;
+	private static $sSessionID = NULL;
+	private static $iTimeout = NULL;
+	
+	private static $oWatchdog = NULL;
+	
+	private static $bClosed = FALSE;
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -26,9 +30,23 @@ class sbSession {
 	* @param 
 	* @return 
 	*/
-	public function __construct($sSessionID) {
-		self::$sSessionID = $sSessionID;
+	public static function getID() {
+		return (self::$sSessionID);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public static function start($sSessionID = NULL, $iTimeout = NULL) {
+		if ($sSessionID != NULL) {
+			self::$sSessionID = $sSessionID;
+			self::$iTimeout = $iTimeout;
+		}
 		self::loadSession();
+		self::$oWatchdog = new sbSessionWatchdog();
 	}
 	
 	//--------------------------------------------------------------------------
@@ -37,36 +55,34 @@ class sbSession {
 	* @param 
 	* @return 
 	*/
-	public function __destruct() {
-		if (self::$bStoreOnDestruct && self::$sSessionID != NULL) {
-			self::storeSession();
-		}
+	public static function commit() {
+		self::$oWatchdog->disarm();
+		self::storeSession();
+		self::$bClosed = TRUE;
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	*
 	* @param 
 	* @return 
 	*/
-	public static function isLoggedIn() {
-		if (isset(self::$aData['userdata']['user_id'])) {
-			return (TRUE);
-		}
-		return (FALSE);
+	public static function close() {
+		self::$oWatchdog->disarm();
+		self::$bClosed = TRUE;
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* FIXME: 
 	* @param 
 	* @return 
 	*/
-	public static function getUserId() {
-		if (isset(self::$aData['userdata']['user_id'])) {
-			return (self::$aData['userdata']['user_id']);
-		}
-		return (FALSE);
+	public static function destroy() {
+		self::$oWatchdog->disarm();
+		self::$aData = NULL;
+		self::destroySession();
+		self::$bClosed = TRUE;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -98,34 +114,19 @@ class sbSession {
 	* @param 
 	* @return 
 	*/
-	public static function getSessionID() {
-		return (self::$sSessionID);
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	public static function getCurrentLocale() {
-		return ('ger');	
-	}
-
-	//--------------------------------------------------------------------------
-	/**
-	* 
-	* @param 
-	* @return 
-	*/
 	private static function loadSession() {
 		$stmtLoadSession = System::getDatabase()->prepareKnown('sbSystem/session/load');
 		$stmtLoadSession->bindParam('session_id', self::$sSessionID, PDO::PARAM_STR);
 		$stmtLoadSession->execute();
 		foreach ($stmtLoadSession as $aRow) {
-			self::$aData = unserialize($aRow['s_data']);
+			if ($aRow['lifetime'] > $aRow['lifespan']) {
+				self::destroySession();
+				throw new SessionTimeoutException(__CLASS__.': session '.self::$sSessionID.' has expired (lifetime='.$aRow['lifetime'].'|lifespan='.$aRow['lifespan'].')');
+			}
+			self::$aData = unserialize($aRow['data']);
 		}
 		$stmtLoadSession->closeCursor();
+		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -134,48 +135,72 @@ class sbSession {
 	* @param 
 	* @return 
 	*/
-	public static function storeSession() {
-		if (self::$sSessionID == NULL) {
-			return (FALSE);
+	private static function storeSession() {
+		if (self::$bClosed) {
+			throw new sbException(__CLASS__.': session is closed and cannot be stored');
 		}
 		$stmtStoreSession = System::getDatabase()->prepareKnown('sbSystem/session/store');
 		$stmtStoreSession->bindParam('session_id', self::$sSessionID, PDO::PARAM_STR);
+		$stmtStoreSession->bindParam('lifespan', self::$iTimeout, PDO::PARAM_INT);
 		$sSerializedData = serialize(self::$aData);
 		$stmtStoreSession->bindParam('data', $sSerializedData, PDO::PARAM_STR);
-		try {
-			$stmtStoreSession->execute();
-			$stmtStoreSession->closeCursor();
-		} catch (Exception $e) {
-			echo $e->getMessage();
-		}
+		$stmtStoreSession->execute();
+		$stmtStoreSession->closeCursor();
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
-	*
+	* 
 	* @param 
 	* @return 
 	*/
-	public static function disableStoring() {
-		self::$bStoreOnDestruct = FALSE;
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	* FIXME: 
-	* @param 
-	* @return 
-	*/
-	public static function destroy() {
+	private static function destroySession() {
 		$stmtDestroySession = System::getDatabase()->prepareKnown('sbSystem/session/destroy');
 		$stmtDestroySession->bindParam('session_id', self::$sSessionID, PDO::PARAM_STR);
 		$stmtDestroySession->execute();
 		$stmtDestroySession->closeCursor();
-		//var_dumpp($stmtDestroySession->rowCount());die();
-		self::$aData = NULL;
-		self::$sSessionID = NULL;
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	private static function clearSessions() {
+		$stmtDestroySession = System::getDatabase()->prepareKnown('sbSystem/session/clear');
+		$stmtDestroySession->execute();
+		$stmtDestroySession->closeCursor();
 	}
 
+}
+
+class sbSessionWatchdog {
+	
+	private $bArmed = TRUE;
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function __destruct() {
+		if ($this->bArmed) {
+			sbSession::commit();
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function disarm() {
+		$this->bArmed = FALSE;
+	}
+	
 }
 
 ?>

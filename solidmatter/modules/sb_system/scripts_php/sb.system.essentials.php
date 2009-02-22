@@ -163,7 +163,7 @@ function import($sLibrary, $bRequired = TRUE) {
 		return (TRUE);
 	}
 	
-	global $_STOPWATCH;
+	Stopwatch::checkGroup('php');
 	
 	$aComponents = explode(':', $sLibrary);
 	switch (count($aComponents)) {
@@ -202,7 +202,7 @@ function import($sLibrary, $bRequired = TRUE) {
 		}
 	}
 	
-	$_STOPWATCH->checkGroup('load');
+	Stopwatch::checkGroup('load');
 	
 	return ($bSuccess);
 }

@@ -30,12 +30,12 @@ class sbView_root_menu extends sbView {
 		$sQuery = '/';
 		if ($sOpen != NULL) {
 			sbSession::$aData['menu']['expanded'][$sOpen] = TRUE;
-			sbSession::storeSession();
+			sbSession::commit();
 			$sQuery = $sOpen;
 		}
 		if ($sClose != NULL) {
 			unset(sbSession::$aData['menu']['expanded'][$sClose]);
-			sbSession::storeSession();
+			sbSession::commit();
 			$sQuery = $sClose;
 		}
 		//die($sQuery);

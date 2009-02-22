@@ -49,6 +49,7 @@ abstract class Registry {
 		// logic
 		$stmtGetValue = self::$crSession->prepareKnown('sbSystem/registry/getValue');
 		$stmtGetValue->bindValue('key', $sKey, PDO::PARAM_STR);
+		// TODO: implement user-specific registry entries
 		$stmtGetValue->bindValue('user_uuid', 'SYSTEM', PDO::PARAM_STR);
 		$stmtGetValue->execute();
 		

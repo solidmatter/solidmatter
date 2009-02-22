@@ -120,12 +120,17 @@
 			<inheritance>Vererbung</inheritance>
 			<inherit_rights>Berechtigungen von übergeordneten Objekten übernehmen</inherit_rights>
 			<bequeath_rights>Berechtigungen an untergeordnete Objekte vererben</bequeath_rights>
+			<authorisations_of>Berechtigungen von </authorisations_of>
+			<allow>Erlauben</allow>
+			<deny>Verweigern</deny>
+			<authorisation>Berechtigung</authorisation>
 		</security>
 	</labels>
 	
 	<texts>
 		<no_subobjects>Dieses Objekt hat keine anzeigbaren Unterobjekte</no_subobjects>
 		<no_comments>Keine Kommentare vorhanden</no_comments>
+		<inbox_empty>Ihre Inbox ist leer</inbox_empty>
 	</texts>
 	
 	<general>

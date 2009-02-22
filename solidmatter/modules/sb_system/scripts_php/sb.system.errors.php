@@ -16,7 +16,7 @@
 * @return 
 */
 class sbException extends Exception {
-	
+	// TODO: log exceptions
 }
 
 // system exceptions
@@ -40,6 +40,7 @@ class MissingParameterException extends sbException { }
 class InvalidFormDataException extends sbException { }
 class ViewUndefinedException extends sbException { }
 class ActionUndefinedException extends sbException { }
+class SessionTimeoutException extends sbException { }
 
 class ImportException extends sbException { }
 class ExportException extends sbException { }

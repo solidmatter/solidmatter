@@ -57,8 +57,9 @@ class System {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
+	* Returns the system's database.
+	* Note that this is the global, workspace-independend database used for
+	* things like session storage and caching.
 	* @return 
 	*/
 	public static function getDatabase() {
@@ -74,7 +75,7 @@ class System {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* Sets the currently used sbCRSession which will be used for logging.
 	* @param 
 	* @return 
 	*/
@@ -183,7 +184,12 @@ class System {
 		
 	}
 	
-	// TODO: make obsolete and remove
+	//--------------------------------------------------------------------------
+	/**
+	* Returns the failsafe (lowercase, filesystem friendly) name of the given module.
+	* TODO: make obsolete and remove if possible (problem: namespaces may contain invalid characters)
+	* @return string the failsafe name
+	*/
 	public static function getFailsafeModuleName($sModule) {
 		$aModules = array(
 			'sbSystem' => 'sb_system',
@@ -203,7 +209,7 @@ class System {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* TODO: URL generation is a task for the handler, so it should be moved there.
 	* @param 
 	* @return 
 	*/

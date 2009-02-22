@@ -33,7 +33,7 @@ class sbView_structure extends sbView {
 				sbSession::$aData['clipboard']['type'] = 'cut';
 				sbSession::$aData['clipboard']['childnode'] = $_REQUEST->getParam('childnode');
 				sbSession::$aData['clipboard']['parentnode'] = $_REQUEST->getParam('parentnode');
-				sbSession::storeSession();
+				sbSession::commit();
 				
 				break;
 				
@@ -49,7 +49,7 @@ class sbView_structure extends sbView {
 				sbSession::$aData['clipboard']['type'] = 'copy';
 				sbSession::$aData['clipboard']['childnode'] = $sChildUUID;
 				sbSession::$aData['clipboard']['parentnode'] = $sParentUUID;
-				sbSession::storeSession();
+				sbSession::commit();
 				break;
 				
 			case 'paste':
@@ -84,7 +84,7 @@ class sbView_structure extends sbView {
 					throw new LazyBastardException();
 				}
 				
-				sbSession::storeSession();
+				sbSession::commit();
 				break;
 				
 			case 'createLink':
@@ -118,7 +118,7 @@ class sbView_structure extends sbView {
 				$nodeNewParent->addExistingNode($nodeSubject);
 				$nodeNewParent->save();
 				
-				sbSession::storeSession();
+				sbSession::commit();
 				break;
 			
 			case 'deleteChild':

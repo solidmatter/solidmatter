@@ -119,12 +119,17 @@
 			<inheritance>Inheritance</inheritance>
 			<inherit_rights>Inherit rights from ancestors</inherit_rights>
 			<bequeath_rights>Bequeath rights to descendants</bequeath_rights>
+			<authorisations_of>Authorisations of </authorisations_of>
+			<allow>Allow</allow>
+			<deny>Deny</deny>
+			<authorisation>Authorisation</authorisation>
 		</security>
 	</labels>
 	
 	<texts>
 		<no_subobjects>This object has no vsisible subobjects</no_subobjects>
 		<no_comments>No comments available</no_comments>
+		<inbox_empty>Your inbox is empty</inbox_empty>
 	</texts>
 	
 	<general>

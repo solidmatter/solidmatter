@@ -25,6 +25,9 @@
 				<info>
 					This box holds important additional information, resp. where to find additional information on the current subject. Used when there are more things to know than are used/told in place...
 				</info>
+				<todo>
+					This box states TODOs still open as well as features planned for future releases.
+				</todo>
 				<code>This box contains program-code</code>
 			</subsection>
 		</section>
@@ -74,6 +77,9 @@
 	
 	<chapter title="solidMatter" id="">
 		<section title="Application Layers" id="">
+			<p>
+				This chapter describes
+			</p>
 			<subsection title="Interface">
 				
 			</subsection>
@@ -103,10 +109,50 @@
 		</section>
 		<section title="Form Building" id="">
 			<subsection title="The sbDOMForm Class">
-				
+				<p>
+					The <class>sbDOMForm</class> class if the default method of building forms for the UI.
+					It has some properties defined for the form itself (action, label, id) as well as a variable number of form elements.
+					The form elements are called Inputs internally, and every element type has to be derived from the abstract <class>Input</class> class.
+				</p>
+				<p>
+					Example for creating a simple fictional form that is used to edit customer details.
+				</p>
+				<code>// init form
+$formCustomer = new sbDOMForm(
+	'customer_details', // id
+	'Edit customer details', // title
+	'/customer/details/save' // action 
+);
+
+// add fields
+$formCustomer->addInput('first_name;string;minlength=2;maxlength=50;required=TRUE;', '$locale/myModule/customer/firstName');
+$formCustomer->addInput('last_name;string;minlength=2;maxlength=50;required=TRUE;', '$locale/myModule/customer/lastName');
+$formCustomer->addInput('gender;select;', '$locale/myModule/customer/gender');
+$formCustomer->addInput('email;email;required=TRUE;', '$locale/myModule/customer/email');
+$formCustomer->addInput('address_postalcode;integer;maxvalue=99999;', '$locale/myModule/customer/postalcode');
+$formCustomer->addInput('address_city;string;maxlength=100;', '$locale/myModule/customer/city');
+$formCustomer->addInput('address_street;string;maxlength=150;', '$locale/myModule/customer/street');
+$formCustomer->addInput('address_housenumber;integer;', '$locale/myModule/customer/houseNumber');
+$formCustomer->addSubmit('$locale/myModule/actions/save');
+
+// set options for gender dropdown
+$aOptions['m'] = 'male';
+$aOptions['f'] = 'female';	
+$formCustomer->setOptions('gender', $aOptions);
+
+// include form in output
+$_RESPONSE->addData($formCustomer);
+</code>
+				<todo>
+					Evaluate the possibilities (incl. cost/value) of richer forms.
+					Forms containing more logic (e.g. show some parts only if a specific checkbox is checked) than the current 'flat' forms are a nice idea, but bear the danger of rebuilding a good portion of application logic in the interface.
+				</todo>
 			</subsection>
 			<subsection title="Inputs">
-				
+				<todo>
+					Input types should be expandable by 3rd party modules, currently they're a fixed sbSystem matter.
+					There has to be some System::registerInputType() or similar, perhaps namespaces make sense then (e.g. different apps with 'customer' inputfield).
+				</todo>
 			</subsection>
 			<subsection title="Form Validation">
 				
@@ -128,17 +174,37 @@
 				- Conclusion: not portable if using the full sbCR API
 			</subsection>
 		</section>
-		<section title="JCR vs. sbCR (Restrictions)" id="jcrsbcr">
+		<section title="JCR vs. sbCR" id="jcrsbcr">
 			<subsection title="Workspaces" id="">
-				- only one workspace
-				- more workspaces supported, but not connected
+				<info>
+					Currently there's basically only one workspace at a time supported.
+					You can use more, but they won't be connected.
+					This has effects on multiple node usage across workspaces, some other JCR API aspects and versioning when it's impemented.
+				</info>
+				<todo>
+					The performance impact of having several workspaces in one hierarchy table has to be evaluated.
+					Additionally, it's not clear how nodes with arbitrary values should be handled.
+				</todo>
 			</subsection>
 			<subsection title="Permissions" id="">
-				- no session-level permissions
-				- but user-level authorisations
+				<caution>
+					Repository permissions are currently not supported.
+					A valid repository user has full permissions on the whole repository (usually the system connects to the repository).
+				</caution>
+				<info>
+					In terms of managing authorisations, these are handled in the application layer via sbSystem capabilities.
+					See $CHAPTER
+				</info>
 			</subsection>
-			<subsection title="Same Name Siblings" id="">
-				- does not support same name siblings
+			<subsection title="Same Name Siblings" id="samenamesiblings">
+				<caution>
+					Same name siblings are currently not supported.
+				</caution>
+				<todo>
+					This might be easy to implement, extending the internal name by '[#]', where # defaults to 0.
+					However, the dependencies in other system parts have to be looked at.
+					Additionally, this means the hierarchy table has to contain the internal name because of consistency.
+				</todo>
 			</subsection>
 			<subsection title="Shared Sets" id="">
 				<p>
@@ -147,6 +213,10 @@
 				<caution>
 					As there is only one instance of a node created in the repository, a name change applies to all nodes in the shared set.
 				</caution>
+				<todo>
+					Supporting shared sets with flexible naming means the hierarchy table has to contain the internal name.
+					This has implications on other parts of the system.
+				</todo>
 			</subsection>
 			<subsection title="Mixin Types" id="mixin">
 				<p>
@@ -162,8 +232,17 @@
 					<li>sb:deleted</li>
 					<li>sb:node</li>
 				</ul>
+				<todo>
+					Nodetype inheritance is not fully available right now.
+					In order to support it, there are several things needed:
+					<ul>
+						<li>completing the code dealing with repository 'reflection'</li>
+						<li>replacing the current property handling (caching)</li>
+						<li>deciding on what should happen with views/actions (do they aggregate? ist that sensible?)</li>
+					</ul>
+				</todo>
 			</subsection>
-			<subsection title="Properties" id="">
+			<subsection title="Properties" id="properties">
 				<p>
 					Because of the mandatory mixin types, several properties are mandatory.
 				</p>
@@ -172,49 +251,12 @@
 					This is mainly for performance reasons and for easier handling
 				</caution>
 			</subsection>
-			<subsection title="" id="">
-				
+			<subsection id="versioning" title="Versioning">
+				<todo>
+					The performance impact of having several versions in the repository as well as transporting the version informatione in the hierarchy table has to be evaluated.
+					Additionally, it's not clear how nodes with arbitrary values should be handled.
+				</todo>
 			</subsection>
-			<subsection title="" id="">
-				
-			</subsection>
-			<subsection title="" id="">
-				
-			</subsection>
-		</section>
-		<section title="JCR vs. sbCR (Additions)" id="jcrsbcr">
-			<subsection title="Same Name Siblings" id="">
-				
-			</subsection>
-			<subsection title="Shared Nodes" id="">
-				
-			</subsection>
-			<subsection title="Web 2.0 - Votes" id="web2.0">
-				<p>
-					
-				</p>
-			</subsection>
-			<subsection title="Web 2.0 - Tags" id="tags">
-				<p>
-					
-				</p>
-			</subsection>
-			<subsection title="" id="">
-				
-			</subsection>
-			<subsection title="" id="">
-				
-			</subsection>
-			<subsection title="" id="">
-				
-			</subsection>
-			<subsection title="" id="">
-				
-			</subsection>
-			<subsection title="" id="">
-				
-			</subsection>
-			
 		</section>
 		<section title="Repository Structure" id="structure">
 			
@@ -265,6 +307,21 @@
 			<subsection title="What is an Action?" id="action">
 				
 			</subsection>
+		</section>
+		<section id="web20" title="Web 2.0">
+			<subsection id="web20_votes" title="Voting/Rating">
+				<p>
+					
+				</p>
+			</subsection>
+			<subsection id="web20_tags" title="Tags">
+				<p>
+					
+				</p>
+			</subsection>
+		</section>
+		<section id="authorisation" title="Authorisation">
+			<subsection title=""></subsection>
 		</section>
 	</chapter>
 	
@@ -560,7 +617,7 @@ class sbView_{nodetype}_{view} extends sbView {
 ?>]]></code>
 			</subsection>
 		</section>
-		<section title="Session Usage" id="sessionusage">
+		<section id="sessionusage" title="Session Usage">
 			<p>The session can be used to store various information. This chapter explains what different modes of access exist.</p>
 			<subsection title="Per Nodetype Settings" id="pernodetype">
 				<p>The keys for the information should be named like this: "module:nodetype:setting".
@@ -568,13 +625,127 @@ class sbView_{nodetype}_{view} extends sbView {
 				<code>sbSession::addData('sbSystem:Folder:defaultView', $sView);</code>
 			</subsection>
 		</section>
+		<section id="filesystemstructure" title="Filesystem Structure">
+			<p>
+				The filesystem structure of solidMatter contains mandatory and optional files/folders: 
+			</p>
+			<ul>
+				{solidMatter root directory}
+				<li>_cache (mandatory, should be used to store stuff cached in local filesystem)</li>
+				<li>_config (mandatory)
+					<ul>
+						<li>controller.xml (mandatory, configuration for controller layer)</li>
+						<li>interface.xml (mandatory, configuration for interface layer)</li>
+						<li>repositories.xml (mandatory, configuration for sbCR repositories)</li>
+					</ul>
+				</li>
+				<li>_logs (mandatory, stores all logfiles generated in application layer)</li>
+				<li>_temp (mandatory, used for temporary files, uploads etc.)</li>
+				<li>interface
+				<ul>
+					<li>locales
+						<ul>
+							<li>{Module}
+							<ul>
+								<li>base_{language}.xml (mandatory, base locale for the module)</li>
+								<li>help_{language}.xml (optional, help texts for the module if used)</li>
+							</ul>
+							</li>
+						</ul>
+					</li>
+					<li>themes
+					<ul>
+						<li>{Theme}
+						<ul>
+							<li>{Module}
+							<ul>
+								<li>css (stylesheets used by the module for the current theme)</li>
+								<ul>
+									<li>styles.css (mandatory for admin backend, this is the stylesheet that will be loaded automatically)</li>
+								</ul>
+								<li>icons (all icons for nodetypes owned by this module, also additional icons if necessary)</li>
+								<li>images (optional, images needed for the module)</li>
+								<li>xsl (mandatory, contains all stylesheets defined for the views/actions of the module)</li>
+							</ul>
+							</li>
+						</ul>
+						</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+				<li>modules
+				<ul>
+					<li>{Module}
+					<ul>
+						<li>bin (optional)</li>
+						<li>data (optional)</li>
+						<li>documentation (mandatory, developer and user manuals)</li>
+						<li>scripts_php (mandatory, all scripts used by the module)
+						<ul>
+							<li>external (optional, all external libraries used by the module)</li>
+						</ul>
+						</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+				<li>controller.php</li>
+				<li>interface.php</li>
+			</ul>
+			<info>
+				Please note that in case of a split tier environment (interface and backend hosted seperately), the following directories/files have to be available to the interface layer:
+				<ul>
+					<li>soldMatter/interface.php</li>
+					<li>soldMatter/_config/interface.xml</li>
+					<li>soldMatter/interface/</li>
+					<li>soldMatter/modules/sb_system (must be available in both tiers!)</li>
+				</ul>
+			</info>
+			<caution>
+				Split tier setups have not been tested for a while.
+				There are DEFINATELY several bugs that prevent such a setup in current state!
+			</caution>
+			<todo>
+				Bring split tier setups in a usable state again.
+			</todo>
+		</section>
 	</chapter>
 	
 	<chapter title="Appendix" id="appendix">
-		<section title="Additional Documentation" id="add_docu">
-		
+		<section id="add_docu" title="Additional Documentation">
+			
 		</section>
-		<section title="History" id="history">
+		<section id="Roadmap" title="roadmap">
+			<subsection id="v1" title="Initial Release">
+				<ul>
+					<li>sbCR: locking</li>
+					<li>sbCR: rudimentary repository administration</li>
+					<li>sbCR: nodetype inheritance</li>
+					<li>sbCR: namespace registry</li>
+					<li>sbCR: property constraints</li>
+					<li>solidMatter: guided install tool</li>
+					<li>solidMatter: module install/uninstall</li>
+					<li>solidMatter: extensible form inputtypes</li>
+					<li>solidMatter: extensible handlers</li>
+					<li>solidMatter: more flexible app positioning (relative to domain root directory)</li>
+					<li>solidMatter: user-specific registry values (incl. administration)</li>
+				</ul>
+			</subsection>
+			<subsection id="vx" title="Future Releases">
+				<ul>
+					<li>sbCR: XPath</li>
+					<li>sbCR: XQuery</li>
+					<li>sbCR: versioning</li>
+					<li>sbCR: visitors</li>
+					<li>sbCR: connected workspaces</li>
+					<li>sbCR: full repository administration</li>
+					<li>sbCR: full property/node constraints</li>
+					<li>sbCR: lifecycle transitions</li>
+				</ul>
+			</subsection>
+		</section>
+		<section id="history" title="History" >
 			<subsection title="0.50.00 alpha" id="05alpha">
 				<ul>
 					<li>[STATE] initial state, work in progress</li>

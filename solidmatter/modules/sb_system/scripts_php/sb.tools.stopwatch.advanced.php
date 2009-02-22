@@ -9,25 +9,31 @@
 */
 //------------------------------------------------------------------------------
 
-require_once('sb.tools.stopwatch.php');
-
 //------------------------------------------------------------------------------
 /**
  * TODO: change Description and other PHPDoc stuff
 * 
 */
-class AdvancedStopwatch {	
+class Stopwatch {
 	
-	private $aTaskTimes = array();
-	private $aTaskGroupTimes = array();
+	private static $mtStarttime = NULL;
+	private static $mtStoptime = NULL;
+	private static $mtMarkertime = NULL;
+	private static $mtGroupMarkertime = NULL;
 	
-	private $mtGroupMarkertime = NULL;
+	private static $aTaskTimes = array();
+	private static $aTaskGroupTimes = array();
 	
-	public function __construct() {
-		//parent::__construct();
-		$this->mtStarttime = microtime(TRUE);
-		$this->mtMarkertime = $this->mtStarttime;
-		$this->mtGroupMarkertime = $this->mtStarttime;
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public static function start() {
+		self::$mtStarttime = microtime(TRUE);
+		self::$mtMarkertime = microtime(TRUE);
+		self::$mtGroupMarkertime = microtime(TRUE);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -36,17 +42,17 @@ class AdvancedStopwatch {
 	* @param 
 	* @return 
 	*/
-	public function check($sTask, $sGroup = NULL) {
+	public static function check($sTask, $sGroup = NULL) {
 		$mtNow = microtime(TRUE);
-		$mtDifference = $mtNow - $this->mtMarkertime;
-		$this->mtMarkertime = microtime(TRUE);
-		if (!isset($this->aTaskTimes[$sTask])) {
-			$this->aTaskTimes[$sTask] = $mtDifference;
+		$mtDifference = $mtNow - self::$mtMarkertime;
+		self::$mtMarkertime = microtime(TRUE);
+		if (!isset(self::$aTaskTimes[$sTask])) {
+			self::$aTaskTimes[$sTask] = $mtDifference;
 		} else {
-			$this->aTaskTimes[$sTask] += $mtDifference;
+			self::$aTaskTimes[$sTask] += $mtDifference;
 		}
 		if ($sGroup != NULL) {
-			$this->checkGroup($sGroup);
+			self::checkGroup($sGroup);
 		}
 		return ($mtDifference);
 	}
@@ -57,14 +63,14 @@ class AdvancedStopwatch {
 	* @param 
 	* @return 
 	*/
-	public function checkGroup($sTaskGroup) {
+	public static function checkGroup($sTaskGroup) {
 		$mtNow = microtime(TRUE);
-		$mtDifference = $mtNow - $this->mtGroupMarkertime;
-		$this->mtGroupMarkertime = microtime(TRUE);
-		if (!isset($this->aTaskGroupTimes[$sTaskGroup])) {
-			$this->aTaskGroupTimes[$sTaskGroup] = $mtDifference;
+		$mtDifference = $mtNow - self::$mtGroupMarkertime;
+		self::$mtGroupMarkertime = microtime(TRUE);
+		if (!isset(self::$aTaskGroupTimes[$sTaskGroup])) {
+			self::$aTaskGroupTimes[$sTaskGroup] = $mtDifference;
 		} else {
-			$this->aTaskGroupTimes[$sTaskGroup] += $mtDifference;
+			self::$aTaskGroupTimes[$sTaskGroup] += $mtDifference;
 		}
 	}
 	
@@ -75,13 +81,13 @@ class AdvancedStopwatch {
 	* @param 
 	* @return 
 	*/
-	public function stop($sTask) {
-		$this->mtStoptime = microtime(TRUE);
-		$mtTotalTime = $this->mtStoptime - $this->mtStarttime;
-		if (isset($this->aTaskTimes[$sTask])) {
+	public static function stop($sTask) {
+		self::$mtStoptime = microtime(TRUE);
+		$mtTotalTime = self::$mtStoptime - self::$mtStarttime;
+		if (isset(self::$aTaskTimes[$sTask])) {
 			throw new Exception(__CLASS__.': stop time has to be stored seperately, "'.$sTask.'" already exists');
 		}
-		$this->aTaskTimes[$sTask] = $mtTotalTime;
+		self::$aTaskTimes[$sTask] = $mtTotalTime;
 		return ($mtTotalTime);
 	}
 	
@@ -91,9 +97,9 @@ class AdvancedStopwatch {
 	* @param 
 	* @return 
 	*/
-	public function resetTimer() {
-		parent::resetTimer();
-		$this->aTaskTimes = array();
+	public static function resetTimer() {
+		self::$aTaskTimes = array();
+		self::$aTaskGroupTimes = array();
 	}
 	
 	//--------------------------------------------------------------------------
@@ -102,11 +108,8 @@ class AdvancedStopwatch {
 	* @param 
 	* @return 
 	*/
-	public function getTaskTimes($sSpecificTask = NULL) {
-		
-		//var_dumpp($this->aTaskGroupTimes);
-		//return ($this->aTaskTimes);
-		$aTimes = array_merge($this->aTaskTimes, $this->aTaskGroupTimes);
+	public static function getTaskTimes($sSpecificTask = NULL) {
+		$aTimes = array_merge(self::$aTaskTimes, self::$aTaskGroupTimes);
 		if ($sSpecificTask != NULL) {
 			return (sprintf('%01.2f', $aTimes[$sSpecificTask] * 1000));
 		}

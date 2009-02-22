@@ -96,7 +96,6 @@
 					</xsl:call-template>
 				</xsl:otherwise>
 			</xsl:choose>
-			<!--<xsl:value-of select="$path" /><xsl:value-of select="@urlname" />-->
 		</li>
 		</xsl:for-each>
 	</xsl:template>
@@ -111,9 +110,8 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<a href="javascript:sbMenu.toggleMenuEntry('{$path}')">
-				<!--<a href="javascript:alert({@nodeid})">-->
 					<xsl:choose>
-					<xsl:when test="count(./*) > 0">
+					<xsl:when test="children/sbnode">
 						<img id="icon{$path}" src="/theme/sb_system/icons/tree_close.gif" name="close" alt="close"/>
 					</xsl:when>
 					<xsl:otherwise>
@@ -153,26 +151,8 @@
 						</a>
 					</xsl:otherwise>
 				</xsl:choose>
-				<!--<a target="main" id="{$path}">
-					<xsl:attribute name="class">type <xsl:value-of select="@csstype" /></xsl:attribute>
-					<xsl:if test="@custom_icon">
-						<xsl:attribute name="style">background-image: url(../<xsl:value-of select="@custom_icon" />);</xsl:attribute>
-					</xsl:if>
-					<xsl:attribute name="href">backend.nodeid=<xsl:value-of select="@uuid" /></xsl:attribute>
-					<xsl:choose>
-						<xsl:when test="false and not(@primary='TRUE')">
-							<xsl:attribute name="style">padding-left:0px;</xsl:attribute>
-							<span class="link"><xsl:value-of select="@label" /></span>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="@label" />
-						</xsl:otherwise>
-					</xsl:choose>
-				</a>-->
 			</xsl:otherwise>
 		</xsl:choose>
-		<!--<a oncontextmenu="openContextMenu('{@uuid}')">[CM]</a>-->
-		<!--<a href="backend.contextmenu..subjectnode={@uuid}" target="main">[CM]</a>-->
 		<!-- children -->
 		<xsl:if test="children[@mode='tree' or @mode='debug']/sbnode">
 			<ul id="children{$path}">

@@ -47,17 +47,23 @@
 	
 	<xsl:template match="response/content/userinfo/row">
 		<div class="eyecandy"><div class="left"><div class="right">
-			<h1>Welcome <xsl:value-of select="s_nickname"/></h1>
-			your last login was on <xsl:value-of select="php:functionString('datetime_mysql2local', string(@dt_lastlogin), string($locale/system/formats/datetime_long))"/>
-			, you have <xsl:value-of select="n_totalfailedlogins"/> failed logins and 
-			<xsl:value-of select="n_successfullogins"/> successful logins
-			<br/><br/><a href="/-/login/logout" target="_top">Logout</a>
+			<h1>Welcome <xsl:value-of select="@nickname"/></h1>
+			your last login was on 
+			<strong><xsl:value-of select="php:functionString('datetime_mysql2local', string(@last_login), string($locale/sbSystem/formats/datetime_long))"/></strong>,
+			you have 
+			<strong><xsl:value-of select="@total_failed_logins"/> failed logins</strong> and 
+			<strong><xsl:value-of select="@successful_logins"/> successful logins</strong>
+			<br/><br/>
+			<a href="/-/login/logout" target="_top">Logout</a>
 		</div></div></div>
 	</xsl:template>
 	
 	<xsl:template name="inbox">
 		<div class="eyecandy"><div class="left"><div class="right">
 			<h1>Inbox</h1>
+			<xsl:if test="not(response/content/inbox/nodes/sbnode)">
+				<xsl:value-of select="$locale/sbSystem/texts/inbox_empty" />
+			</xsl:if>
 			<xsl:for-each select="response/content/inbox/nodes/sbnode">
 				<a href="/{@uuid}" class="type sb_message"><xsl:value-of select="@label" /></a><br/>
 			</xsl:for-each>

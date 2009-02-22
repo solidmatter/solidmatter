@@ -30,11 +30,7 @@ date_default_timezone_set(TIMEZONE);
 
 // create stopwatch
 require_once('modules/sb_system/scripts_php/sb.tools.stopwatch.advanced.php');
-if (!isset($_STOPWATCH)) {
-	$_STOPWATCH = new AdvancedStopwatch();
-} else {
-	$_STOPWATCH->check('tier_transition', 'com');
-}
+Stopwatch::check('tier_transition', 'com');
 
 // basic
 require_once('modules/sb_system/scripts_php/sb.system.essentials.php');
@@ -57,7 +53,7 @@ import('sb.cr.session');
 //import('sb.cr.workspace');
 //import('sb.cr.nodetypemanager');
 
-$_STOPWATCH->check('tier2_load', 'load');
+Stopwatch::check('tier2_load', 'load');
 
 // globals
 $_CONTROLLERCONFIG		= simplexml_load_file('_config/controller.xml');
@@ -69,7 +65,7 @@ ERROR_REPORTING ? $iDebuglevel = E_ALL : $iDebuglevel = 0;
 mb_internal_encoding('UTF-8');
 System::init();
 
-$_STOPWATCH->check('tier2_init', 'php');
+Stopwatch::check('tier2_init', 'php');
 
 //------------------------------------------------------------------------------
 // recieve request
@@ -94,8 +90,7 @@ $crSession = $crRepository->login($crCredentials, $aRepository['workspace']);
 System::setSession($crSession);
 Registry::setSession($crSession);
 User::setSession($crSession);
-$_SBSESSION = new sbSession($_REQUEST->getSessionID());
-//var_dumpp($_SBSESSION);
+sbSession::start($_REQUEST->getSessionID(), Registry::getValue('sb.system.session.timeout'));
 
 //------------------------------------------------------------------------------
 // check if registry cache is current state
@@ -161,17 +156,17 @@ $hndProcessor->handleRequest($crSession);
 //------------------------------------------------------------------------------
 // add metadata
 
-$_STOPWATCH->check('tier2_main', 'php');
-$_RESPONSE->addSystemMeta('sessionid', $_SBSESSION->getSessionID());
+Stopwatch::check('tier2_main', 'php');
+$_RESPONSE->addSystemMeta('sessionid', sbSession::getID());
 $_RESPONSE->addMetadata();
 //$swTier2->check('tier2_metadata');
-$_STOPWATCH->stop('tier2_complete', 'php');
+Stopwatch::stop('tier2_complete', 'php');
 
 //------------------------------------------------------------------------------
 // send back to tier one
 
 if (TIER2_SEPARATED) {
-	$_RESPONSE->addStopwatchTimes($_STOPWATCH->getTaskTimes());
+	$_RESPONSE->addStopwatchTimes(Stopwatch::getTaskTimes());
 	// remove temp files
 	foreach ($_FILES as $sFieldname => $aField) {
 		foreach ($aField as $aEntry) {

@@ -37,7 +37,10 @@ class User {
 	* @return 
 	*/
 	public static function getUUID() {
-		return (sbSession::getUserID());
+		if (isset(sbSession::$aData['userdata']['user_id'])) {
+			return (sbSession::$aData['userdata']['user_id']);
+		}
+		return (FALSE);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -61,7 +64,7 @@ class User {
 	* @return 
 	*/
 	public static function getNode() {
-		return (self::$crSession->getNodeByIdentifier(sbSession::getUserID()));
+		return (self::$crSession->getNodeByIdentifier(self::getUUID()));
 	}
 	
 	//--------------------------------------------------------------------------
@@ -104,7 +107,10 @@ class User {
 	* @return 
 	*/
 	public static function isLoggedIn() {
-		return(sbSession::isLoggedIn());
+		if (isset(sbSession::$aData['userdata']['user_id'])) {
+			return (TRUE);
+		}
+		return (FALSE);
 	}
 	
 	//--------------------------------------------------------------------------

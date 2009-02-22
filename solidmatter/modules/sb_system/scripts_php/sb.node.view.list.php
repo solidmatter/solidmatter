@@ -20,7 +20,10 @@ class sbView_list extends sbView {
 		switch ($sAction) {
 			
 			case 'display':
-				$this->nodeSubject->loadChildren('list', TRUE, FALSE, TRUE);
+				$niChildren = $this->nodeSubject->loadChildren('list', TRUE, TRUE, TRUE);
+				foreach($niChildren as $nodeChild) {
+					$_RESPONSE->addLocale($nodeChild->getModule());
+				}
 				$this->nodeSubject->storeChildren();
 				return;
 			

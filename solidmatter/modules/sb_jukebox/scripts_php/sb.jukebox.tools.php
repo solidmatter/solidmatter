@@ -143,7 +143,7 @@ class JukeboxTools {
 				if ($nodeJukebox->getProperty('config_userealpath') == 'TRUE') { // use direct paths to e.g. a shared folder
 					$sPlaylist .= iconv('UTF-8', System::getFilesystemEncoding(), $nodeSubject->getSession()->getNodeByIdentifier($aItem['uuid'])->getRealPath())."\n";
 				} else { // use urls
-					$sPlaylist .= 'http://'.$_REQUEST->getDomain().'/'.$aItem['uuid'].'/song/play/'.$aItem['uuid'].'.mp3?sid='.sbSession::getSessionID()."#.mp3\n";
+					$sPlaylist .= 'http://'.$_REQUEST->getDomain().'/'.$aItem['uuid'].'/song/play/'.$aItem['uuid'].'.mp3?sid='.sbSession::getID()."#.mp3\n";
 				}
 			}
 		} elseif ($sFormat == 'XSPF') {
@@ -153,7 +153,7 @@ class JukeboxTools {
 				if ($nodeJukebox->getProperty('config_userealpath') == 'TRUE') { // use direct paths to e.g. a shared folder
 					//$sPlaylist .= iconv('UTF-8', System::getFilesystemEncoding(), $nodeSubject->getSession()->getNodeByIdentifier($aItem['uuid'])->getRealPath())."\n";
 				} else { // use urls
-					$sPlaylist .= '<track><location>http://'.$_REQUEST->getDomain().'/'.$aItem['uuid'].'/song/play/sid='.sbSession::getSessionID()."</track></location>\n";
+					$sPlaylist .= '<track><location>http://'.$_REQUEST->getDomain().'/'.$aItem['uuid'].'/song/play/sid='.sbSession::getID()."</track></location>\n";
 				}
 			}
 			$sPlaylist .= '</trackList></playlist>';

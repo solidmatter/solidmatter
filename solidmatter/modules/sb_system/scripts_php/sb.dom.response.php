@@ -585,8 +585,7 @@ class sbDOMResponse extends sbDOMDocument {
 	*/
 	public function saveOutput($sMethod = NULL) {
 		
-		global $_STOPWATCH;
-		$_STOPWATCH->check('end', 'php');
+		Stopwatch::check('end', 'php');
 		
 		$elemResponse = $this->getSectionElement('response');
 		
@@ -649,9 +648,9 @@ class sbDOMResponse extends sbDOMDocument {
 				} else {
 					$sOutput = $procGenerator->transformToXML($this);
 				}
-				$_STOPWATCH->check('transform', 'php');
+				Stopwatch::check('transform', 'php');
 				header('Content-Length: '.strlen($sOutput));
-				header('X-Transform-Time: '.$_STOPWATCH->getTaskTimes('transform'));
+				header('X-Transform-Time: '.Stopwatch::getTaskTimes('transform'));
 				echo ($sOutput);
 				break;
 				

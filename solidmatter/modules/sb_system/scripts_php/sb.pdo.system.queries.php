@@ -13,6 +13,7 @@ $_QUERIES['MAPPING']['{TABLE_MODULES}']		= '{PREFIX_FRAMEWORK}_modules';
 
 $_QUERIES['MAPPING']['{TABLE_USERS}']		= '{PREFIX_WORKSPACE}_system_useraccounts';
 $_QUERIES['MAPPING']['{TABLE_REGISTRY}']	= '{PREFIX_WORKSPACE}_system_registry';
+$_QUERIES['MAPPING']['{TABLE_REGVALUES}']	= '{PREFIX_WORKSPACE}_system_registry_values';
 
 $_QUERIES['MAPPING']['{TABLE_VOTES}']		= '{PREFIX_WORKSPACE}_system_nodes_votes';
 $_QUERIES['MAPPING']['{TABLE_NODETAGS}']	= '{PREFIX_WORKSPACE}_system_nodes_tags';
@@ -23,7 +24,9 @@ $_QUERIES['MAPPING']['{TABLE_TAGS}']		= '{PREFIX_WORKSPACE}_system_tags';
 //------------------------------------------------------------------------------
 
 $_QUERIES['sbSystem/session/load'] = '
-	SELECT		s_data
+	SELECT		s_data AS data,
+				n_lifespan AS lifespan,
+				(UNIX_TIMESTAMP() - UNIX_TIMESTAMP(ts_created)) AS lifetime
 	FROM		{TABLE_SESSIONS}
 	WHERE		s_sessionid = :session_id
 ';
@@ -31,18 +34,28 @@ $_QUERIES['sbSystem/session/store'] = '
 	INSERT INTO {TABLE_SESSIONS}
 				(
 					s_sessionid,
-					s_data
+					s_data,
+					ts_created,
+					n_lifespan
 				) VALUES (
 					:session_id,
-					:data
+					:data,
+					NOW(),
+					:lifespan
 				)
 	ON DUPLICATE KEY UPDATE
-				s_data = :data
+				s_data = :data,
+				ts_created = NOW()
 ';
 $_QUERIES['sbSystem/session/destroy'] = '
 	DELETE FROM	{TABLE_SESSIONS}
 	WHERE		s_sessionid = :session_id
 ';
+$_QUERIES['sbSystem/session/clear'] = '
+	DELETE FROM	{TABLE_SESSIONS}
+	WHERE		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(ts_created) > n_lifespan
+';
+
 
 //------------------------------------------------------------------------------
 // ImageCache
@@ -790,18 +803,23 @@ $_QUERIES['sbSystem/node/trashcan/getAbandonedNodes'] = '
 
 $_QUERIES['sbSystem/registry/getAllEntries'] = '
 	SELECT		*
-	FROM		{TABLE_REGISTRY}
-	ORDER BY	s_key
+	FROM		{TABLE_REGISTRY} r
+	INNER JOIN	{TABLE_REGVALUES} rv
+		ON		r.s_key = rv.s_key
+	WHERE		rv.fk_user = :user_uuid
+	ORDER BY	r.s_key
 ';
 $_QUERIES['sbSystem/registry/getValue'] = '
-	SELECT		s_value,
-				e_type
-	FROM		{TABLE_REGISTRY}
-	WHERE		s_key = :key
+	SELECT		rv.s_value,
+				r.e_type
+	FROM		{TABLE_REGISTRY} r
+	INNER JOIN	{TABLE_REGVALUES} rv
+		ON		r.s_key = rv.s_key
+	WHERE		rv.s_key = :key
 		AND		fk_user = :user_uuid
 ';
 $_QUERIES['sbSystem/registry/setValue'] = '
-	UPDATE		{TABLE_REGISTRY}
+	UPDATE		{TABLE_REGVALUES}
 	SET			s_value = :value
 	WHERE		s_key = :key
 		AND		fk_user = :user_uuid
@@ -815,12 +833,12 @@ $_QUERIES['sbSystem/registry/setValue'] = '
 // view:welcome ----------------------------------------------------------------
 
 $_QUERIES['sb_system/root/view/welcome/loadUserdata'] = '
-	SELECT		n.s_label AS s_nickname,
-				u.b_activated,
-				u.dt_lastlogin,
-				u.dt_currentlogin,
-				u.n_totalfailedlogins,
-				u.n_successfullogins
+	SELECT		n.s_label AS nickname,
+				u.b_activated AS activated_at,
+				u.dt_lastlogin AS last_login,
+				u.dt_currentlogin AS current_login,
+				u.n_totalfailedlogins AS total_failed_logins,
+				u.n_successfullogins AS successful_logins
 	FROM		{TABLE_USERS} u
 	INNER JOIN	{TABLE_NODES} n
 		ON		n.uuid = u.uuid

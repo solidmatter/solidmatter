@@ -20,7 +20,7 @@ if (!defined('PRETTYPRINT'))		define('PRETTYPRINT', TRUE);
 // create stopwatch
 
 require_once('modules/sb_system/scripts_php/sb.tools.stopwatch.advanced.php');
-$_STOPWATCH = new AdvancedStopwatch();
+Stopwatch::start();
 
 //------------------------------------------------------------------------------
 // init
@@ -62,7 +62,7 @@ if ($elemSite == NULL) {
 	die('could not handle request, aborting.');
 }
 
-$_STOPWATCH->check('tier1_sitematch', 'php');
+Stopwatch::check('tier1_sitematch', 'php');
 
 switch ((string) $elemSite['type']) {
 	
@@ -76,7 +76,7 @@ switch ((string) $elemSite['type']) {
 		import('sb.factory.response');
 		import('sb.dom.response');
 		
-		$_STOPWATCH->check('tier1_load', 'load');
+		Stopwatch::check('tier1_load', 'load');
 		
 		// TODO: transport repository stuff to tier2
 		define('DEBUG',					constant((string) $elemController->debug['enabled']));
@@ -191,7 +191,7 @@ switch ((string) $elemSite['type']) {
 	
 }
 
-$_STOPWATCH->check('tier1_siteswitch', 'php');
+Stopwatch::check('tier1_siteswitch', 'php');
 
 //------------------------------------------------------------------------------
 // rearrange/prepare files array
@@ -208,7 +208,7 @@ if (count($_FILES) > 0) {
 		}
 	}
 	$_FILES = $aNewFiles;
-	$_STOPWATCH->check('tier1_rearrangefiles', 'php');
+	Stopwatch::check('tier1_rearrangefiles', 'php');
 	//var_dump($_FILES);
 }
 
@@ -228,8 +228,8 @@ if (TIER2_SEPARATED) {
 	include_once('controller.php');
 }
 
-DEBUG('Interface: request processing took '.($_STOPWATCH->stop('execution_time')*1000).'ms', DEBUG::BASIC);
-$_RESPONSE->addStopwatchTimes($_STOPWATCH->getTaskTimes());
+DEBUG('Interface: request processing took '.(Stopwatch::stop('execution_time')*1000).'ms', DEBUG::BASIC);
+$_RESPONSE->addStopwatchTimes(Stopwatch::getTaskTimes());
 if ($_REQUEST->getParam('debug') != TRUE) {
 	$_RESPONSE->importLocales();
 }

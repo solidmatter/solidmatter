@@ -67,20 +67,28 @@
 		<div class="action"><xsl:copy-of select="." /></div>
 	</xsl:template>
 	<xsl:template match="caution">
-		<div class="caution"><xsl:copy-of select="." /></div>
+		<div class="caution">CAUTION: <xsl:copy-of select="." /></div>
 	</xsl:template>
 	<xsl:template match="info">
 		<div class="info"><xsl:copy-of select="." /></div>
+	</xsl:template>
+	<xsl:template match="todo">
+		<div class="todo">TODO: <xsl:copy-of select="." /></div>
 	</xsl:template>
 	<xsl:template match="code">
 		<pre class="code"><xsl:copy-of select="." /></pre>
 	</xsl:template>
 	
 	<xsl:template match="p">
+		<!--<xsl:apply-templates />-->
 		<xsl:copy-of select="." />
 	</xsl:template>
 	<xsl:template match="ul">
 		<xsl:copy-of select="." />
+	</xsl:template>
+	
+	<xsl:template match="class">
+		<span class="class"><xsl:copy-of select="." /></span>
 	</xsl:template>
 	
 </xsl:stylesheet>

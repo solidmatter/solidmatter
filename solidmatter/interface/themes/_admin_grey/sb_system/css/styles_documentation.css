@@ -44,7 +44,9 @@ h4 {
 	border-bottom: 1px solid black;
 }
 
-
+span.class (
+	font-weight: bold;
+);
 
 
 p {
@@ -53,7 +55,8 @@ p {
 
 *.caution,
 *.info,
-*.action {
+*.action,
+*.todo {
 	padding: 10px;
 	margin-bottom: 8px;
 }
@@ -71,6 +74,10 @@ p {
 *.action {
 	background-color: #DDF;
 	border: 3px solid #AAF;
+}
+*.todo {
+	background-color: #DFD;
+	border: 3px solid #AFA;
 }
 pre.code {
 	background-color: #DDD;

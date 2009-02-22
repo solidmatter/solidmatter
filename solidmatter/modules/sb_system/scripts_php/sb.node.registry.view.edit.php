@@ -110,7 +110,9 @@ class sbView_registry_edit extends sbView {
 			$this->crSession
 		);
 		
+		$sUserUUID = 'SYSTEM';
 		$stmtGetData = $this->crSession->prepareKnown('sbSystem/registry/getAllEntries');
+		$stmtGetData->bindParam('user_uuid', $sUserUUID, PDO::PARAM_STR);
 		$stmtGetData->execute();
 		$this->aRegistry = $stmtGetData->fetchAll();
 		$stmtGetData->closeCursor();

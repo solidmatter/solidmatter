@@ -41,7 +41,7 @@ class sbView_jukebox_track_song extends sbJukeboxView {
 				$startArray = sscanf($_REQUEST->getServerValue('HTTP_RANGE'), 'bytes=%d-');
 				$start = $startArray[0];
 				
-				DEBUG('Play Track: SessionID = '.sbSession::getSessionID(), DEBUG::SESSION);
+				DEBUG('Play Track: SessionID = '.sbSession::getID(), DEBUG::SESSION);
 				
 				header("Accept-Ranges: bytes" );
 				
@@ -59,8 +59,7 @@ class sbView_jukebox_track_song extends sbJukeboxView {
 				
 				$this->setNowPlaying();
 				
-				
-				sbSession::disableStoring();
+				sbSession::close();
 				
 				header('Content-type: audio/mpeg');
 				

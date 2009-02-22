@@ -27,7 +27,7 @@ class sbView_root_welcome extends sbView {
 		$stmtInfo = $this->crSession->prepareKnown($this->aQueries['loadUserInfo']);
 		$stmtInfo->bindValue('user_id', User::getUUID(), PDO::PARAM_STR);
 		$stmtInfo->execute();
-		$_RESPONSE->addData($stmtInfo->fetchDOM('userinfo'));
+		$_RESPONSE->addData($stmtInfo->fetchElements('userinfo'));
 		
 		$nodeInbox = User::getNode()->getNode('inbox');
 		$niInboxItems = $nodeInbox->getNodes();
