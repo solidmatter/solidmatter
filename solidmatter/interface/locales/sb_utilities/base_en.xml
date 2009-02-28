@@ -2,7 +2,7 @@
 <sbUtilities>
 	
 	<nodetypes>
-		<type id="sbUtilities:Imageprocessing">Imageporcessing</type>
+		<type id="sbUtilities:Imageprocessing">Imageprocessing</type>
 		<type id="sbUtilities:Imagefilterstack">Filterstack</type>
 		<type id="sbUtilities:Imagefilter_resize">Resize</type>
 		<type id="sbUtilities:Imagefilter_crop">Crop</type>

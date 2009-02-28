@@ -86,8 +86,10 @@ class sbCR_RepositoryStructure {
 			'mix:referenceable',
 			'mix:lockable',
 			'mix:shareable',
+			'mix:lifecycle',
 			'sb:deleted',
 		),
+		'mix:lifecycle' => array(),
 	);
 	
 	private $aNodeTypeProperies = array(

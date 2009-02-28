@@ -103,17 +103,18 @@ class sbCR_Node {
 	* 
 	*/
 	protected $aPropertyTranslation = array(
-		'jcr:uuid'				=> 'uuid',
-		'jcr:created'			=> 'createdat',
-		'jcr:createdBy'			=> 'createdby',
-		'jcr:lastModified'		=> 'modifiedat',
-		'jcr:lastModifiedBy'	=> 'modifiedby',
-		'sbcr:label'			=> 'label',
-		'sbcr:inheritrights'	=> 'inheritrights',
-		'sbcr:bequeathrights'	=> 'bequeathrights',
-		'sbcr:deleted'			=> 'deletedat',
-		'sbcr:deletedBy'		=> 'deletedby',
-		'sbcr:deletedFrom'		=> 'deletedfrom',
+		'jcr:uuid'					=> 'uuid',
+		'jcr:created'				=> 'createdat',
+		'jcr:createdBy'				=> 'createdby',
+		'jcr:lastModified'			=> 'modifiedat',
+		'jcr:lastModifiedBy'		=> 'modifiedby',
+		'jcr:currentLifecycleState' => 'currentlifecyclestate',
+		'sbcr:label'				=> 'label',
+		'sbcr:inheritrights'		=> 'inheritrights',
+		'sbcr:bequeathrights'		=> 'bequeathrights',
+		'sbcr:deleted'				=> 'deletedat',
+		'sbcr:deletedBy'			=> 'deletedby',
+		'sbcr:deletedFrom'			=> 'deletedfrom',
 	);
 	
 	//--------------------------------------------------------------------------
@@ -166,6 +167,10 @@ class sbCR_Node {
 		// hierarchy related
 		$this->aQueries['hierarchy/getSharedSet']			= 'sbCR/node/getSharedSet';
 		$this->aQueries['hierarchy/isAncestorOf']			= 'sbCR/node/checkAncestor';
+		
+		// lifecycle
+		$this->aQueries['lifecycle/getTransitions']			= 'sbCR/node/lifecycle/getAllowedTransitions';
+		$this->aQueries['lifecycle/followTransition']		= 'sbCR/node/lifecycle/followTransition';
 		
 		// linking / nested set stuff
 		$this->aQueries['addLink']['getBasicInfo']			= 'sbCR/node/addLink/getBasicInfo';
@@ -2551,8 +2556,68 @@ class sbCR_Node {
 		$stmtClearLocks->closeCursor();
 	}
 	
-
 	
+	
+	
+	//--------------------------------------------------------------------------
+	// lifecycle related
+	//--------------------------------------------------------------------------
+	/**
+	* Causes the lifecycle state of this node to undergo the specified transition.
+	* This method may change the value of the jcr:currentLifecycleState property, 
+	* in most cases it is expected that the implementation will change the value 
+	* to that of the passed transition parameter, though this is an 
+	* implementation-specific issue. If the jcr:currentLifecycleState property 
+	* is changed the change is persisted immediately, there is no need to call 
+	* save.
+	* 
+	* Throws an UnsupportedRepositoryOperationException if this implementation 
+	* does not support lifecycle actions or if this node does not have the 
+	* mix:lifecycle mixin.
+	* 
+	* Throws InvalidLifecycleTransitionException if the lifecycle transition is 
+	* not successful. 
+	* 
+	* @param 
+	* @return 
+	*/
+	public function followLifecycleTransition($sTransition) {
+		/*if (!in_array('mix:lifecycle', $this->crSession->getWorkspace()->getNodeTypeManager()->getMixinNodeTypes())) {
+			throw new UnsupportedRepositoryOperationException(__CLASS__.': node '.$this->getIdentifier().' does not have the mix:lifecycle mixin type');	
+		}*/
+		if (!in_array($sTransition, $this->getAllowedLifecycleTransitions())) {
+			throw new InvalidLifecycleTransitionException(__CLASS__.': node '.$this->getIdentifier().' does not support the lifecycle transition from "'.$this->getProperty('jcr:currentLifecycleState').'" to "'.$sTransition.'"');
+		}
+		$stmtSetTransition = $this->crSession->prepareKnown($this->aQueries['lifecycle/followTransition']);
+		$stmtSetTransition->bindValue('node_uuid', $this->getIdentifier(), PDO::PARAM_STR);
+		$stmtSetTransition->bindValue('state', $sTransition, PDO::PARAM_STR);
+		$stmtSetTransition->execute();
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* Returns the list of valid state transitions for this node. 
+	* @param 
+	* @return 
+	*/
+	public function getAllowedLifecycleTransitions() {
+		/*if (!in_array('mix:lifecycle', $this->crSession->getWorkspace()->getNodeTypeManager()->getMixinNodeTypes())) {
+			throw new UnsupportedRepositoryOperationException(__CLASS__.': node '.$this->getIdentifier().' does not have the mix:lifecycle mixin type');	
+		}*/
+		$sCurrentState = $this->getProperty('jcr:currentLifecycleState');
+		if ($sCurrentState == NULL) {
+			$sCurrentState = 'default';
+		}
+		$stmtGetTransitions = $this->crSession->prepareKnown($this->aQueries['lifecycle/getTransitions']);
+		$stmtGetTransitions->bindValue('nodetype', $this->getPrimaryNodeType(), PDO::PARAM_STR);
+		$stmtGetTransitions->bindValue('state', $sCurrentState, PDO::PARAM_STR);
+		$stmtGetTransitions->execute();
+		$aTransitions = array();
+		foreach ($stmtGetTransitions as $aTransition) {
+			$aTransitions[] = $aTransition['transition'];
+		}
+		return ($aTransitions);
+	}
 	
 	
 	

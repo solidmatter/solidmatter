@@ -5,6 +5,7 @@ global $_QUERIES;
 $_QUERIES['MAPPING']['{TABLE_NODETYPES}']		= '{PREFIX_FRAMEWORK}_nodetypes';
 $_QUERIES['MAPPING']['{TABLE_NAMESPACES}']		= '{PREFIX_FRAMEWORK}_namespaces';
 $_QUERIES['MAPPING']['{TABLE_NTHIERARCHY}']		= '{PREFIX_FRAMEWORK}_nodetypes_inheritance';
+$_QUERIES['MAPPING']['{TABLE_LIFECYCLE}']		= '{PREFIX_FRAMEWORK}_nodetypes_lifecycles';
 $_QUERIES['MAPPING']['{TABLE_VIEWS}']			= '{PREFIX_FRAMEWORK}_nodetypes_views';
 $_QUERIES['MAPPING']['{TABLE_ACTIONS}']			= '{PREFIX_FRAMEWORK}_nodetypes_viewactions';
 $_QUERIES['MAPPING']['{TABLE_MODES}']			= '{PREFIX_FRAMEWORK}_nodetypes_modes';
@@ -226,6 +227,7 @@ $_QUERIES['sbCR/getNode/root'] = '
 				n.s_customcsstype,
 				n.b_inheritrights,
 				n.b_bequeathrights,
+				n.s_currentlifecyclestate,
 				nt.s_classfile,
 				nt.s_class,
 				nt.s_csstype,
@@ -245,6 +247,7 @@ $_QUERIES['sbCR/getNode/byUUID'] = '
 				n.s_customcsstype,
 				n.b_inheritrights,
 				n.b_bequeathrights,
+				n.s_currentlifecyclestate,
 				nt.s_classfile,
 				nt.s_class,
 				nt.s_csstype,
@@ -267,6 +270,7 @@ $_QUERIES['sbCR/getNode/byUID'] = '
 				n.s_customcsstype,
 				n.b_inheritrights,
 				n.b_bequeathrights,
+				n.s_currentlifecyclestate,
 				nt.s_classfile,
 				nt.s_class,
 				nt.s_csstype,
@@ -889,6 +893,20 @@ $_QUERIES['sbCR/node/locking/removeLock/byNode'] = '
 $_QUERIES['sbCR/node/locking/removeLock/byUser'] = '
 	DELETE FROM	{TABLE_LOCKS}
 	WHERE		fk_user = :user_uuid
+';
+
+// lifecycle -------------------------------------------------------------------
+
+$_QUERIES['sbCR/node/lifecycle/getAllowedTransitions'] = '
+	SELECT		s_statetransition AS transition
+	FROM		{TABLE_LIFECYCLE}
+	WHERE		fk_nodetype = :nodetype
+		AND		s_state = :state
+';
+$_QUERIES['sbCR/node/lifecycle/followTransition'] = '
+	UPDATE		{TABLE_NODES}
+	SET			s_currentlifecyclestate = :state
+	WHERE		uuid = :node_uuid
 ';
 
 //------------------------------------------------------------------------------

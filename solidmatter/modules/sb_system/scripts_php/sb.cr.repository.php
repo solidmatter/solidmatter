@@ -11,7 +11,7 @@
 import('sb.pdo.repository');
 import('sb.cr.propertydefinitioncache');
 
-// xml file containing all information on repositories this SBCR instance supports
+// xml file containing all information on repositories this sbCR instance supports
 if (!defined('REPOSITORY_DEFINITION_FILE')) {	define('REPOSITORY_DEFINITION_FILE', 'repositories.xml'); }
 // number of characters to use for the pseudo-materialized path on each level
 if (!defined('REPOSITORY_MPHASH_SIZE')) {		define('REPOSITORY_MPHASH_SIZE', 5); }
@@ -26,14 +26,15 @@ class sbCR_Repository {
 		'SPEC_NAME_DESC' => 'solidbytes Content Repository for PHP Technology API',
 		'REP_VENDOR_DESC' => 'solidbytes',
 		'REP_VENDOR_URL_DESC' => 'http://www.solidbytes.net',
-		'REP_NAME_DESC' => 'SBCR',
+		'REP_NAME_DESC' => 'sbCR',
 		'REP_VERSION_DESC' => '1.0',
 		'LEVEL_1_SUPPORTED' => 'true',
 		'LEVEL_2_SUPPORTED' => 'true',
 		'OPTION_TRANSACTIONS_SUPPORTED' => 'true',
 		'OPTION_VERSIONING_SUPPORTED' => 'false',
 		'OPTION_OBSERVATION_SUPPORTED' => 'false',
-		'OPTION_LOCKING_SUPPORTED' => 'true',
+		'OPTION_LOCKING_SUPPORTED' => 'false',
+		'OPTION_LIFECYCLE_SUPPORTED' => 'true',
 		'OPTION_QUERY_SQL_SUPPORTED' => 'false',
 		'QUERY_XPATH_POS_INDEX' => 'false',
 		'QUERY_XPATH_DOC_ORDER' => 'false',

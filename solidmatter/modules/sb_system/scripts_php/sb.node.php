@@ -780,8 +780,22 @@ class sbNode extends sbCR_Node {
 		$this->elemSubject->appendChild($elemContainer);
 	}
 	
-	
-	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function storeSupportedLifecycleTransitions() {
+		$aTransitions = $this->getAllowedLifecycleTransitions();
+		$elemContainer = $this->elemSubject->ownerDocument->createElement('allowedLifecycleTransitions');
+		foreach ($aTransitions as $sTransition) {
+			$elemTransition = $this->elemSubject->ownerDocument->createElement('transition');
+			$elemTransition->setAttribute('state', $sTransition);
+			$elemContainer->appendChild($elemTransition);
+		}
+		$this->elemSubject->appendChild($elemContainer);
+	}
 	
 	
 	//--------------------------------------------------------------------------

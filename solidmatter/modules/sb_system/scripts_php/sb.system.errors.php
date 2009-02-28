@@ -56,6 +56,7 @@ class ConstraintViolationException extends JCRException { }
 class InvalidItemStateException extends JCRException { }
 class InvalidQueryException extends JCRException { }
 class InvalidSerializedDataException extends JCRException { }
+class InvalidLifecycleTransitionException extends JCRException { }
 class ItemExistsException extends JCRException { }
 class ItemNotFoundException extends JCRException { }
 class LockException extends JCRException { }

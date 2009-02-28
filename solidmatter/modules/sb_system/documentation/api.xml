@@ -492,7 +492,8 @@ $_RESPONSE->addData($formCustomer);
 			You SHOULD stick to these rules if you are developing a 3rd-party-module for solidMatter.
 		</p>
 		<info>
-			Rules exist to be broken. No, seriously, there are exceptions from these rules, but keep in mind that they are very rare, and MUST serve the readability or have a really good reason.
+			Rules exist to be broken.
+			No, seriously, there are exceptions from these rules, but keep in mind that they are very rare and MUST serve the readability or have a really good reason.
 		</info>
 		<section title="Versioning" id="code_versioning">
 			<p>
@@ -521,7 +522,7 @@ $_RESPONSE->addData($formCustomer);
 		</section>
 		<section title="Variable Naming" id="variablenaming">
 			<p>Variables SHOULD always indicate their proposed type as lowercase prefix, followed by the self explanatory name: "$prefixSelfExplanatoryName".
-			The well-known Prefixes for scalar types are:</p>
+			The well-known Prefixes for built-in types are:</p>
 			<ul>
 				<li>i: Integer</li>
 				<li>s: String</li>
@@ -539,6 +540,7 @@ $_RESPONSE->addData($formCustomer);
 				<li>form: sbDOMForm</li>
 				<li>view: sbView or derived class</li>
 				<li>o: unknown/unspecified object</li>
+				<li>m: multiple types are possible (objects and built-in)</li>
 			</ul>
 			<info>
 				Exceptions:
@@ -546,6 +548,27 @@ $_RESPONSE->addData($formCustomer);
 					<li>$_REQUEST/$_RESPONSE: global request/response in solidMatter</li>
 					<li>$i, $j, etc.: loop iterators</li>
 					<li>$e: catched exception</li>
+				</ul>
+			</info>
+		</section>
+		<section title="Table/Column Naming" id="tablecolumnnaming">
+			<p>
+				Columns in database tables SHOULD be prefixed according to the following scheme:
+			</p>
+			<ul>
+				<li>s_: string (varchar, char)</li>
+				<li>n_: number (float, int, bigint etc.)</li>
+				<li>t_: text (tinytext, text, etc.)</li>
+				<li>dt_: datetime</li>
+				<li>ts_: timestamp</li>
+				<li>e_: enum</li>
+				<li>b_: boolean (enum with "TRUE" and "FALSE")</li>
+				<li>fk_: foreign key (type doesn't matter)</li>
+			</ul>
+			<info>
+				Exceptions:
+				<ul>
+					<li>uuid: for arbitrary node properties, the table's first column should be named uuid and contain a foreign key to the node table</li>
 				</ul>
 			</info>
 		</section>
@@ -724,24 +747,27 @@ class sbView_{nodetype}_{view} extends sbView {
 					<li>sbCR: nodetype inheritance</li>
 					<li>sbCR: namespace registry</li>
 					<li>sbCR: property constraints</li>
+					<li>sbCR: lifecycle transitions</li>
 					<li>solidMatter: guided install tool</li>
 					<li>solidMatter: module install/uninstall</li>
 					<li>solidMatter: extensible form inputtypes</li>
 					<li>solidMatter: extensible handlers</li>
 					<li>solidMatter: more flexible app positioning (relative to domain root directory)</li>
 					<li>solidMatter: user-specific registry values (incl. administration)</li>
+					<li>solidMatter: task management</li>
+					<li>solidMatter: store user passwords as salted hash</li>
+					<li>solidMatter: user properties should not include password </li>
 				</ul>
 			</subsection>
 			<subsection id="vx" title="Future Releases">
 				<ul>
 					<li>sbCR: XPath</li>
 					<li>sbCR: XQuery</li>
-					<li>sbCR: versioning</li>
+					<li>sbCR: versioning (simple at least)</li>
 					<li>sbCR: visitors</li>
 					<li>sbCR: connected workspaces</li>
 					<li>sbCR: full repository administration</li>
 					<li>sbCR: full property/node constraints</li>
-					<li>sbCR: lifecycle transitions</li>
 				</ul>
 			</subsection>
 		</section>

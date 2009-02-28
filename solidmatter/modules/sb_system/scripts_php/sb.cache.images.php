@@ -20,8 +20,6 @@ class ImageCache {
 	/**
 	* Caches an image along with information on the currently used filterstack.
 	* TODO: check for failures, only true is returned for now
-	* TODO: the temporary file created cannot be deleted for some ridiculous 
-	* reason, needs to be fixed
 	* @param string the uuid of the image node
 	* @param string the uuid of the currently active filterstack node (can have 
 	* other values with custom mode)

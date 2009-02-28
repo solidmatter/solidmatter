@@ -45,6 +45,7 @@ class sbView_debug extends sbView {
 		$this->nodeSubject->setAttribute('internal_path', $this->nodeSubject->getMPath());
 		
 		$this->nodeSubject->storeSupertypeNames();
+		$this->nodeSubject->storeSupportedLifecycleTransitions();
 		
 		return (NULL);
 		

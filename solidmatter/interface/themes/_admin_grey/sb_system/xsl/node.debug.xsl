@@ -35,7 +35,7 @@
 			<tr>
 				<td width="50%">
 					<div class="eyecandy"><div class="left"><div class="right">
-						<h1>Properties:</h1>
+						<h1>Properties</h1>
 						<ul>
 						<xsl:for-each select="@*">
 							<li>
@@ -85,6 +85,17 @@
 						<xsl:for-each select="tags/tag">
 							<li>
 								<xsl:value-of select="." /> (<xsl:value-of select="@id" />)<br/>
+							</li>
+						</xsl:for-each>
+						</ul>
+					</div></div></div>
+					<div class="eyecandy"><div class="left"><div class="right">
+						<h1>LifecycleTransitions</h1>
+						from <xsl:value-of select="@currentlifecyclestate" />:
+						<ul>
+						<xsl:for-each select="allowedLifecycleTransitions/transition">
+							<li>
+								<xsl:value-of select="@state" /><br/>
 							</li>
 						</xsl:for-each>
 						</ul>

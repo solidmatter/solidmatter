@@ -64,7 +64,7 @@ class InputFactory {
 		unset($aConfig[1]);
 		
 		if (!in_array($sType, InputFactory::$aKnownTypes)) {
-			throw new sbException('unknown input type: '.$sType);	
+			throw new sbException('unknown input type: '.$sType);
 		}
 		
 		import('sb.form.input.'.$sType);
@@ -73,6 +73,16 @@ class InputFactory {
 		$ifGenerated = new $sClass($sName, $domForm, $aConfig);
 		
 		return ($ifGenerated);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public static function registerInputType($sType, $sModule) {
 		
 	}
 	

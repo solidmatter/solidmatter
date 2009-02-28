@@ -653,6 +653,7 @@ class sbCR_Session {
 		// for now always set full inheritance on new nodes
 		$aNode['b_inheritrights'] = 'TRUE';
 		$aNode['b_bequeathrights'] = 'TRUE';
+		$aNode['s_currentlifecyclestate'] = NULL;
 		
 		return ($this->generateInstanceFromRow($aNode, 'new'));
 	}
@@ -784,6 +785,9 @@ class sbCR_Session {
 		if ($aRow['s_customcsstype'] != NULL) {
 			$aRow['s_csstype'] = $aRow['s_customcsstype'];
 		}
+		if ($aRow['s_currentlifecyclestate'] == NULL) {
+			$aRow['s_currentlifecyclestate'] = 'default';
+		}
 		
 		// set properties
 		$elemSubject->setAttribute('nodetype', $aRow['fk_nodetype']);
@@ -797,6 +801,7 @@ class sbCR_Session {
 		$elemSubject->setAttribute('parent', $aRow['fk_parent']);
 		$elemSubject->setAttribute('inheritrights', $aRow['b_inheritrights']);
 		$elemSubject->setAttribute('bequeathrights', $aRow['b_bequeathrights']);
+		$elemSubject->setAttribute('currentlifecyclestate', $aRow['s_currentlifecyclestate']);
 		
 		return ($nodeSubject);
 		
