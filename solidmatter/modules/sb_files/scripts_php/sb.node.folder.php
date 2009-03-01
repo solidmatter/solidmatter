@@ -27,12 +27,12 @@ class sbNode_folder extends sbNode {
 	* Returns the last used view (list or thumbnail) if it was set before
 	* @return string name of the default view
 	*/
-	protected function getDefaultView() {
-		$sDefaultView = sbSession::getData('sb_system:folder:defaultView');
+	protected function getDefaultViewName() {
+		$sDefaultView = sbSession::getData('sbFiles:Folder:defaultView');
 		if ($sDefaultView != NULL) {
 			return ($sDefaultView);
 		} else {
-			return (parent::getDefaultView());	
+			return (parent::getDefaultView());
 		}
 	}
 	
@@ -47,7 +47,7 @@ class sbNode_folder extends sbNode {
 	*/
 	public function callView($sView = NULL, $sAction = NULL) {
 		if ($sView == 'thumbnails' || $sView == 'list') {
-			sbSession::addData('sb_system:folder:defaultView', $sView);
+			sbSession::addData('sbFiles:Folder:defaultView', $sView);
 		}
 		return (parent::callView($sView, $sAction));
 	}

@@ -231,7 +231,7 @@ class sbCR_Repository {
 					'b_protected' => 'FALSE',
 					'b_protectedoncreation' => 'FALSE'
 				),
-				'csstype' => array(
+				'displaytype' => array(
 					'e_type' => 'STRING',
 					's_internaltype' => 'string',
 					'b_showinproperties' => 'FALSE',
@@ -239,7 +239,7 @@ class sbCR_Repository {
 					's_descriptionpath' => NULL,
 					'b_multiple' => 'FALSE',
 					'e_storagetype' => 'PRIMARY',
-					's_auxname' => 's_csstype',
+					's_auxname' => 's_displaytype',
 					'b_protected' => 'TRUE',
 					'b_protectedoncreation' => 'FALSE'
 				),
@@ -256,7 +256,7 @@ class sbCR_Repository {
 					'b_protected' => 'TRUE',
 					'b_protectedoncreation' => 'FALSE'
 				),
-				'customcsstype' => array(
+				'customdisplaytype' => array(
 					'e_type' => 'STRING',
 					's_internaltype' => 'string',
 					'b_showinproperties' => 'FALSE',
@@ -264,7 +264,7 @@ class sbCR_Repository {
 					's_descriptionpath' => NULL,
 					'b_multiple' => 'FALSE',
 					'e_storagetype' => 'EXTENDED',
-					's_auxname' => 's_customcsstype',
+					's_auxname' => 's_customdisplaytype',
 					'b_protected' => 'FALSE',
 					'b_protectedoncreation' => 'FALSE'
 				),
@@ -289,6 +289,18 @@ class sbCR_Repository {
 					'b_multiple' => 'FALSE',
 					'e_storagetype' => 'EXTENDED',
 					's_auxname' => 'b_bequeathrights',
+					'b_protected' => 'FALSE',
+					'b_protectedoncreation' => 'FALSE'
+				),
+				'bequeathlocalrights' => array(
+					'e_type' => 'BOOLEAN',
+					's_internaltype' => 'checkbox',
+					'b_showinproperties' => 'FALSE',
+					's_labelpath' => '$locale/sbSystem/general/labels/',
+					's_descriptionpath' => NULL,
+					'b_multiple' => 'FALSE',
+					'e_storagetype' => 'EXTENDED',
+					's_auxname' => 'b_bequeathlocalrights',
 					'b_protected' => 'FALSE',
 					'b_protectedoncreation' => 'FALSE'
 				),
@@ -328,7 +340,7 @@ class sbCR_Repository {
 					'b_protected' => 'TRUE',
 					'b_protectedoncreation' => 'TRUE'
 				),
-				'createdat' => array(
+				'created' => array(
 					'e_type' => 'DATE',
 					's_internaltype' => 'urlsafe',
 					'b_showinproperties' => 'FALSE',
@@ -336,11 +348,11 @@ class sbCR_Repository {
 					's_descriptionpath' => NULL,
 					'b_multiple' => 'FALSE',
 					'e_storagetype' => 'EXTENDED',
-					's_auxname' => 'dt_createdat',
+					's_auxname' => 'dt_created',
 					'b_protected' => 'TRUE',
 					'b_protectedoncreation' => 'TRUE'
 				),
-				'modifiedat' => array(
+				'modified' => array(
 					'e_type' => 'DATE',
 					's_internaltype' => 'urlsafe',
 					'b_showinproperties' => 'FALSE',
@@ -348,11 +360,11 @@ class sbCR_Repository {
 					's_descriptionpath' => NULL,
 					'b_multiple' => 'FALSE',
 					'e_storagetype' => 'EXTENDED',
-					's_auxname' => 'dt_modifiedat',
+					's_auxname' => 'dt_modified',
 					'b_protected' => 'TRUE',
 					'b_protectedoncreation' => 'TRUE'
 				),
-				'deletedat' => array(
+				'deleted' => array(
 					'e_type' => 'DATE',
 					's_internaltype' => 'urlsafe',
 					'b_showinproperties' => 'FALSE',
@@ -360,7 +372,7 @@ class sbCR_Repository {
 					's_descriptionpath' => NULL,
 					'b_multiple' => 'FALSE',
 					'e_storagetype' => 'EXTENDED',
-					's_auxname' => 'dt_deletedat',
+					's_auxname' => 'dt_deleted',
 					'b_protected' => 'TRUE',
 					'b_protectedoncreation' => 'TRUE'
 				),
@@ -401,7 +413,7 @@ class sbCR_Repository {
 		$aRepositoryInfo = array();
 		
 		// get nodetypes
-		$stmtNodetypes = $this->DB->prepareKnown('sbCR/repository/getNodetypes');
+		$stmtNodetypes = $this->DB->prepareKnown('sbCR/repository/getNodeTypes');
 		$stmtNodetypes->execute();
 		$stmtNodetypes = $stmtNodetypes->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($stmtNodetypes as $aRow) {

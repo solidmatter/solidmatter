@@ -53,15 +53,15 @@
 		<xsl:choose>
 			<xsl:when test="@type='delete'">
 				<h1>Delete</h1> 
-				<span class="type {child/sbnode/@csstype}"><xsl:value-of select="child/sbnode/@label" /></span>
+				<span class="type {child/sbnode/@displaytype}"><xsl:value-of select="child/sbnode/@label" /></span>
 				from
-				<span class="type {parent/sbnode/@csstype}"><xsl:value-of select="parent/sbnode/@label" /></span>
+				<span class="type {parent/sbnode/@displaytype}"><xsl:value-of select="parent/sbnode/@label" /></span>
 				<br /><br />
 				<xsl:if test="../references">
 					<h2>References:</h2>
 					<ul>
 					<xsl:for-each select="../references/sbnode">
-						<li><a href="/{@uuid}" class="type {@csstype}"><xsl:value-of select="@label" /></a></li>
+						<li><a href="/{@uuid}" class="type {@displaytype}"><xsl:value-of select="@label" /></a></li>
 					</xsl:for-each>
 					</ul>
 				</xsl:if>
@@ -69,7 +69,7 @@
 					<h2>Softlinks:</h2>
 					<ul>
 					<xsl:for-each select="../softlinks/sbnode">
-						<li><a href="/{@uuid}" class="type {@csstype}"><xsl:value-of select="@label" /></a></li>
+						<li><a href="/{@uuid}" class="type {@displaytype}"><xsl:value-of select="@label" /></a></li>
 					</xsl:for-each>
 					</ul>
 				</xsl:if>

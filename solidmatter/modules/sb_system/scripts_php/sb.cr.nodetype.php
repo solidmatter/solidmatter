@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 import('sb.cr.nodedefinition');
+import('sb.cr.viewdefinition');
 
 //------------------------------------------------------------------------------
 /** TODO: complete this
@@ -17,6 +18,8 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	
 	private $aDeclaredSupertypes = NULL;
 	private $aSupertypes = NULL;
+	private $aDeclaredViewDefinitions = NULL;
+	private $aSupportedViews = array();
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -30,7 +33,8 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	* @return boolean
 	*/
 	public function canAddChildNode($sChildNodeName, $sNodeTypeName = NULL) {
-		
+		// TODO: implement hierarchy constraints
+		return (TRUE);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -41,7 +45,8 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	* @return boolean
 	*/
 	public function canRemoveNode($sNodeName) {
-		
+		// TODO: implement hierarchy constraints (currently nodes themselves know if they can be deleted)
+		return (TRUE);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -52,7 +57,8 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	* @return boolean
 	*/
 	public function canRemoveProperty($sPropertyName) {
-		
+		// TODO: improve property handling (support removing properties, unsolved: arbitrary properties)
+		return (FALSE);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -64,7 +70,10 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	* @return 
 	*/
 	public function canSetProperty($sPropertyName, $mValue) {
-		
+		// check property existence
+		// check if property is protected
+		// check property constraints
+		// TODO: implement restrictions
 	}
 	
 	//--------------------------------------------------------------------------
@@ -74,7 +83,7 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	* @return NodeDefinition[]
 	*/
 	public function getChildNodeDefinitions() {
-		
+		// 
 	}
 	
 	//--------------------------------------------------------------------------
@@ -146,17 +155,66 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* CUSTOM:
 	* @param 
 	* @return 
 	*/
-	public function getSupportedViews() {
-		return ($this->crRepositoryStructure->getSupportedViews($this->aNodeTypeInformation['NodeTypeName']));
+	public function getViewDefinition($sViewName) {
+		
+		switch ($sViewName) {
+			case 'security':
+				$vdCurrentView = new sbCR_ViewDefinition(
+					$this,
+					$this->aNodeTypeInformation['NodeTypeName'],
+					'security',
+					'sbView_security',
+					'sbSystem:sb.node.view.security',
+					TRUE,
+					1
+				);
+				break;
+			case 'debug':
+				$vdCurrentView = new sbCR_ViewDefinition(
+					$this,
+					$this->aNodeTypeInformation['NodeTypeName'],
+					'debug',
+					'sbView_debug',
+					'sbSystem:sb.node.view.debug',
+					TRUE,
+					2
+				);
+				break;
+			default:
+				$vdCurrentView = $this->crRepositoryStructure->getViewDefinition($this->aNodeTypeInformation['NodeTypeName'], $sViewName);
+		}
+		
+		return ($vdCurrentView);
+		
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* CUSTOM:
+	* @param 
+	* @return 
+	*/
+	public function getSupportedViews($nodeSubject = NULL) {
+		return ($this->crRepositoryStructure->getSupportedViews($this->aNodeTypeInformation['NodeTypeName'], $nodeSubject));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* CUSTOM:
+	* @param 
+	* @return 
+	*/
+	public function getDeclaredViewDefinitions() {
+		return ($this->crRepositoryStructure->getDeclaredViewDefinitions($this->aNodeTypeInformation['NodeTypeName']));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* CUSTOM:
 	* @param 
 	* @return 
 	*/

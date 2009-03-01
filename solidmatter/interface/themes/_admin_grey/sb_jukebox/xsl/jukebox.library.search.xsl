@@ -59,7 +59,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 							<td>
-								<a href="/{@uuid}"><span class="type {@csstype}"><xsl:value-of select="@label" /></span></a>
+								<a href="/{@uuid}"><span class="type {@displaytype}"><xsl:value-of select="@label" /></span></a>
 								<!--| <a href="/{@uuid}/song/play/sessionid={$system/sessionid}">play</a>-->
 							</td>
 							<td>

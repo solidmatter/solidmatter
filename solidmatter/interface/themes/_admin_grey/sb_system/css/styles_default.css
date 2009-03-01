@@ -374,6 +374,10 @@ a.explorercard img {
 	background-position: 1px center;
 }
 
+*.sb_abstract {
+	background-image: url(../icons/type_abstract.png);
+}
+
 *.sb_view {
 	background-image: url(../icons/type_view.png);
 }

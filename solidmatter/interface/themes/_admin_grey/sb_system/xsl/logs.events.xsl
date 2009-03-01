@@ -92,7 +92,7 @@
 								<a href="/{@uuid}"><span class="type "></span></a>
 							</td>-->
 							<td>
-								<a href="/{@fk_subject}" class="type {@s_subjectcsstype}"></a>
+								<a href="/{@fk_subject}" class="type {@s_subjectdisplaytype}"></a>
 								<xsl:if test="@fk_user!=''">
 									<a href="/{@fk_user}" class="type sb_user"></a>
 								</xsl:if>

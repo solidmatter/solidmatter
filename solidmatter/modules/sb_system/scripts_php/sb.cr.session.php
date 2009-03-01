@@ -647,12 +647,13 @@ class sbCR_Session {
 		$aNode['s_name'] = $sName;
 		$aNode['s_label'] = $sLabel;
 		$aNode['s_uid'] = NULL;
-		$aNode['s_csstype'] = $this->aNodetypes[$sNodetype]['s_csstype'];
-		$aNode['s_customcsstype'] = NULL;
+		$aNode['s_displaytype'] = $this->aNodetypes[$sNodetype]['s_displaytype'];
+		$aNode['s_customdisplaytype'] = NULL;
 		$aNode['fk_parent'] = $sParentUUID;
 		// for now always set full inheritance on new nodes
 		$aNode['b_inheritrights'] = 'TRUE';
 		$aNode['b_bequeathrights'] = 'TRUE';
+		$aNode['b_bequeathlocalrights'] = 'TRUE';
 		$aNode['s_currentlifecyclestate'] = NULL;
 		
 		return ($this->generateInstanceFromRow($aNode, 'new'));
@@ -779,11 +780,8 @@ class sbCR_Session {
 		
 		// prepare special properties
 		// TODO: get more standards-compliant
-		if (!isset($aRow['b_taggable'])) {
-			$aRow['b_taggable'] = 'FALSE';
-		}
-		if ($aRow['s_customcsstype'] != NULL) {
-			$aRow['s_csstype'] = $aRow['s_customcsstype'];
+		if ($aRow['s_customdisplaytype'] != NULL) {
+			$aRow['s_displaytype'] = $aRow['s_customdisplaytype'];
 		}
 		if ($aRow['s_currentlifecyclestate'] == NULL) {
 			$aRow['s_currentlifecyclestate'] = 'default';
@@ -796,11 +794,11 @@ class sbCR_Session {
 		$elemSubject->setAttribute('label', $aRow['s_label']);
 		$elemSubject->setAttribute('uid', $aRow['s_uid']);
 		$elemSubject->setAttribute('query', $sQuery);
-		$elemSubject->setAttribute('csstype', $aRow['s_csstype']);
-		$elemSubject->setAttribute('taggable', $aRow['b_taggable']);
+		$elemSubject->setAttribute('displaytype', $aRow['s_displaytype']);
 		$elemSubject->setAttribute('parent', $aRow['fk_parent']);
 		$elemSubject->setAttribute('inheritrights', $aRow['b_inheritrights']);
 		$elemSubject->setAttribute('bequeathrights', $aRow['b_bequeathrights']);
+		$elemSubject->setAttribute('bequeathlocalrights', $aRow['b_bequeathlocalrights']);
 		$elemSubject->setAttribute('currentlifecyclestate', $aRow['s_currentlifecyclestate']);
 		
 		return ($nodeSubject);
@@ -819,7 +817,7 @@ class sbCR_Session {
 			return (FALSE);
 		}
 		
-		$stmtLoad = $this->DB->prepareKnown('sbCR/repository/getNodetypes');
+		$stmtLoad = $this->DB->prepareKnown('sbCR/repository/getNodeTypes');
 		$stmtLoad->execute();
 		
 		$aNodetypes = $stmtLoad->fetchAll(PDO::FETCH_ASSOC);

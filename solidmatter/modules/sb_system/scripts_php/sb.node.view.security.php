@@ -14,6 +14,15 @@
 */
 class sbView_security extends sbView {
 	
+	protected $aRequiredAuthorisations = array(
+		'display' => array('special', 'grant'),
+		'addUser' => array('grant'),
+		'removeUser' => array('grant'),
+		'changeInheritance' => array('grant'),
+		'editAuthorisations' => array('grant'),
+		'saveAuthorisations' => array('grant'),
+	);
+	
 	//--------------------------------------------------------------------------
 	/**
 	* 
@@ -89,8 +98,9 @@ class sbView_security extends sbView {
 					throw new InvalidFormDataException('changeInheritance');
 				}
 				$aInputs = $formInheritance->getValues();
-				$this->nodeSubject->setProperty('sbcr:inheritrights', $aInputs['inheritrights']);
-				$this->nodeSubject->setProperty('sbcr:bequeathrights', $aInputs['bequeathrights']);
+				$this->nodeSubject->setProperty('sbcr:inheritRights', $aInputs['inheritrights']);
+				$this->nodeSubject->setProperty('sbcr:bequeathRights', $aInputs['bequeathrights']);
+				$this->nodeSubject->setProperty('sbcr:bequeathLocalRights', $aInputs['bequeathlocalrights']);
 				$this->nodeSubject->save();
 				
 				$cacheAuth = CacheFactory::getInstance('authorisations');
@@ -181,6 +191,7 @@ class sbView_security extends sbView {
 				);
 				$formInheritance->addInput('inheritrights;checkbox');
 				$formInheritance->addInput('bequeathrights;checkbox');
+				$formInheritance->addInput('bequeathlocalrights;checkbox');
 				return ($formInheritance);
 		}
 		

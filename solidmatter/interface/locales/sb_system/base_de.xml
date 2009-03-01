@@ -120,6 +120,7 @@
 			<inheritance>Vererbung</inheritance>
 			<inherit_rights>Berechtigungen von übergeordneten Objekten übernehmen</inherit_rights>
 			<bequeath_rights>Berechtigungen an untergeordnete Objekte vererben</bequeath_rights>
+			<bequeath_local_rights>lokale Berechtigungen an untergeordnete Objekte vererben</bequeath_local_rights>
 			<authorisations_of>Berechtigungen von </authorisations_of>
 			<allow>Erlauben</allow>
 			<deny>Verweigern</deny>
@@ -177,6 +178,10 @@
 		<type id="sbSystem:Registry">Registry</type>
 		<type id="sbSystem:Tags">Tags</type>
 		<type id="sbSystem:Trashcan">Mülleimer</type>
+		<type id="sbSystem:TestNode">Testknoten</type>
+		<type id="sbSystem:PropertiesView">Eigenschaften (Abstrakt)</type>
+		<type id="sbSystem:ListView">Liste (Abstrakt)</type>
+		<type id="sbSystem:Taggable">Tagbar (Abstrakt)</type>
 	</nodetypes>
 	
 	<User>
@@ -234,6 +239,7 @@
 		<view id="manage">Verwalten</view>
 		<view id="documentation">Dokumentation</view>
 		<view id="content">Inhalt</view>
+		<view id="groups">Gruppen</view>
 	</views>
 	
 	<config>

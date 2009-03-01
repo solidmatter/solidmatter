@@ -44,7 +44,7 @@
 						<img src="/{@uuid}/preview/outputresized" />
 					</xsl:if>
 				</span>
-				<span class="type {@csstype}"><xsl:value-of select="@name" /></span>
+				<span class="type {@displaytype}"><xsl:value-of select="@name" /></span>
 			</a>
 		</xsl:for-each>
 		

@@ -53,7 +53,7 @@
 							<xsl:attribute name="class">even</xsl:attribute>
 						</xsl:otherwise>
 					</xsl:choose>
-					<td><span class="type {@s_csstype}"><xsl:value-of select="$locale//nodetypes/type[@id=$nodetype]" /></span></td>
+					<td><span class="type {@s_displaytype}"><xsl:value-of select="$locale//nodetypes/type[@id=$nodetype]" /></span></td>
 					<td><xsl:value-of select="@s_type" /></td>
 					<td><xsl:value-of select="@num_nodes" /></td>
 				</tr>

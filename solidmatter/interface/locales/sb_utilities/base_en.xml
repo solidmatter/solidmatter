@@ -12,6 +12,7 @@
 		<type id="sbUtilities:Imagefilter_greyscale">Greyscale</type>
 		<type id="sbUtilities:Imagefilter_roundededges">Rounded Edges</type>
 		<type id="sbUtilities:Imagefilter_merge">Merge</type>
+		<type id="sbUtilities:Imagefilter">Imagefilter (Abstract)</type>
 	</nodetypes>
 	
 	<Imagefilterstack>

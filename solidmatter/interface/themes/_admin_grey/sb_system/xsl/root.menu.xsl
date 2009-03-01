@@ -123,14 +123,14 @@
 		</xsl:choose>
 		<!-- label -->
 		<xsl:choose>
-			<xsl:when test="@csstype='sb_root'">
+			<xsl:when test="@displaytype ='sb_root'">
 				<a href="/-/welcome" class="type sb_root" target="main">solidMatter</a>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="boolean(false) and not(@primary='TRUE')">
 						<span style="padding:0;">
-							<xsl:attribute name="class">type <xsl:value-of select="@csstype" /></xsl:attribute>
+							<xsl:attribute name="class">type <xsl:value-of select="@displaytype" /></xsl:attribute>
 							<xsl:if test="@custom_icon">
 								<xsl:attribute name="style">background-image: url(../<xsl:value-of select="@custom_icon" />);</xsl:attribute>
 							</xsl:if>
@@ -142,7 +142,7 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<a target="main" id="{$path}">
-							<xsl:attribute name="class">type <xsl:value-of select="@csstype" /></xsl:attribute>
+							<xsl:attribute name="class">type <xsl:value-of select="@displaytype" /></xsl:attribute>
 							<xsl:if test="@custom_icon">
 								<xsl:attribute name="style">background-image: url(../<xsl:value-of select="@custom_icon" />);</xsl:attribute>
 							</xsl:if>

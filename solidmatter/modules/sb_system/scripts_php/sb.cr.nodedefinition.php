@@ -35,8 +35,9 @@ class sbCR_NodeDefinition {
 	*/
 	public function __construct($crRepositoryStructure, $sNodeTypeName) {
 		
-		$this->crRepositoryStructure = $crRepositoryStructure;
+		// store basic info
 		$this->aNodeTypeInformation['NodeTypeName'] = $sNodeTypeName;
+		$this->crRepositoryStructure = $crRepositoryStructure;
 		
 	}
 	
@@ -58,6 +59,7 @@ class sbCR_NodeDefinition {
 	* @return PropertyDefinition[]
 	*/
 	public function getDeclaredPropertyDefinitions() {
+		// TODO: aggregate property definitions from supertypes
 		return ($this->aNodeTypeInformation['PropertyDefinitions']);
 	}
 	

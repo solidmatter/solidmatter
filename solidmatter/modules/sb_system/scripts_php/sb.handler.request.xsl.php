@@ -17,21 +17,28 @@ class XSLRequestHandler {
 				}
 			}
 			
+			DEBUG('XSLHandler: Request Path = '.$sURI, DEBUG::HANDLER);
+			
 			//var_dumpp($aPath);
+			// remove empty last part (because of trailing slash)
 			unset($aPath[count($aPath)-1]);
+			// remove empty first part (because of leading slash)
 			unset($aPath[0]);
+			// remove fixed 'templates' dir
+			unset($aPath[1]);
+			// get template mode (preview|edit) and remove the part
 			$sMode = $aPath[2];
 			unset($aPath[2]);
 			//var_dumpp($aPath);
 			
-			$sTemplatePath = '/'.$aURI['host'].'::'.implode('/', $aPath);
+			$sTemplatePath = '/'.$_REQUEST->getSubject().'/'.implode('/', $aPath);
 			//var_dumpp($sTemplatePath);
 			$nodeCurrent = $crSession->getNode($sTemplatePath);
 			
-			if ($sMode == 'preview') {
-				$sLayoutXSL = $nodeCurrent->getProperty('xsl_frontend');
-			} else {
+			if ($sMode == 'edit') {
 				$sLayoutXSL = $nodeCurrent->getProperty('xsl_backend');
+			} else {
+				$sLayoutXSL = $nodeCurrent->getProperty('xsl_frontend');
 			}
 			$domLayout = new sbDOMDocument();
 			$domLayout->loadXML($sLayoutXSL);

@@ -71,7 +71,7 @@
 				</a>
 			</xsl:otherwise>
 			</xsl:choose>
-			<span class="type {@s_csstype}"><xsl:value-of select="@s_type" /></span>
+			<span class="type {@s_displaytype}"><xsl:value-of select="@s_type" /></span>
 			<xsl:if test="views/view">
 				<ul id="content:{$path}" style="display:none;">
 				<xsl:for-each select="views/view">
@@ -117,28 +117,5 @@
 			<span class="type sb_action"><xsl:value-of select="@s_action" /></span>
 		</li>
 	</xsl:template>
-	
-	
-	<!--<xsl:template match="response/content">
-		
-		<xsl:for-each select="repository/nodetypes/nodetype">
-			<table class="default">
-				<tr>
-					<th colspan=""><span class="type {@s_csstype}"><xsl:value-of select="@s_type" /></span></th>
-				</tr>
-				<xsl:for-each select="views/view">
-					<tr class="th2">
-						<th colspan=""><xsl:value-of select="@s_view" /></th>
-					</tr>
-					<xsl:for-each select="actions/action">
-						<tr>
-							<td><xsl:value-of select="@s_action" /></td>
-						</tr>
-					</xsl:for-each>
-				</xsl:for-each>
-			</table>
-		</xsl:for-each>
-		
-	</xsl:template>-->
 	
 </xsl:stylesheet>

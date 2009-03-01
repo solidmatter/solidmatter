@@ -21,7 +21,16 @@ class sbView_image_preview extends sbView {
 				
 			case 'display':
 				break;
-				
+			
+			case 'outputoriginal':
+				// generate image
+				$sImageData = $this->nodeSubject->loadBinaryProperty('properties_content', TRUE);
+				$imgCurrent = new Image(Image::FROMSTRING, $sImageData);
+				// output
+				$imgCurrent->output(JPG);
+				break;
+			
+			case 'outputprocessed':
 			case 'output':
 				
 				import('sb.image');

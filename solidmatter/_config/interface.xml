@@ -2,14 +2,16 @@
 <config>
 	
 	<!-- primary repository, keep it clean! -->
-	<site location="sb2.localhost/" type="controller" handler="frontend">
+	<site location="sb2.localhost/" type="controller" handler="frontend" subject="demowebsite">
 		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
 		<debug enabled="false" verbose="false" />
+		<site location="sb2.localhost/templates" type="controller" handler="xsl" subject="demotemplates" />
+		<site location="sb2.localhost/mmm" type="controller" handler="frontend" subject="demofiles" />
 	</site>
 	<site location="admin.localhost/" type="controller" handler="backend">
 		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
-		<site location="admin.localhost/templates" type="controller" handler="xsl" />
+		<site location="admin.localhost/templates" type="controller" handler="xsl" subject="demotemplates" />
 		<site location="admin.localhost/theme" type="theme" handler="backend" theme="_admin_grey" />
 		<site location="admin.localhost/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
 	</site>
@@ -23,13 +25,13 @@
 	</site>-->
 	
 	<!-- test repository, free to play around -->
-	<site location="test.jukebox/" type="controller" handler="application" subject="jukebox">
+	<site location="test.jukebox/" type="controller" handler="application" subject="demojukebox">
 		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
 		<site location="test.jukebox/theme" type="theme" handler="backend" theme="_default" />
 		<site location="test.jukebox/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
 	</site>
-	<site location="ollo.gotdns.org/" type="controller" handler="application" subject="jukebox">
+	<site location="ollo.gotdns.org/" type="controller" handler="application" subject="demojukebox">
 		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
 		<site location="ollo.gotdns.org/theme" type="theme" handler="backend" theme="_default" />
@@ -37,49 +39,9 @@
 	<site location="test.backend/" type="controller" handler="backend">
 		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
-		<site location="test.backend/templates" type="controller" handler="xsl" />
+		<site location="test.backend/templates" type="controller" handler="xsl" subject="demotemplates" />
 		<site location="test.backend/theme" type="theme" handler="backend" theme="_admin_grey" />
 		<site location="test.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
-	</site>
-	<site location="test.frontend/" type="controller" handler="frontend">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-	</site>
-	<site location="test.tiers/" type="controller" handler="backend">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<tier2 separated="true" host="test.controller" port="" path="" />
-		<site location="test.tiers/templates" type="controller" handler="xsl" />
-		<site location="test.tiers/theme" type="theme" handler="backend" theme="_admin_grey" />
-		<site location="test.tiers/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
-	</site>
-	
-	<!-- domains on BITBURG -->
-	<site location="admin.bitbox/" type="controller" handler="backend">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="admin.bitbox/templates" type="controller" handler="xsl" />
-		<site location="admin.bitbox/theme" type="theme" handler="backend" theme="_admin_grey" />
-		<site location="admin.bitbox/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
-	</site>
-	<site location="test.bitbox/" type="controller" handler="application" subject="jukebox">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="test.bitbox/theme" type="theme" handler="backend" theme="_default" />
-	</site>
-	
-	<!-- domains on SBWEB2 -->
-	<site location="sbweb2.jukebox/" type="controller" handler="application" subject="jukebox">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="sbweb2.jukebox/theme" type="theme" handler="backend" theme="_default" />
-	</site>
-	<site location="sbweb2.backend/" type="controller" handler="backend">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="sbweb2.backend/templates" type="controller" handler="xsl" />
-		<site location="sbweb2.backend/theme" type="theme" handler="backend" theme="_admin_grey" />
-		<site location="sbweb2.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
 	</site>
 	
 	<!-- utilities -->
@@ -92,11 +54,11 @@
 	<site location="sm.backend/" type="controller" handler="backend">
 		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
-		<site location="sm.backend/templates" type="controller" handler="xsl" />
+		<site location="sm.backend/templates" type="controller" handler="xsl" subject="demotemplates" />
 		<site location="sm.backend/theme" type="theme" handler="backend" theme="_admin_grey" />
 		<site location="sm.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
 	</site>
-	<site location="sm.jukebox/" type="controller" handler="application" subject="jukebox">
+	<site location="sm.jukebox/" type="controller" handler="application" subject="demojukebox">
 		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
 		<site location="sm.jukebox/theme" type="theme" handler="backend" theme="_default" />

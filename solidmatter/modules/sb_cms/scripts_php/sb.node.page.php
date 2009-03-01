@@ -26,18 +26,18 @@ class sbNode_page extends sbNode {
 		
 		if ($sLayoutUUID != FALSE) {
 			
-			$nodeTemplate = $this->crSession->getNodeByIdentifier($sLayoutUUID);
-			$sPath = $nodeTemplate->getPath();
+			$nodeLayout = $this->crSession->getNodeByIdentifier($sLayoutUUID);
+			$sPath = $nodeLayout->getPath();
 			$aPath = explode('/', $sPath);
 			//var_dumpp($aPath);
 			switch ($sView) {
 				
 				case 'preview':
-					$sPath = str_replace('::', '/', $aPath[1]).'/preview/'.implode('/', array_slice($aPath, 2));
+					$sPath = $_REQUEST->getDomain().'/templates/preview/'.implode('/', array_slice($aPath, 2));
 					break;
 					
 				case 'edit':
-					$sPath = str_replace('::', '/', $aPath[1]).'/edit/'.implode('/', array_slice($aPath, 2));
+					$sPath = $_REQUEST->getDomain().'/templates/edit/'.implode('/', array_slice($aPath, 2));
 					break;
 				
 			}

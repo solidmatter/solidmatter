@@ -12,13 +12,20 @@ class FrontendRequestHandler {
 		
 		try {
 			
-			$_GET['debug'] = TRUE;
-			$_RESPONSE = ResponseFactory::getInstance('global');
+			global $_RESPONSE;
+			//$_RESPONSE->forceRenderMode('debug');
 			
-			$sPath = '/'.$_SERVER['HTTP_HOST'].'::'.substr($_SERVER['REQUEST_URI'], 1);
+			/*var_dumpp($_REQUEST->getPath());
+			var_dumpp($_REQUEST->getURI());
+			var_dumpp($_REQUEST->getLocation());
+			var_dumpp($_REQUEST->getRelativePath());
+			exit;*/
+			
+			$sPath = '/'.$_REQUEST->getSubject().$_REQUEST->getRelativePath();
 			
 			$nodeCurrent = $crSession->getNode($sPath);
 			$nodeCurrent->callView('render');
+			
 			$_RESPONSE->addData($nodeCurrent);
 			
 		} catch (NodeNotFoundException $e) {

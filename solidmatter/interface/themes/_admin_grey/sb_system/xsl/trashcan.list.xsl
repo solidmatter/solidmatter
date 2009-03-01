@@ -69,17 +69,17 @@
 							<xsl:call-template name="colorize" />
 							<td width="1"><input type="checkbox" name="marker" id="marker_{@uuid}" /></td>
 							<td>
-								<a href="/{@uuid}"><span class="type {@csstype}"><xsl:value-of select="@label" /></span></a>
+								<a href="/{@uuid}"><span class="type {@displaytype}"><xsl:value-of select="@label" /></span></a>
 							</td>
 							<td>
 								<xsl:variable name="type" select="@nodetype" />
 								<xsl:value-of select="$locale//nodetypes/type[@id=$type]" />
 							</td>
 							<td>
-								<xsl:value-of select="@createdat" />
+								<xsl:value-of select="@created" />
 							</td>
 							<td>
-								<xsl:value-of select="@modifiedat" />
+								<xsl:value-of select="@modified" />
 							</td>
 							<td>
 								<xsl:if test="position() != 1">

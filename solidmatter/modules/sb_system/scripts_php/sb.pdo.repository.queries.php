@@ -35,11 +35,11 @@ $_QUERIES['sbCR/repository/loadAuthorisations/supported'] = '
 	ORDER BY	ad.n_order
 ';
 $_QUERIES['sbCR/repository/loadViews/supported'] = '
-	SELECT		v.s_view,
-				v.s_classfile,
-				v.s_class,
-				v.b_default,
-				v.b_display
+	SELECT		v.s_view AS name,
+				v.s_classfile AS classfile,
+				v.s_class AS class,
+				v.b_display AS visible,
+				v.n_priority AS priority
 	FROM		{TABLE_VIEWS} v
 	WHERE		v.fk_nodetype = :nodetype
 	ORDER BY	v.n_order
@@ -122,7 +122,7 @@ $_QUERIES['sb_system/cache/authorisation/empty'] = '
 // sbContentRepository
 //------------------------------------------------------------------------------
 
-$_QUERIES['sbCR/repository/getNodetypes'] = '
+$_QUERIES['sbCR/repository/getNodeTypes'] = '
 	SELECT		*
 	FROM		{TABLE_NODETYPES} sn
 	ORDER BY	sn.s_type
@@ -147,12 +147,6 @@ $_QUERIES['sb_system/repository/getAuthorisations'] = '
 	FROM		{TABLE_VIEWAUTH} snva
 	ORDER BY	snva.fk_nodetype, snva.fk_view
 ';
-
-$_QUERIES['sbCR/repository/getNodeTypes'] = '
-	SELECT		*
-	FROM		{TABLE_NODETYPES} sn
-	ORDER BY	sn.s_type
-';
 $_QUERIES['sbCR/repository/getNodeTypeHierarchy'] = '
 	SELECT		fk_parentnodetype,
 				fk_childnodetype
@@ -165,13 +159,11 @@ $_QUERIES['sbCR/nodetype/save'] = '
 	INSERT INTO	{TABLE_NODETYPES}
 				(
 					s_type,
-					b_abstract,
 					e_type,
 					s_class,
 					s_classfile,
 					s_category,
-					s_csstype,
-					b_taggable
+					s_displaytype
 				) VALUES (
 					:nodetype,
 					:abstract,
@@ -179,18 +171,15 @@ $_QUERIES['sbCR/nodetype/save'] = '
 					:class,
 					:classfile,
 					:category,
-					:displaytype,
-					:taggable
+					:displaytype
 				)
 	ON DUPLICATE KEY UPDATE
 				s_type = :nodetype,
-				b_abstract = :abstract,
 				e_type = :type,
 				s_class = :class,
 				s_classfile = :classfile,
 				s_category = :category,
-				s_csstype = :displaytype,
-				b_taggable = :taggable
+				s_displaytype = :displaytype
 ';
 $_QUERIES['sbCR/nodetype/remove'] = '
 	DELETE FROM	{TABLE_NODETYPES}
@@ -224,14 +213,14 @@ $_QUERIES['sbCR/getNode/root'] = '
 				n.fk_nodetype,
 				n.s_name,
 				n.s_label,
-				n.s_customcsstype,
+				n.s_customdisplaytype,
 				n.b_inheritrights,
 				n.b_bequeathrights,
+				n.b_bequeathlocalrights,
 				n.s_currentlifecyclestate,
 				nt.s_classfile,
 				nt.s_class,
-				nt.s_csstype,
-				\'FALSE\' AS b_taggable,
+				nt.s_displaytype,
 				NULL AS fk_parent
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
@@ -244,14 +233,14 @@ $_QUERIES['sbCR/getNode/byUUID'] = '
 				n.fk_nodetype,
 				n.s_name,
 				n.s_label,
-				n.s_customcsstype,
+				n.s_customdisplaytype,
 				n.b_inheritrights,
 				n.b_bequeathrights,
+				n.b_bequeathlocalrights,
 				n.s_currentlifecyclestate,
 				nt.s_classfile,
 				nt.s_class,
-				nt.s_csstype,
-				nt.b_taggable,
+				nt.s_displaytype,
 				h.fk_parent
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
@@ -267,14 +256,14 @@ $_QUERIES['sbCR/getNode/byUID'] = '
 				n.fk_nodetype,
 				n.s_name,
 				n.s_label,
-				n.s_customcsstype,
+				n.s_customdisplaytype,
 				n.b_inheritrights,
 				n.b_bequeathrights,
+				n.b_bequeathlocalrights,
 				n.s_currentlifecyclestate,
 				nt.s_classfile,
 				nt.s_class,
-				nt.s_csstype,
-				nt.b_taggable,
+				nt.s_displaytype,
 				h.fk_parent
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
@@ -402,8 +391,8 @@ $_QUERIES['sbCR/node/loadChildren/debug'] = '
 				n.fk_nodetype,
 				n.s_name,
 				n.s_label,
-				n.s_customcsstype,
-				nt.s_csstype,
+				n.s_customdisplaytype,
+				nt.s_displaytype,
 				h.b_primary
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
@@ -450,7 +439,7 @@ $_QUERIES['sbCR/node/getChild/byName'] = '
 	SELECT		n.uuid,
 				n.fk_nodetype,
 				n.s_name,
-				nt.s_csstype
+				nt.s_displaytype
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
 		ON		n.fk_nodetype = nt.s_type
@@ -463,7 +452,7 @@ $_QUERIES['sbCR/node/getChild/byName'] = '
 $_QUERIES['sbSystem/node/getAllowedSubtypes'] = '
 	SELECT		m.fk_parentnodetype,
 				m.fk_nodetype,
-				nt.s_csstype
+				nt.s_displaytype
 	FROM		{TABLE_MODES} m
 	INNER JOIN	{TABLE_NODETYPES} nt
 		ON		m.fk_nodetype = nt.s_type
@@ -540,24 +529,26 @@ $_QUERIES['sbCR/node/save/new'] = '
 					fk_nodetype,
 					s_label,
 					s_name,
-					s_customcsstype,
+					s_customdisplaytype,
 					b_inheritrights,
 					b_bequeathrights,
+					b_bequeathlocalrights,
 					fk_createdby,
 					fk_modifiedby,
 					fk_deletedby,
-					dt_createdat,
-					dt_modifiedat,
-					dt_deletedat
+					dt_created,
+					dt_modified,
+					dt_deleted
 				) VALUES (
 					:uuid,
 					:uid,
 					:nodetype,
 					:label,
 					:name,
-					:customcsstype,
+					:customdisplaytype,
 					:inheritrights,
 					:bequeathrights,
+					:bequeathlocalrights,
 					:user_id,
 					:user_id,
 					NULL,
@@ -571,11 +562,12 @@ $_QUERIES['sbCR/node/save/existing'] = '
 	SET			s_uid = :uid,
 				s_label = :label,
 				s_name = :name,
-				s_customcsstype = :customcsstype,
+				s_customdisplaytype = :customdisplaytype,
 				b_inheritrights = :inheritrights,
 				b_bequeathrights = :bequeathrights,
+				b_bequeathlocalrights = :bequeathlocalrights,
 				fk_modifiedby = :user_id,
-				dt_modifiedat = NOW()
+				dt_modified = NOW()
 	WHERE		uuid = :uuid
 ';
 $_QUERIES['sbCR/node/delete/forGood'] = '
@@ -781,15 +773,16 @@ $_QUERIES['sbCR/node/loadProperties/extended'] = '
 	SELECT		n.s_name,
 				n.s_uid,
 				n.s_label,
-				n.s_customcsstype,
+				n.s_customdisplaytype,
 				n.b_inheritrights,
 				n.b_bequeathrights,
+				n.b_bequeathlocalrights,
 				n.fk_createdby,
 				n.fk_modifiedby,
 				n.fk_deletedby,
-				n.dt_createdat,
-				n.dt_modifiedat,
-				n.dt_deletedat
+				n.dt_created,
+				n.dt_modified,
+				n.dt_deleted
 	FROM		{TABLE_NODES} n
 	WHERE		n.uuid = :node_id
 ';

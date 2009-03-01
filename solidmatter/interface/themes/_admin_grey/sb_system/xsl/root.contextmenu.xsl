@@ -29,7 +29,7 @@
 					<ul>
 					<xsl:for-each select="new">
 						<xsl:variable name="type" select="@nodetype" />
-						<li><a href="/-/structure/createChild/parentnode={$content/contextmenu/@uuid}&amp;nodetype={$type}" target="main"><span class="type {@csstype}"><xsl:value-of select="$locale//nodetypes/type[@id=$type]" /></span></a></li>
+						<li><a href="/-/structure/createChild/parentnode={$content/contextmenu/@uuid}&amp;nodetype={$type}" target="main"><span class="type {@displaytype}"><xsl:value-of select="$locale//nodetypes/type[@id=$type]" /></span></a></li>
 					</xsl:for-each>
 					</ul>
 				</li>

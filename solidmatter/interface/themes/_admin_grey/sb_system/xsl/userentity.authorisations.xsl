@@ -52,7 +52,7 @@
 							<xsl:attribute name="class">even</xsl:attribute>
 						</xsl:otherwise>
 					</xsl:choose>
-					<td><a href="/{@uuid}/security" class="type {@csstype}"><xsl:value-of select="@path" /></a></td>
+					<td><a href="/{@uuid}/security" class="type {@displaytype}"><xsl:value-of select="@path" /></a></td>
 					<td><xsl:value-of select="@authorisation" /></td>
 					<td><xsl:value-of select="@granttype" /></td>
 				</tr>

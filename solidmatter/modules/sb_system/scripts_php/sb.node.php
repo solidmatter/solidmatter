@@ -18,8 +18,7 @@ class sbNode extends sbCR_Node {
 	
 	protected $crNodetype = NULL;
 	
-	protected $aViews				= array();
-	protected $aActions				= array();
+	protected $aViews				= NULL;
 	protected $elemViews			= NULL;
 	
 	public $aChildNodes				= array();
@@ -518,43 +517,51 @@ class sbNode extends sbCR_Node {
 	*/
 	public function loadViews($bReturnViews = TRUE) {
 		
-		$crNodeType = $this->getSession()->getWorkspace()->getNodeTypeManager()->getNodeType($this->getPrimaryNodeType());
-		$aViews = $crNodeType->getSupportedViews();
+		static $bViewsStored = FALSE;
 		
+		$crNodeType = $this->getNodeType();
+		$this->aViews = $crNodeType->getSupportedViews();
+		
+		// special views
+		// TODO: find a better way, all view information should come from nodetype
+		// add special view if user has the necessary authorisations
 		if (User::isAuthorised('grant', $this)) {
-			$aViews['security']['s_classfile'] = 'sbSystem:sb.node.view.security';
-			$aViews['security']['s_class'] = 'sbView_security';
-			$aViews['security']['b_default'] = 'FALSE';
-			$aViews['security']['b_display'] = 'TRUE';
+			$this->aViews['security'] = array(
+				'name' => 'security',
+				'priority' => '1',
+				'visible' => TRUE
+			);
 		}
-		
-		// TODO: improve debug stuff
+		// add special view if user has the necessary authorisations and config allows it
 		if (Registry::getValue('sb.system.debug.tab.enabled') && User::isAdmin()) {
-			$aViews['debug']['s_classfile'] = 'sbSystem:sb.node.view.debug';
-			$aViews['debug']['s_class'] = 'sbView_debug';
-			$aViews['debug']['b_default'] = 'TRUE';
-			$aViews['debug']['b_display'] = 'TRUE';
+			$this->aViews['debug'] = array(
+				'name' => 'debug',
+				'priority' => '2',
+				'visible' => TRUE
+			);
 		}
 		
 		$elemViews = $this->elemSubject->ownerDocument->createElement('views');
-		foreach ($aViews as $sView => $aDetails) {
+		foreach ($this->aViews as $aView) {
 			$elemView = $this->elemSubject->ownerDocument->createElement('view');
 			// TODO: find cleaner way to distinct non-display views
-			if ($aDetails['b_display'] == 'TRUE') {
-				$elemView->setAttribute('name', $sView);
+			if ($aView['visible']) {
+				$elemView->setAttribute('name', $aView['name']);
+				$elemView->setAttribute('priority', $aView['priority']);
 				$elemViews->appendChild($elemView);
 			}
 		}
 		
-		$this->aViews = $aViews;
-		
-		if ($bReturnViews) {
-			return($elemViews);
-		} else {
-			// TODO: save views in another way?
+		if (!$bViewsStored) {
+			$bViewsStored = TRUE;
 			$this->elemViews = $elemViews;
 			$this->elemSubject->appendChild($elemViews);
 		}
+		
+		if ($bReturnViews) {
+			return($elemViews);
+		}
+		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -563,112 +570,19 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	protected function getDefaultView() {
-		foreach ($this->aViews as $sCurrentView => $aDetails) {
-			$sView = $sCurrentView;
-			if ($aDetails['b_default'] == 'TRUE') {
-				$sView = $sCurrentView;
-				break;
+	protected function getDefaultViewName() {
+		
+		$sDefaultView = NULL;
+		$iCurrentPriority = 0;
+		foreach ($this->aViews as $aView) {
+			if ($aView['priority'] >= $iCurrentPriority) {
+				$sDefaultView = $aView['name'];
+				$iCurrentPriority = $aView['priority'];
 			}
 		}
-		return ($sView);
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	protected function getActionDetails($sView, $sAction = NULL) {
-		
-		if ($sView == 'debug' && Registry::getValue('sb.system.debug.tab.enabled')) {
-			$aRow['s_action'] = 'debug';
-			$aRow['e_outputtype'] = 'rendered';
-			$aRow['s_stylesheet'] = 'sb_system:node.debug.xsl';
-			$aRow['s_mimetype'] = 'text/html';
-			$aRow['b_uselocale'] = 'TRUE';
-			return($aRow);
-		}
-		
-		if (User::isAuthorised('grant', $this) && $sView == 'security') {
-			$aActions = array(
-				'display' => array(
-					's_action' => 'display',
-					'e_outputtype' => 'rendered',
-					's_stylesheet' => 'sb_system:node.security.xsl',
-					's_mimetype' => 'text/html',
-					'b_uselocale' => 'TRUE',
-				),
-				'changeInheritance' => array(
-					's_action' => 'changeInheritance',
-					'e_outputtype' => 'rendered',
-					's_stylesheet' => 'sb_system:node.security.xsl',
-					's_mimetype' => 'text/html',
-					'b_uselocale' => 'TRUE',
-				),
-				'editAuthorisations' => array(
-					's_action' => 'editAuthorisations',
-					'e_outputtype' => 'rendered',
-					's_stylesheet' => 'sb_system:node.security.editauthorisations.xsl',
-					's_mimetype' => 'text/html',
-					'b_uselocale' => 'TRUE',
-				),
-				'saveAuthorisations' => array(
-					's_action' => 'saveAuthorisations',
-					'e_outputtype' => 'rendered',
-					's_stylesheet' => 'sb_system:node.security.editauthorisations.xsl',
-					's_mimetype' => 'text/html',
-					'b_uselocale' => 'TRUE',
-				),
-				'addUser' => array(
-					's_action' => 'addUser',
-					'e_outputtype' => 'rendered',
-					's_stylesheet' => 'sb_system:node.security.xsl',
-					's_mimetype' => 'text/html',
-					'b_uselocale' => 'TRUE',
-				),
-				'removeUser' => array(
-					's_action' => 'removeUser',
-					'e_outputtype' => 'rendered',
-					's_stylesheet' => 'sb_system:node.security.xsl',
-					's_mimetype' => 'text/html',
-					'b_uselocale' => 'TRUE',
-				),
-			);
-			if ($sAction == NULL) {
-				return ($aActions['display']);	
-			} elseif (isset($aActions[$sAction])) {
-				return ($aActions[$sAction]);
-			} else {
-				return (FALSE);
-			}
-		}
-		
-		if ($sAction != NULL) {
-			$stmtViews = $this->prepareKnown('actions/getDetails/given');
-			$stmtViews->bindValue(':uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
-			$stmtViews->bindValue(':view', $sView, PDO::PARAM_STR);
-			$stmtViews->bindValue(':action', $sAction, PDO::PARAM_STR);
-			$stmtViews->execute();
-		} else {
-			$stmtViews = $this->prepareKnown('actions/getDetails/default');
-			$stmtViews->bindValue(':uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
-			$stmtViews->bindValue(':view', $sView, PDO::PARAM_STR);
-			$stmtViews->execute();
-		}
-		
-		$aViews = $stmtViews->fetchAll(PDO::FETCH_ASSOC);
-		$stmtViews->closeCursor();
-		
-		foreach ($aViews as $aRow) {
-			return ($aRow);
-		}
-		
-		return(FALSE);
+		return ($sDefaultView);
 		
 	}
-	
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -678,78 +592,57 @@ class sbNode extends sbCR_Node {
 	*/
 	public function callView($sView = NULL, $sAction = NULL) {
 		
+		$this->loadViews();
+		if ($sView == NULL) {
+			$sView = $this->getDefaultViewName();
+		}
+		$vdCurrentView = $this->getNodeType()->getViewDefinition($sView);
+		$adCurrentAction = $vdCurrentView->getActionDefinition($sAction);
+			
+		DEBUG('Node: calling view "'.$sView.'" and action "'.$sAction.'" on node '.$this->getName().' ('.$this->getIdentifier().')', DEBUG::NODE);
+		
+		// process view & action info
+		$sClass = $adCurrentAction->getClass();
+		$sLibrary = $adCurrentAction->getClassFile();
+		$sAction = $adCurrentAction->getName();
+		
+		// init module
+		list($sModule, $sFile) = explode(':', $sLibrary);
+		import($sModule.':init', FALSE);
+		
+		// import class file and create instance
+		import($sLibrary);
+		if (!class_exists($sClass)) {
+			throw new sbException('Class does not exist: '.$sClass);
+		}
+		$viewCurrent = new $sClass($this);
+		
 		global $_RESPONSE;
 		
-		$this->loadViews(FALSE);
-		
-		if ($sView == NULL) {
-			$sView = $this->getDefaultView();
+		// check if login is necessary
+		if ($viewCurrent->requiresLogin() && !User::isLoggedIn()) {
+			//$nodeRoot = $this->getSession()->getRootNode();
+			//return($this->redirect($nodeRoot->getProperty('jcr:uuid'), 'login'));
+			$_RESPONSE->redirect('-', 'login');
 		}
 		
-		if (isset($this->aViews[$sView])) {
-			
-			$aAction = $this->getActionDetails($sView, $sAction);
-			
-			if ($aAction !== FALSE) {
-				
-				DEBUG('Node: calling view "'.$sView.'" and action "'.$sAction.'" on node '.$this->getName().' ('.$this->getIdentifier().')', DEBUG::NODE);
-				
-				// process view & action info
-				$sClass = $this->aViews[$sView]['s_class'];
-				$sLibrary = $this->aViews[$sView]['s_classfile'];
-				$sAction = $aAction['s_action'];
-				if ($aAction['b_uselocale'] == 'TRUE') {
-					$bUseLocale = TRUE;
-				} else {
-					$bUseLocale = FALSE;
-				}
-				if (isset($aAction['s_classfile']) && $aAction['s_classfile'] != NULL) {
-					$sClass = $aAction['s_class'];
-					$sLibrary = $aAction['s_classfile'];
-				}
-				
-				// init module
-				list($sModule, $sFile) = explode(':', $sLibrary);
-				import($sModule.':init', FALSE);
-				
-				// import class file and create instance
-				import($sLibrary);
-				
-				if (!class_exists($sClass)) {
-					throw new sbException('Class does not exist: '.$sClass);
-				}
-				$viewCurrent = new $sClass($this);
-				
-				// check if login is necessary
-				if ($viewCurrent->requiresLogin() && !User::isLoggedIn()) {
-					//$nodeRoot = $this->getSession()->getRootNode();
-					//return($this->redirect($nodeRoot->getProperty('jcr:uuid'), 'login'));
-					$_RESPONSE->redirect('-', 'login');
-				}
-				
-				if (!$_RESPONSE->hasRequestData()) {
-					$_RESPONSE->addRequestData($this->getProperty('jcr:uuid'), $sView, $sAction);
-				}
-				
-				// execute action and store data
-				$elemView = $viewCurrent->execute($sAction);
-				
-				$_RESPONSE->setRenderMode($aAction['e_outputtype'], $aAction['s_mimetype'], $aAction['s_stylesheet']);
-				$_RESPONSE->setLocaleMode($bUseLocale);
-				if ($bUseLocale) {
-					$_RESPONSE->addLocale($sModule);
-					$_RESPONSE->addLocale($this->getModule());
-				}
-				
-				return ($elemView);
-				
-			} else {
-				throw new ActionUndefinedException('"'.$sAction.'" for "'.$sView.'" in node '.$this->getProperty('jcr:uuid').' ('.$this->getPrimaryNodeType().')');
-			}
-			
-		} else {
-			throw new ViewUndefinedException('"'.$sView.'" in node '.$this->getProperty('jcr:uuid').' ('.$this->getPrimaryNodeType().')');
+		if (!$_RESPONSE->hasRequestData()) {
+			$_RESPONSE->addRequestData($this->getProperty('jcr:uuid'), $sView, $sAction);
 		}
+		
+		// execute action and store data
+		$elemView = $viewCurrent->execute($sAction);
+		
+		//var_dumpp($adCurrentAction->debug());
+		
+		$_RESPONSE->setRenderMode($adCurrentAction->getOutputtype(), $adCurrentAction->getMimetype(), $adCurrentAction->getStylesheet());
+		$_RESPONSE->setLocaleMode($adCurrentAction->usesLocale());
+		if ($adCurrentAction->usesLocale()) {
+			$_RESPONSE->addLocale($sModule);
+			$_RESPONSE->addLocale($this->getModule());
+		}
+		
+		return ($elemView);
 		
 	}
 	
@@ -923,7 +816,7 @@ class sbNode extends sbCR_Node {
 		foreach ($stmtGetAllowedSubtypes as $aRow) {
 			$elemNew = ResponseFactory::createElement('new');
 			$elemNew->setAttribute('nodetype', $aRow['fk_nodetype']);
-			$elemNew->setAttribute('csstype', $aRow['s_csstype']);
+			$elemNew->setAttribute('displaytype', $aRow['s_displaytype']);
 			$elemContextMenu->appendChild($elemNew);
 			$sModule = substr($aRow['fk_nodetype'], 0, strpos($aRow['fk_nodetype'], ':'));
 			global $_RESPONSE;
@@ -1023,7 +916,7 @@ class sbNode extends sbCR_Node {
 							//$formCurrent->setValue($sName, $this->getProperty($aDetails['s_attributename']));
 						}
 					}
-					$_RESPONSE->addSystemMeta('csstype', $this->getProperty('csstype'));
+					$_RESPONSE->addSystemMeta('displaytype', $this->getProperty('displaytype'));
 					$formCreate->addSubmit('$locale/sbSystem/actions/save');
 					$this->modifyForm($formCreate, 'create');
 					return ($formCreate);
@@ -1487,7 +1380,7 @@ class sbNode extends sbCR_Node {
 	* @return 
 	*/
 	public function isTaggable() {
-		if ($this->elemSubject->getAttribute('taggable') == 'TRUE') {
+		if ($this->isNodeType('sbSystem:Taggable')) {
 			return (TRUE);
 		}
 		return (FALSE);
@@ -1784,15 +1677,18 @@ class sbNode extends sbCR_Node {
 				
 		$aMerged = array();
 		
-		if ($this->getProperty('sbcr:inheritrights') == 'TRUE') {
+		if ($this->getProperty('sbcr:inheritRights') == 'TRUE') {
 			$_CACHE = CacheFactory::getInstance('system');
 			if ($_CACHE->exists('authorisations:array/'.$this->getProperty('jcr:uuid'))) {
 				$aMerged = $_CACHE->loadData('authorisations:array/'.$this->getProperty('jcr:uuid'));
 			} else {
 				try {
 					$nodeParent = $this->getParent();
-					$aLocal = $nodeParent->loadLocalAuthorisations(FALSE);
-					if ($nodeParent->getProperty('sbcr:bequeathrights') == 'TRUE') {
+					$aLocal = array();
+					if ($nodeParent->getProperty('sbcr:bequeathLocalRights') == 'TRUE') {
+						$aLocal = $nodeParent->loadLocalAuthorisations(FALSE);
+					}
+					if ($nodeParent->getProperty('sbcr:bequeathRights') == 'TRUE') {
 						$aInherited = $nodeParent->loadInheritedAuthorisations(FALSE);
 						$aMerged = $this->mergeAuthInherited($aLocal, $aInherited);
 						//$_CACHE->storeData('authorisations:array/'.$this->elemSubject->getAttribute('uuid'), $aMerged);
@@ -1881,8 +1777,7 @@ class sbNode extends sbCR_Node {
 		
 		if ($this->aSupportedAuthorisations == NULL) {
 			$crNodeTypeManager = $this->crSession->getWorkspace()->getNodeTypeManager();
-			$crNodeType = $crNodeTypeManager->getNodeType($this->getPrimaryNodeType());
-			$aAuthorisations = $crNodeType->getSupportedAuthorisations();
+			$aAuthorisations = $crNodeTypeManager->getNodeType($this->getPrimaryNodeType())->getSupportedAuthorisations();
 			$this->aSupportedAuthorisations = $aAuthorisations;
 		}
 		

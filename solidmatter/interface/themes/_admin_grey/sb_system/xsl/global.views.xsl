@@ -33,13 +33,13 @@
 			<xsl:for-each select="../ancestors/sbnode">
 				<xsl:sort order="descending" />
 				<xsl:if test="@nodetype != 'sbSystem:Root'">
-					<a href="/{@uuid}"><span class="type {@csstype}"><xsl:value-of select="@label" /></span></a>
+					<a href="/{@uuid}"><span class="type {@displaytype}"><xsl:value-of select="@label" /></span></a>
 					<xsl:if test="position() != last()+1">
 						/
 					</xsl:if>
 				</xsl:if>
 			</xsl:for-each>
-			<a href="/{../@uuid}"><span class="type {../@csstype}"><xsl:value-of select="../@label" /></span></a>
+			<a href="/{../@uuid}"><span class="type {../@displaytype}"><xsl:value-of select="../@label" /></span></a>
 		</div>
 		<div class="views">
 			<xsl:apply-templates select="/response/metadata/stopwatch" />

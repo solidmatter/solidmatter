@@ -104,15 +104,16 @@ class sbCR_Node {
 	*/
 	protected $aPropertyTranslation = array(
 		'jcr:uuid'					=> 'uuid',
-		'jcr:created'				=> 'createdat',
+		'jcr:created'				=> 'created',
 		'jcr:createdBy'				=> 'createdby',
-		'jcr:lastModified'			=> 'modifiedat',
+		'jcr:lastModified'			=> 'modified',
 		'jcr:lastModifiedBy'		=> 'modifiedby',
 		'jcr:currentLifecycleState' => 'currentlifecyclestate',
 		'sbcr:label'				=> 'label',
-		'sbcr:inheritrights'		=> 'inheritrights',
-		'sbcr:bequeathrights'		=> 'bequeathrights',
-		'sbcr:deleted'				=> 'deletedat',
+		'sbcr:inheritRights'		=> 'inheritrights',
+		'sbcr:bequeathRights'		=> 'bequeathrights',
+		'sbcr:bequeathLocalRights'	=> 'bequeathlocalrights',
+		'sbcr:deleted'				=> 'deleted',
 		'sbcr:deletedBy'			=> 'deletedby',
 		'sbcr:deletedFrom'			=> 'deletedfrom',
 	);
@@ -251,7 +252,7 @@ class sbCR_Node {
 	* - uuid
 	* - fk_nodetype
 	* - s_name
-	* - s_csstype
+	* - s_displaytype
 	* - s_extension
 	* Throws NodeNotFoundException if no or serveral nodes are found.
 	* TODO: support same name siblings
@@ -740,27 +741,29 @@ class sbCR_Node {
 		
 		if ($this->isNew()) {
 			$stmtInsert = $this->crSession->prepareKnown($this->aQueries['save']['new']);
-			$stmtInsert->bindValue(':uuid',				$this->getIdentifier(),						PDO::PARAM_STR);
-			$stmtInsert->bindValue(':uid',				$this->getProperty('uid'),					PDO::PARAM_STR);
-			$stmtInsert->bindValue(':nodetype',			$this->getProperty('nodetype'),				PDO::PARAM_STR);
-			$stmtInsert->bindValue(':label',			$this->getProperty('label'),				PDO::PARAM_STR);
-			$stmtInsert->bindValue(':name',				$this->getProperty('name'),					PDO::PARAM_STR);
-			$stmtInsert->bindValue(':customcsstype',	$this->getProperty('customcsstype'),		PDO::PARAM_STR);
-			$stmtInsert->bindValue(':inheritrights',	$this->getProperty('sbcr:inheritrights'),	PDO::PARAM_STR);
-			$stmtInsert->bindValue(':bequeathrights',	$this->getProperty('sbcr:bequeathrights'),	PDO::PARAM_STR);
-			$stmtInsert->bindValue(':user_id',			User::getUUID(),							PDO::PARAM_STR);
+			$stmtInsert->bindValue(':uuid',					$this->getIdentifier(),							PDO::PARAM_STR);
+			$stmtInsert->bindValue(':uid',					$this->getProperty('uid'),						PDO::PARAM_STR);
+			$stmtInsert->bindValue(':nodetype',				$this->getProperty('nodetype'),					PDO::PARAM_STR);
+			$stmtInsert->bindValue(':label',				$this->getProperty('label'),					PDO::PARAM_STR);
+			$stmtInsert->bindValue(':name',					$this->getProperty('name'),						PDO::PARAM_STR);
+			$stmtInsert->bindValue(':customdisplaytype',	$this->getProperty('customdisplaytype'),		PDO::PARAM_STR);
+			$stmtInsert->bindValue(':inheritrights',		$this->getProperty('sbcr:inheritRights'),		PDO::PARAM_STR);
+			$stmtInsert->bindValue(':bequeathrights',		$this->getProperty('sbcr:bequeathRights'),		PDO::PARAM_STR);
+			$stmtInsert->bindValue(':bequeathlocalrights',	$this->getProperty('sbcr:bequeathLocalRights'),	PDO::PARAM_STR);
+			$stmtInsert->bindValue(':user_id',				User::getUUID(),								PDO::PARAM_STR);
 			$stmtInsert->execute();
 			$this->elemSubject->setAttribute('query', $this->getIdentifier());
 		} else {
 			$stmtInsert = $this->crSession->prepareKnown($this->aQueries['save']['existing']);
-			$stmtInsert->bindValue(':uuid',				$this->getIdentifier(),						PDO::PARAM_STR);
-			$stmtInsert->bindValue(':uid',				$this->getProperty('uid'),					PDO::PARAM_STR);
-			$stmtInsert->bindValue(':label',			$this->getProperty('label'),				PDO::PARAM_STR);
-			$stmtInsert->bindValue(':name',				$this->getProperty('name'),					PDO::PARAM_STR);
-			$stmtInsert->bindValue(':customcsstype',	$this->getProperty('customcsstype'),		PDO::PARAM_STR);
-			$stmtInsert->bindValue(':inheritrights',	$this->getProperty('sbcr:inheritrights'),	PDO::PARAM_STR);
-			$stmtInsert->bindValue(':bequeathrights',	$this->getProperty('sbcr:bequeathrights'),	PDO::PARAM_STR);
-			$stmtInsert->bindValue(':user_id',			User::getUUID(),							PDO::PARAM_STR);
+			$stmtInsert->bindValue(':uuid',					$this->getIdentifier(),							PDO::PARAM_STR);
+			$stmtInsert->bindValue(':uid',					$this->getProperty('uid'),						PDO::PARAM_STR);
+			$stmtInsert->bindValue(':label',				$this->getProperty('label'),					PDO::PARAM_STR);
+			$stmtInsert->bindValue(':name',					$this->getProperty('name'),						PDO::PARAM_STR);
+			$stmtInsert->bindValue(':customdisplaytype',	$this->getProperty('customdisplaytype'),		PDO::PARAM_STR);
+			$stmtInsert->bindValue(':inheritrights',		$this->getProperty('sbcr:inheritRights'),		PDO::PARAM_STR);
+			$stmtInsert->bindValue(':bequeathrights',		$this->getProperty('sbcr:bequeathRights'),		PDO::PARAM_STR);
+			$stmtInsert->bindValue(':bequeathlocalrights',	$this->getProperty('sbcr:bequeathLocalRights'),	PDO::PARAM_STR);
+			$stmtInsert->bindValue(':user_id',				User::getUUID(),								PDO::PARAM_STR);
 			$stmtInsert->execute();
 		}
 		$stmtInsert->closeCursor();

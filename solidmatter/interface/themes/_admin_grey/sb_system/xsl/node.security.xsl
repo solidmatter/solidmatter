@@ -104,6 +104,11 @@
 									<xsl:attribute name="checked">checked</xsl:attribute>
 								</xsl:if>
 							</input> <xsl:value-of select="$locale/sbSystem/labels/security/bequeath_rights" /><br/>
+							<input type="checkbox" name="bequeathlocalrights">
+								<xsl:if test="/response/content/sbnode[@bequeathlocalrights = 'TRUE']">
+									<xsl:attribute name="checked">checked</xsl:attribute>
+								</xsl:if>
+							</input> <xsl:value-of select="$locale/sbSystem/labels/security/bequeath_local_rights" /><br/>
 							<input type="submit" value="{$locale/sbSystem/actions/save}" />
 						</form>
 					</div></div></div>

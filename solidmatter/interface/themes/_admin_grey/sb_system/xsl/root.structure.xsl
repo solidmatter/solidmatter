@@ -42,9 +42,9 @@
 			<table class="default">
 				<tr><th colspan="2">
 					<xsl:value-of select="dyn:evaluate(@label)" />: 
-					<span class="type {$system/csstype}"><xsl:value-of select="$locale//nodetypes/type[@id=$content/@nodetype]" /></span>
+					<span class="type {$system/displaytype}"><xsl:value-of select="$locale//nodetypes/type[@id=$content/@nodetype]" /></span>
 					in
-					<span class="type {$content/parent/sbnode/@csstype}"><xsl:value-of select="$content/parent/sbnode/@label" /></span>
+					<span class="type {$content/parent/sbnode/@displaytype}"><xsl:value-of select="$content/parent/sbnode/@label" /></span>
 				</th></tr>
 				<xsl:if test="@errorlabel"><br/><xsl:value-of select="dyn:evaluate(@errorlabel)" /></xsl:if>
 				<xsl:apply-templates select="*" mode="complete" />

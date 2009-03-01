@@ -244,7 +244,7 @@
 		<xsl:param name="prefix" />
 		<xsl:param name="value" />
 		<xsl:for-each select="sbnode">
-			<option value="{@uuid}" class="type {@csstype}">
+			<option value="{@uuid}" class="type {@displaytype}">
 				<xsl:if test="@uuid = $value">
 					<xsl:attribute name="selected">selected</xsl:attribute>
 				</xsl:if>

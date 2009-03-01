@@ -196,13 +196,13 @@ $_QUERIES['sbSystem/eventLog/getEntries/filtered'] = '
 				el.s_loguid,
 				el.t_log,
 				el.fk_subject,
-				(SELECT 	s_csstype
+				(SELECT 	s_displaytype
 					FROM	{TABLE_NODETYPES}
 					WHERE	s_type = (SELECT	fk_nodetype
 										FROM	{TABLE_NODES}
 										WHERE	uuid = el.fk_subject
 					)
-				) AS s_subjectcsstype,
+				) AS s_subjectdisplaytype,
 				fk_user,
 				e_type,
 				dt_created
@@ -405,18 +405,14 @@ $_QUERIES['sbSystem/tagging/clearUnusedTags'] = '
 $_QUERIES['sbSystem/node/loadActionDetails/given'] = '
 	SELECT		*
 	FROM		{TABLE_ACTIONS} a
-	INNER JOIN	{TABLE_NODES} n
-		ON		a.fk_nodetype = n.fk_nodetype
-	WHERE		n.uuid = :uuid
+	WHERE		a.fk_nodetype = :nodetype
 		AND		a.s_view = :view
 		AND		a.s_action = :action
 ';
 $_QUERIES['sbSystem/node/loadActionDetails/default'] = '
 	SELECT		*
 	FROM		{TABLE_ACTIONS} a
-	INNER JOIN	{TABLE_NODES} n
-		ON		a.fk_nodetype = n.fk_nodetype
-	WHERE		n.uuid = :uuid
+	WHERE		a.fk_nodetype = :nodetype
 		AND		a.s_view = :view
 		AND		a.b_default = \'TRUE\'
 ';
@@ -719,7 +715,7 @@ $_QUERIES['sbSystem/modules/getInfo'] = '
 // view:nodetypes --------------------------------------------------------------
 $_QUERIES['sbSystem/reports_structure/nodetypes/overview'] = '
 	SELECT		nt.s_type,
-				nt.s_csstype,
+				nt.s_displaytype,
 				(SELECT
 					COUNT(*) 
 					FROM	{TABLE_NODES}
@@ -766,8 +762,8 @@ $_QUERIES['sbSystem/node/trashcan/getAbandonedNodes'] = '
 				n.fk_nodetype,
 				n.s_name,
 				n.s_label,
-				n.s_customcsstype,
-				nt.s_csstype
+				n.s_customdisplaytype,
+				nt.s_displaytype
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
 		ON		n.fk_nodetype = nt.s_type
@@ -778,22 +774,6 @@ $_QUERIES['sbSystem/node/trashcan/getAbandonedNodes'] = '
 				) = 0
 	AND			n.fk_nodetype != \'sbSystem:Root\'
 ';
-/*$_QUERIES['sb_system/node/loadChildren/trashcan'] = '
-	SELECT		sn.uuid,
-				sn.fk_nodetype,
-				sn.s_name,
-				sn.s_label,
-				sn.s_customcsstype,
-				snt.s_csstype
-	FROM		{PREFIX_WORKSPACE}_system_nodes sn
-	INNER JOIN	{PREFIX_FRAMEWORK}_system_nodetypes snt
-		ON		sn.fk_nodetype = snt.s_type
-	WHERE		(
-					SELECT 	COUNT(*)
-					FROM	{PREFIX_WORKSPACE}_system_nodes_parents snp
-					WHERE	fk_child = sn.uuid
-				) = 0
-';*/
 
 //------------------------------------------------------------------------------
 // node:registry

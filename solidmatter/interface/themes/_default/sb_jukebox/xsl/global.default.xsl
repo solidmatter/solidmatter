@@ -285,7 +285,7 @@
 				<xsl:when test="children[@mode='comments']/sbnode">
 					<xsl:for-each select="children[@mode='comments']/sbnode">
 						<div>
-							<h3><span style="float:right;"><xsl:value-of select="php:functionString('datetime_mysql2local', @createdat)" /></span><xsl:value-of select="@username" /></h3>
+							<h3><span style="float:right;"><xsl:value-of select="php:functionString('datetime_mysql2local', @created)" /></span><xsl:value-of select="@username" /></h3>
 							<p><xsl:call-template name="break">
 								<xsl:with-param name="text" select="@comment" />
 							</xsl:call-template></p>

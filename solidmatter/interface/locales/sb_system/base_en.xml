@@ -119,6 +119,7 @@
 			<inheritance>Inheritance</inheritance>
 			<inherit_rights>Inherit rights from ancestors</inherit_rights>
 			<bequeath_rights>Bequeath rights to descendants</bequeath_rights>
+			<bequeath_local_rights>Bequeath local rights to descendants</bequeath_local_rights>
 			<authorisations_of>Authorisations of </authorisations_of>
 			<allow>Allow</allow>
 			<deny>Deny</deny>
@@ -176,6 +177,10 @@
 		<type id="sbSystem:Registry">Registry</type>
 		<type id="sbSystem:Tags">Tags</type>
 		<type id="sbSystem:Trashcan">Trashcan</type>
+		<type id="sbSystem:TestNode">Test Node</type>
+		<type id="sbSystem:PropertiesView">Properties (Abstract)</type>
+		<type id="sbSystem:ListView">List (Abstract)</type>
+		<type id="sbSystem:Taggable">Taggable (Abstract)</type>
 	</nodetypes>
 	
 	<User>
@@ -232,6 +237,8 @@
 		<view id="administration">Administration</view>
 		<view id="manage">Manage</view>
 		<view id="documentation">Documentation</view>
+		<view id="content">Content</view>
+		<view id="groups">Groups</view>
 	</views>
 	
 	<!-- <config>

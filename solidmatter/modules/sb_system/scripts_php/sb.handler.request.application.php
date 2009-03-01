@@ -48,8 +48,6 @@ class ApplicationRequestHandler {
 		if (isset($aURI['query'])) {
 			$aQuery = array();
 			parse_str($aURI['query'], $aQuery);
-//			var_dumpp($aURI['query']);
-//			var_dumpp($aQuery);
 			foreach ($aQuery as $sParam => $sValue) {
 				$_REQUEST->setParam($sParam, $sValue);
 			}

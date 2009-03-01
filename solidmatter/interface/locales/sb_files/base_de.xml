@@ -19,6 +19,7 @@
 		<type id="sbFiles:AutoFolder">Auto-Ordner</type>
 		<type id="sbFiles:Image">Bild</type>
 		<type id="sbFiles:Asset">Datei</type>
+		<type id="sbFiles:ThumbnailView">Miniaturansicht (Abstrakt)</type>
 	</nodetypes>
 	
 	<views>

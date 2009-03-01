@@ -12,6 +12,7 @@
 		<type id="sbUtilities:Imagefilter_greyscale">Graustufen</type>
 		<type id="sbUtilities:Imagefilter_roundededges">Ecken abrunden</type>
 		<type id="sbUtilities:Imagefilter_merge">Verschmelzen</type>
+		<type id="sbUtilities:Imagefilter">Filter (Abstrakt)</type>
 	</nodetypes>
 	
 	<Imagefilterstack>

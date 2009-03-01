@@ -299,7 +299,7 @@ $_QUERIES['sbJukebox/jukebox/albums/getLatest'] = '
 		ON		a.uuid = h.fk_child
 	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		n.fk_nodetype = :nodetype
-	ORDER BY	n.dt_createdat DESC
+	ORDER BY	n.dt_created DESC
 	LIMIT		0, :limit
 ';
 $_QUERIES['sbJukebox/jukebox/albums/getAll'] = '

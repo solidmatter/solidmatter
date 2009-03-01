@@ -428,6 +428,21 @@ class sbDOMRequest extends sbDOMDocument {
 	* @param 
 	* @return 
 	*/
+	public function getRelativePath() {
+		$sFullPath = $this->getServerValue('HTTP_HOST').$this->getServerValue('REQUEST_URI');
+		$sRelativePath = str_replace($this->getLocation(), '', $sFullPath);
+		if ($sRelativePath{0} != '/') {
+			$sRelativePath = '/'.$sRelativePath;	
+		}
+		return ($sRelativePath);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function setHandler($sHandler) {
 		$this->firstChild->setAttribute('handler', $sHandler);
 	}

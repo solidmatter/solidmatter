@@ -60,7 +60,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 							<td>
-								<a href="/{@uuid}"><span class="type {@csstype}"><xsl:value-of select="@label" /></span></a>
+								<a href="/{@uuid}"><span class="type {@displaytype}"><xsl:value-of select="@label" /></span></a>
 								<!--<a href="/{@uuid}/song/play/sessionid={$system/sessionid}" class="type sb_action_play"> </a>-->
 							</td>
 							<td>
@@ -68,10 +68,10 @@
 								<xsl:value-of select="$locale//nodetypes/type[@id=$type]" />
 							</td>
 							<td>
-								<xsl:value-of select="@createdat" />
+								<xsl:value-of select="@created" />
 							</td>
 							<td>
-								<xsl:value-of select="@modifiedat" />
+								<xsl:value-of select="@modified" />
 							</td>
 							<td>
 								<xsl:if test="position() != 1">

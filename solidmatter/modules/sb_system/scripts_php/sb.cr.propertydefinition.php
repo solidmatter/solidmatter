@@ -44,7 +44,7 @@ class sbCR_PropertyDefinition {
 	* @return 
 	*/
 	public function getDefaultValues() {
-		return ($this->aNodeTypeInformation['DefaultValues']);
+		return ($this->aPropertyInformation['DefaultValues']);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -54,7 +54,7 @@ class sbCR_PropertyDefinition {
 	* @return 
 	*/
 	public function getRequiredType()  {
-		
+		return ($this->aPropertyInformation['RequiredType']);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -64,7 +64,9 @@ class sbCR_PropertyDefinition {
 	* @return 
 	*/
 	public function getValueConstraints()  {
-		
+		// constraints are not visible right now
+		// TODO: make constraints visible and implement custom constraints
+		return (array());
 	}
 	
 	//--------------------------------------------------------------------------
@@ -74,7 +76,9 @@ class sbCR_PropertyDefinition {
 	* @return 
 	*/
 	public function isMultiple() {
-		
+		// multiple values are currently not supported
+		// TODO: implement multiple properties?
+		return (FALSE);
 	}
 	
 	

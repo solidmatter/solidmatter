@@ -12,6 +12,8 @@
 		<type id="sbJukebox:TPL_Favorites">Jukebox: Favorites</type>
 		<type id="sbJukebox:TPL_TopRated">Jukebox: Charts</type>
 		<type id="sbJukebox:TPL_NowPlaying">Jukebox: On Air</type>
+		<type id="sbJukebox:VotesView">Votes (Abstract)</type>
+		<type id="sbJukebox:RecommendView">Recommend (Abstract)</type>
 	</nodetypes>
 	
 	<views>

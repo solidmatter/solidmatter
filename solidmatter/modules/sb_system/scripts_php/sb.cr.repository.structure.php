@@ -8,14 +8,9 @@
 */
 //------------------------------------------------------------------------------
 
-//define('NODE_MODULE', 1001);
 define('NODE_CLASS', 1002);
 define('NODE_CLASSFILE', 1003);
-//define('NODE_CATEGORY', 1004);
-define('NODE_CSSTYPE', 1005);
-//define('NODE_FRONTENDACCESS', 1006);
-//define('NODE_EXTENSION', 1007);
-//define('NODE_CUSTOM', 1008);
+define('NODE_DISPLAYTYPE', 1005);
 define('NODE_ABSTRACT', 1009);
 define('NODE_TYPE', 1010);
 define('NODE_USESTAGS', 1011);
@@ -38,14 +33,12 @@ define('PROP_DESCRIPTIONPATH', 2017);
 define('VIEW_DEFAULT', 3001);
 define('VIEW_DISPLAY', 3002);
 define('VIEW_LABELPATH', 3003);
-//define('VIEW_MODULE', 3004);
 define('VIEW_CLASS', 3005);
 define('VIEW_CLASSFILE', 3006);
 define('VIEW_ORDER', 3007);
 
 define('ACT_TYPE', 4001);
 define('ACT_DEFAULT', 4002);
-//define('ACT_MODULE', 4003);
 define('ACT_CLASS', 4004);
 define('ACT_CLASSFILE', 4005);
 define('ACT_OUTPUTTYPE', 4006);
@@ -77,6 +70,7 @@ class sbCR_RepositoryStructure {
 			'mix:referenceable',
 		),
 		'mix:title' => array(),
+		'mix:lifecycle' => array(),
 		//'mix:versionable' => array(),
 		'sb:deleted' => array(),
 		'sb:node' => array(
@@ -89,7 +83,6 @@ class sbCR_RepositoryStructure {
 			'mix:lifecycle',
 			'sb:deleted',
 		),
-		'mix:lifecycle' => array(),
 	);
 	
 	private $aNodeTypeProperies = array(
@@ -114,12 +107,12 @@ class sbCR_RepositoryStructure {
 		),
 		'mix:created' => array(
 			'jcr:created' => array(
-				PROP_ALIAS => 'createdat',
+				PROP_ALIAS => 'created',
 			),
 			'jcr:createdBy' => array(
 				PROP_ALIAS => 'createdby',
 			),
-			'createdat' => array(
+			'created' => array(
 				PROP_TYPE => 'DATE',
 				PROP_MANDATORY => TRUE,
 				PROP_PROTECTED => TRUE,
@@ -129,7 +122,7 @@ class sbCR_RepositoryStructure {
 				PROP_LABELPATH => '$locale/system/general/labels/',
 				PROP_DESCRIPTIONPATH => NULL,
 				PROP_STORAGETYPE => 'EXTENDED',
-				PROP_AUXNAME => 'dt_createdat',
+				PROP_AUXNAME => 'dt_created',
 				PROP_PROTECTEDONCREATION => TRUE
 			),
 			'createdby' => array(
@@ -148,12 +141,12 @@ class sbCR_RepositoryStructure {
 		),
 		'mix:lastModified' => array(
 			'jcr:lastModified' => array(
-				PROP_ALIAS => 'modifiedat',
+				PROP_ALIAS => 'modified',
 			),
 			'jcr:lastModifiedBy' => array(
 				PROP_ALIAS => 'modifiedby',
 			),
-			'modifiedat' => array(
+			'modified' => array(
 				PROP_TYPE => 'DATE',
 				PROP_MANDATORY => FALSE,
 				PROP_PROTECTED => TRUE,
@@ -163,7 +156,7 @@ class sbCR_RepositoryStructure {
 				PROP_LABELPATH => '$locale/system/general/labels/',
 				PROP_DESCRIPTIONPATH => NULL,
 				PROP_STORAGETYPE => 'EXTENDED',
-				PROP_AUXNAME => 'dt_modifiedat',
+				PROP_AUXNAME => 'dt_modified',
 				PROP_PROTECTEDONCREATION => TRUE
 			),
 			'modifiedby' => array(
@@ -319,7 +312,7 @@ class sbCR_RepositoryStructure {
 				PROP_AUXNAME => 's_name',
 				PROP_PROTECTEDONCREATION => FALSE
 			),
-			'csstype' => array(
+			'displaytype' => array(
 				PROP_TYPE => 'STRING',
 				PROP_MANDATORY => FALSE,
 				PROP_PROTECTED => TRUE,
@@ -329,7 +322,7 @@ class sbCR_RepositoryStructure {
 				PROP_LABELPATH => '$locale/system/general/labels/',
 				PROP_DESCRIPTIONPATH => NULL,
 				PROP_STORAGETYPE => 'PRIMARY',
-				PROP_AUXNAME => 's_csstype',
+				PROP_AUXNAME => 's_displaytype',
 				PROP_PROTECTEDONCREATION => FALSE
 			),
 			// extended properties
@@ -346,7 +339,7 @@ class sbCR_RepositoryStructure {
 				PROP_AUXNAME => 's_uid',
 				PROP_PROTECTEDONCREATION => FALSE
 			),
-			'customcsstype' => array(
+			'customdisplaytype' => array(
 				PROP_TYPE => 'STRING',
 				PROP_MANDATORY => TRUE,
 				PROP_PROTECTED => FALSE,
@@ -356,7 +349,7 @@ class sbCR_RepositoryStructure {
 				PROP_LABELPATH => '$locale/system/general/labels/',
 				PROP_DESCRIPTIONPATH => NULL,
 				PROP_STORAGETYPE => 'EXTENDED',
-				PROP_AUXNAME => 's_customcsstype',
+				PROP_AUXNAME => 's_customdisplaytype',
 				PROP_PROTECTEDONCREATION => FALSE
 			),
 			'inheritrights' => array(
@@ -400,7 +393,7 @@ class sbCR_RepositoryStructure {
 				PROP_AUXNAME => 'fk_deletedby',
 				PROP_PROTECTEDONCREATION => TRUE
 			),
-			'deletedat' => array(
+			'deleted' => array(
 				PROP_TYPE => 'DATE',
 				PROP_MANDATORY => FALSE,
 				PROP_PROTECTED => TRUE,
@@ -410,11 +403,11 @@ class sbCR_RepositoryStructure {
 				PROP_LABELPATH => '$locale/system/general/labels/',
 				PROP_DESCRIPTIONPATH => NULL,
 				PROP_STORAGETYPE => 'EXTENDED',
-				PROP_AUXNAME => 'dt_deletedat',
+				PROP_AUXNAME => 'dt_deleted',
 				PROP_PROTECTEDONCREATION => TRUE
 			),
 			'deletedfrom' => array(
-				PROP_TYPE => 'DATE',
+				PROP_TYPE => 'WEAKREFERENCE',
 				PROP_MANDATORY => FALSE,
 				PROP_PROTECTED => TRUE,
 				PROP_MULTIPLE => FALSE,
@@ -423,7 +416,7 @@ class sbCR_RepositoryStructure {
 				PROP_LABELPATH => '$locale/system/general/labels/',
 				PROP_DESCRIPTIONPATH => NULL,
 				PROP_STORAGETYPE => 'EXTENDED',
-				PROP_AUXNAME => 'dt_deletedat',
+				PROP_AUXNAME => 'dt_deletedfrom',
 				PROP_PROTECTEDONCREATION => TRUE
 			),
 		),
@@ -439,7 +432,8 @@ class sbCR_RepositoryStructure {
 		),
 	);
 	
-	private $aViewCache				= array();
+	private $aRawViewData			= array();
+	private $aViewDefinitionCache	= array();
 	private $aAuthorisationCache	= array();
 	
 	//--------------------------------------------------------------------------
@@ -488,6 +482,16 @@ class sbCR_RepositoryStructure {
 			$cacheRepos->storeData('NodeTypeHierarchy', $this->aNodeTypeHierarchy);
 		}
 		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getSession() {
+		return ($this->crSession);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -613,57 +617,144 @@ class sbCR_RepositoryStructure {
 	public function getSupportedViews($sNodeTypeName) {
 		
 		// check if they are already loaded for this nodetype
-		/*if (isset($this->aViewCache[$sNodeTypeName])) {
-			return ($this->aViewCache[$sNodeTypeName]);
-		}*/
-		
-		// check cache
-		if (Registry::getValue('sb.system.cache.nodetypes.enabled')) {
-			$cacheRepos = CacheFactory::getInstance('repository');
-			if ($cacheRepos->exists('Views:'.$sNodeTypeName)) {
-				$aViews = $cacheRepos->loadData('Views:'.$sNodeTypeName);
-				//echo ('view cache hit');
-				return ($aViews);
-			}
+		if (isset($this->aViewCache[$sNodeTypeName]['supported_views'])) {
+			return ($this->aViewCache[$sNodeTypeName]['supported_views']);
 		}
 		
-		$aViews = array();
+		// init
+		$this->initViewData($sNodeTypeName);
 		
-		$aSupertypes = $this->getSupertypes($sNodeTypeName);
-		//var_dumpp($aSupertypes);
+		// gather supported views
+		$aSupportedViews = array();
+		foreach ($this->aViewData[$sNodeTypeName] as $aView) {
+			$aSupportedViews[$aView['name']] = array(
+				'name' => $aView['name'],
+				'priority' => $aView['priority'],
+				'visible' => constant($aView['visible']),
+			);
+		}
 		
-		// gather views
+		// cache views
+		$this->aViewCache[$sNodeTypeName]['supported_views'] = $aSupportedViews;
+		
+		return ($aSupportedViews);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function initViewData($sNodeTypeName) {
+		
+		// already initialized
+		if (isset($this->aViewData[$sNodeTypeName])) {
+			$this->aViewData[$sNodeTypeName];
+		}
+		
+		// gather local views
+		$aViewData = array();
 		$stmtViews = $this->crSession->prepareKnown('sbCR/repository/loadViews/supported');
 		$stmtViews->bindParam(':nodetype', $sNodeTypeName, PDO::PARAM_STR);
 		$stmtViews->execute();
-		foreach ($stmtViews as $aRow) {
-			$aViews[$aRow['s_view']]['s_classfile'] = $aRow['s_classfile'];
-			$aViews[$aRow['s_view']]['s_class'] = $aRow['s_class'];
-			$aViews[$aRow['s_view']]['b_default'] = $aRow['b_default'];
-			$aViews[$aRow['s_view']]['b_display'] = $aRow['b_display'];
+		while ($aRow = $stmtViews->fetch(PDO::FETCH_ASSOC)) {
+			$aRow['nodetypename'] = $sNodeTypeName;
+			$aViewData[$aRow['name']] = $aRow;
 		}
 		$stmtViews->closeCursor();
 		
+		// aggregate views with views from supertypes
+		$aSupertypes = $this->getSupertypeNames($sNodeTypeName);
+		foreach ($aSupertypes as $sSupertype) {
+			// second parameter has priority over first parameter (local views outweight inherited ones)
+			//var_dumpp($aViewData);
+			/*foreach($this->initViewData($sSupertype) as $aSuperViewData) {
+				if (!isset($aViewData[$aSuperViewData['name']])) {
+					$aViewData[$aSuperViewData['name'] = $aSuperViewData;
+				} else {
+					foreach ($aSuperView)
+				}
+			};*/
+			
+			$aViewData = array_merge($this->initViewData($sSupertype), $aViewData);
+		}
+		
+		$this->aViewData[$sNodeTypeName] = $aViewData;
+		
+		// fill cache
+		/*if (Registry::getValue('sb.system.cache.nodetypes.enabled')) {
+			$cacheRepos = CacheFactory::getInstance('repository');
+			$cacheRepos->storeData('Views:'.$sNodeTypeName, $aViews);
+		}*/
+		
+		return ($aViewData);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getViewDefinition($sNodeTypeName, $sView) {
+		
+		// gather view information
+		$aSupportedViews = $this->getSupportedViews($sNodeTypeName);
+		if (!isset($aSupportedViews[$sView])) {
+			throw new RepositoryException(__CLASS__.': view "'.$sView.'" is not defined for nodetype "'.$sNodeTypeName.'"');	
+		}
+		
+		//var_dumpp($this->aViewData[$sNodeTypeName][$sView]);
+		
+		$vdCurrentView = new sbCR_ViewDefinition(
+			$this,
+			$this->aViewData[$sNodeTypeName][$sView]['nodetypename'],
+			$this->aViewData[$sNodeTypeName][$sView]['name'],
+			$this->aViewData[$sNodeTypeName][$sView]['class'],
+			$this->aViewData[$sNodeTypeName][$sView]['classfile'],
+			constant($this->aViewData[$sNodeTypeName][$sView]['visible']),
+			$this->aViewData[$sNodeTypeName][$sView]['priority']
+		);
+		
 		// gather viewauthorisations
-		$stmtAuth = $this->crSession->prepareKnown('sbCR/repository/loadViewAuthorisations');
+		/*$stmtAuth = $this->crSession->prepareKnown('sbCR/repository/loadViewAuthorisations');
 		$stmtAuth->bindParam(':nodetype', $sNodeTypeName, PDO::PARAM_STR);
 		$stmtAuth->execute();
 		foreach ($stmtAuth as $aRow) {
-			$aViews[$aRow['fk_view']]['auth'][] = $aRow['fk_authorisation'];	
+			$aViews[$aRow['fk_view']]['auth'][] = $aRow['fk_authorisation'];
 		}
-		$stmtAuth->closeCursor();
+		$stmtAuth->closeCursor();*/
 		
-		// cache views
-		/*reset($aViews);
-		$this->aViewCache[$sNodeTypeName] = $aViews;*/
+		// cache view
+		$this->aViewDefinitionCache[$sNodeTypeName][$sView] = $vdCurrentView;
 		
-		// fill cache
-		if (Registry::getValue('sb.system.cache.nodetypes.enabled')) {
-			$cacheRepos = CacheFactory::getInstance('repository');
-			$cacheRepos->storeData('Views:'.$sNodeTypeName, $aViews);
+		return ($vdCurrentView);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getDeclaredViewDefinitions($sNodeTypeName) {
+		
+		throw new LazyBastardException();
+		
+		// check local cache and 
+		if ($this->aDeclaredViewDefinitions == NULL) {
+			
+			// views defined in nodetype and supertypes
+			$this->aDeclaredViewDefinitions = $this->crRepositoryStructure->getSupportedViews($this->aNodeTypeInformation['NodeTypeName']);
+			
+			
 		}
 		
-		return ($aViews);
+		return ($this->aDeclaredViewDefinitions);
 		
 	}
 	

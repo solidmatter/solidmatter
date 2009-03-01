@@ -52,7 +52,7 @@
 								<ul>
 								<xsl:for-each select="children/*">
 									<li style="margin: 2px 0;">
-										<span class="type {@csstype}"><xsl:value-of select="@label" /> (<xsl:value-of select="@nodetype" />)</span><br/>
+										<span class="type {@displaytype}"><xsl:value-of select="@label" /> (<xsl:value-of select="@nodetype" />)</span><br/>
 									</li>
 								</xsl:for-each>
 								</ul>
@@ -62,7 +62,7 @@
 								<ul>
 								<xsl:for-each select="ancestors/*">
 									<li style="margin: 2px 0;">
-										<span class="type {@csstype}"><xsl:value-of select="@label" /> (<xsl:value-of select="@nodetype" />)</span><br/>
+										<span class="type {@displaytype}"><xsl:value-of select="@label" /> (<xsl:value-of select="@nodetype" />)</span><br/>
 									</li>
 								</xsl:for-each>
 								</ul>
@@ -72,7 +72,7 @@
 								<ul>
 								<xsl:for-each select="parents/*">
 									<li style="margin: 2px 0;">
-										<span class="type {@csstype}"><xsl:value-of select="@label" /> (<xsl:value-of select="@nodetype" />)</span><br/>
+										<span class="type {@displaytype}"><xsl:value-of select="@label" /> (<xsl:value-of select="@nodetype" />)</span><br/>
 									</li>
 								</xsl:for-each>
 								</ul>
