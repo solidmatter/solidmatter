@@ -47,7 +47,7 @@ class sbView_maintenance_repair extends sbView {
 				$nodeTrashcan = $this->crSession->getNode('//*[@uid="sbSystem:Trashcan"]');
 				$niAbandonedNodes = $nodeTrashcan->getAbandonedNodes();
 				foreach ($niAbandonedNodes as $nodeTrash) {
-					$nodeTrashcan->addExistingNode($nodeTrashcan);
+					$nodeTrashcan->addExistingNode($nodeTrash);
 				}
 				$this->logEvent(System::MAINTENANCE, 'TRASHCAN_FILLED', 'gathered abandoned nodes in trashcan');
 				break;

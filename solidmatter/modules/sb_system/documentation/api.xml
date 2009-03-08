@@ -229,8 +229,8 @@ $_RESPONSE->addData($formCustomer);
 					<li>mix:referencable</li>
 					<li>mix:lockable</li>
 					<li>mix:referencable</li>
-					<li>sb:deleted</li>
-					<li>sb:node</li>
+					<li>sbCR:Deleted</li>
+					<li>sbCR:Node</li>
 				</ul>
 				<todo>
 					Nodetype inheritance is not fully available right now.

@@ -498,7 +498,7 @@ $_QUERIES['sbSystem/module/saveProperties/auxiliary'] = '
 					:version_sub,
 					:version_bugfix,
 					:version_suffix,
-					:info_installedat,
+					:info_installedon,
 					:info_lastupdate,
 					:info_uninstallable,
 					:config_active,
@@ -510,7 +510,7 @@ $_QUERIES['sbSystem/module/saveProperties/auxiliary'] = '
 				n_subversion = :version_sub,
 				n_bugfixversion = :version_bugfix,
 				s_versioninfo = :version_suffix,
-				dt_installed = :info_installedat,
+				dt_installed = :info_installedon,
 				dt_updated = :info_lastupdate,
 				b_uninstallable = :info_uninstallable,
 				b_active = :config_active
@@ -762,7 +762,6 @@ $_QUERIES['sbSystem/node/trashcan/getAbandonedNodes'] = '
 				n.fk_nodetype,
 				n.s_name,
 				n.s_label,
-				n.s_customdisplaytype,
 				nt.s_displaytype
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt

@@ -11,6 +11,7 @@
 
 import('sb.tools.filesystem');
 import('sb.tools.filesystem.object');
+import('sb.tools.mime');
 
 //------------------------------------------------------------------------------
 /**
@@ -52,9 +53,27 @@ class sbFile extends sbFilesystemObject {
 	* @return 
 	*/
 	public function getContents() {
-		$sFileName = $this->aInfo['abs_path'];
-		//var_dumpp($sFileName);
-		return (file_get_contents($sFileName));
+		return (file_get_contents($this->aInfo['abs_path']));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getSize() {
+		return (filesize($this->aInfo['abs_path']));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getMimetype() {
+		return (get_mimetype($this->aInfo['abs_path']));
 	}
 	
 	//--------------------------------------------------------------------------
@@ -64,9 +83,7 @@ class sbFile extends sbFilesystemObject {
 	* @return 
 	*/
 	public function delete() {
-		$sFileName = $this->aInfo['abs_path'];
-		//var_dumpp($sFileName);
-		return (unlink($sFileName));
+		return (unlink($this->aInfo['abs_path']));
 	}
 	
 }

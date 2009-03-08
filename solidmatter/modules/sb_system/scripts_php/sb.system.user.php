@@ -128,9 +128,11 @@ class User {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Checks whether the current user is autorised a specific authorisation on
+	* a given node instance.
+	* @param string the authorisation to be checked
+	* @param multiple the node (or the node's uuid) to check against
+	* @return boolean true if the user is authorised; false otherwise
 	*/
 	public static function isAuthorised($sAuthorisation, $mSubject) {
 		if (is_string($mSubject)) { // should be uuid

@@ -15,7 +15,7 @@
 class sbView_security extends sbView {
 	
 	protected $aRequiredAuthorisations = array(
-		'display' => array('special', 'grant'),
+		'display' => array('grant'),
 		'addUser' => array('grant'),
 		'removeUser' => array('grant'),
 		'changeInheritance' => array('grant'),
@@ -74,6 +74,9 @@ class sbView_security extends sbView {
 				}
 				$cacheAuth = CacheFactory::getInstance('authorisations');
 				$cacheAuth->clearAuthorisations($sEntityUUID);
+				
+				$this->logEvent(System::SECURITY, 'USERENTITY_ADDED', $sEntityUUID);
+				
 				//$this->nodeSubject->callView('security');
 				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'security');
 				break;
@@ -87,6 +90,9 @@ class sbView_security extends sbView {
 				$stmtDefault->closeCursor();
 				$cacheAuth = CacheFactory::getInstance('authorisations');
 				$cacheAuth->clearAuthorisations($sEntityUUID);
+				
+				$this->logEvent(System::SECURITY, 'USERENTITY_REMOVED', $sEntityUUID);
+				
 				//$this->nodeSubject->callView('security');
 				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'security');
 				break;
@@ -105,6 +111,10 @@ class sbView_security extends sbView {
 				
 				$cacheAuth = CacheFactory::getInstance('authorisations');
 				$cacheAuth->clearAuthorisations($_REQUEST->getParam('userentity'));
+				
+				$this->logEvent(System::SECURITY, 'INHERITANCE_CHANGED', 'I: '.$aInputs['inheritrights'].' B: '.$aInputs['bequeathrights'].' BL: '.$aInputs['bequeathlocalrights']);
+				
+				// deactivated, does not represent current state, reload instead
 				//$this->nodeSubject->callView('security', 'display');
 				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'security');
 				break;
@@ -114,7 +124,6 @@ class sbView_security extends sbView {
 				$this->nodeSubject->setAttribute('subjectid', $_REQUEST->getParam('userentity'));
 				$nodeUserEntity = $this->crSession->getNodeByIdentifier($_REQUEST->getParam('userentity'));
 				$_RESPONSE->addData($nodeUserEntity, 'userentity');
-				//$_RESPONSE->addData($this->nodeSubject);
 				break;
 				
 			case 'saveAuthorisations':
@@ -125,29 +134,32 @@ class sbView_security extends sbView {
 				$stmtRemoveAuth = $this->nodeSubject->getSession()->prepareKnown('sbSystem/node/removeAuthorisation');
 				$stmtRemoveAuth->bindValue('entity_uuid', $_REQUEST->getParam('userentity'), PDO::PARAM_STR);
 				$stmtRemoveAuth->bindValue('subject_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
-				// TODO: save on node::save()
+				// TODO: save on node::save()?
+				$sMessage = $_REQUEST->getParam('userentity').' ';
 				foreach ($this->nodeSubject->loadSupportedAuthorisations() as $sAuth => $sParentAuth) {
-					//echo($sAuth.'_allow = '.$_REQUEST->getParam($sAuth.'_allow').'<br>');
-					//echo($sAuth.'_deny = '.$_REQUEST->getParam($sAuth.'_deny').'<br>');
 					if ($_REQUEST->getParam($sAuth.'_allow') == 'on') {
 						$stmtSaveAuth->bindValue('authorisation', $sAuth, PDO::PARAM_STR);
 						$stmtSaveAuth->bindValue('granttype', 'ALLOW', PDO::PARAM_STR);
 						$stmtSaveAuth->execute();
+						$sMessage .= $sAuth.'=ALLOW ';
 					} elseif ($_REQUEST->getParam($sAuth.'_deny') == 'on') {
 						$stmtSaveAuth->bindValue('authorisation', $sAuth, PDO::PARAM_STR);
 						$stmtSaveAuth->bindValue('granttype', 'DENY', PDO::PARAM_STR);
 						$stmtSaveAuth->execute();
+						$sMessage .= $sAuth.'=DENY ';
 					} else {
 						$stmtRemoveAuth->bindValue('authorisation', $sAuth, PDO::PARAM_STR);
 						$stmtRemoveAuth->execute();
+						$sMessage .= $sAuth.'=REMOVE ';
 					}
-					
 				}
 				$cacheAuth = CacheFactory::getInstance('authorisations');
 				$cacheAuth->clearAuthorisations($_REQUEST->getParam('userentity'));
 				$this->nodeSubject->loadSecurityAuthorisations();
 				$this->nodeSubject->setAttribute('subjectid', $_REQUEST->getParam('userentity'));
-				//$_RESPONSE->addData($this->nodeSubject);
+				
+				$this->logEvent(System::SECURITY, 'AUTHORISATIONS_CHANGED', $sMessage);
+				
 				break;
 			
 			default:

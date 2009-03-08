@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: solidmatter
 Target Host: localhost
 Target Database: solidmatter
-Date: 01.03.2009 23:18:47
+Date: 08.03.2009 14:34:31
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -422,7 +422,7 @@ CREATE TABLE `sb_system_eventlog` (
   `e_type` enum('MAINTENANCE','INFO','ERROR','DEBUG','SECURITY','WARNING') NOT NULL default 'INFO',
   `dt_created` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=177 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for sb_system_nodes
@@ -675,8 +675,10 @@ INSERT INTO `rep_nodetypes` VALUES ('sbCMS:TPL_Menu', 'sbNode_tpl_menu', 'sbCMS:
 INSERT INTO `rep_nodetypes` VALUES ('sbCMS:TPL_Plaintext', 'sbNode', 'sbSystem:sb.node', 'sb_tpl_plaintext', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbCMS:TPL_Richtext', 'sbNode', 'sbSystem:sb.node', 'sb_tpl_richtext', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbCMS:TPL_Script', 'sbNode', 'sbSystem:sb.node', 'sb_script', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbCR:Deletedfv', null, null, null, 'ABSTRACT');
+INSERT INTO `rep_nodetypes` VALUES ('sbCR:Node', null, null, null, 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbFiles:Asset', 'sbNode', 'sbSystem:sb.node', 'sb_asset', 'PRIMARY');
-INSERT INTO `rep_nodetypes` VALUES ('sbFiles:AutoFolder', 'sbNode_autofolder', 'sbFiles:sb.node.autofolder', 'sb_folder', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbFiles:AutoFolder', 'sbNode_autofolder', 'sbFiles:sb.node.autofolder', 'sb_autofolder', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbFiles:Filemanager', 'sbNode_filemanager', 'sbFiles:sb.node.filemanager', 'sb_multimediamanager', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbFiles:Folder', 'sbNode_folder', 'sbFiles:sb.node.folder', 'sb_folder', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbFiles:Image', 'sbNode', 'sbSystem:sb.node', 'sb_image', 'PRIMARY');
@@ -714,8 +716,8 @@ INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Inbox', 'sbNode', 'sbSystem:sb.nod
 INSERT INTO `rep_nodetypes` VALUES ('sbSystem:ListView', null, null, 'sb_abstract', 'ABSTRACT');
 INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Logs', 'sbNode', 'sbSystem:sb.node', 'sb_logs', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Maintenance', 'sbNode', 'sbSystem:sb.node', 'sb_maintenance', 'PRIMARY');
-INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Module', 'sbNode', 'sbSystem:sb.node', 'sb_modules', 'PRIMARY');
-INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Modules', 'sbNode_module', 'sbSystem:sb.node.module', 'sb_modules', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Module', 'sbNode_module', 'sbSystem:sb.node.module', 'sb_modules', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Modules', 'sbNode', 'sbSystem:sb.node', 'sb_modules', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Preferences', 'sbNode', 'sbSystem:sb.node', 'sb_preferences', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbSystem:PropertiesView', null, null, 'sb_abstract', 'ABSTRACT');
 INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Registry', 'sbNode', 'sbSystem:sb.node', 'sb_registry', 'PRIMARY');
@@ -897,7 +899,8 @@ INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbCM
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbFiles:Asset');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:Taggable', 'sbFiles:Asset');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbFiles:ThumbnailView', 'sbFiles:AutoFolder');
-INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:Taggable', 'sbFiles:AutoFolder');
+INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:ListView', 'sbFiles:AutoFolder');
+INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbFiles:AutoFolder');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:ListView', 'sbFiles:Filemanager');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbFiles:Filemanager');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbFiles:ThumbnailView', 'sbFiles:Folder');
@@ -923,12 +926,14 @@ INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbJukebox:RecommendView', 'sbJu
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbJukebox:VotesView', 'sbJukebox:Track');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbJukebox:Track');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:Taggable', 'sbJukebox:Track');
+INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbSystem:Comment');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:ListView', 'sbSystem:TestNode');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbSystem:TestNode');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:Taggable', 'sbSystem:TestNode');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbSystem:User');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:Taggable', 'sbSystem:User');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:ListView', 'sbSystem:Useraccounts');
+INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:ListView', 'sbSystem:Usergroup');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbSystem:Usergroup');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbUtilities:Imagefilter');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:ListView', 'sbUtilities:Imagefilterstack');
@@ -1016,10 +1021,14 @@ INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbCMS:Template', 'sbCMS:TPL
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbCMS:Template', 'sbCMS:TPL_Richtext', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbCMS:TPL_Container', 'sbCMS:TPL_Richtext', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbCMS:TPL_Container', 'sbCMS:TPL_Richtext', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('clear', 'sbFiles:AutoFolder', 'sbFiles:Asset', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbFiles:AutoFolder', 'sbFiles:Asset', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbFiles:Folder', 'sbFiles:Asset', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbFiles:Filemanager', 'sbFiles:AutoFolder', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbFiles:Filemanager', 'sbFiles:AutoFolder', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbFiles:Filemanager', 'sbFiles:AutoFolder', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbFiles:Folder', 'sbFiles:AutoFolder', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbFiles:Folder', 'sbFiles:AutoFolder', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbFiles:Folder', 'sbFiles:AutoFolder', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('chooseImage', 'sbSystem:Root', 'sbFiles:Filemanager', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbSystem:Root', 'sbFiles:Filemanager', 'TRUE', 'TRUE');
@@ -1035,6 +1044,8 @@ INSERT INTO `rep_nodetypes_modes` VALUES ('chooseImage', 'sbFiles:Folder', 'sbFi
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbFiles:Folder', 'sbFiles:Folder', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbFiles:Folder', 'sbFiles:Folder', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbFiles:Folder', 'sbFiles:Folder', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('clear', 'sbFiles:AutoFolder', 'sbFiles:Image', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbFiles:AutoFolder', 'sbFiles:Image', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('chooseImage', 'sbFiles:Folder', 'sbFiles:Image', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbFiles:Folder', 'sbFiles:Image', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbForum:Category', 'sbForum:Category', 'TRUE', 'TRUE');
@@ -1128,9 +1139,11 @@ INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbSystem:Root', 'sbSystem:Tra
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbSystem:Useraccounts', 'sbSystem:User', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbSystem:Useraccounts', 'sbSystem:User', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('loadusers', 'sbSystem:Useraccounts', 'sbSystem:User', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbSystem:Usergroup', 'sbSystem:User', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbSystem:Usergroup', 'sbSystem:User', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbSystem:Preferences', 'sbSystem:Useraccounts', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbSystem:Useraccounts', 'sbSystem:Usergroup', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('groups', 'sbSystem:Useraccounts', 'sbSystem:Usergroup', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('loadgroups', 'sbSystem:Useraccounts', 'sbSystem:Usergroup', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbSystem:Useraccounts', 'sbSystem:Usergroup', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('chooseImagefilterstack', 'sbUtilities:Imagefilterstack', 'sbUtilities:Imagefilterstack', 'TRUE', 'TRUE');
@@ -1198,7 +1211,8 @@ INSERT INTO `rep_nodetypes_properties` VALUES ('sbCMS:TPL_Richtext', 'config_num
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbFiles:Asset', 'properties_content', 'BINARY', null, 'FALSE', '', 'EXTERNAL', null, null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbFiles:Asset', 'properties_mimetype', 'STRING', 'string', 'TRUE', '$locale/sbSystem/labels/mimetype', 'EXTERNAL', null, null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbFiles:Asset', 'properties_size', 'LONG', 'integer', 'FALSE', '', 'EXTERNAL', null, null, 'FALSE', 'FALSE', 'FALSE', null, '');
-INSERT INTO `rep_nodetypes_properties` VALUES ('sbFiles:AutoFolder', 'config_realfolder', 'STRING', 'string', 'TRUE', '$locale/sbFiles/AutoFolder/config_realfolder/@label', 'EXTERNAL', null, null, 'FALSE', 'FALSE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbFiles:AutoFolder', 'config_realfolder', 'STRING', 'string;minlength=1;maxlength=250;', 'TRUE', '$locale/sbFiles/AutoFolder/config_realfolder/@label', 'EXTERNAL', null, null, 'FALSE', 'FALSE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbFiles:AutoFolder', 'last_update', 'DATE', 'datetime', 'TRUE', '$locale/sbFiles/AutoFolder/last_update/@label', 'EXTERNAL', null, null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbFiles:Folder', 'config_listingallowed', 'BOOLEAN', 'checkbox', 'TRUE', '$locale/sbFiles/Folder/config_listingallowed/@label', 'EXTERNAL', null, '6', 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbFiles:Folder', 'config_types_allowed', 'STRING', 'text;rows=4', 'TRUE', '$locale/sbFiles/Folder/config_types_allowed/@label', 'EXTERNAL', null, '5', 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbFiles:Folder', 'properties_description', 'STRING', 'text', 'TRUE', '$locale/sbSystem/labels/description', 'EXTERNAL', null, '0', 'FALSE', 'FALSE', 'FALSE', null, '');
@@ -1258,8 +1272,8 @@ INSERT INTO `rep_nodetypes_properties` VALUES ('sbJukebox:Track', 'info_publishe
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbJukebox:Track', 'info_title', 'STRING', 'string', 'TRUE', '$locale/sbJukebox/Track/info_title', 'AUXILIARY', 's_title', null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Comment', 'comment', 'STRING', 'text', 'TRUE', '$locale/sbSystem/labels/comment', 'EXTERNAL', null, '0', 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'config_active', 'BOOLEAN', 'checkbox', 'TRUE', '', 'AUXILIARY', 'b_active', null, 'TRUE', 'TRUE', 'FALSE', null, '');
-INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_installedat', 'DATE', 'datetime', 'TRUE', '', 'AUXILIARY', 'dt_installedat', null, 'TRUE', 'TRUE', 'FALSE', null, '');
-INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_lastupdate', 'DATE', 'datetime', 'TRUE', '', 'AUXILIARY', 'dt_lastupdate', null, 'TRUE', 'TRUE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_installedon', 'DATE', 'datetime', 'TRUE', '', 'AUXILIARY', 'dt_installed', null, 'TRUE', 'TRUE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_lastupdate', 'DATE', 'datetime', 'TRUE', '', 'AUXILIARY', 'dt_updated', null, 'TRUE', 'TRUE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_name', 'STRING', 'string', 'TRUE', '', 'AUXILIARY', 's_name', null, 'TRUE', 'TRUE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_uninstallable', 'BOOLEAN', 'checkbox', 'TRUE', '', 'AUXILIARY', 'b_uninstallable', null, 'TRUE', 'TRUE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'version_bugfix', 'LONG', 'integer', 'TRUE', '', 'AUXILIARY', 'n_bugfixversion', null, 'TRUE', 'TRUE', 'FALSE', null, '');
@@ -1319,9 +1333,10 @@ INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbCMS:Page', 'render', 'onthefl
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbCMS:Template', 'properties', 'edit', 'TRUE', null, null, 'RENDERED', 'sb_system:node.properties.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbCMS:Template', 'properties', 'save', 'FALSE', null, null, 'RENDERED', 'sb_system:node.properties.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:Asset', 'render', 'onthefly', 'TRUE', null, null, 'STREAM', null, null, 'FALSE');
-INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:AutoFolder', 'list', 'display', 'TRUE', null, null, 'RENDERED', 'sb_system:node.list.xsl', 'text/html', 'TRUE');
-INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:AutoFolder', 'properties', 'edit', 'TRUE', null, null, 'RENDERED', 'sb_system:node.properties.xsl', 'text/html', 'TRUE');
-INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:AutoFolder', 'properties', 'save', 'FALSE', null, null, 'RENDERED', 'sb_system:node.properties.xsl', 'text/html', 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:AutoFolder', 'maintenance', 'check', 'FALSE', null, null, 'RENDERED', 'sb_files:autofolder.maintenance.xsl', 'text/html', 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:AutoFolder', 'maintenance', 'clear', 'FALSE', null, null, 'RENDERED', 'sb_files:autofolder.maintenance.xsl', 'text/html', 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:AutoFolder', 'maintenance', 'display', 'TRUE', null, null, 'RENDERED', 'sb_files:autofolder.maintenance.xsl', 'text/html', 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:AutoFolder', 'maintenance', 'update', 'FALSE', null, null, 'RENDERED', 'sb_files:autofolder.maintenance.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:Folder', 'upload', 'display', 'TRUE', null, null, 'RENDERED', 'sb_files:folder.upload.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:Folder', 'upload', 'send', 'FALSE', null, null, 'RENDERED', 'sb_files:folder.upload.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:Image', 'preview', 'display', 'TRUE', null, null, 'RENDERED', 'sb_files:image.preview.xsl', 'text/html', 'TRUE');
@@ -1403,8 +1418,6 @@ INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'addTag', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'addToBlacklist', 'FALSE', null, null, 'RENDERED', null, null, 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'placeVote', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
-INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Comment', 'properties', 'edit', 'TRUE', null, null, 'RENDERED', 'sb_system:node.properties.xsl', 'text/html', 'TRUE');
-INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Comment', 'properties', 'save', 'FALSE', null, null, 'RENDERED', 'sb_system:node.properties.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Debug', 'session', 'display', 'TRUE', null, null, 'RENDERED', 'sb_system:debug.session.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Debug', 'tests', 'display', 'TRUE', null, null, 'RENDERED', 'sb_system:debug.tests.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Debug', 'tests', 'init_progressbar', 'FALSE', null, null, 'XML', null, null, 'TRUE');
@@ -1521,10 +1534,9 @@ INSERT INTO `rep_nodetypes_views` VALUES ('sbCMS:Page', 'properties', 'TRUE', nu
 INSERT INTO `rep_nodetypes_views` VALUES ('sbCMS:Page', 'render', 'FALSE', null, 'sbCMS:sb.node.view.render', 'sbView_render', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbCMS:Template', 'properties', 'TRUE', null, 'sbSystem:sb.node.view.properties', 'sbView_properties', '0', '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbFiles:Asset', 'render', 'FALSE', null, 'sbFiles:sb.node.asset.view.render', 'sbView_asset_render', null, '0');
-INSERT INTO `rep_nodetypes_views` VALUES ('sbFiles:AutoFolder', 'list', 'TRUE', null, 'sbSystem:sb.node.view.list', 'sbView_list', null, '0');
-INSERT INTO `rep_nodetypes_views` VALUES ('sbFiles:AutoFolder', 'properties', 'TRUE', null, 'sbSystem:sb.node.view.properties', 'sbView_properties', null, '0');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbFiles:AutoFolder', 'maintenance', 'TRUE', null, 'sbFiles:sb.node.autofolder.view.maintenance', 'sbView_autofolder_maintenance', null, '100');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbFiles:Folder', 'upload', 'TRUE', null, 'sbFiles:sb.node.folder.view.upload', 'sbView_folder_upload', '3', '0');
-INSERT INTO `rep_nodetypes_views` VALUES ('sbFiles:Image', 'preview', 'TRUE', null, 'sbFiles:sb.node.image.view.preview', 'sbView_image_preview', '1', '0');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbFiles:Image', 'preview', 'TRUE', null, 'sbFiles:sb.node.image.view.preview', 'sbView_image_preview', '1', '1000');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbFiles:Image', 'render', 'FALSE', null, 'sbFiles:sb.node.asset.view.render', 'sbView_asset_render', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbFiles:ThumbnailView', 'thumbnails', 'TRUE', null, 'sbSystem:sb.node.view.list', 'sbView_list', '0', '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbForum:Category', 'list', 'TRUE', null, 'sbSystem:sb.node.view.list', 'sbView_list', '2', '0');
@@ -1546,7 +1558,7 @@ INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Jukebox', 'artists', 'FALSE
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Jukebox', 'blacklist', 'FALSE', null, 'sbJukebox:sb.jukebox.node.jukebox.view.blacklist', 'sbView_jukebox_jukebox_blacklist', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Jukebox', 'charts', 'FALSE', null, 'sbJukebox:sb.jukebox.node.jukebox.view.charts', 'sbView_jukebox_jukebox_charts', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Jukebox', 'favorites', 'FALSE', null, 'sbJukebox:sb.jukebox.node.jukebox.view.favorites', 'sbView_jukebox_jukebox_favorites', null, '0');
-INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Jukebox', 'library', 'FALSE', null, 'sbJukebox:sb.jukebox.node.jukebox.view.library', 'sbView_jukebox_jukebox_library', '0', '100');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Jukebox', 'library', 'FALSE', null, 'sbJukebox:sb.jukebox.node.jukebox.view.library', 'sbView_jukebox_jukebox_library', '0', '1000');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Jukebox', 'login', 'FALSE', null, 'sbSystem:sb.node.root.view.login', 'sbView_root_login', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Jukebox', 'playlists', 'FALSE', null, 'sbJukebox:sb.jukebox.node.jukebox.view.playlists', 'sbView_jukebox_jukebox_playlists', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Jukebox', 'tags', 'FALSE', null, 'sbJukebox:sb.jukebox.node.jukebox.view.tags', 'sbView_jukebox_jukebox_tags', null, '0');
@@ -1556,15 +1568,14 @@ INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:RecommendView', 'recommend'
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Track', 'details', 'TRUE', null, 'sbJukebox:sb.jukebox.node.track.view.details', 'sbView_jukebox_track_details', '0', '1000');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Track', 'song', 'FALSE', null, 'sbJukebox:sb.jukebox.node.track.view.song', 'sbView_jukebox_track_song', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:VotesView', 'votes', 'FALSE', null, 'sbJukebox:sb.jukebox.node.various.view.votes', 'sbView_jukebox_various_votes', null, '0');
-INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Comment', 'properties', 'TRUE', null, 'sbSystem:sb.node.view.properties', 'sbView_properties', '0', '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Debug', 'session', 'TRUE', null, 'sbSystem:sb.node.debug.view.session', 'sbView_debug_session', '0', '1000');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Debug', 'tests', 'TRUE', null, 'sbSystem:sb.node.debug.view.tests', 'sbView_debug_tests', '2', '800');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Debug', 'tree', 'TRUE', null, 'sbSystem:sb.node.debug.view.tree', 'sbView_debug_tree', '1', '900');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:ListView', 'list', 'TRUE', null, 'sbSystem:sb.node.view.list', 'sbView_list', '2', '550');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Logs', 'events', 'TRUE', null, 'sbSystem:sb.node.logs.view.events', 'sbView_logs_events', '0', '1000');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Logs', 'system', 'TRUE', null, 'sbSystem:sb.node.logs.view.system', 'sbView_logs_system', '1', '900');
-INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Maintenance', 'cache', 'TRUE', null, 'sbSystem:sb.node.maintenance.view.cache', 'sbView_maintenance_cache', '0', '0');
-INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Maintenance', 'repair', 'TRUE', null, 'sbSystem:sb.node.maintenance.view.repair', 'sbView_maintenance_repair', '1', '0');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Maintenance', 'cache', 'TRUE', null, 'sbSystem:sb.node.maintenance.view.cache', 'sbView_maintenance_cache', '0', '1000');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Maintenance', 'repair', 'TRUE', null, 'sbSystem:sb.node.maintenance.view.repair', 'sbView_maintenance_repair', '1', '900');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Module', 'documentation', 'TRUE', null, 'sbSystem:sb.node.module.view.documentation', 'sbView_module_documentation', '2', '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Module', 'information', 'TRUE', null, 'sbSystem:sb.node.module.view.information', 'sbView_module_information', '0', '1000');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Module', 'scripts', 'TRUE', null, 'sbSystem:sb.node.module.view.scripts', 'sbView_module_scripts', '1', '0');
@@ -1583,7 +1594,7 @@ INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Root', 'menu', 'FALSE', null
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Root', 'structure', 'FALSE', null, 'sbSystem:sb.node.view.structure', 'sbView_structure', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Root', 'utilities', 'FALSE', null, 'sbSystem:sb.node.root.view.utilities', 'sbView_root_utilities', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Root', 'welcome', 'TRUE', null, 'sbSystem:sb.node.root.view.welcome', 'sbView_root_welcome', '0', '0');
-INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Tags', 'manage', 'TRUE', null, 'sbSystem:sb.node.tags.view.manage', 'sbView_tags_manage', null, '0');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Tags', 'manage', 'TRUE', null, 'sbSystem:sb.node.tags.view.manage', 'sbView_tags_manage', null, '1000');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Trashcan', 'content', 'TRUE', null, 'sbSystem:sb.node.trashcan.view.content', 'sbView_trashcan_content', '0', '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:User', 'authorisations', 'TRUE', null, 'sbSystem:sb.node.userentity.view.authorisations', 'sbView_userentity_authorisations', '2', '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:User', 'groups', 'TRUE', null, 'sbSystem:sb.node.user.view.groups', 'sbView_user_groups', '1', '0');
@@ -1642,6 +1653,29 @@ INSERT INTO `sb_system_eventlog` VALUES ('173', 'sbSystem', 'LOGIN_SUCCESSFUL', 
 INSERT INTO `sb_system_eventlog` VALUES ('174', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-01 17:46:47');
 INSERT INTO `sb_system_eventlog` VALUES ('175', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-01 20:13:46');
 INSERT INTO `sb_system_eventlog` VALUES ('176', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-01 22:24:45');
+INSERT INTO `sb_system_eventlog` VALUES ('177', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-02 00:12:44');
+INSERT INTO `sb_system_eventlog` VALUES ('178', 'sbSystem', 'REGISTRY_SAVED', '48501470072f4be48f65a1e5ee1146ab', 'SYSTEM values have been saved', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-02 00:13:15');
+INSERT INTO `sb_system_eventlog` VALUES ('179', 'sbSystem', 'REGISTRY_SAVED', '48501470072f4be48f65a1e5ee1146ab', 'SYSTEM values have been saved', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-02 00:28:38');
+INSERT INTO `sb_system_eventlog` VALUES ('180', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-02 00:29:03');
+INSERT INTO `sb_system_eventlog` VALUES ('181', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-03 21:53:59');
+INSERT INTO `sb_system_eventlog` VALUES ('182', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-03 23:24:41');
+INSERT INTO `sb_system_eventlog` VALUES ('183', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-04 00:31:30');
+INSERT INTO `sb_system_eventlog` VALUES ('184', 'sbSystem', 'REGISTRY_SAVED', '48501470072f4be48f65a1e5ee1146ab', 'SYSTEM values have been saved', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-04 00:33:02');
+INSERT INTO `sb_system_eventlog` VALUES ('185', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-04 00:33:14');
+INSERT INTO `sb_system_eventlog` VALUES ('186', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-04 00:33:18');
+INSERT INTO `sb_system_eventlog` VALUES ('187', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-04 00:33:24');
+INSERT INTO `sb_system_eventlog` VALUES ('188', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-04 00:34:11');
+INSERT INTO `sb_system_eventlog` VALUES ('189', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-04 00:34:16');
+INSERT INTO `sb_system_eventlog` VALUES ('190', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-04 00:34:27');
+INSERT INTO `sb_system_eventlog` VALUES ('191', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-04 00:35:41');
+INSERT INTO `sb_system_eventlog` VALUES ('192', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a8ddc5d55b08180fb782d8ad5be3b47b\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-07 01:18:27');
+INSERT INTO `sb_system_eventlog` VALUES ('193', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'system', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-07 01:21:51');
+INSERT INTO `sb_system_eventlog` VALUES ('194', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'paths', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-07 01:21:51');
+INSERT INTO `sb_system_eventlog` VALUES ('195', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'registry', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-07 01:21:51');
+INSERT INTO `sb_system_eventlog` VALUES ('196', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'images', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-07 01:21:51');
+INSERT INTO `sb_system_eventlog` VALUES ('197', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'authorisations', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-07 01:21:51');
+INSERT INTO `sb_system_eventlog` VALUES ('198', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'repository', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-07 01:21:51');
+INSERT INTO `sb_system_eventlog` VALUES ('199', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'misc', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-07 01:21:51');
 INSERT INTO `sb_system_nodes` VALUES ('00000000000000000000000000000000', 'sbSystem:Root', 'sbSystem:Root', 'solidMatter', 'root', '', 'TRUE', 'TRUE', 'TRUE', '0', 'a6cdee339f11414b8fa732c7030aab85', null, '0000-00-00 00:00:00', '2007-11-25 13:34:44', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('0080dc1373b84eb0b2096988254ef361', 'sbSystem:Preferences', 'sbSystem:Preferences', 'Preferences', 'jcr_system', '', 'TRUE', 'TRUE', 'TRUE', '0', 'a6cdee339f11414b8fa732c7030aab85', null, '0000-00-00 00:00:00', '2007-05-13 23:39:39', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('02eb2c9c7092418487b1a97aa669ed63', '', 'sbJukebox:Playlist', 'Favorites', '5e97357b8be04b099c2ef20a028ee4ef', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2009-01-11 17:14:58', '2009-01-11 17:14:58', null, null, null, null, null);
@@ -1701,6 +1735,7 @@ INSERT INTO `sb_system_nodes` VALUES ('5cf6746c9dcc42429acf0837fb341e8b', '', 's
 INSERT INTO `sb_system_nodes` VALUES ('5e97357b8be04b099c2ef20a028ee4ef', '', 'sbJukebox:Jukebox', 'Demo Jukebox', 'demojukebox', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-11-02 23:20:59', '2009-02-28 19:06:32', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('6208f457a71e427dad7cc552e2162f55', '', 'sbCMS:Page', 'xXx', 'xxx', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-02-02 13:19:21', '2007-09-03 01:55:27', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('64938dac23c942ae872b54675bb5b984', '', 'sbUtilities:Imagefilterstack', '200x150', '200x150', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-02-03 23:20:23', '2007-02-03 23:20:23', null, null, null, null, null);
+INSERT INTO `sb_system_nodes` VALUES ('664ef81b1f6f4e9cb8f7d83c8694fe0e', '', 'sbSystem:User', 'muneeb', 'muneeb', null, 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2009-03-07 01:18:57', '2009-03-07 01:18:57', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('67ada0a2203047a2b8a5b875e1e0a151', '', 'sbCMS:Page', 'YYY', 'yyy', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-02-02 16:11:49', '2007-09-13 00:11:01', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('6be12c719974477592c3668b2cfd9e8c', '', 'sbForum:Category', 'Known Bugs', 'bugs', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-01-27 16:27:13', '2007-01-27 16:27:13', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('71de4b6ce5cf45b09290e3c135c5fa4b', '', 'sbCMS:Page', 'טערנַיאָנא אוני', 'xxx', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-02-02 13:06:24', '2007-10-08 15:11:09', null, null, null, null, null);
@@ -1864,6 +1899,7 @@ INSERT INTO `sb_system_nodes_parents` VALUES ('76a2384d47b7415fb355efebcb86e663'
 INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '15663e54221440f0a9d2a3e78d8273b2', 'TRUE', '0', '3', '838cf1e2d3d3b06');
 INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '3a334839b2eb4b9eaa53cb291d0ad0ef', 'TRUE', '13', '3', '838cf1e2d3d3b06');
 INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '50b193ceffa1425d852839b3a34c7376', 'TRUE', '6', '3', '838cf1e2d3d3b06');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '664ef81b1f6f4e9cb8f7d83c8694fe0e', 'TRUE', '14', '3', '068a1e14e7664e4');
 INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '86e22252bdea494bacf904674d3711ea', 'TRUE', '1', '3', '838cf1e2d3d3b06');
 INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '8ea185a64e394c7c83f098ba6f537073', 'TRUE', '2', '3', '838cf1e2d3d3b06');
 INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '926b69fb3c8a4de8914d244136222e14', 'TRUE', '12', '3', '838cf1e2d3d3b06');
@@ -2440,9 +2476,9 @@ INSERT INTO `sb_system_registry_values` VALUES ('sb.system.cache.authorisations.
 INSERT INTO `sb_system_registry_values` VALUES ('sb.system.cache.images.enabled', 'SYSTEM', 'FALSE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.system.cache.images.strategy', 'SYSTEM', 'DATABASE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.system.cache.nodes.enabled', 'SYSTEM', 'FALSE');
-INSERT INTO `sb_system_registry_values` VALUES ('sb.system.cache.nodetypes.enabled', 'SYSTEM', 'FALSE');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.system.cache.nodetypes.enabled', 'SYSTEM', 'TRUE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.system.cache.paths.enabled', 'SYSTEM', 'FALSE');
-INSERT INTO `sb_system_registry_values` VALUES ('sb.system.cache.registry.changedetection', 'SYSTEM', 'e51740a885ec4ab6abefef3a780049a3');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.system.cache.registry.changedetection', 'SYSTEM', 'ea219e1089c04b3b92afebfe256d057c');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.system.cache.registry.enabled', 'SYSTEM', 'FALSE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.system.debug.menu.debugmode', 'SYSTEM', 'TRUE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.system.debug.tab.enabled', 'SYSTEM', 'TRUE');
@@ -2479,6 +2515,7 @@ INSERT INTO `sb_system_registry_values` VALUES ('sb.system.temp.dir', 'SYSTEM', 
 INSERT INTO `sb_system_registry_values` VALUES ('_sb.system.backend.output.prettyprint', 'SYSTEM', 'TRUE');
 INSERT INTO `sb_system_registry_values` VALUES ('_sb.system.debug.bounce.enabled', 'SYSTEM', 'FALSE');
 INSERT INTO `sb_system_useraccounts` VALUES ('3a334839b2eb4b9eaa53cb291d0ad0ef', 'test', 'hg@nodmain.test', '28c9083133e24e399c1c038d326d0ba4', null, '0', 'TRUE', 'FALSE', 'FALSE', 'FALSE', null, null, null, null, '0', '0', '0', 'FALSE', 'FALSE', null);
+INSERT INTO `sb_system_useraccounts` VALUES ('664ef81b1f6f4e9cb8f7d83c8694fe0e', 'test', 'no@mail.com', 'ea1d880464564d7cbe3e3ed0c453f69a', null, '0', 'TRUE', 'FALSE', 'FALSE', 'FALSE', null, null, null, null, '0', '0', '0', 'FALSE', 'FALSE', null);
 INSERT INTO `sb_system_useraccounts` VALUES ('86e22252bdea494bacf904674d3711ea', 'test', 'tester@nodomain.test', null, 'Der Tester!', '0', 'TRUE', 'TRUE', 'FALSE', 'FALSE', null, '2007-05-17 14:14:28', '2007-05-17 14:13:08', null, '0', '9', '0', 'TRUE', 'TRUE', '2012-12-12 00:00:00');
 INSERT INTO `sb_system_useraccounts` VALUES ('8ea185a64e394c7c83f098ba6f537073', 'test', 'hthiery@nodomain.test', null, null, '0', 'TRUE', 'TRUE', 'FALSE', 'TRUE', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', null, '0', '0', '0', 'TRUE', 'TRUE', null);
 INSERT INTO `sb_system_useraccounts` VALUES ('926b69fb3c8a4de8914d244136222e14', 'test', 'divi@nodmain.test', 'aa3a30af1f2646a79cbc72afb9965212', null, '0', 'TRUE', 'FALSE', 'FALSE', 'FALSE', null, null, null, null, '0', '0', '0', 'FALSE', 'FALSE', null);

@@ -114,13 +114,14 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
+	* Extends the save() method of sbCR_Node.
 	* 
 	* @param 
 	* @return 
 	*/
 	public function save() {
 		
-		// first process parent tasks
+		// first process parent tasks, but wrap this in a new transaction
 		$this->crSession->beginTransaction('sbNode::save');
 		parent::save();
 		
@@ -254,9 +255,8 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* CUSTOM:
-	* @param 
-	* @return 
+	* Returns the module name this node's primary type is associated with.
+	* @return string the module
 	*/
 	public function getModule() {
 		return(substr($this->getPrimaryNodeType(), 0, strpos($this->getPrimaryNodeType(), ':')));
@@ -407,7 +407,7 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* CUSTOM!!!
+	* 
 	* @param 
 	* @return 
 	*/
@@ -478,9 +478,9 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* CUSTOM:
-	* @param 
-	* @return 
+	* Makes the corresponding method of sbCR_Node public.
+	* @param Node the node this node is checked against
+	* @return boolean true if this node is a descendant of the subject node; false otherwise
 	*/
 	public function isDescendantOf($nodeSubject) {
 		return (parent::isDescendantOf($nodeSubject));
@@ -488,9 +488,9 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* CUSTOM:
-	* @param 
-	* @return 
+	* Makes the corresponding method of sbCR_Node public.
+	* @param Node the node this node is checked against
+	* @return boolean true if this node is an ancestor of the subject node; false otherwise
 	*/
 	public function isAncestorOf($nodeSubject) {
 		return (parent::isAncestorOf($nodeSubject));
@@ -511,7 +511,9 @@ class sbNode extends sbCR_Node {
 	// views & actions
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* Initializes the views that are associated with this node.
+	* Basically these are defined for the nodetype, but based on authorisations
+	* and configuration there are special views (security, debug) added.
 	* @param 
 	* @return 
 	*/
@@ -566,9 +568,8 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Returns the default view of this node (the one with the highest priority).
+	* @return string the name of the default wiew
 	*/
 	protected function getDefaultViewName() {
 		
@@ -586,34 +587,38 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
+	* Executes an action on this node.
+	* TODO: better comment explaining this vital feature
+	* @param string the view's name which defines the action (optional, will call the default view of this node if omitted)
+	* @param string the action's name (optional, will execute the default action of the view if omitted)
 	* @return 
 	*/
 	public function callView($sView = NULL, $sAction = NULL) {
 		
+		// initialize supported views and chose default one if it was not given as parameter
 		$this->loadViews();
 		if ($sView == NULL) {
 			$sView = $this->getDefaultViewName();
 		}
 		$vdCurrentView = $this->getNodeType()->getViewDefinition($sView);
+		// the view does determine the default action if it was not given as parameter
 		$adCurrentAction = $vdCurrentView->getActionDefinition($sAction);
-			
-		DEBUG('Node: calling view "'.$sView.'" and action "'.$sAction.'" on node '.$this->getName().' ('.$this->getIdentifier().')', DEBUG::NODE);
+		
+		DEBUG(__CLASS__.': calling view "'.$sView.'" and action "'.$sAction.'" on node '.$this->getName().' ('.$this->getIdentifier().')', DEBUG::NODE);
 		
 		// process view & action info
 		$sClass = $adCurrentAction->getClass();
 		$sLibrary = $adCurrentAction->getClassFile();
 		$sAction = $adCurrentAction->getName();
 		
-		// init module
+		// init module (loads init.php of the module)
 		list($sModule, $sFile) = explode(':', $sLibrary);
 		import($sModule.':init', FALSE);
 		
 		// import class file and create instance
 		import($sLibrary);
 		if (!class_exists($sClass)) {
-			throw new sbException('Class does not exist: '.$sClass);
+			throw new sbException(__CLASS__.': Class does not exist: '.$sClass);
 		}
 		$viewCurrent = new $sClass($this);
 		
@@ -633,8 +638,7 @@ class sbNode extends sbCR_Node {
 		// execute action and store data
 		$elemView = $viewCurrent->execute($sAction);
 		
-		//var_dumpp($adCurrentAction->debug());
-		
+		// set the default output parameters as defined for the executed action
 		$_RESPONSE->setRenderMode($adCurrentAction->getOutputtype(), $adCurrentAction->getMimetype(), $adCurrentAction->getStylesheet());
 		$_RESPONSE->setLocaleMode($adCurrentAction->usesLocale());
 		if ($adCurrentAction->usesLocale()) {
@@ -695,7 +699,8 @@ class sbNode extends sbCR_Node {
 	/**
 	* Returns a sbCR_NodeIterator with all nodes that contain references to this
 	* node. If there are no referencing nodes the iterator will be empty.
-	* @return sbCR_NodeIterator 
+	* TODO: implement check for auxiliary properties!
+	* @return NodeIterator the nodes that have a reference to this node
 	*/
 	public function getReferencingNodes() {
 		
@@ -720,7 +725,8 @@ class sbNode extends sbCR_Node {
 	/**
 	* Returns a sbCR_NodeIterator with all nodes containing a softlink to this 
 	* node. If there are no softlinks the iterator will be empty.
-	* @return sbCR_NodeIterator
+	* TODO: implement check for auxiliary properties!
+	* @return NodeIterator the nodes that have a weak reference to this node
 	*/
 	public function getWeakReferencingNodes() {
 		
@@ -751,7 +757,8 @@ class sbNode extends sbCR_Node {
 	// custom sbCR stuff
 	//--------------------------------------------------------------------------
 	/**
-	* TODO: check if this is necessary
+	* Internal redirect without actually doing a HTTP redirect?
+	* TODO: check if this is necessary, was used for displaying the login
 	* @param 
 	* @return 
 	*/
@@ -764,9 +771,10 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Returns an element defining the context menu of this node.
+	* TODO: add description how the data is structured
+	* @param string the parent node's uuid (optional, necessary if the node is retrieved via it's uuid)
+	* @return DOMElement the context menu data
 	*/
 	public function getContextMenu($sParentUUID) {
 		
@@ -831,21 +839,17 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Generates a standard form for this node.
+	* Currently the modes 'properties' (editing properties of an existing node)
+	* and 'create' (entering primary information for new, unsaved nodes) are
+	* supported.
+	* The form elements are specified through the property definitions stored in
+	* the repository for this node's type.
+	* @param string the mode resp. type of form that should be built
+	* @param string the parent's uuid (required for the create form, it must know where the new node should be stored)
+	* @return sbDOMForm the form based on the given mode
 	*/
-	/*public function getSubject() {
-		return ($this->elemSubject);
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	* Generates a standard form for this node 
-	* @param 
-	* @return 
-	*/
-	public function buildForm($sMode = 'properties', $sParentUUID = '') {
+	public function buildForm($sMode, $sParentUUID = '') {
 		
 		global $_RESPONSE;
 		$this->initPropertyDefinitions();
@@ -931,9 +935,10 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Optionally modifies a form created by buildForm().
+	* This method may be overloaded by custom node classes.
+	* @param sbDOMForm the default form
+	* @param string the mode the form was created for
 	*/
 	protected function modifyForm($formCurrent, $sMode) { }
 	
@@ -941,7 +946,7 @@ class sbNode extends sbCR_Node {
 	/**
 	* Wraps the sbCR_Node method to return NULL instead of throwing an 
 	* exception.
-	* @param 
+	* @param string the name of the property
 	* @return NULL if property does not exist, otherwise property value 
 	*/
 	public function getProperty($sName) {
@@ -955,19 +960,21 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Directly writes to this node's internal DOMElement.
+	* This method enables a passthrough access to the element attributes and
+	* thus may be used to add information to this node for output resp. data
+	* transport. If the given attribute is also a property, the property will be
+	* set, too.
+	* @param string name of the attribute/property
+	* @param multiple the value to set the attribute/property to
 	*/
 	public function setAttribute($sName, $mValue) {
-		
 		$this->initPropertyDefinitions();
 		if ($this->crPropertyDefinitionCache->hasProperty($sName)) {
 			parent::setProperty($sName, $mValue);
 		} else {
 			$this->elemSubject->setAttribute($sName, $mValue);
 		}
-		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -1018,7 +1025,8 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* TODO: remove this? may only be needed for content of sbCMS, but may also
+	* be used for applications (whether or not incorporated in a sbCMS website)
 	* @param 
 	* @return 
 	*/

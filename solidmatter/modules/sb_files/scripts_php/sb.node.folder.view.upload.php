@@ -1,10 +1,24 @@
 <?php
 
-import('sb.node.view');
-import('sb.form');
+//------------------------------------------------------------------------------
+/**
+* @package	solidMatter[sbFiles]
+* @author	()((() [Oliver Müller]
+* @version	1.00.00
+*/
+//------------------------------------------------------------------------------
 
+//------------------------------------------------------------------------------
+/**
+*/
 class sbView_folder_upload extends sbView {
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function execute($sAction) {
 		
 		global $_RESPONSE;
@@ -22,43 +36,15 @@ class sbView_folder_upload extends sbView {
 				
 			case 'send':
 				
-				import('sb.tools.strings.conversion');
-				
-				$aMimetypeMapping = $this->getMimetypeMapping();
-				
-				if (isset($_FILES['files'])) {
-					foreach ($_FILES['files'] as $aFile) {
-						
-						if (isset($aMimetypeMapping[$aFile['type']])) {
-							$sNodetype = $aMimetypeMapping[$aFile['type']];
-						} else {
-							$sNodetype = 'sbFiles:Asset';
-						}
-						
-						// TODO: behave differently if already existing node is a folder
-						//die (str2urlsafe($aFile['name']));
-						if ($this->nodeSubject->hasNode(str2urlsafe($aFile['name']))) {
-							
-							// TODO: implement question what to do first, not just overwrite
-							throw new LazyBastardException('node with this name already exists');
-														
-							$nodeAsset = $this->nodeSubject->getNode(str2urlsafe($aFile['name']));
-							$nodeAsset->setProperty('properties_size', $aFile['size']);
-							$nodeAsset->setProperty('properties_mimetype', $aFile['type']);
-							$fpAsset = fopen($aFile['tmp_name'], 'rb');
-							$nodeAsset->saveBinaryProperty('properties_content', $fpAsset);
-							fclose($fpAsset);
-						} else {
-							$nodeNew = $this->nodeSubject->addNode(str2urlsafe($aFile['name']), $sNodetype);
-							$nodeNew->setProperty('name', $aFile['name']);
-							$nodeNew->setProperty('properties_size', $aFile['size']);
-							$nodeNew->setProperty('properties_mimetype', $aFile['type']);
-							$this->nodeSubject->save();
-							$fpAsset = fopen($aFile['tmp_name'], 'rb');
-							$nodeNew->saveBinaryProperty('properties_content', $fpAsset);
-							fclose($fpAsset);
-						}
-					}
+				if (!isset($_FILES['files'])) {
+					throw new sbException(__CLASS__.': no files submitted');
+				}
+					
+				foreach ($_FILES['files'] as $aFileInfo) {
+					// full file path/name is expected under 'file' array entry
+					$aFileInfo['file'] = $aFileInfo['tmp_name'];
+					$aFileInfo['name_imported'] = str2urlsafe($aFileInfo['tmp_name']);
+					$this->nodeSubject->addFile($aFileInfo);
 				}
 				
 				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'upload');
@@ -72,6 +58,12 @@ class sbView_folder_upload extends sbView {
 		
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	private function buildUploadForm() {
 		
 		$formUpload = new sbDOMForm(
@@ -86,20 +78,6 @@ class sbView_folder_upload extends sbView {
 		//$this->extendForm($formUpload);
 		
 		return ($formUpload);
-		
-	}
-	
-	private function getMimetypeMapping() {
-		
-		$aMimetypeMapping = array();
-		
-		$stmtMimetypes = $this->crSession->prepareKnown('sb_system/folder/view/upload/getMimetypeMapping');
-		$stmtMimetypes->execute();
-		foreach ($stmtMimetypes as $aRow) {
-			$aMimetypeMapping[$aRow['s_mimetype']] = $aRow['fk_nodetype'];			
-		}
-		$stmtMimetypes->closeCursor();
-		return ($aMimetypeMapping);
 		
 	}
 	

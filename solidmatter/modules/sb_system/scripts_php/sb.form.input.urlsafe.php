@@ -37,14 +37,18 @@ class sbInput_urlsafe extends sbInput_string {
 	*/
 	public function checkInput() {
 		
-		if ($this->aConfig['siteformat'] == 'TRUE') {
-			if (!preg_match('/^[a-z0-9_\.]+::[a-z0-9_\.]+$/', $this->mValue)) {
-				$this->sErrorLabel = '$locale/sbSystem/formerrors/no_siteformat';
-			}
-		} else {
-			if (!preg_match('/^[a-z0-9_\.]+$/', $this->mValue)) {
-				$this->sErrorLabel = '$locale/sbSystem/formerrors/not_urlsafe';
-			}
+//		if ($this->aConfig['siteformat'] == 'TRUE') {
+//			if (!preg_match('/^[a-z0-9_\.]+::[a-z0-9_\.]+$/', $this->mValue)) {
+//				$this->sErrorLabel = '$locale/sbSystem/formerrors/no_siteformat';
+//			}
+//		} else {
+//			if (!preg_match('/^[a-z0-9_\.]+$/', $this->mValue)) {
+//				$this->sErrorLabel = '$locale/sbSystem/formerrors/not_urlsafe';
+//			}
+//		}
+		
+		if ($this->mValue != str2urlsafe($this->mValue)) {
+			$this->sErrorLabel = '$locale/sbSystem/formerrors/not_urlsafe';
 		}
 		
 		return (parent::checkInput());

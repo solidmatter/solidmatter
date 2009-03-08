@@ -157,8 +157,8 @@ class sbCR_Node {
 		$this->aQueries['getChild']['byName']				= 'sbCR/node/getChild/byName';
 		
 		// saving the node and primary properties
-		$this->aQueries['save']['new']						= 'sbCR/node/save/new';
-		$this->aQueries['save']['existing']					= 'sbCR/node/save/existing';
+		$this->aQueries['save']['new']						= 'sbCR/node/save';
+		$this->aQueries['save']['existing']					= 'sbCR/node/save';
 		
 		// getting parent nodes
 		$this->aQueries['getPrimaryParent']					= 'sbCR/node/getPrimaryParent';
@@ -413,42 +413,26 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* CUSTOM:
-	* @param 
-	* @return 
+	* Returns the descendant relation state of this node to another node.
+	* @param Node the node this node is checked against
+	* @return boolean true if this node is a descendant of the subject node; false otherwise
 	*/
 	protected function isDescendantOf($nodeSubject) {
-		
 		return ($nodeSubject->isAncestorOf($this));
-		
-		/*$stmtCheck = $this->crSession->prepareKnown($this->aQueries['hierarchy/isAncestorOf']);
-		$stmtCheck->bindValue(':child_uuid', $this->getIdentifier(), PDO::PARAM_STR);
-		$stmtCheck->bindValue(':parent_uuid', $nodeSubject->getIdentifier(), PDO::PARAM_STR);
-		$stmtCheck->execute();
-		
-		$bCheck = FALSE;
-		foreach ($stmtCheck as $aRow) {
-			$bCheck = TRUE;
-		}
-		
-		$stmtCheck->closeCursor();
-		
-		return ($bCheck);*/
-		
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
-	* CUSTOM:
-	* @param 
-	* @return 
+	* Returns the ancestor relation state of this node to another node.
+	* @param Node the node this node is checked against
+	* @return boolean true if this node is an ancestor of the subject node; false otherwise
 	*/
 	protected function isAncestorOf($nodeSubject) {
 		
 		try {
 			$nodeParent = $nodeSubject->getParent();
 			if ($nodeParent->isSame($this)) {
-				return (TRUE);
+				return (FALSE);
 			} else {
 				return ($this->isAncestorOf($nodeParent));
 			}
@@ -489,9 +473,9 @@ class sbCR_Node {
 	// save/move
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Adds a task that is to be executed when this node is saved.
+	* @param string the type of task
+	* @param array additional information associated with the task (optional)
 	*/
 	protected function addSaveTask($sTaskType, $aOptions = NULL) {
 		switch ($sTaskType) {
@@ -513,9 +497,66 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* TODO: get closer to JCR API with this, also regarding hierarchy
-	* @param 
-	* @return 
+	* Validates all pending changes currently recorded in this Session that
+	* apply to this Item  or any of its descendants (that is, the subtree
+	* rooted at this Item). If validation of all pending changes succeeds,
+	* then this change information is cleared from the Session. If the save
+	* occurs outside a transaction, the changes are persisted and thus made
+	* visible to other Sessions. If the save occurs within a transaction, the
+	* changes are not persisted until the transaction is committed.
+	* 
+	* If validation fails, then no pending changes are saved and they remain
+	* recorded on the Session. There is no best-effort or partial save.
+	* 
+	* The item in persistent storage to which a transient item is saved is
+	* determined by matching identifiers and paths.
+	* 
+	* An AccessDeniedException will be thrown if any of the changes to be
+	* persisted would violate the access privileges of this Session.
+	* 
+	* If any of the changes to be persisted would cause the removal of a node
+	* that is currently the target of a REFERENCE property then a
+	* ReferentialIntegrityException is thrown, provided that this Session has
+	* read access to that REFERENCE property. If, on the other hand, this
+	* Session does not have read access to the REFERENCE property in question,
+	* then an AccessDeniedException is thrown instead.
+	* 
+	* An ItemExistsException will be thrown if any of the changes to be
+	* persisted would be prevented by the presence of an already existing item
+	* in the workspace.
+	* 
+	* A ConstraintViolationException will be thrown if any of the changes to be
+	* persisted would violate a node type restriction. Additionally, a
+	* repository may use this exception to enforce implementation- or
+	* configuration-dependant restrictions.
+	* 
+	* An InvalidItemStateException is thrown if any of the changes to be
+	* persisted conflicts with a change already persisted through another
+	* session and the implementation is such that this conflict can only be
+	* detected at save-time and therefore was not detected earlier, at
+	* change-time.
+	* 
+	* A VersionException is thrown if the save would make a result in a change
+	* to persistent storage that would violate the read-only status of a
+	* checked-in node.
+	* 
+	* A LockException is thrown if the save would result in a change to
+	* persistent storage that would violate a lock.
+	* 
+	* A NoSuchNodeTypeException is thrown if the save would result in the
+	* addition of a node with an unrecognized node type.
+	* 
+	* A RepositoryException will be thrown if another error occurs.
+	* 
+	* TODO: changes are not validate before persisting, instead the save tasks
+	* are carried out inside a transaction that may fail
+	* NOTE: ACLs are not supported, so there are no AccessDeniedExceptions
+	* thrown
+	* TODO: this is not close enough to the standard, changes should be saved
+	* when save() is called on an ancestor of this node, too. Needs to be
+	* figured out, possibly a save should match all pending changes against
+	* the node's ancestors based on uuid.
+	* TODO: get a number of things closer to the standard, e.g. references
 	*/
 	public function save() {
 		
@@ -546,7 +587,8 @@ class sbCR_Node {
 				$nodeChild->save();
 			}
 			
-			// remove this node? for now, removing the links is enough!
+			// remove the node from the repository
+			// TODO: should only remove links (check references first etc.)
 			$this->deleteNode();
 			
 //			// first remove all decendant links
@@ -571,7 +613,7 @@ class sbCR_Node {
 			$nodePrimaryParent = $this->getPrimaryParent();
 			$nodeParent = $this->getParent();
 			if ($nodeParent->isSame($nodePrimaryParent)) {
-				throw new RepositoryException('currently you can only remove secondary nodes from shared set');	
+				throw new RepositoryException(__CLASS__.': currently you can only remove secondary nodes from shared set');	
 			}
 			$this->deleteLink($nodeParent);
 			unset($this->aSaveTasks['remove_share']);
@@ -617,10 +659,10 @@ class sbCR_Node {
 				$stmtInfo->closeCursor();
 				
 				if (!$bFound) {
-					throw new RepositoryException('no info found on node '.$this->getProperty('label').' ('.$this->getIdentifier().')');
+					throw new RepositoryException(__CLASS__.': no info found on node '.$this->getProperty('label').' ('.$this->getIdentifier().')');
 				}
 				if ($iNumSameNameSiblings != 0) {
-					throw new RepositoryException('a node with the name "'.$nodeChild->getProperty('name').'" already exists under '.$this->getProperty('label').' ('.$this->getProperty('jcr:uuid').')');	
+					throw new ItemExistsException(__CLASS__.': a node with the name "'.$nodeChild->getProperty('name').'" already exists under '.$this->getProperty('label').' ('.$this->getProperty('jcr:uuid').')');	
 				}
 				
 				$sIsPrimary = 'FALSE';
@@ -708,9 +750,13 @@ class sbCR_Node {
 			
 		}
 		
-		$this->crSession->removeSaveTaskForNode($this);
+		// all pending changes have been saved within the transaction, now persist them 
 		$this->crSession->commit('sbCR_Node::save');
 		
+		// let the session know the node has been saved
+		$this->crSession->removeSaveTaskForNode($this);
+		
+		// update node state and pending changes
 		//$this->aSaveTasks = array();
 		$this->aModifiedChildren = array();
 		$this->aModifiedProperties = array();
@@ -728,9 +774,8 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Persists the node itself and the basic mandatory properties.
+	* @return boolean true if the node was saved successfully; false if wasn't modified
 	*/
 	protected function saveNode() {
 		
@@ -746,12 +791,12 @@ class sbCR_Node {
 			$stmtInsert->bindValue(':nodetype',				$this->getProperty('nodetype'),					PDO::PARAM_STR);
 			$stmtInsert->bindValue(':label',				$this->getProperty('label'),					PDO::PARAM_STR);
 			$stmtInsert->bindValue(':name',					$this->getProperty('name'),						PDO::PARAM_STR);
-			$stmtInsert->bindValue(':customdisplaytype',	$this->getProperty('customdisplaytype'),		PDO::PARAM_STR);
 			$stmtInsert->bindValue(':inheritrights',		$this->getProperty('sbcr:inheritRights'),		PDO::PARAM_STR);
 			$stmtInsert->bindValue(':bequeathrights',		$this->getProperty('sbcr:bequeathRights'),		PDO::PARAM_STR);
 			$stmtInsert->bindValue(':bequeathlocalrights',	$this->getProperty('sbcr:bequeathLocalRights'),	PDO::PARAM_STR);
 			$stmtInsert->bindValue(':user_id',				User::getUUID(),								PDO::PARAM_STR);
 			$stmtInsert->execute();
+			// the node is now persisted, the internal query must be updated so that it is not considered 'new' anymore
 			$this->elemSubject->setAttribute('query', $this->getIdentifier());
 		} else {
 			$stmtInsert = $this->crSession->prepareKnown($this->aQueries['save']['existing']);
@@ -759,14 +804,17 @@ class sbCR_Node {
 			$stmtInsert->bindValue(':uid',					$this->getProperty('uid'),						PDO::PARAM_STR);
 			$stmtInsert->bindValue(':label',				$this->getProperty('label'),					PDO::PARAM_STR);
 			$stmtInsert->bindValue(':name',					$this->getProperty('name'),						PDO::PARAM_STR);
-			$stmtInsert->bindValue(':customdisplaytype',	$this->getProperty('customdisplaytype'),		PDO::PARAM_STR);
 			$stmtInsert->bindValue(':inheritrights',		$this->getProperty('sbcr:inheritRights'),		PDO::PARAM_STR);
 			$stmtInsert->bindValue(':bequeathrights',		$this->getProperty('sbcr:bequeathRights'),		PDO::PARAM_STR);
 			$stmtInsert->bindValue(':bequeathlocalrights',	$this->getProperty('sbcr:bequeathLocalRights'),	PDO::PARAM_STR);
 			$stmtInsert->bindValue(':user_id',				User::getUUID(),								PDO::PARAM_STR);
+			// FIXME: not really needed, but query requires it
+			$stmtInsert->bindValue(':nodetype',				$this->getProperty('nodetype'),					PDO::PARAM_STR);
 			$stmtInsert->execute();
 		}
 		$stmtInsert->closeCursor();
+		
+		return (TRUE);
 		
 	}
 	
@@ -1064,12 +1112,13 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* Returns the name of this Item. The name of an item is the last element in 
-	* its path, minus any square-bracket index that may exist. If this Item is 
-	* the root node of the workspace (i.e., if this.getDepth() == 0), an empty 
-	* string will be returned.
-	* @param 
-	* @return 
+	* Returns the name of this Item. 
+	* The name of an item is the last element in its path, minus any 
+	* square-bracket index that may exist. If this Item is the root node of the
+	* workspace (i.e., if this.getDepth() == 0), an empty string will be 
+	* returned.
+	* NOTE: nodes in a shared set currently all have the same name
+	* @return string this node's name
 	*/
 	public function getName() {
 		return ($this->elemSubject->getAttribute('name'));
@@ -1077,9 +1126,12 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Returns this node's parent node.
+	* Depending on how this node was retrieved, this may be the primary parent
+	* or a parent of the shared set. Retrieving nodes via the identifier will 
+	* register the primary parent, retrieving via the hierarchy (i.e. getNode())
+	* will register the parent through which it was retrieved.
+	* @return Node the parent node
 	*/
 	public function getParent() {
 		
@@ -1099,9 +1151,11 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Returns the primary parent of this node.
+	* Every node has a single primary parent, in case of nodes in a shared set
+	* the additional nodes have also secondary parents. The primary parent is by
+	* default the node under which the first node instance in the set was saved.
+	* @return Node the primary parent
 	*/
 	protected function getPrimaryParent() {
 		
@@ -1129,9 +1183,11 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Returns a NodeIterator containing all parents of this node.
+	* In case this node is part of a shared set, the NodeIterator will contain
+	* multiple nodes.
+	* TODO: will not work for new, unsaved nodes -> check and rely on unpersisted information
+	* @return NodeIterator the node iterator containing all parent nodes
 	*/
 	public function getParents() {
 		
@@ -1198,9 +1254,18 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
+	* Returns the absolute path to this item.
+	* If the path includes items that are same-name sibling nodes properties 
+	* then those elements in the path will include the appropriate 
+	* "square bracket" index notation (for example, /a/b[3]/c).
 	* 
-	* @param 
-	* @return 
+	* NOTE: same name siblings are not supported. Also, the path returned will
+	* be specified through the primary parents for shared sets, except the 
+	* relation of this node (the node on which getPath() is called).
+	* 
+	* TODO: move this to item class
+	* @param string a property name that should be used for the path (optional)
+	* @return string the generated path
 	*/
 	public function getPath($sProperty = 'name') {
 		if ($this->sPath != '') {
@@ -1240,12 +1305,19 @@ class sbCR_Node {
 		return ($sPath);*/
 	}
 	
-	
-	
 	//--------------------------------------------------------------------------
 	/**
+	* Returns true if this Item has been saved but has subsequently been 
+	* modified through the current session and therefore the state of this item
+	* as recorded in the session differs from the state of this item as saved.
+	* Within a transaction, isModified on an Item may return false (because the
+	* Item has been saved since the modification) even if the modification in
+	* question is not in persistent storage (because the transaction has not
+	* yet been committed).
 	* 
-	* @return 
+	* TODO: verify the behavior is correct
+	* TODO: move this to item class
+	* @return boolean true if this item is modified; false otherwise.
 	*/
 	public function isModified() {
 		return ($this->bIsModified);
@@ -1253,8 +1325,21 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
+	* Returns true if this is a new item, meaning that it exists only in
+	* transient storage on the Session and has not yet been saved. Within a
+	* transaction, isNew on an Item may return false (because the item has been
+	* saved) even if that Item is not in persistent storage (because the
+	* transaction has not yet been committed).
 	* 
-	* @return 
+	* Note that if an item returns true on isNew, then by definition is parent
+	* will return true on isModified.
+	* 
+	* Note that in level 1 (that is, read-only) implementations, this method
+	* will always return false.
+	* 
+	* TODO: verify the behavior is correct (parent isModified won't work now)
+	* TODO: move this to item class
+	* @return boolean true if this item is new; false otherwise.
 	*/
 	public function isNew() {
 		if ($this->elemSubject->getAttribute('query') == 'new') {
@@ -1265,9 +1350,10 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Indicates whether this Item is a Node or a Property. Returns true if this
+	* Item is a Node; Returns false if this Item is a Property.
+	* TODO: move this to item class
+	* @return boolean true if this Item is a Node, false if it is a Property.
 	*/
 	public function isNode() {
 		return (TRUE); // items not supported by now
@@ -1275,7 +1361,36 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
+	* Returns true if this Item object (the Java object instance) represents
+	* the same actual workspace item as the object otherItem.
 	* 
+	* Two Item objects represent the same workspace item if all the following
+	* are true:
+	* - Both objects were acquired through Session objects that were created by
+	*   the same Repository object.
+	* - Both objects were acquired through Session objects bound to the same
+	*   repository workspace.
+	* - The objects are either both Node objects or both Property objects.
+	* - If they are Node objects, they have the same correspondence identifier.
+	*   Note that this is the identifier used to determine whether two nodes in
+	*   different workspaces correspond but obviously it is also true that any
+	*   node has the same correspondence identifier as itself. Hence, this 
+	*   identifier is used here to determine whether two different Java Node 
+	*   objects actually represent the same workspace node.
+	* - If they are Property objects they have identical names and isSame is 
+	*   true of their parent nodes.
+	* 
+	* This method does not compare the states of the two items. For example, 
+	* if two Item objects representing the same actual workspace item have been
+	* retrieved through two different sessions and one has been modified, then 
+	* this method will still return true when comparing these two objects. Note
+	* that if two Item objects representing the same workspace item are
+	* retrieved through the same session they will always reflect the same state
+	* (see section 5.1.3 Reflecting Item State in the JSR 283 specification
+	* document) so comparing state is not an issue. 
+	* 
+	* TODO: verify the behavior is correct
+	* TODO: move this to item class
 	* @param 
 	* @return 
 	*/
@@ -1288,11 +1403,26 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
+	* If keepChanges is false, this method discards all pending changes
+	* currently recorded in this Session that apply to this Item or any of its
+	* descendants (that is, the subtree rooted at this Item)and returns all
+	* items to reflect the current saved state. Outside a transaction this
+	* state is simple the current state of persistent storage. Within a
+	* transaction, this state will reflect persistent storage as modified by
+	* changes that have been saved but not yet committed.
 	* 
-	* @param 
-	* @return 
+	* If keepChanges is true then pending change are not discarded but items
+	* that do not have changes pending have their state refreshed to reflect the
+	* current saved state, thus revealing changes made by other sessions.
+	* 
+	* An InvalidItemStateException is thrown if this Item object represents a
+	* workspace item that has been removed (either by this session or another).
+	* 
+	* TODO: verify the behavior is correct
+	* TODO: move this to item class
+	* @param boolean flag defining if unsaved changes should be kept
 	*/
-	public function refresh($bKeepChanges) {
+	public function refresh($bKeepChanges = FALSE) {
 		// TODO: actually load current state from repository!!!
 		if ($bKeepChanges) {
 			throw new LazyBastardException('not implemented yet');
@@ -1306,7 +1436,47 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* FIXME: current crSession should know that this node is about to be removed! (crSession->save())
+	* Removes this item (and its subtree).
+	* 
+	* To persist a removal, a save must be performed that includes the (former)
+	* parent of the removed item within its scope.
+	* 
+	* If a node with same-name siblings is removed, this decrements by one the
+	* indices of all the siblings with indices greater than that of the removed
+	* node. In other words, a removal compacts the array of same-name siblings
+	* and causes the minimal re-numbering required to maintain the original
+	* order but leave no gaps in the numbering.
+	* 
+	* A ReferentialIntegrityException will be thrown on save if this item or an
+	* item in its subtree is currently the target of a REFERENCE property
+	* located in this workspace but outside this item's subtree and the current
+	* Session has read access to that REFERENCE property.
+	* 
+	* An AccessDeniedException will be thrown on save if this item or an item in
+	* its subtree is currently the target of a REFERENCE property located in
+	* this workspace but outside this item's subtree and the current Session
+	* does not have read access to that REFERENCE property.
+	* 
+	* A ConstraintViolationException will be thrown either immediately or on
+	* save, if removing this item would violate a node type or
+	* implementation-specific constraint. Implementations may differ on when
+	* this validation is performed.
+	* 
+	* A VersionException will be thrown either immediately or on save, if the
+	* parent node of this item is versionable and checked-in or is
+	* non-versionable but its nearest versionable ancestor is checked-in.
+	* Implementations may differ on when this validation is performed.
+	* 
+	* A LockException will be thrown either immediately or on save if a lock
+	* prevents the removal of this item. Implementations may differ on when this
+	* validation is performed. 
+	* 
+	* NOTE: the removal is currently persisted if this node or the session is
+	* saved, not when a parent or ancestor is saved!
+	* TODO: rework behavior
+	* TODO: move this to item class
+	* FIXME: current crSession should know that this node is about to be
+	* removed! (crSession->save())
 	* @param 
 	* @return 
 	*/
@@ -1320,28 +1490,40 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Returns an iterator over all nodes that are in the shared set of this
+	* node. If this node is not shared then the returned iterator contains
+	* only this node.
+	* @return NodeIterator the nodes in the shared set
 	*/
 	public function getSharedSet() {
+		
+		// get the shared set (only persisted nodes, will also include unshared nodes, i.e. this node)
 		$stmtGetShares = $this->prepareKnown('hierarchy/getSharedSet');
 		$stmtGetShares->bindValue(':child_uuid', $this->getIdentifier(), PDO::PARAM_STR);
 		$stmtGetShares->execute();
+		
+		// fill node iterator with shared set nodes
 		$aShares = array();
 		foreach ($stmtGetShares as $aRow) {
 			$aShares[] = $this->crSession->getNodeByIdentifier($this->getIdentifier(), $aRow['fk_parent']);
 		}
 		$stmtGetShares->closeCursor();
 		$niSharedSet = new sbCR_NodeIterator($aShares);
+		
 		return ($niSharedSet);
+		
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
+	* A special kind of remove() that removes this node, but does not remove
+	* any other node in the shared set of this node.
 	* 
-	* @param 
-	* @return 
+	* All of the exceptions defined for remove() apply to this function. In
+	* addition, a RepositoryException is thrown if this node cannot be removed
+	* without removing another node in the shared set of this node.
+	* 
+	* If this node is not shared this method removes only this node.
 	*/
 	public function removeShare() {
 		$this->addSaveTask('remove_share');
@@ -2148,6 +2330,9 @@ class sbCR_Node {
 			return(NULL);
 		}
 		if (!isset($this->aQueries['loadProperties'][strtolower($sType)])) {
+			var_dumpp($this->crPropertyDefinitionCache);
+			var_dumpp($this->aQueries);
+			var_dumpp($this->getPrimaryNodeType());
 			throw new sbException('property view not supported: '.$sType);
 		}
 		$stmtGetProperties = $this->prepareKnown($this->aQueries['loadProperties'][strtolower($sType)]);
@@ -2188,7 +2373,7 @@ class sbCR_Node {
 	*/
 	protected function initPropertyDefinitions() {
 		if ($this->crPropertyDefinitionCache == NULL) {
-			$this->crPropertyDefinitionCache = $this->crSession->getRepository()->getPropertyDefinitions($this->getPrimaryNodeType());
+			$this->crPropertyDefinitionCache = $this->getNodeType()->getPropertyCache();
 		}
 	}
 	

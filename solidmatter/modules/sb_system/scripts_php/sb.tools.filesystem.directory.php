@@ -11,6 +11,7 @@
 
 import('sb.tools.filesystem');
 import('sb.tools.filesystem.object');
+import('sb.tools.filesystem.file');
 
 //------------------------------------------------------------------------------
 /**
@@ -54,6 +55,12 @@ class sbDirectory extends sbFilesystemObject {
 		if (!file_exists($this->aInfo['abs_path']) || !is_dir($this->aInfo['abs_path'])) {
 			throw new sbException(__CLASS__.': directory "'.$this->aInfo['abs_path'].'" does not exist');
 		}
+		
+		// clear in case read() is called multiple times
+		$this->aDirectories[] = array();
+		$this->aDirectoriesBackup = array();
+		$this->aFiles = array();
+		$this->aFilesBackup = array();
 		
 		// read and store
 		$aEntries = scandir($this->aInfo['abs_path']);
@@ -132,20 +139,13 @@ class sbDirectory extends sbFilesystemObject {
 	*/
 	public function filterFiles($sRegEx, $bExcludeMatches = FALSE) {
 		
-		$aTemp = array();
-		
 		foreach ($this->aFiles as $iIndex => $aFile) {
-			if (!preg_match($sRegEx, $aFile['name'])) {
-				if ($bExcludeMatches) {
-					$aTemp[] = $aFile;
-				} else {
-					unset($this->aFiles[$iIndex]);
-				}
+			if ($bExcludeMatches && preg_match($sRegEx, $aFile['name'])) {
+				unset($this->aFiles[$iIndex]);
 			}
-		}
-		
-		if ($bExcludeMatches) {
-			$this->aFiles = $aTemp;
+			if (!$bExcludeMatches && !preg_match($sRegEx, $aFile['name'])) {
+				unset($this->aFiles[$iIndex]);
+			}
 		}
 		
 	}
@@ -180,10 +180,10 @@ class sbDirectory extends sbFilesystemObject {
 		
 		$aFiles = array();
 		
-		if ($bAsFiles) {
-			throw new LazyBastardException('implement file objects');
-		} else {
-			foreach ($this->aFiles as $aFile) {
+		foreach ($this->aFiles as $aFile) {
+			if ($bAsFiles) {
+				$aFiles[] = $this->getFile($aFile['name']);
+			} else {
 				$aFiles[] = $aFile['name'];
 			}
 		}
@@ -199,18 +199,38 @@ class sbDirectory extends sbFilesystemObject {
 	* @return 
 	*/
 	public function getFile($sRelPath) {
-		import('sb.tools.filesystem.file');
+		
+		// fill search array if necessary
 		$aSearch = array();
 		if (!is_array($sRelPath)) {
 			$aSearch[0] = $sRelPath;
 		} else {
-			$aSearch = $sRelPath;	
+			$aSearch = $sRelPath;
 		}
+		
 		foreach ($aSearch as $sRelPath) {
 			if (file_exists($this->aInfo['abs_path'].$sRelPath)) {
 				return (new sbFile($this->aInfo['abs_path'].$sRelPath));
 			}
 		}
+		
+		return (FALSE);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function hasFile($sRelPath) {
+		foreach ($this->aFiles as $aFileInfo) {
+			if ($aFileInfo['name'] == $sRelPath) {
+				return (TRUE);
+			}
+		}
+//		var_dumpp($sRelPath);
+//		var_dumpp($this->aFiles);
 		return (FALSE);
 	}
 	
@@ -246,7 +266,6 @@ class sbDirectory extends sbFilesystemObject {
 	*/
 	public function sort($sSortcriterium = 'name') {
 		import('sb.tools.arrays');
-		//var_dumpp($this->aFiles); die();
 		ivsort($this->aFiles, $sSortcriterium, TRUE);
 		ivsort($this->aFiles, $sSortcriterium, TRUE);
 	}

@@ -66,6 +66,9 @@ class sbView_logs_events extends sbView {
 		);
 		
 		$formFilter->addInput('type;select;', '$locale/sbSystem/labels/type');
+		$formFilter->addInput('module;select;', '$locale/sbSystem/labels/module');
+		$formFilter->addSubmit('$locale/sbSystem/actions/filter');
+		
 		$aOptions = array(
 			'' => '',
 			'SECURITY' => 'SECURITY',
@@ -76,13 +79,13 @@ class sbView_logs_events extends sbView {
 			'DEBUG' => 'DEBUG',
 		);
 		$formFilter->setOptions('type', $aOptions);
-		$formFilter->addInput('module;select;', '$locale/sbSystem/labels/module');
+		
 		$aOptions = array('' => '');
-		foreach (System::getModules() as $sKey => $unused) {
-			$aOptions[$sKey] = $sKey;
+		
+		foreach ($this->crSession->getNode('//*[@uid="sbSystem:Modules"]')->getNodes() as $nodeModule) {
+			$aOptions[$nodeModule->getProperty('label')] = $nodeModule->getProperty('label');
 		}
 		$formFilter->setOptions('module', $aOptions);
-		$formFilter->addSubmit('$locale/sbSystem/actions/filter');
 		
 		return ($formFilter);
 		

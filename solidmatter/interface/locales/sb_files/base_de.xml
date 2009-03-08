@@ -6,9 +6,9 @@
 		<config_types_allowed label="erlaubte Mimetypes" />
 		<config_listingallowed label="Auflistung erlaubt" />
 	</Folder>
-	<Autofolder>
+	<AutoFolder>
 		<config_realfolder label="Ordner im Dateisystem" />
-	</Autofolder>
+	</AutoFolder>
 	<Image>
 		<config_filterstack label="optionaler Grafikfilter" />
 	</Image>

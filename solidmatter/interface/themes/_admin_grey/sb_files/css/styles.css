@@ -9,6 +9,9 @@
 *.sb_folder {
 	background-image: url(../icons/type_folder.png);
 }
+*.sb_autofolder {
+	background-image: url(../icons/type_autofolder.png);
+}
 *.sb_image {
 	background-image: url(../icons/type_image.png);
 }

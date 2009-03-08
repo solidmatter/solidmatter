@@ -239,6 +239,7 @@
 		<view id="documentation">Documentation</view>
 		<view id="content">Content</view>
 		<view id="groups">Groups</view>
+		<view id="maintenance">Maintenance</view>
 	</views>
 	
 	<!-- <config>

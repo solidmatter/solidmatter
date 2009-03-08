@@ -153,58 +153,6 @@ $_QUERIES['sbCR/repository/getNodeTypeHierarchy'] = '
 	FROM		{TABLE_NTHIERARCHY}
 ';
 
-// repository administration ---------------------------------------------------
-
-$_QUERIES['sbCR/nodetype/save'] = '
-	INSERT INTO	{TABLE_NODETYPES}
-				(
-					s_type,
-					e_type,
-					s_class,
-					s_classfile,
-					s_category,
-					s_displaytype
-				) VALUES (
-					:nodetype,
-					:abstract,
-					:type,
-					:class,
-					:classfile,
-					:category,
-					:displaytype
-				)
-	ON DUPLICATE KEY UPDATE
-				s_type = :nodetype,
-				e_type = :type,
-				s_class = :class,
-				s_classfile = :classfile,
-				s_category = :category,
-				s_displaytype = :displaytype
-';
-$_QUERIES['sbCR/nodetype/remove'] = '
-	DELETE FROM	{TABLE_NODETYPES}
-	WHERE		s_type = :nodetype
-';
-$_QUERIES['sbCR/view/save'] = '
-	INSERT INTO	{TABLE_VIEWS}
-				(
-				
-				) VALUES (
-					
-				)
-	ON DUPLICATE KEY UPDATE
-';
-$_QUERIES['sbCR/action/save'] = '
-	INSERT INTO	{TABLE_ACTIONS}
-				(
-					
-				) VALUES (
-					
-				)
-	ON DUPLICATE KEY UPDATE
-';
-
-
 // node retrieval --------------------------------------------------------------
 
 $_QUERIES['sbCR/getNode/root'] = '
@@ -521,7 +469,7 @@ $_QUERIES['sbCR/node/checkDescendant'] = '
 
 // save/delete -----------------------------------------------------------------
 
-$_QUERIES['sbCR/node/save/new'] = '
+$_QUERIES['sbCR/node/save'] = '
 	INSERT INTO	{TABLE_NODES}
 				(
 					uuid,
@@ -529,7 +477,6 @@ $_QUERIES['sbCR/node/save/new'] = '
 					fk_nodetype,
 					s_label,
 					s_name,
-					s_customdisplaytype,
 					b_inheritrights,
 					b_bequeathrights,
 					b_bequeathlocalrights,
@@ -545,7 +492,6 @@ $_QUERIES['sbCR/node/save/new'] = '
 					:nodetype,
 					:label,
 					:name,
-					:customdisplaytype,
 					:inheritrights,
 					:bequeathrights,
 					:bequeathlocalrights,
@@ -556,18 +502,21 @@ $_QUERIES['sbCR/node/save/new'] = '
 					NOW(),
 					NULL
 				)
-';
-$_QUERIES['sbCR/node/save/existing'] = '
-	UPDATE		{TABLE_NODES}
-	SET			s_uid = :uid,
+	ON DUPLICATE KEY UPDATE
+				s_uid = :uid,
 				s_label = :label,
 				s_name = :name,
-				s_customdisplaytype = :customdisplaytype,
 				b_inheritrights = :inheritrights,
 				b_bequeathrights = :bequeathrights,
 				b_bequeathlocalrights = :bequeathlocalrights,
 				fk_modifiedby = :user_id,
 				dt_modified = NOW()
+';
+$_QUERIES['sbCR/node/delete/forTrash'] = '
+	UPDATE		{TABLE_NODES}
+	SET			fk_deletedby = :user_id,
+				dt_deleted = NOW(),
+				fk_deletedfrom = :parent_uuid
 	WHERE		uuid = :uuid
 ';
 $_QUERIES['sbCR/node/delete/forGood'] = '
@@ -927,6 +876,15 @@ $_QUERIES['sb_system/node/view/security/removeAuthorisations'] = '
 	WHERE		fk_subject = :subject_uuid
 		AND		fk_userentity = :entity_uuid
 ';
+$_QUERIES['sb_system/node/view/security/changeInheritance'] = '
+	UPDATE		{TABLE_NODES}
+	SET			b_inheritrights = :inheritrights,
+				b_bequeathrights = :bequeathrights,
+				b_bequeathlocalrights = :bequeathlocalrights,
+				fk_modifiedby = :user_id,
+				dt_modified = NOW()
+	WHERE		uuid = :subject_uuid
+';
 $_QUERIES['sbCR/test/loadRoot'] = '
 	SELECT		uuid
 	FROM		{TABLE_NODES}
@@ -938,5 +896,5 @@ $_QUERIES['sbCR/test/loadChildren'] = '
 	WHERE		fk_parent = :fk_parent
 	ORDER BY	n_order
 ';
-		
+
 ?>

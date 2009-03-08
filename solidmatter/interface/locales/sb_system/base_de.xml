@@ -240,6 +240,7 @@
 		<view id="documentation">Dokumentation</view>
 		<view id="content">Inhalt</view>
 		<view id="groups">Gruppen</view>
+		<view id="maintenance">Wartung</view>
 	</views>
 	
 	<config>

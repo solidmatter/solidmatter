@@ -8,20 +8,25 @@
 */
 //------------------------------------------------------------------------------
 
+define('JCR_PROPERTY_', )
+
 //------------------------------------------------------------------------------
 /** TODO: complete this
 */
 class sbCR_PropertyDefinition {
 	
 	protected $aPropertyInformation = array(
+		// JCR attributes
 		'PropertyName' => '',
-		'RequiredType' => NULL,
+		'RequiredType' => '',
 		'isMultiple' => FALSE,
 		'ValueConstraints' => array(),
-		'LabelPath' => '',
 		'isEditable' => TRUE,
 		'isProtected' => FALSE,
+		// sbCR attributes
 		'isProtectedOnCreation' => FALSE,
+		'LabelPath' => '',
+		'InternalType' => '',
 	);
 	
 	//--------------------------------------------------------------------------
@@ -30,10 +35,10 @@ class sbCR_PropertyDefinition {
 	* @param 
 	* @return 
 	*/
-	public function __construct($crRepositoryStructure, $sNodeTypeName) {
+	public function __construct($crRepositoryStructure, $sNodeTypeName, $sPropertyName) {
 		
-//		$this->crRepositoryStructure = $crRepositoryStructure;
-//		$this->aNodeTypeInformation['NodeTypeName'] = $sNodeTypeName;
+		$this->crRepositoryStructure = $crRepositoryStructure;
+		$this->aPropertyInformation = $crRepositoryStructure->getPropertyData($sNodeTypeName, $sPropertyName);
 		
 	}
 	

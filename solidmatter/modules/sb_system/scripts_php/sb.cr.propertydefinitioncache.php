@@ -22,9 +22,10 @@ class sbCR_PropertyDefinitionCache implements Iterator {
 	* @param 
 	* @return 
 	*/
-	public function __construct($aPropertyDefinitions = NULL, $aPropertyStorageInfo = NULL) {
-		if ($aPropertyDefinitions !== NULL) {
-			$this->fill($aPropertyDefinitions, $aPropertyStorageInfo);
+	public function __construct($aPropertyData = NULL) {
+		//var_dumpp($aPropertyData);
+		if ($aPropertyData != NULL) {
+			$this->fill($aPropertyData['definitions'], $aPropertyData['storage']);
 		}
 	}
 	

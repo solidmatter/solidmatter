@@ -136,6 +136,16 @@ class sbCR_NodeType extends sbCR_NodeDefinition {
 	
 	//--------------------------------------------------------------------------
 	/**
+	* Returns an array containing the property definitions of this node type.
+	* @param 
+	* @return PropertyDefinition[]
+	*/
+	public function getPropertyCache() {
+		return ($this->crRepositoryStructure->getPropertyCache($this->aNodeTypeInformation['NodeTypeName']));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* Returns true if this node type is nodeTypeName or a subtype of 
 	* nodeTypeName, otherwise returns false.
 	* @param 

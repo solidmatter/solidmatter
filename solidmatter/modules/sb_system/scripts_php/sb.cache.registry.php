@@ -9,7 +9,12 @@
 */
 //------------------------------------------------------------------------------
 
-class RegistryCache extends SessionCache implements sbCache {
+import('sb.cache.database');
+
+//------------------------------------------------------------------------------
+/** 
+*/
+class RegistryCache extends DatabaseCache implements sbCache {
 	
 	protected $sPrefix = 'REGISTRY:';
 

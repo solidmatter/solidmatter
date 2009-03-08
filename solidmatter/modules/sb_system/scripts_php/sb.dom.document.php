@@ -48,12 +48,16 @@ class sbDOMDocument extends DOMDocument {
 		if (!is_array($aSubject)) {
 			throw new Exception('no array: '.var_export($aSubject));
 		}
+		if (!is_string($sName) || is_numeric($sName)) {
+			throw new Exception('no string: '.var_export($sName));
+		}
 		
+		//var_dumpp($sName);
 		$elemArray = $this->createElement($sName);
 		
 		foreach($aSubject as $sNodeName => $mValue) {
 			if (is_numeric($sNodeName) || is_numeric($sNodeName[0])) {
-				$sNodeName = 'entry_'.$sNodeName;
+				$sNodeName = 'entry';
 			}
 			if (is_array($mValue)) {
 				$elemCurrent = $this->convertArrayToElement($sNodeName, $mValue);

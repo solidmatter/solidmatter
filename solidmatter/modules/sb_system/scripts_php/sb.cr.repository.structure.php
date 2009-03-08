@@ -72,8 +72,8 @@ class sbCR_RepositoryStructure {
 		'mix:title' => array(),
 		'mix:lifecycle' => array(),
 		//'mix:versionable' => array(),
-		'sb:deleted' => array(),
-		'sb:node' => array(
+		'sbCR:Deleted' => array(),
+		'sbCR:Node' => array(
 			'nt:base',
 			'mix:created',
 			'mix:lastModified',
@@ -81,7 +81,7 @@ class sbCR_RepositoryStructure {
 			'mix:lockable',
 			'mix:shareable',
 			'mix:lifecycle',
-			'sb:deleted',
+			'sbCR:Deleted',
 		),
 	);
 	
@@ -272,7 +272,7 @@ class sbCR_RepositoryStructure {
 				PROP_PROTECTEDONCREATION => TRUE
 			),
 		),
-		'sb:node' => array(
+		'sbCR:Node' => array(
 			'nodetype' => array(
 				PROP_TYPE => 'STRING',
 				PROP_MANDATORY => TRUE,
@@ -339,19 +339,6 @@ class sbCR_RepositoryStructure {
 				PROP_AUXNAME => 's_uid',
 				PROP_PROTECTEDONCREATION => FALSE
 			),
-			'customdisplaytype' => array(
-				PROP_TYPE => 'STRING',
-				PROP_MANDATORY => TRUE,
-				PROP_PROTECTED => FALSE,
-				PROP_MULTIPLE => FALSE,
-				PROP_INTERNALTYPE => 'string',
-				PROP_SHOWINPROPERTIES => FALSE,
-				PROP_LABELPATH => '$locale/system/general/labels/',
-				PROP_DESCRIPTIONPATH => NULL,
-				PROP_STORAGETYPE => 'EXTENDED',
-				PROP_AUXNAME => 's_customdisplaytype',
-				PROP_PROTECTEDONCREATION => FALSE
-			),
 			'inheritrights' => array(
 				PROP_TYPE => 'BOOLEAN',
 				PROP_MANDATORY => TRUE,
@@ -379,7 +366,7 @@ class sbCR_RepositoryStructure {
 				PROP_PROTECTEDONCREATION => FALSE
 			),
 		),
-		'sb:deleted' => array(		
+		'sbCR:Deleted' => array(		
 			'deletedby' => array(
 				PROP_TYPE => 'WEAKREFERENCE',
 				PROP_MANDATORY => FALSE,
@@ -423,7 +410,7 @@ class sbCR_RepositoryStructure {
 	);
 	
 	private $aNodeTypeAuthorisations = array(
-		'sb:node' => array(
+		'sbCR:Node' => array(
 			'full' => NULL,
 			'read' => 'full',
 			'write' => 'full',
@@ -432,7 +419,11 @@ class sbCR_RepositoryStructure {
 		),
 	);
 	
-	private $aRawViewData			= array();
+	private $aPropertyData		= array();
+	private $aViewData			= array();
+	
+	private $aPropertyDefinitionCache	= array();
+	
 	private $aViewDefinitionCache	= array();
 	private $aAuthorisationCache	= array();
 	
@@ -452,7 +443,6 @@ class sbCR_RepositoryStructure {
 			$cacheRepos = CacheFactory::getInstance('repository');
 			if ($cacheRepos->exists('NodeTypeHierarchy')) {
 				$this->aNodeTypeHierarchy = $cacheRepos->loadData('NodeTypeHierarchy');
-				//echo ('nodetypehierarchy cache hit');
 				return;
 			}
 		}
@@ -462,10 +452,10 @@ class sbCR_RepositoryStructure {
 		$stmtNodetypes->execute();
 		$stmtNodetypes = $stmtNodetypes->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($stmtNodetypes as $aRow) {
-			if ($aRow['s_type'] == 'sb:node') {
+			if ($aRow['s_type'] == 'sbCR:Node') {
 				continue;	
 			}
-			$this->aNodeTypeHierarchy[$aRow['s_type']][] = 'sb:node';
+			$this->aNodeTypeHierarchy[$aRow['s_type']][] = 'sbCR:Node';
 		}
 		
 		// store nodetype hierarchy
@@ -647,58 +637,6 @@ class sbCR_RepositoryStructure {
 	* @param 
 	* @return 
 	*/
-	protected function initViewData($sNodeTypeName) {
-		
-		// already initialized
-		if (isset($this->aViewData[$sNodeTypeName])) {
-			$this->aViewData[$sNodeTypeName];
-		}
-		
-		// gather local views
-		$aViewData = array();
-		$stmtViews = $this->crSession->prepareKnown('sbCR/repository/loadViews/supported');
-		$stmtViews->bindParam(':nodetype', $sNodeTypeName, PDO::PARAM_STR);
-		$stmtViews->execute();
-		while ($aRow = $stmtViews->fetch(PDO::FETCH_ASSOC)) {
-			$aRow['nodetypename'] = $sNodeTypeName;
-			$aViewData[$aRow['name']] = $aRow;
-		}
-		$stmtViews->closeCursor();
-		
-		// aggregate views with views from supertypes
-		$aSupertypes = $this->getSupertypeNames($sNodeTypeName);
-		foreach ($aSupertypes as $sSupertype) {
-			// second parameter has priority over first parameter (local views outweight inherited ones)
-			//var_dumpp($aViewData);
-			/*foreach($this->initViewData($sSupertype) as $aSuperViewData) {
-				if (!isset($aViewData[$aSuperViewData['name']])) {
-					$aViewData[$aSuperViewData['name'] = $aSuperViewData;
-				} else {
-					foreach ($aSuperView)
-				}
-			};*/
-			
-			$aViewData = array_merge($this->initViewData($sSupertype), $aViewData);
-		}
-		
-		$this->aViewData[$sNodeTypeName] = $aViewData;
-		
-		// fill cache
-		/*if (Registry::getValue('sb.system.cache.nodetypes.enabled')) {
-			$cacheRepos = CacheFactory::getInstance('repository');
-			$cacheRepos->storeData('Views:'.$sNodeTypeName, $aViews);
-		}*/
-		
-		return ($aViewData);
-		
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	* 
-	* @param 
-	* @return 
-	*/
 	public function getViewDefinition($sNodeTypeName, $sView) {
 		
 		// gather view information
@@ -757,6 +695,323 @@ class sbCR_RepositoryStructure {
 		return ($this->aDeclaredViewDefinitions);
 		
 	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getPropertyCache($sNodeTypeName) {
+		$this->initPropertyData($sNodeTypeName);
+		return(new sbCR_PropertyDefinitionCache($this->aPropertyData[$sNodeTypeName]));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function initViewData($sNodeTypeName) {
+		
+		// omit predefined mandatory node types
+		/*if (isset($this->aNodeTypeHierarchy[$sNodeTypeName])) {
+			$this->aViewData[$sNodeTypeName] = array();
+			return;	
+		}*/
+		
+		// check local cache
+		if (isset($this->aViewData[$sNodeTypeName])) {
+			return;
+		}
+		
+		// check cache
+		if (Registry::getValue('sb.system.cache.nodetypes.enabled')) {
+			$cacheRepos = CacheFactory::getInstance('repository');
+			if ($cacheRepos->exists('ViewData:'.$sNodeTypeName)) {
+				//echo ('view cache hit');
+				$this->aViewData[$sNodeTypeName] = $cacheRepos->loadData('ViewData:'.$sNodeTypeName);
+				return;
+			}
+		}
+		
+		// gather local views
+		$this->aViewData[$sNodeTypeName] = array();
+		$stmtViews = $this->crSession->prepareKnown('sbCR/repository/loadViews/supported');
+		$stmtViews->bindParam(':nodetype', $sNodeTypeName, PDO::PARAM_STR);
+		$stmtViews->execute();
+		while ($aRow = $stmtViews->fetch(PDO::FETCH_ASSOC)) {
+			$aRow['nodetypename'] = $sNodeTypeName;
+			$this->aViewData[$sNodeTypeName][$aRow['name']] = $aRow;
+		}
+		$stmtViews->closeCursor();
+		
+		// aggregate views with views from supertypes
+		$aSupertypes = $this->getSupertypeNames($sNodeTypeName);
+		foreach ($aSupertypes as $sSupertype) {
+			// second parameter has priority over first parameter (local views outweight inherited ones)
+			//var_dumpp($aViewData);
+			/*foreach($this->initViewData($sSupertype) as $aSuperViewData) {
+				if (!isset($aViewData[$aSuperViewData['name']])) {
+					$aViewData[$aSuperViewData['name'] = $aSuperViewData;
+				} else {
+					foreach ($aSuperView)
+				}
+			};*/
+			$this->initViewData($sSupertype);
+			$this->aViewData[$sNodeTypeName] = array_merge($this->aViewData[$sSupertype], $this->aViewData[$sNodeTypeName]);
+		}
+		
+		// fill cache
+		if (Registry::getValue('sb.system.cache.nodetypes.enabled')) {
+			$cacheRepos = CacheFactory::getInstance('repository');
+			$cacheRepos->storeData('ViewData:'.$sNodeTypeName, $this->aViewData[$sNodeTypeName]);
+		}
+		
+		return;
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function initPropertyData($sNodeTypeName) {
+		
+		/*static $numcalls = 0;
+		echo $numcalls.'|';
+		$numcalls++;*/
+		
+		// already initialized?
+		if (isset($this->aPropertyData[$sNodeTypeName])) {
+			return;
+		}
+		
+		// check cache
+		if (Registry::getValue('sb.system.cache.nodetypes.enabled')) {
+			$cacheRepos = CacheFactory::getInstance('repository');
+			if ($cacheRepos->exists('PropertyData:'.$sNodeTypeName)) {
+				//echo ('view cache hit');
+				$this->aPropertyData[$sNodeTypeName] = $cacheRepos->loadData('PropertyData:'.$sNodeTypeName);
+				return;
+			}
+		}
+		
+		// mandatory properties
+		$this->aPropertyData[$sNodeTypeName]['definitions'] = array(
+			// primary properties
+			'uuid' => array(
+				'e_type' => 'STRING',
+				's_internaltype' => 'string',
+				'b_showinproperties' => 'FALSE',
+				's_labelpath' => '$locale/sbSystem/labels/uuid',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'PRIMARY',
+				's_auxname' => 'uuid',
+				'b_protected' => 'TRUE',
+				'b_protectedoncreation' => 'FALSE'
+			),
+			'nodetype' => array(
+				'e_type' => 'STRING',
+				's_internaltype' => 'string',
+				'b_showinproperties' => 'FALSE',
+				's_labelpath' => '$locale/sbSystem/labels/nodetype',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'PRIMARY',
+				's_auxname' => 'fk_nodetype',
+				'b_protected' => 'TRUE',
+				'b_protectedoncreation' => 'TRUE'
+			),
+			'label' => array(
+				'e_type' => 'STRING',
+				's_internaltype' => 'string;minlength=1;maxlength=250;required=true;',
+				'b_showinproperties' => 'TRUE',
+				's_labelpath' => '$locale/sbSystem/labels/label',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'PRIMARY',
+				's_auxname' => 's_label',
+				'b_protected' => 'FALSE',
+				'b_protectedoncreation' => 'FALSE'
+			),
+			'name' => array(
+				'e_type' => 'STRING',
+				's_internaltype' => 'urlsafe;minlength=1;maxlength=100;required=true;',
+				'b_showinproperties' => 'TRUE',
+				's_labelpath' => '$locale/sbSystem/labels/urlname',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'PRIMARY',
+				's_auxname' => 's_name',
+				'b_protected' => 'FALSE',
+				'b_protectedoncreation' => 'FALSE'
+			),
+			'displaytype' => array(
+				'e_type' => 'STRING',
+				's_internaltype' => 'string',
+				'b_showinproperties' => 'FALSE',
+				's_labelpath' => '$locale/sbSystem/general/labels/',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'PRIMARY',
+				's_auxname' => 's_displaytype',
+				'b_protected' => 'TRUE',
+				'b_protectedoncreation' => 'FALSE'
+			),
+			// extended properties
+			'uid' => array(
+				'e_type' => 'STRING',
+				's_internaltype' => 'string',
+				'b_showinproperties' => 'FALSE',
+				's_labelpath' => '$locale/sbSystem/general/labels/',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'EXTENDED',
+				's_auxname' => 's_uid',
+				'b_protected' => 'TRUE',
+				'b_protectedoncreation' => 'FALSE'
+			),
+			'inheritrights' => array(
+				'e_type' => 'BOOLEAN',
+				's_internaltype' => 'checkbox',
+				'b_showinproperties' => 'FALSE',
+				's_labelpath' => '$locale/sbSystem/general/labels/',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'EXTENDED',
+				's_auxname' => 'b_inheritrights',
+				'b_protected' => 'FALSE',
+				'b_protectedoncreation' => 'FALSE'
+			),
+			'bequeathrights' => array(
+				'e_type' => 'BOOLEAN',
+				's_internaltype' => 'checkbox',
+				'b_showinproperties' => 'FALSE',
+				's_labelpath' => '$locale/sbSystem/general/labels/',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'EXTENDED',
+				's_auxname' => 'b_bequeathrights',
+				'b_protected' => 'FALSE',
+				'b_protectedoncreation' => 'FALSE'
+			),
+			'bequeathlocalrights' => array(
+				'e_type' => 'BOOLEAN',
+				's_internaltype' => 'checkbox',
+				'b_showinproperties' => 'FALSE',
+				's_labelpath' => '$locale/sbSystem/general/labels/',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'EXTENDED',
+				's_auxname' => 'b_bequeathlocalrights',
+				'b_protected' => 'FALSE',
+				'b_protectedoncreation' => 'FALSE'
+			),
+			'createdby' => array(
+				'e_type' => 'WEAKREFERENCE',
+				's_internaltype' => 'string',
+				'b_showinproperties' => 'FALSE',
+				's_labelpath' => '$locale/sbSystem/general/labels/',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'EXTENDED',
+				's_auxname' => 'fk_createdby',
+				'b_protected' => 'TRUE',
+				'b_protectedoncreation' => 'TRUE'
+			),
+			'modifiedby' => array(
+				'e_type' => 'WEAKREFERENCE',
+				's_internaltype' => 'string',
+				'b_showinproperties' => 'FALSE',
+				's_labelpath' => '$locale/sbSystem/general/labels/',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'EXTENDED',
+				's_auxname' => 'fk_modifiedby',
+				'b_protected' => 'TRUE',
+				'b_protectedoncreation' => 'TRUE'
+			),
+			'deletedby' => array(
+				'e_type' => 'WEAKREFERENCE',
+				's_internaltype' => 'string',
+				'b_showinproperties' => 'FALSE',
+				's_labelpath' => '$locale/sbSystem/general/labels/',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'EXTENDED',
+				's_auxname' => 'fk_deletedby',
+				'b_protected' => 'TRUE',
+				'b_protectedoncreation' => 'TRUE'
+			),
+			'created' => array(
+				'e_type' => 'DATE',
+				's_internaltype' => 'urlsafe',
+				'b_showinproperties' => 'FALSE',
+				's_labelpath' => '$locale/sbSystem/general/labels/',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'EXTENDED',
+				's_auxname' => 'dt_created',
+				'b_protected' => 'TRUE',
+				'b_protectedoncreation' => 'TRUE'
+			),
+			'modified' => array(
+				'e_type' => 'DATE',
+				's_internaltype' => 'urlsafe',
+				'b_showinproperties' => 'FALSE',
+				's_labelpath' => '$locale/sbSystem/general/labels/',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'EXTENDED',
+				's_auxname' => 'dt_modified',
+				'b_protected' => 'TRUE',
+				'b_protectedoncreation' => 'TRUE'
+			),
+			'deleted' => array(
+				'e_type' => 'DATE',
+				's_internaltype' => 'urlsafe',
+				'b_showinproperties' => 'FALSE',
+				's_labelpath' => '$locale/sbSystem/general/labels/',
+				's_descriptionpath' => NULL,
+				'b_multiple' => 'FALSE',
+				'e_storagetype' => 'EXTENDED',
+				's_auxname' => 'dt_deleted',
+				'b_protected' => 'TRUE',
+				'b_protectedoncreation' => 'TRUE'
+			),
+		);
+		
+		$this->aPropertyData[$sNodeTypeName]['storage'] = array(
+			'PRIMARY' => TRUE,
+			'EXTENDED' => TRUE,
+			'EXTERNAL' => FALSE,
+			'AUXILIARY' => FALSE
+		);
+		
+		$stmtProperties = $this->crSession->prepareKnown('sbCR/node/getPropertyDefinitions');
+		$stmtProperties->bindValue('nodetype', $sNodeTypeName, PDO::PARAM_STR);
+		$stmtProperties->execute();
+		while ($aRow = $stmtProperties->fetch(PDO::FETCH_ASSOC)) {
+			$this->aPropertyData[$sNodeTypeName]['storage'][$aRow['e_storagetype']] = TRUE;
+			$this->aPropertyData[$sNodeTypeName]['definitions'][$aRow['s_attributename']] = $aRow;
+		}
+		
+		// fill cache
+		if (Registry::getValue('sb.system.cache.nodetypes.enabled')) {
+			$cacheRepos = CacheFactory::getInstance('repository');
+			$cacheRepos->storeData('PropertyData:'.$sNodeTypeName, $this->aPropertyData[$sNodeTypeName]);
+		}
+		
+		return;
+
+	}
+	
+	
 	
 }
 
