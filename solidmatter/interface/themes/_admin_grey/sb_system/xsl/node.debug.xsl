@@ -100,6 +100,21 @@
 						</xsl:for-each>
 						</ul>
 					</div></div></div>
+					<div class="eyecandy"><div class="left"><div class="right">
+						<h1>Supported Relations</h1>
+						<ul>
+						<xsl:for-each select="supportedRelations/relation">
+							<li>
+								<xsl:value-of select="@id" />
+								<ul>
+								<xsl:for-each select="nodetype">
+									<li><xsl:value-of select="." /></li> 
+								</xsl:for-each>
+								</ul>
+							</li>
+						</xsl:for-each>
+						</ul>
+					</div></div></div>
 				</td>
 				<td><div class="spacer"></div></td>
 				<td width="50%">

@@ -31,17 +31,25 @@
 		<site location="test.jukebox/theme" type="theme" handler="backend" theme="_default" />
 		<site location="test.jukebox/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
 	</site>
-	<site location="ollo.gotdns.org/" type="controller" handler="application" subject="demojukebox">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="ollo.gotdns.org/theme" type="theme" handler="backend" theme="_default" />
-	</site>
 	<site location="test.backend/" type="controller" handler="backend">
 		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
 		<site location="test.backend/templates" type="controller" handler="xsl" subject="demotemplates" />
 		<site location="test.backend/theme" type="theme" handler="backend" theme="_admin_grey" />
 		<site location="test.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
+	</site>
+	<site location="jukebox.sm.gotdns.org/" type="controller" handler="application" subject="demojukebox">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="jukebox.sm.gotdns.org/theme" type="theme" handler="backend" theme="_default" />
+		<site location="jukebox.sm.gotdns.org/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
+	</site>
+	<site location="admin.sm.gotdns.org/" type="controller" handler="backend">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="admin.sm.gotdns.org/templates" type="controller" handler="xsl" subject="demotemplates" />
+		<site location="admin.sm.gotdns.org/theme" type="theme" handler="backend" theme="_admin_grey" />
+		<site location="admin.sm.gotdns.org/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
 	</site>
 	
 	<!-- utilities -->

@@ -55,6 +55,8 @@
 		<refresh>Refresh</refresh>
 		<send>Send</send>
 		<new_tag>New tag</new_tag>
+		<purge>Purge</purge>
+		<new_relation>New relation</new_relation>
 	</actions>
 	
 	<labels>

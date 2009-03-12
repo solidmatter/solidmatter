@@ -43,6 +43,13 @@ class sbView_jukebox_track_details extends sbJukeboxView {
 					$_RESPONSE->addData($formTag);
 				}
 				
+				// EXPERIMENTAL
+				if (true) {
+					$formRelate = $this->buildRelateForm();
+					$formRelate->saveDOM();
+					$_RESPONSE->addData($formRelate);
+				}
+				
 				// add comments
 				$niComments = $this->nodeSubject->loadChildren('comments', TRUE, TRUE, TRUE);
 				foreach ($niComments as $nodeComment) {

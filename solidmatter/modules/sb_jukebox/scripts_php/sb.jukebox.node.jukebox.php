@@ -15,6 +15,17 @@ class sbNode_jukebox_jukebox extends sbNode {
 	
 	//--------------------------------------------------------------------------
 	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function __setQueries() {
+		parent::__setQueries();
+		$this->aQueries['loadChildren']['byMode'] = 'sbCR/node/loadChildren/mode/standard/byLabel';
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* Overrides parent method to adjust view dependent on handler.
 	* @return string 'properties' if in backend handler, otherwise the nodetype default
 	*/

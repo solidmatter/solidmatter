@@ -74,7 +74,14 @@ class sbNode extends sbCR_Node {
 		$this->aQueries['tagging/createNewTag']						= 'sbSystem/tagging/tags/addTag';
 		$this->aQueries['tagging/getAllTags']						= 'sbSystem/tagging/tags/getAll';
 		$this->aQueries['tagging/increasePopularity']				= 'sbSystem/tagging/tags/increasePopularity';
-	
+		
+		// relations
+		$this->aQueries['relations/getRelations']					= 'sbSystem/relations/getRelations';
+		$this->aQueries['relations/getSupportedRelations']			= 'sbSystem/relations/getSupportedRelations';
+		$this->aQueries['relations/getPossibleTargets']				= 'sbSystem/relations/getPossibleTargets';
+		$this->aQueries['relations/addRelation']					= 'sbSystem/relations/addRelation';
+		$this->aQueries['relations/removeRelation']					= 'sbSystem/relations/removeRelation';
+		
 		// authorisation stuff
 		$this->aQueries['loadLocalAuthorisations']					= 'sbSystem/node/loadAuthorisations/local';
 		$this->aQueries['loadLocalEntityAuthorisations']			= 'sbSystem/node/loadAuthorisations/local/byEntity';
@@ -1408,92 +1415,146 @@ class sbNode extends sbCR_Node {
 	
 	
 	
+	
+	
 	//--------------------------------------------------------------------------
-	// comments
+	// relations
 	//--------------------------------------------------------------------------
 	/**
 	* 
-	* @param 
-	* @return 
+	* 
 	*/
-	/*public function placeComment($sUserUUID = NULL, $sComment) {
-		if ($sUserUUID == NULL) {
-			throw new sbException('voting needs user uuid');	
+	public function getSupportedRelations() {
+		
+		$stmtGet = $this->prepareKnown('relations/getSupportedRelations');
+		$stmtGet->bindValue('nodetype', $this->getPrimaryNodeType(), PDO::PARAM_STR);
+		$stmtGet->execute();
+		$aRelations = array();
+		foreach ($stmtGet as $aRow) {
+			$aRelations[$aRow['relation']][$aRow['targetnodetype']] = $aRow['targetnodetype'];
 		}
-		$stmtPlaceVote = $this->prepareKnown($this->aQueries['voting']['placeVote']);
-		$stmtPlaceVote->bindValue(':subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
-		$stmtPlaceVote->bindValue(':user_uuid', $sUserUUID, PDO::PARAM_STR);
-		$stmtPlaceVote->bindValue(':vote', $iVote, PDO::PARAM_INT);
-		$stmtPlaceVote->execute();
-		$this->refreshGlobalVote();
+		
+		return ($aRelations);
+		
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
 	* 
-	* @param 
-	* @return 
+	* 
 	*/
-	/*public function removeVote($sUserUUID = NULL) {
-		if ($sUserUUID == NULL) {
-			throw new sbException('voting needs user uuid');	
+	public function storeSupportedRelations() {
+		
+		$aRelations = $this->getSupportedRelations();
+		$domOwner = $this->elemSubject->ownerDocument;
+		$elemRelations = $domOwner->createElement('supportedRelations');
+		
+		foreach ($aRelations as $sRelation => $aNodetypes) {
+			$elemRelation = $domOwner->createElement('relation');
+			$elemRelation->setAttribute('id', $sRelation);
+			foreach ($aNodetypes as $sNodetype) {
+				$elemNodetype = $domOwner->createElement('nodetype', $sNodetype);
+				$elemRelation->appendChild($elemNodetype);
+			}
+			$elemRelations->appendChild($elemRelation);
 		}
-		$stmtPlaceVote = $this->prepareKnown($this->aQueries['voting']['removeVote']);
-		$stmtPlaceVote->bindValue(':subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
-		$stmtPlaceVote->bindValue(':user_uuid', $sUserUUID, PDO::PARAM_STR);
-		$stmtPlaceVote->execute();
-		$this->refreshGlobalVote();
+		
+		$this->elemSubject->appendChild($elemRelations);
+		
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
 	* 
-	* @param 
-	* @return 
+	* 
 	*/
-	/*public function getVote($sUserUUID = NULL) {
-		if ($sUserUUID == NULL) {
-			$nodeAll = $this->crSession->getRootNode();
-			$sUserUUID = $nodeAll->getProperty('jcr:uuid');
+	public function getRelations() {
+		
+		$stmtGet = $this->prepareKnown('relations/getRelations');
+		$stmtGet->bindValue('source_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+		$stmtGet->execute();
+		$aRelations = array();
+		foreach ($stmtGet as $aRow) {
+			$aRelations[] = array(
+				'relation' => $aRow['relation'],
+				'target_uuid' => $aRow['target_uuid'],
+				'target_label' => $aRow['target_label'],
+				'target_nodetype' => $aRow['target_nodetype'],
+			);
 		}
-		$stmtGetVote = $this->prepareKnown($this->aQueries['voting']['getVote']['byUser']);
-		$stmtGetVote->bindValue(':subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
-		$stmtGetVote->bindValue(':user_uuid', $sUserUUID, PDO::PARAM_STR);
-		$stmtGetVote->execute();
-		foreach ($stmtGetVote as $aRow) {
-			$this->setAttribute('vote', $aRow['n_vote']);
-			return ($aRow['n_vote']);
-		}
-		return (NULL);
+		
+		return ($aRelations);
+		
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
 	* 
-	* @param 
-	* @return 
+	* 
 	*/
-	/*protected function refreshGlobalVote() {
-		$nodeAll = $this->crSession->getRootNode();
-		$stmtGetVotes = $this->prepareKnown($this->aQueries['voting']['getVote']['average']);
-		$stmtGetVotes->bindValue(':subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
-		$stmtGetVotes->bindValue(':ignore_uuid', $nodeAll->getProperty('jcr:uuid'), PDO::PARAM_STR);
-		$stmtGetVotes->execute();
-		foreach ($stmtGetVotes as $aRow) {
-			$stmtPlaceVote = $this->prepareKnown($this->aQueries['voting']['placeVote']);
-			$stmtPlaceVote->bindValue(':subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
-			$stmtPlaceVote->bindValue(':user_uuid', $nodeAll->getProperty('jcr:uuid'), PDO::PARAM_STR);
-			$stmtPlaceVote->bindValue(':vote', round($aRow['n_average']), PDO::PARAM_INT);
-			$stmtPlaceVote->execute();
+	public function storeRelations() {
+		
+		$aRelations = $this->getRelations();
+		$domOwner = $this->elemSubject->ownerDocument;
+		$elemRelations = $domOwner->createElement('existingRelations');
+		
+		foreach ($aRelations as $aRelation) {
+			$elemRelation = $domOwner->createElement('relation');
+			$elemRelation->setAttribute('id', $aRelation['relation']);
+			$elemRelation->setAttribute('target_uuid', $aRelation['target_uuid']);
+			$elemRelation->setAttribute('target_label', $aRelation['target_label']);
+			$elemRelations->appendChild($elemRelation);
 		}
+		
+		$this->elemSubject->appendChild($elemRelations);
+		
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* TODO: not finished
+	*/
+	public function getPossibleTargets($sRelation, $sSubstring = NULL) {
+		
+		if ($sSubstring != NULL) {
+			$sSubstring = '%'.$sSubstring.'%';
+		}
+		
+		$stmtGet = $this->prepareKnown('relations/getPossibleTargets');
+		$stmtGet->bindValue('relation', $sRelation, PDO::PARAM_STR);
+		$stmtGet->bindValue('sourcenodetype', $this->getPrimaryNodeType(), PDO::PARAM_STR);
+		$stmtGet->bindValue('substring', $sSubstring, PDO::PARAM_STR);
+		$stmtGet->execute();
+		$aTargets = array();
+		foreach ($stmtGet as $aRow) {
+			$aTargets[$aRow['uuid']] = array(
+				'label' => $aRow['label'],
+				'nodetype' => $aRow['nodetype'],
+				'displaytype' => $aRow['displaytype'],
+			);
+		}
+		
+		return ($aTargets);
+		
+	}
 	
-	
-	
-	
-	
-	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* TODO: not finished
+	*/
+	public function addRelation($sRelation, $nodeTarget) {
+		
+		$stmtGet = $this->prepareKnown('relations/addRelation');
+		$stmtGet->bindValue('relation', $sRelation, PDO::PARAM_STR);
+		$stmtGet->bindValue('source_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+		$stmtGet->bindValue('target_uuid', $nodeTarget->getProperty('jcr:uuid'), PDO::PARAM_STR);
+		$stmtGet->execute();
+		
+		return;
+		
+	}
 	
 	//--------------------------------------------------------------------------
 	// authorisations
@@ -1535,7 +1596,7 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function loadUserAuthorisations($bSaveToElement = TRUE) {
+	public function loadUserAuthorisations() {
 		
 		if (User::isLoggedIn()) {
 			$sUserUUID = User::getUUID();
@@ -1547,7 +1608,7 @@ class sbNode extends sbCR_Node {
 		// compute authorisations if necessary
 		if ($this->aUserAuthorisations == NULL) {
 			
-			$this->storeSupportedAuthorisations();
+			$this->loadSupportedAuthorisations();
 			
 //			// check cache
 //			if (Registry::getValue('sb.system.cache.authorisations.enabled')) {
@@ -1606,22 +1667,6 @@ class sbNode extends sbCR_Node {
 			
 		}
 		
-		if ($bSaveToElement) {
-			$this->storeUserAuthorisations();
-		}
-		
-		/*echo 'local ';
-		var_dumpp($this->aLocalAuthorisations);
-		echo 'inherited '; 
-		var_dumpp($this->aInheritedAuthorisations);
-		echo 'merged '; 
-		var_dumpp($this->aMergedAuthorisations);
-		echo 'groups merged '; 
-		var_dumpp($aGroupAuth);
-		echo 'user '; 
-		var_dumpp($aUserAuth);*/
-		//exit();
-		
 		return ($this->aUserAuthorisations);
 	}
 	
@@ -1632,8 +1677,15 @@ class sbNode extends sbCR_Node {
 	* @return 
 	*/
 	public function storeUserAuthorisations() {
+		
 		static $bAlreadyStored = FALSE;
-		if (!$bAlreadyStored && $this->aUserAuthorisations != NULL) {
+		
+		if (!$bAlreadyStored) {
+			
+			if ($this->aUserAuthorisations == NULL) {
+				$this->loadUserAuthorisations();	
+			}
+			
 			$elemContainer = ResponseFactory::createElement('user_authorisations');
 			foreach ($this->aUserAuthorisations as $sAuthorisation => $sGrantType) {
 				$elemAuthorisation = $this->elemSubject->ownerDocument->createElement('authorisation');
@@ -1644,6 +1696,7 @@ class sbNode extends sbCR_Node {
 			$this->elemSubject->appendChild($elemContainer);
 			$bAlreadyStored = TRUE;
 		}
+		
 	}
 	
 	//--------------------------------------------------------------------------

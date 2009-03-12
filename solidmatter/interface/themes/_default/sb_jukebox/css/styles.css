@@ -311,6 +311,25 @@ a.imglink img {
 	border: 0;
 }
 
+/* autocompleter -------------------------------------------------------------*/
+
+div.ac_suggestions {
+	background-color: white;
+	border: 1px solid black;
+}
+div.ac_suggestions ul {
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+div.ac_suggestions ul li {
+	cursor: pointer;
+	margin: 2px 0;
+	padding: 2px;
+}
+div.ac_suggestions ul li.selected {
+	background-color: #EEF;
+}
 
 /* icons ---------------------------------------------------------------------*/
 
@@ -353,6 +372,19 @@ a.imglink img {
 }
 *.tag {
 	background-image: url(../icons/type_tag.png);
+}
+*.relation {
+	background-image: url(../icons/type_relation.png);
+}
+
+*.sb_track {
+	background-image: url(../icons/type_track.png);
+}
+*.sb_album {
+	background-image: url(../icons/type_cd.png);
+}
+*.sb_artist {
+	background-image: url(../icons/type_artist.png);
 }
 
 /* other objects/types */

@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: solidmatter
 Target Host: localhost
 Target Database: solidmatter
-Date: 08.03.2009 14:34:31
+Date: 12.03.2009 08:32:50
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -189,6 +189,21 @@ CREATE TABLE `rep_nodetypes_modes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+-- Table structure for rep_nodetypes_ontology
+-- ----------------------------
+CREATE TABLE `rep_nodetypes_ontology` (
+  `s_relation` varchar(50) character set ascii NOT NULL,
+  `fk_sourcenodetype` varchar(40) character set utf8 NOT NULL,
+  `fk_targetnodetype` varchar(40) character set utf8 NOT NULL,
+  `s_reverserelation` varchar(50) character set ascii default NULL,
+  PRIMARY KEY  (`s_relation`,`fk_sourcenodetype`,`fk_targetnodetype`),
+  KEY `rep_nto_source` (`fk_sourcenodetype`),
+  KEY `rep_nto_target` (`fk_targetnodetype`),
+  CONSTRAINT `rep_nto_source` FOREIGN KEY (`fk_sourcenodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `rep_nto_target` FOREIGN KEY (`fk_targetnodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+-- ----------------------------
 -- Table structure for rep_nodetypes_properties
 -- ----------------------------
 CREATE TABLE `rep_nodetypes_properties` (
@@ -208,15 +223,6 @@ CREATE TABLE `rep_nodetypes_properties` (
   `s_descriptionpath` varchar(250) NOT NULL,
   PRIMARY KEY  (`fk_nodetype`,`s_attributename`),
   CONSTRAINT `rep_np_nodetype` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Table structure for rep_nodetypes_relations
--- ----------------------------
-CREATE TABLE `rep_nodetypes_relations` (
-  `s_relationtype` varchar(40) character set latin1 NOT NULL,
-  `b_bidirectional` enum('TRUE','FALSE') character set latin1 collate latin1_general_ci NOT NULL default 'TRUE',
-  PRIMARY KEY  (`s_relationtype`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -422,7 +428,7 @@ CREATE TABLE `sb_system_eventlog` (
   `e_type` enum('MAINTENANCE','INFO','ERROR','DEBUG','SECURITY','WARNING') NOT NULL default 'INFO',
   `dt_created` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for sb_system_nodes
@@ -526,6 +532,19 @@ CREATE TABLE `sb_system_nodes_properties_binary` (
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 -- ----------------------------
+-- Table structure for sb_system_nodes_relations
+-- ----------------------------
+CREATE TABLE `sb_system_nodes_relations` (
+  `fk_entity1` char(32) character set ascii NOT NULL,
+  `s_relation` varchar(50) character set ascii NOT NULL,
+  `fk_entity2` char(32) character set ascii NOT NULL,
+  PRIMARY KEY  (`fk_entity1`,`s_relation`,`fk_entity2`),
+  KEY `sb_srel_target` (`fk_entity2`),
+  CONSTRAINT `sb_srel_source` FOREIGN KEY (`fk_entity1`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sb_srel_target` FOREIGN KEY (`fk_entity2`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+-- ----------------------------
 -- Table structure for sb_system_nodes_tags
 -- ----------------------------
 CREATE TABLE `sb_system_nodes_tags` (
@@ -583,16 +602,6 @@ CREATE TABLE `sb_system_registry_values` (
   PRIMARY KEY  (`s_key`,`fk_user`),
   CONSTRAINT `sb_srv` FOREIGN KEY (`s_key`) REFERENCES `sb_system_registry` (`s_key`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
-
--- ----------------------------
--- Table structure for sb_system_relations
--- ----------------------------
-CREATE TABLE `sb_system_relations` (
-  `fk_entity1` char(32) collate latin1_general_ci NOT NULL,
-  `s_relation` varchar(40) character set utf8 NOT NULL,
-  `fk_entity2` char(32) character set ascii NOT NULL,
-  PRIMARY KEY  (`fk_entity1`,`s_relation`,`fk_entity2`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- ----------------------------
 -- Table structure for sb_system_tags
@@ -1178,6 +1187,13 @@ INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbUtilities:Imagefilterstack'
 INSERT INTO `rep_nodetypes_modes` VALUES ('chooseImagefilterstack', 'sbSystem:Root', 'sbUtilities:Imageprocessing', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbSystem:Root', 'sbUtilities:Imageprocessing', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbSystem:Root', 'sbUtilities:Imageprocessing', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_ontology` VALUES ('CouldBeFrom', 'sbJukebox:Album', 'sbJukebox:Artist', 'CouldHaveDone');
+INSERT INTO `rep_nodetypes_ontology` VALUES ('IsMemberOf', 'sbJukebox:Artist', 'sbJukebox:Artist', 'HasMember');
+INSERT INTO `rep_nodetypes_ontology` VALUES ('IsPseudonymOf', 'sbJukebox:Artist', 'sbJukebox:Artist', 'IsRealNameOf');
+INSERT INTO `rep_nodetypes_ontology` VALUES ('IsRemixOf', 'sbJukebox:Album', 'sbJukebox:Album', 'IsOriginalTo');
+INSERT INTO `rep_nodetypes_ontology` VALUES ('IsRemixOf', 'sbJukebox:Track', 'sbJukebox:Track', 'IsOriginalTo');
+INSERT INTO `rep_nodetypes_ontology` VALUES ('IsSuccessorOf', 'sbJukebox:Artist', 'sbJukebox:Artist', 'IsPredecessorTo');
+INSERT INTO `rep_nodetypes_ontology` VALUES ('SoundsLike', 'sbJukebox:Artist', 'sbJukebox:Artist', 'SoundsLike');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbCMS:CTN_Image', 'content_image', 'WEAKREFERENCE', 'nodeselector;mode=chooseImage', 'TRUE', '', 'EXTERNAL', null, null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbCMS:Layout', 'xsl_backend', 'STRING', 'codeeditor;syntax=xml', 'TRUE', '$locale/sbCMS/Template/xsl_backend/@label', 'EXTERNAL', null, '1', 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbCMS:Layout', 'xsl_frontend', 'STRING', 'codeeditor;syntax=xml', 'TRUE', '$locale/sbCMS/Template/xsl_frontend/@label', 'EXTERNAL', null, '0', 'FALSE', 'FALSE', 'FALSE', null, '');
@@ -1272,14 +1288,14 @@ INSERT INTO `rep_nodetypes_properties` VALUES ('sbJukebox:Track', 'info_publishe
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbJukebox:Track', 'info_title', 'STRING', 'string', 'TRUE', '$locale/sbJukebox/Track/info_title', 'AUXILIARY', 's_title', null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Comment', 'comment', 'STRING', 'text', 'TRUE', '$locale/sbSystem/labels/comment', 'EXTERNAL', null, '0', 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'config_active', 'BOOLEAN', 'checkbox', 'TRUE', '', 'AUXILIARY', 'b_active', null, 'TRUE', 'TRUE', 'FALSE', null, '');
-INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_installedon', 'DATE', 'datetime', 'TRUE', '', 'AUXILIARY', 'dt_installed', null, 'TRUE', 'TRUE', 'FALSE', null, '');
-INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_lastupdate', 'DATE', 'datetime', 'TRUE', '', 'AUXILIARY', 'dt_updated', null, 'TRUE', 'TRUE', 'FALSE', null, '');
-INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_name', 'STRING', 'string', 'TRUE', '', 'AUXILIARY', 's_name', null, 'TRUE', 'TRUE', 'FALSE', null, '');
-INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_uninstallable', 'BOOLEAN', 'checkbox', 'TRUE', '', 'AUXILIARY', 'b_uninstallable', null, 'TRUE', 'TRUE', 'FALSE', null, '');
-INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'version_bugfix', 'LONG', 'integer', 'TRUE', '', 'AUXILIARY', 'n_bugfixversion', null, 'TRUE', 'TRUE', 'FALSE', null, '');
-INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'version_main', 'LONG', 'integer', 'TRUE', '', 'AUXILIARY', 'n_mainversion', null, 'TRUE', 'TRUE', 'FALSE', null, '');
-INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'version_sub', 'LONG', 'integer', 'TRUE', '', 'AUXILIARY', 'n_subversion', null, 'FALSE', 'TRUE', 'FALSE', null, '');
-INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'version_suffix', 'STRING', 'string', 'TRUE', '', 'AUXILIARY', 's_versioninfo', null, 'TRUE', 'TRUE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_installedon', 'DATE', 'datetime', 'FALSE', '', 'AUXILIARY', 'dt_installed', null, 'TRUE', 'TRUE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_lastupdate', 'DATE', 'datetime', 'FALSE', '', 'AUXILIARY', 'dt_updated', null, 'TRUE', 'TRUE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_name', 'STRING', 'string', 'FALSE', '', 'AUXILIARY', 's_name', null, 'TRUE', 'TRUE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_uninstallable', 'BOOLEAN', 'checkbox', 'FALSE', '', 'AUXILIARY', 'b_uninstallable', null, 'TRUE', 'TRUE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'version_bugfix', 'LONG', 'integer', 'FALSE', '', 'AUXILIARY', 'n_bugfixversion', null, 'TRUE', 'TRUE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'version_main', 'LONG', 'integer', 'FALSE', '', 'AUXILIARY', 'n_mainversion', null, 'TRUE', 'TRUE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'version_sub', 'LONG', 'integer', 'FALSE', '', 'AUXILIARY', 'n_subversion', null, 'FALSE', 'TRUE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'version_suffix', 'STRING', 'string', 'FALSE', '', 'AUXILIARY', 's_versioninfo', null, 'TRUE', 'TRUE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Trashcan', 'info_lastemptied', 'DATE', 'datetime', 'TRUE', '', 'EXTERNAL', null, null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:User', 'config_hidestatus', 'BOOLEAN', 'checkbox', 'TRUE', '$locale/sbSystem/User/config_hidestatus/@label', 'AUXILIARY', 'b_hidestatus', '5', 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:User', 'info_activatedat', 'DATE', 'datetime', 'FALSE', '$locale/sbSystem/User/info_activatedat/@label', 'AUXILIARY', 'dt_activatedat', '13', 'FALSE', 'FALSE', 'FALSE', null, '');
@@ -1319,10 +1335,6 @@ INSERT INTO `rep_nodetypes_properties` VALUES ('sbUtilities:Imagefilter_resize',
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbUtilities:Imagefilter_resize', 'config_height', 'LONG', 'integer;minvalue=1;maxvalue=2000;required=TRUE', 'TRUE', '$locale/sbUtilities/Imagefilter_resize/config_height/@label', 'EXTERNAL', null, '1', 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbUtilities:Imagefilter_resize', 'config_mode', 'STRING', 'select', 'TRUE', '$locale/sbUtilities/Imagefilter_resize/config_mode/@label', 'EXTERNAL', null, '2', 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbUtilities:Imagefilter_resize', 'config_width', 'LONG', 'integer;minvalue=1;maxvalue=2000;required=TRUE', 'TRUE', '$locale/sbUtilities/Imagefilter_resize/config_width/@label', 'EXTERNAL', null, '0', 'FALSE', 'FALSE', 'FALSE', null, '');
-INSERT INTO `rep_nodetypes_relations` VALUES ('sbJukebox:IsSimilarTo', 'TRUE');
-INSERT INTO `rep_nodetypes_relations` VALUES ('sbJukebox:RemixOf', 'FALSE');
-INSERT INTO `rep_nodetypes_relations` VALUES ('sbJukebox:SoundsLike', 'TRUE');
-INSERT INTO `rep_nodetypes_relations` VALUES ('sbJukebox:SuccessorOf', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbCMS:Page', 'edit', 'display', 'TRUE', null, null, 'RENDERED', 'sb_system:node.edit.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbCMS:Page', 'edit', 'render', 'FALSE', null, null, 'RENDERED', null, null, 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbCMS:Page', 'preview', 'display', 'TRUE', null, null, 'RENDERED', 'sb_cms:node.preview.xsl', 'text/html', 'TRUE');
@@ -1415,8 +1427,10 @@ INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Track', 'details', 'g
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Track', 'details', 'getM3U', 'FALSE', null, null, 'STREAM', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Track', 'song', 'play', 'TRUE', null, null, 'STREAM', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'addComment', 'TRUE', null, null, 'HEADERS', null, null, 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'addRelation', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'addTag', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'addToBlacklist', 'FALSE', null, null, 'RENDERED', null, null, 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'getTargets', 'FALSE', null, null, 'RENDERED', 'sb_jukebox:various.tools.getTargets.xsl', 'text/html', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'placeVote', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Debug', 'session', 'display', 'TRUE', null, null, 'RENDERED', 'sb_system:debug.session.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Debug', 'tests', 'display', 'TRUE', null, null, 'RENDERED', 'sb_system:debug.tests.xsl', 'text/html', 'TRUE');
@@ -1676,10 +1690,23 @@ INSERT INTO `sb_system_eventlog` VALUES ('196', 'sbSystem', 'CACHE_CLEARED', 'de
 INSERT INTO `sb_system_eventlog` VALUES ('197', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'authorisations', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-07 01:21:51');
 INSERT INTO `sb_system_eventlog` VALUES ('198', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'repository', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-07 01:21:51');
 INSERT INTO `sb_system_eventlog` VALUES ('199', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'misc', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-07 01:21:51');
+INSERT INTO `sb_system_eventlog` VALUES ('200', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a27048f3b51f52dfd20350810471b12c\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-08 18:46:33');
+INSERT INTO `sb_system_eventlog` VALUES ('201', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'system', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-08 18:49:12');
+INSERT INTO `sb_system_eventlog` VALUES ('202', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'paths', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-08 18:49:12');
+INSERT INTO `sb_system_eventlog` VALUES ('203', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'registry', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-08 18:49:12');
+INSERT INTO `sb_system_eventlog` VALUES ('204', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'images', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-08 18:49:12');
+INSERT INTO `sb_system_eventlog` VALUES ('205', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'authorisations', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-08 18:49:12');
+INSERT INTO `sb_system_eventlog` VALUES ('206', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'repository', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-08 18:49:12');
+INSERT INTO `sb_system_eventlog` VALUES ('207', 'sbSystem', 'CACHE_CLEARED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'misc', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-08 18:49:12');
+INSERT INTO `sb_system_eventlog` VALUES ('208', 'sbSystem', 'REBUILD_MPATHS_STARTED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'starting to fix materialized paths', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-08 19:40:03');
+INSERT INTO `sb_system_eventlog` VALUES ('209', 'sbSystem', 'REBUILD_MPATHS_ENDED', 'de7762bc4e074f789ac9c1dda4ce40c5', 'done with rebuilding materialized paths', 'a6cdee339f11414b8fa732c7030aab85', 'MAINTENANCE', '2009-03-08 19:40:03');
+INSERT INTO `sb_system_eventlog` VALUES ('210', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a27048f3b51f52dfd20350810471b12c\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-08 20:44:53');
+INSERT INTO `sb_system_eventlog` VALUES ('211', 'sbSystem', 'LOGIN_SUCCESSFUL', '00000000000000000000000000000000', '\"ollo\" with fingerprint \"a27048f3b51f52dfd20350810471b12c\" from \"127.0.0.1\"', 'a6cdee339f11414b8fa732c7030aab85', 'INFO', '2009-03-10 08:15:13');
 INSERT INTO `sb_system_nodes` VALUES ('00000000000000000000000000000000', 'sbSystem:Root', 'sbSystem:Root', 'solidMatter', 'root', '', 'TRUE', 'TRUE', 'TRUE', '0', 'a6cdee339f11414b8fa732c7030aab85', null, '0000-00-00 00:00:00', '2007-11-25 13:34:44', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('0080dc1373b84eb0b2096988254ef361', 'sbSystem:Preferences', 'sbSystem:Preferences', 'Preferences', 'jcr_system', '', 'TRUE', 'TRUE', 'TRUE', '0', 'a6cdee339f11414b8fa732c7030aab85', null, '0000-00-00 00:00:00', '2007-05-13 23:39:39', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('02eb2c9c7092418487b1a97aa669ed63', '', 'sbJukebox:Playlist', 'Favorites', '5e97357b8be04b099c2ef20a028ee4ef', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2009-01-11 17:14:58', '2009-01-11 17:14:58', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('03924e41ea44484bac211cb98a97bdb1', '', 'sbSystem:Inbox', 'Inbox', 'inbox', '', 'TRUE', 'TRUE', 'TRUE', 'bdf4f48bab2544c7875611d79ea4a0c2', 'bdf4f48bab2544c7875611d79ea4a0c2', null, '2008-12-21 22:26:27', '2008-12-21 22:26:27', null, null, null, null, null);
+INSERT INTO `sb_system_nodes` VALUES ('0403708141058bcbd4f286eb45c70555', 'sbCMS', 'sbSystem:Module', 'sbCMS', 'sb_cms', null, 'TRUE', 'TRUE', 'TRUE', '0', null, null, '0000-00-00 00:00:00', null, null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('07677c2a5ad24835b008ece8c950bbf7', '', 'sbCMS:Page', 'Conclusion', 'conclusion', '', 'TRUE', 'TRUE', 'TRUE', '0', 'a6cdee339f11414b8fa732c7030aab85', null, '0000-00-00 00:00:00', '2009-02-18 20:02:11', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('08479177a247489b86078a3a0204a96e', '', 'sbFiles:Asset', 'stifflip.p00', 'Stifflip.p00', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2009-02-19 00:09:50', '2009-02-19 00:09:50', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('0a30e3986e0040018bfa013a88771dee', '', 'sbFiles:Image', 'catnmouse.jpg', 'catnmouse.jpg', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2009-02-18 21:44:59', '2009-02-19 01:42:24', null, null, null, null, null);
@@ -1725,6 +1752,7 @@ INSERT INTO `sb_system_nodes` VALUES ('4e67469947774139aafe1341dd977da6', '', 's
 INSERT INTO `sb_system_nodes` VALUES ('4f85c4a0db1244cd8937b6be022569df', '', 'sbSystem:TestNode', 'TestNode', 'testnode', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2009-03-01 10:24:59', '2009-03-01 10:24:59', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('50b134bb586942c68dab4783fcb1c5f0', '', 'sbForum:Thread', 'WebOS slows down', 'webosslow', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-03-21 08:03:02', '2007-03-21 08:03:02', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('50b193ceffa1425d852839b3a34c7376', '', 'sbSystem:Usergroup', 'Users (Jukebox)', 'users_jukebox', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2008-03-07 01:16:11', '2008-03-07 01:16:11', null, null, null, null, null);
+INSERT INTO `sb_system_nodes` VALUES ('5172ae3fd7dc2c89766074ff53f7400a', 'sbForum', 'sbSystem:Module', 'sbForum', 'sb_forum', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-05-06 23:30:59', '2007-05-06 23:30:59', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('522b0b27de4644ac90f9635d3973d45d', '', 'sbCMS:TPL_Richtext', 'Introduction', 'introduction', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-09-02 01:19:22', '2009-02-18 23:45:22', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('52aeb12cc4f748d5ac0ee851cee58b7a', '', 'sbCMS:Page', 'Article 1', 'art1', '', 'TRUE', 'TRUE', 'TRUE', '0', 'a6cdee339f11414b8fa732c7030aab85', null, '0000-00-00 00:00:00', '2009-02-18 20:01:40', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('53bf036f4aa34099bf53d639c24d1b73', '', 'sbCMS:Page', 'Article 2', 'art2', '', 'TRUE', 'TRUE', 'TRUE', '0', 'a6cdee339f11414b8fa732c7030aab85', null, '0000-00-00 00:00:00', '2009-02-18 21:28:59', null, null, null, null, null);
@@ -1758,6 +1786,9 @@ INSERT INTO `sb_system_nodes` VALUES ('8ea185a64e394c7c83f098ba6f537073', '', 's
 INSERT INTO `sb_system_nodes` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', 'sbSystem:Modules', 'sbSystem:Modules', 'Modules', 'modules', null, 'TRUE', 'TRUE', 'TRUE', '0', null, null, '0000-00-00 00:00:00', null, null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('9022d8e26cb349bd832aa1309f177d87', '', 'sbUtilities:Imagefilter_lightness', 'More Contrast', 'morecontrast', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-02-02 14:52:40', '2009-02-18 23:51:07', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('926b69fb3c8a4de8914d244136222e14', '', 'sbSystem:User', 'Dirk 4', 'divi', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2009-01-18 12:42:03', '2009-02-18 21:17:47', null, null, null, null, null);
+INSERT INTO `sb_system_nodes` VALUES ('969b3b1e5721c24ff5b48d3cedf52fe4', 'sbSystem', 'sbSystem:Module', 'sbSystem', 'sb_system', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-05-06 23:30:46', '2007-05-06 23:30:46', null, null, null, null, null);
+INSERT INTO `sb_system_nodes` VALUES ('96b3319f5b4086db49a4093565bc8d74', 'sbUtilities', 'sbSystem:Module', 'sbUtilities', 'sb_utilities', null, 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-05-06 23:30:46', '2007-05-06 23:30:46', null, null, null, null, null);
+INSERT INTO `sb_system_nodes` VALUES ('9724c30b7f33877ab7c59df1f5af222d', 'sbShop', 'sbSystem:Module', 'sbShop', 'sb_shop', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-05-06 23:33:06', '2007-05-06 23:33:06', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('98c88b1f427b40f6a02c26ffb63e6c66', null, 'sbFiles:Folder', 'CSS', 'css', null, 'TRUE', 'TRUE', 'TRUE', '0', null, null, '0000-00-00 00:00:00', null, null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('99a8d1cbb5ea4c95a0605f80826c5c22', '', 'sbCMS:Page', 'Good', 'good', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-08-26 01:25:31', '2009-02-18 21:29:52', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('a088cb4434f2481784e6a86775bce794', '', 'sbUtilities:Imagefilter_resize', 'Shrink', 'shrink', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-02-03 23:34:27', '2009-02-18 23:53:19', null, null, null, null, null);
@@ -1772,6 +1803,7 @@ INSERT INTO `sb_system_nodes` VALUES ('a8161f9b44144f2b8927e7f515fe4fdf', 'sbSys
 INSERT INTO `sb_system_nodes` VALUES ('a83b351baeff4c0c80c68945fb2266cf', 'sbSystem:Admins', 'sbSystem:Usergroup', 'Admins', 'admins', 'sb_admins', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-03-18 18:01:21', '2007-03-18 18:01:21', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('ac58d48b6a0848dcb4330a7c5957d92d', '', 'sbFiles:Asset', 'blindtexts.txt', 'blindtexts.txt', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2009-02-19 00:06:10', '2009-02-19 00:07:54', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('adcff1aa2aa544b0b1a60a5c7e56af89', null, 'sbSystem:Tasks', 'Tasks', 'tasks', '', 'TRUE', 'TRUE', 'TRUE', 'bdf4f48bab2544c7875611d79ea4a0c2', 'bdf4f48bab2544c7875611d79ea4a0c2', null, '2008-12-21 22:26:27', '2008-12-21 22:26:27', null, null, null, null, null);
+INSERT INTO `sb_system_nodes` VALUES ('af86df686cb2d9b8729200e5b6910631', 'sbJukebox', 'sbSystem:Module', 'sbJukebox', 'sb_jukebox', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-10-16 19:29:58', '2007-10-16 19:29:58', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('afe9922a6e684eb88b3823174db8c072', '', 'sbCMS:Page', 'Philosophy', 'philosophy', '', 'TRUE', 'TRUE', 'TRUE', '0', 'a6cdee339f11414b8fa732c7030aab85', null, '0000-00-00 00:00:00', '2009-02-18 23:38:02', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('b55202ea1190484db8c575419aefe6fc', '', 'sbCMS:Templategroup', 'Templategroup', 'templategroup', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-08-12 11:47:55', '2009-02-28 18:52:33', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('bd4cf50d699d4a17aad0c4bc5c4b66ae', null, 'sbCMS:Templategroup', 'Templates', 'templates', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-08-12 13:05:12', '2007-08-12 13:05:12', null, null, null, null, null);
@@ -1786,17 +1818,12 @@ INSERT INTO `sb_system_nodes` VALUES ('cf33a52cce7a4eef99de947addd1d02f', null, 
 INSERT INTO `sb_system_nodes` VALUES ('cff8de79afa84f249a906645c94cc2b5', '', 'sbCMS:CTN_Image', 'Sectionimage', 'sectionimage', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2009-02-18 23:48:48', '2009-02-18 23:48:48', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('d1e50833ff4046bb8e4be7510df78f32', '', 'sbForum:Thread', 'WTF?', 'wtf', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-03-21 08:01:03', '2007-03-21 08:01:03', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('d4341cc8a61c478d875b11007192e37d', '', 'sbSystem:Tags', 'Tags', 'tags', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2008-04-05 15:35:39', '2008-04-05 15:35:39', null, null, null, null, null);
+INSERT INTO `sb_system_nodes` VALUES ('d6c87690b0ee6f725ce1b620c3bed2b3', 'sbNews', 'sbSystem:Module', 'sbNews', 'sb_news', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-10-16 19:37:20', '2007-10-16 19:37:20', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('d7a3ccd461fb4c6692e0ac7c87ddd7fe', '', 'sbUtilities:Imagefilter_negative', 'Negative', 'negative', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-02-02 16:09:34', '2009-02-18 23:51:18', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('de7762bc4e074f789ac9c1dda4ce40c5', 'sbSystem:Maintenance', 'sbSystem:Maintenance', 'Maintenance', 'maintenance', null, 'TRUE', 'TRUE', 'TRUE', '0', null, null, '0000-00-00 00:00:00', null, null, null, null, null, null);
-INSERT INTO `sb_system_nodes` VALUES ('deadbeef0110666f72756d0000000000', 'sbForum', 'sbSystem:Module', 'sbForum', 'sb_forum', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-05-06 23:30:59', '2007-05-06 23:30:59', null, null, null, null, null);
-INSERT INTO `sb_system_nodes` VALUES ('deadbeef01106775657374626f6f6b00', 'sbGuestbook', 'sbSystem:Module', 'sbGuestbook', 'sb_guestbook', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-05-06 23:32:52', '2007-05-06 23:32:52', null, null, null, null, null);
-INSERT INTO `sb_system_nodes` VALUES ('deadbeef01106a756b65626f78000000', 'sbJukebox', 'sbSystem:Module', 'sbJukebox', 'sb_jukebox', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-10-16 19:29:58', '2007-10-16 19:29:58', null, null, null, null, null);
-INSERT INTO `sb_system_nodes` VALUES ('deadbeef01106e657773000000000000', 'sbNews', 'sbSystem:Module', 'sbNews', 'sb_news', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-10-16 19:37:20', '2007-10-16 19:37:20', null, null, null, null, null);
-INSERT INTO `sb_system_nodes` VALUES ('deadbeef011073686f70000000000000', 'sbShop', 'sbSystem:Module', 'sbShop', 'sb_shop', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-05-06 23:33:06', '2007-05-06 23:33:06', null, null, null, null, null);
-INSERT INTO `sb_system_nodes` VALUES ('deadbeef011073797374656d00000000', 'sbSystem', 'sbSystem:Module', 'sbSystem', 'sb_system', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-05-06 23:30:46', '2007-05-06 23:30:46', null, null, null, null, null);
-INSERT INTO `sb_system_nodes` VALUES ('deadbeef01107574696c697469657300', 'sbUtilities', 'sbSystem:Module', 'sbUtilities', 'sb_utilities', null, 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-05-06 23:30:46', '2007-05-06 23:30:46', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('df0faa531b374ae8afb95aeb6ffcd841', '', 'sbSystem:User', 'Miki Maus', 'miki', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2008-12-21 21:51:03', '2008-12-21 21:54:38', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('e2bef28bd3d64ad6aef46edbdeb1a015', '', 'sbSystem:Inbox', 'Inbox', 'inbox', '', 'TRUE', 'TRUE', 'TRUE', 'a205b4cdb96442cb85d0d99caff9d530', 'a205b4cdb96442cb85d0d99caff9d530', null, '2008-12-21 22:24:32', '2008-12-21 22:24:32', null, null, null, null, null);
+INSERT INTO `sb_system_nodes` VALUES ('e598ce16e7b2b13af2f5f93c92a6f976', 'sbGuestbook', 'sbSystem:Module', 'sbGuestbook', 'sb_guestbook', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-05-06 23:32:52', '2007-05-06 23:32:52', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('eaa56c620fab446d9690604303788b34', '', 'sbSystem:Tasks', 'Tasks', 'tasks', '', 'TRUE', 'TRUE', 'TRUE', '8ea185a64e394c7c83f098ba6f537073', '8ea185a64e394c7c83f098ba6f537073', null, '2008-12-20 23:39:38', '2008-12-20 23:39:38', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('eb04110996804ef3bbc35ae492738c8a', '', 'sbCMS:Page', 'ת הסיפור המשעשע שחלקתי עמכם כאן בזמנו', 'hindi', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2008-09-27 12:01:58', '2008-09-27 12:01:58', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', '', 'sbCMS:Site', 'Demo Website', 'demowebsite', '', 'TRUE', 'FALSE', 'TRUE', '0', 'a6cdee339f11414b8fa732c7030aab85', null, '0000-00-00 00:00:00', '2009-03-01 20:48:43', null, null, null, null, null);
@@ -1833,155 +1860,156 @@ INSERT INTO `sb_system_nodes_authorisation` VALUES ('ec3f5a676d7c43e1a7a539cb483
 INSERT INTO `sb_system_nodes_authorisation` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', 'write', '86e22252bdea494bacf904674d3711ea', 'ALLOW');
 INSERT INTO `sb_system_nodes_authorisation` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', 'write', '8ea185a64e394c7c83f098ba6f537073', 'ALLOW');
 INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', '00000000000000000000000000000000', 'TRUE', '0', '0', null);
-INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', '0080dc1373b84eb0b2096988254ef361', 'TRUE', '5', '1', '838cf');
-INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', '307f66febf2e460b81d1613a4d9350a5', 'TRUE', '2', '1', '838cf');
-INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', '4f85c4a0db1244cd8937b6be022569df', 'TRUE', '8', '1', '068a1');
-INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', '5e97357b8be04b099c2ef20a028ee4ef', 'TRUE', '1', '1', '838cf');
-INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', 'ec3f5a676d7c43e1a7a539cb483ca394', 'TRUE', '0', '1', '838cf');
-INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', 'f23806d022824fe5ae510ff5ffffeb3c', 'TRUE', '3', '1', '838cf');
-INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', 'f81ddc601c604510a74e7c97f42353a6', 'TRUE', '6', '1', '838cf');
-INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', 'f81ddc601c723510a74e7c97f42353a6', 'TRUE', '4', '1', '838cf');
-INSERT INTO `sb_system_nodes_parents` VALUES ('0080dc1373b84eb0b2096988254ef361', '2b49b3e2d1a648a1a80a82c660693c40', 'TRUE', '0', '2', '838cf1e2d3');
-INSERT INTO `sb_system_nodes_parents` VALUES ('0080dc1373b84eb0b2096988254ef361', '7a4579077e6b4dada6ee610ff589a8ce', 'TRUE', '1', '2', '838cf1e2d3');
-INSERT INTO `sb_system_nodes_parents` VALUES ('0080dc1373b84eb0b2096988254ef361', '8f1d4495a5b9461a9f09bd4e24410d34', 'TRUE', '2', '2', '838cf1e2d3');
-INSERT INTO `sb_system_nodes_parents` VALUES ('0080dc1373b84eb0b2096988254ef361', 'de7762bc4e074f789ac9c1dda4ce40c5', 'TRUE', '3', '2', '838cf1e2d3');
-INSERT INTO `sb_system_nodes_parents` VALUES ('07677c2a5ad24835b008ece8c950bbf7', '46232558ab324467a418c6bfd8e29695', 'TRUE', '1', '5', '838cf9ffc43caf3d09de633c9');
-INSERT INTO `sb_system_nodes_parents` VALUES ('07677c2a5ad24835b008ece8c950bbf7', '99a8d1cbb5ea4c95a0605f80826c5c22', 'TRUE', '0', '5', '838cf9ffc43caf3d09de633c9');
-INSERT INTO `sb_system_nodes_parents` VALUES ('0afa05f280404cd0a9acd4637686aa34', '1e34773b0aa64968b7bdf5a6cbb4de72', 'TRUE', '0', '5', '838cf71e177725b40062a6f16');
-INSERT INTO `sb_system_nodes_parents` VALUES ('0e0dd3e60ec442d4aaa981198482bdb9', '1dc4241a9bc64499b5a8ff1bbdd10ca3', 'TRUE', '0', '7', '838cf9ffc4a64de068009820ad0e504b752');
-INSERT INTO `sb_system_nodes_parents` VALUES ('15663e54221440f0a9d2a3e78d8273b2', '86e22252bdea494bacf904674d3711ea', 'FALSE', '1', '4', '838cf1e2d3d3b06459c0');
-INSERT INTO `sb_system_nodes_parents` VALUES ('21b3a5cde2df43618217d40180448b4c', '07677c2a5ad24835b008ece8c950bbf7', 'TRUE', '5', '4', '838cf9ffc43caf3d09de');
-INSERT INTO `sb_system_nodes_parents` VALUES ('21b3a5cde2df43618217d40180448b4c', '1fc461acb6f04c46b9a4bab0e19b5675', 'TRUE', '4', '4', '838cf9ffc43caf3d09de');
-INSERT INTO `sb_system_nodes_parents` VALUES ('21b3a5cde2df43618217d40180448b4c', '52aeb12cc4f748d5ac0ee851cee58b7a', 'TRUE', '0', '4', '838cf9ffc43caf3d09de');
-INSERT INTO `sb_system_nodes_parents` VALUES ('21b3a5cde2df43618217d40180448b4c', '53bf036f4aa34099bf53d639c24d1b73', 'TRUE', '1', '4', '838cf9ffc43caf3d09de');
-INSERT INTO `sb_system_nodes_parents` VALUES ('21b3a5cde2df43618217d40180448b4c', 'f23806d022824fe5ae510ff5ceaaeb3c', 'TRUE', '2', '4', '838cf9ffc43caf3d09de');
-INSERT INTO `sb_system_nodes_parents` VALUES ('21b3a5cde2df43618217d40180448b4c', 'f90222ca603d4d8da3c82bcd20564505', 'TRUE', '3', '4', '838cf9ffc43caf3d09de');
+INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', '0080dc1373b84eb0b2096988254ef361', 'TRUE', '5', '1', '068a1');
+INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', '307f66febf2e460b81d1613a4d9350a5', 'TRUE', '2', '1', '068a1');
+INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', '4f85c4a0db1244cd8937b6be022569df', 'TRUE', '7', '1', '068a1');
+INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', '5e97357b8be04b099c2ef20a028ee4ef', 'TRUE', '1', '1', '068a1');
+INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', 'ec3f5a676d7c43e1a7a539cb483ca394', 'TRUE', '0', '1', '068a1');
+INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', 'f23806d022824fe5ae510ff5ffffeb3c', 'TRUE', '3', '1', '068a1');
+INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', 'f81ddc601c604510a74e7c97f42353a6', 'TRUE', '6', '1', '068a1');
+INSERT INTO `sb_system_nodes_parents` VALUES ('00000000000000000000000000000000', 'f81ddc601c723510a74e7c97f42353a6', 'TRUE', '4', '1', '068a1');
+INSERT INTO `sb_system_nodes_parents` VALUES ('0080dc1373b84eb0b2096988254ef361', '2b49b3e2d1a648a1a80a82c660693c40', 'TRUE', '0', '2', '068a1e14e7');
+INSERT INTO `sb_system_nodes_parents` VALUES ('0080dc1373b84eb0b2096988254ef361', '7a4579077e6b4dada6ee610ff589a8ce', 'TRUE', '1', '2', '068a1e14e7');
+INSERT INTO `sb_system_nodes_parents` VALUES ('0080dc1373b84eb0b2096988254ef361', '8f1d4495a5b9461a9f09bd4e24410d34', 'TRUE', '2', '2', '068a1e14e7');
+INSERT INTO `sb_system_nodes_parents` VALUES ('0080dc1373b84eb0b2096988254ef361', 'de7762bc4e074f789ac9c1dda4ce40c5', 'TRUE', '3', '2', '068a1e14e7');
+INSERT INTO `sb_system_nodes_parents` VALUES ('07677c2a5ad24835b008ece8c950bbf7', '46232558ab324467a418c6bfd8e29695', 'TRUE', '1', '5', '068a1f012bbb89c3464fed31b');
+INSERT INTO `sb_system_nodes_parents` VALUES ('07677c2a5ad24835b008ece8c950bbf7', '99a8d1cbb5ea4c95a0605f80826c5c22', 'TRUE', '0', '5', '068a1f012bbb89c3464fed31b');
+INSERT INTO `sb_system_nodes_parents` VALUES ('0afa05f280404cd0a9acd4637686aa34', '1e34773b0aa64968b7bdf5a6cbb4de72', 'TRUE', '0', '5', '068a106efcd8cf9280819376d');
+INSERT INTO `sb_system_nodes_parents` VALUES ('0e0dd3e60ec442d4aaa981198482bdb9', '1dc4241a9bc64499b5a8ff1bbdd10ca3', 'TRUE', '0', '7', '068a1f012b3fcd04cd094f2fbf99e0dc13a');
+INSERT INTO `sb_system_nodes_parents` VALUES ('15663e54221440f0a9d2a3e78d8273b2', '86e22252bdea494bacf904674d3711ea', 'FALSE', '0', '4', '068a1e14e7664e4cf35f');
+INSERT INTO `sb_system_nodes_parents` VALUES ('21b3a5cde2df43618217d40180448b4c', '07677c2a5ad24835b008ece8c950bbf7', 'TRUE', '5', '4', '068a1f012bbb89c3464f');
+INSERT INTO `sb_system_nodes_parents` VALUES ('21b3a5cde2df43618217d40180448b4c', '1fc461acb6f04c46b9a4bab0e19b5675', 'TRUE', '4', '4', '068a1f012bbb89c3464f');
+INSERT INTO `sb_system_nodes_parents` VALUES ('21b3a5cde2df43618217d40180448b4c', '52aeb12cc4f748d5ac0ee851cee58b7a', 'TRUE', '0', '4', '068a1f012bbb89c3464f');
+INSERT INTO `sb_system_nodes_parents` VALUES ('21b3a5cde2df43618217d40180448b4c', '53bf036f4aa34099bf53d639c24d1b73', 'TRUE', '1', '4', '068a1f012bbb89c3464f');
+INSERT INTO `sb_system_nodes_parents` VALUES ('21b3a5cde2df43618217d40180448b4c', 'f23806d022824fe5ae510ff5ceaaeb3c', 'TRUE', '2', '4', '068a1f012bbb89c3464f');
+INSERT INTO `sb_system_nodes_parents` VALUES ('21b3a5cde2df43618217d40180448b4c', 'f90222ca603d4d8da3c82bcd20564505', 'TRUE', '3', '4', '068a1f012bbb89c3464f');
 INSERT INTO `sb_system_nodes_parents` VALUES ('289a5b61f601431e8410a7932553b220', '7777249867fd4a2eb43355afe4093be0', 'TRUE', '2', '3', '068a1f012b3fcd0');
-INSERT INTO `sb_system_nodes_parents` VALUES ('289a5b61f601431e8410a7932553b220', '8a7441a710344cd781e1a9e73118f108', 'TRUE', '0', '3', '838cf9ffc4a64de');
+INSERT INTO `sb_system_nodes_parents` VALUES ('289a5b61f601431e8410a7932553b220', '8a7441a710344cd781e1a9e73118f108', 'TRUE', '0', '3', '068a1f012b3fcd0');
 INSERT INTO `sb_system_nodes_parents` VALUES ('289a5b61f601431e8410a7932553b220', 'cff8de79afa84f249a906645c94cc2b5', 'TRUE', '1', '3', '068a1f012b3fcd0');
-INSERT INTO `sb_system_nodes_parents` VALUES ('2b49b3e2d1a648a1a80a82c660693c40', '0d063b3e151a4267852a9f5f5e2a991e', 'TRUE', '1', '3', '838cf1e2d34ea53');
-INSERT INTO `sb_system_nodes_parents` VALUES ('2b49b3e2d1a648a1a80a82c660693c40', '2b49b3e2d1a648a1a80a82c660693c41', 'TRUE', '0', '3', '838cf1e2d34ea53');
+INSERT INTO `sb_system_nodes_parents` VALUES ('2b49b3e2d1a648a1a80a82c660693c40', '0d063b3e151a4267852a9f5f5e2a991e', 'TRUE', '1', '3', '068a1e14e7a709b');
+INSERT INTO `sb_system_nodes_parents` VALUES ('2b49b3e2d1a648a1a80a82c660693c40', '2b49b3e2d1a648a1a80a82c660693c41', 'TRUE', '0', '3', '068a1e14e7a709b');
 INSERT INTO `sb_system_nodes_parents` VALUES ('307f66febf2e460b81d1613a4d9350a5', '47557c9f224e4306980a38cd36b30728', 'TRUE', '0', '2', '068a16008f');
 INSERT INTO `sb_system_nodes_parents` VALUES ('307f66febf2e460b81d1613a4d9350a5', '8574e415d0114caebe004f66f328086c', 'TRUE', '2', '2', '068a16008f');
-INSERT INTO `sb_system_nodes_parents` VALUES ('307f66febf2e460b81d1613a4d9350a5', '98c88b1f427b40f6a02c26ffb63e6c66', 'TRUE', '1', '2', '838cfef41e');
-INSERT INTO `sb_system_nodes_parents` VALUES ('3d736f78289f4f9e821ba0ac653a6dbc', '0e0dd3e60ec442d4aaa981198482bdb9', 'TRUE', '0', '6', '838cf9ffc4a64de068009820ad0e50');
-INSERT INTO `sb_system_nodes_parents` VALUES ('44509a3ab481412fabb0fe5f26332d61', '575bca4b0fbb490c97aaded986d1bae3', 'TRUE', '0', '4', '838cfef41e269f08ca86');
-INSERT INTO `sb_system_nodes_parents` VALUES ('451f274d6c064b16bca1e4011f8050cf', '0f7fb53268da465fb67127112785696a', 'TRUE', '0', '3', '838cf19525f0f45');
+INSERT INTO `sb_system_nodes_parents` VALUES ('307f66febf2e460b81d1613a4d9350a5', '98c88b1f427b40f6a02c26ffb63e6c66', 'TRUE', '1', '2', '068a16008f');
+INSERT INTO `sb_system_nodes_parents` VALUES ('3d736f78289f4f9e821ba0ac653a6dbc', '0e0dd3e60ec442d4aaa981198482bdb9', 'TRUE', '0', '6', '068a1f012b3fcd04cd094f2fbf99e0');
+INSERT INTO `sb_system_nodes_parents` VALUES ('44509a3ab481412fabb0fe5f26332d61', '575bca4b0fbb490c97aaded986d1bae3', 'TRUE', '0', '4', '068a16008f4e6684773b');
+INSERT INTO `sb_system_nodes_parents` VALUES ('451f274d6c064b16bca1e4011f8050cf', '0f7fb53268da465fb67127112785696a', 'TRUE', '0', '3', '068a1940e458d1e');
 INSERT INTO `sb_system_nodes_parents` VALUES ('47557c9f224e4306980a38cd36b30728', '0a30e3986e0040018bfa013a88771dee', 'TRUE', '2', '3', '068a16008f0db84');
 INSERT INTO `sb_system_nodes_parents` VALUES ('47557c9f224e4306980a38cd36b30728', '1b05b1b977ed40a18d34d05823133529', 'TRUE', '1', '3', '068a16008f0db84');
 INSERT INTO `sb_system_nodes_parents` VALUES ('47557c9f224e4306980a38cd36b30728', '5cf6746c9dcc42429acf0837fb341e8b', 'TRUE', '3', '3', '068a16008f0db84');
 INSERT INTO `sb_system_nodes_parents` VALUES ('47557c9f224e4306980a38cd36b30728', 'c42afe4b46634ebc90946626a51c57f1', 'TRUE', '0', '3', '068a16008f0db84');
 INSERT INTO `sb_system_nodes_parents` VALUES ('47557c9f224e4306980a38cd36b30728', 'c9afb8c17ab643fca4b17c1f7e5288e9', 'TRUE', '5', '3', '068a16008f0db84');
 INSERT INTO `sb_system_nodes_parents` VALUES ('47557c9f224e4306980a38cd36b30728', 'f4a089e751c64350ba66fcc824b3cfe0', 'TRUE', '4', '3', '068a16008f0db84');
-INSERT INTO `sb_system_nodes_parents` VALUES ('4e67469947774139aafe1341dd977da6', '13706b2112bb45aaa416b0dd622917c0', 'TRUE', '1', '3', '838cf195254444a');
-INSERT INTO `sb_system_nodes_parents` VALUES ('4e67469947774139aafe1341dd977da6', '1b02a28848344850a9e2c54a6b0426dd', 'TRUE', '0', '3', '838cf195254444a');
-INSERT INTO `sb_system_nodes_parents` VALUES ('50b193ceffa1425d852839b3a34c7376', '3a334839b2eb4b9eaa53cb291d0ad0ef', 'FALSE', '6', '4', '838cf1e2d3d3b0644b76');
-INSERT INTO `sb_system_nodes_parents` VALUES ('50b193ceffa1425d852839b3a34c7376', '8ea185a64e394c7c83f098ba6f537073', 'FALSE', '0', '4', '838cf1e2d3d3b0644b76');
-INSERT INTO `sb_system_nodes_parents` VALUES ('50b193ceffa1425d852839b3a34c7376', '926b69fb3c8a4de8914d244136222e14', 'FALSE', '5', '4', '838cf1e2d3d3b0644b76');
-INSERT INTO `sb_system_nodes_parents` VALUES ('50b193ceffa1425d852839b3a34c7376', 'a205b4cdb96442cb85d0d99caff9d530', 'FALSE', '4', '4', '838cf1e2d3d3b0644b76');
-INSERT INTO `sb_system_nodes_parents` VALUES ('50b193ceffa1425d852839b3a34c7376', 'bdf4f48bab2544c7875611d79ea4a0c2', 'FALSE', '1', '4', '838cf1e2d3d3b0644b76');
-INSERT INTO `sb_system_nodes_parents` VALUES ('50b193ceffa1425d852839b3a34c7376', 'df0faa531b374ae8afb95aeb6ffcd841', 'FALSE', '3', '4', '838cf1e2d3d3b0644b76');
-INSERT INTO `sb_system_nodes_parents` VALUES ('50b193ceffa1425d852839b3a34c7376', 'f43e9b4c2a0e4e56bc2448e1c80d77f8', 'FALSE', '7', '4', '838cf1e2d3d3b0644b76');
+INSERT INTO `sb_system_nodes_parents` VALUES ('4e67469947774139aafe1341dd977da6', '13706b2112bb45aaa416b0dd622917c0', 'TRUE', '1', '3', '068a1940e401480');
+INSERT INTO `sb_system_nodes_parents` VALUES ('4e67469947774139aafe1341dd977da6', '1b02a28848344850a9e2c54a6b0426dd', 'TRUE', '0', '3', '068a1940e401480');
+INSERT INTO `sb_system_nodes_parents` VALUES ('50b193ceffa1425d852839b3a34c7376', '3a334839b2eb4b9eaa53cb291d0ad0ef', 'FALSE', '5', '4', '068a1e14e7664e4bde1a');
+INSERT INTO `sb_system_nodes_parents` VALUES ('50b193ceffa1425d852839b3a34c7376', '8ea185a64e394c7c83f098ba6f537073', 'FALSE', '0', '4', '068a1e14e7664e4bde1a');
+INSERT INTO `sb_system_nodes_parents` VALUES ('50b193ceffa1425d852839b3a34c7376', '926b69fb3c8a4de8914d244136222e14', 'FALSE', '4', '4', '068a1e14e7664e4bde1a');
+INSERT INTO `sb_system_nodes_parents` VALUES ('50b193ceffa1425d852839b3a34c7376', 'a205b4cdb96442cb85d0d99caff9d530', 'FALSE', '3', '4', '068a1e14e7664e4bde1a');
+INSERT INTO `sb_system_nodes_parents` VALUES ('50b193ceffa1425d852839b3a34c7376', 'bdf4f48bab2544c7875611d79ea4a0c2', 'FALSE', '1', '4', '068a1e14e7664e4bde1a');
+INSERT INTO `sb_system_nodes_parents` VALUES ('50b193ceffa1425d852839b3a34c7376', 'df0faa531b374ae8afb95aeb6ffcd841', 'FALSE', '2', '4', '068a1e14e7664e4bde1a');
+INSERT INTO `sb_system_nodes_parents` VALUES ('50b193ceffa1425d852839b3a34c7376', 'f43e9b4c2a0e4e56bc2448e1c80d77f8', 'FALSE', '6', '4', '068a1e14e7664e4bde1a');
 INSERT INTO `sb_system_nodes_parents` VALUES ('5e97357b8be04b099c2ef20a028ee4ef', '398f26d012ea4b2e8d74986688806b3d', 'TRUE', '0', '2', '068a134100');
-INSERT INTO `sb_system_nodes_parents` VALUES ('6208f457a71e427dad7cc552e2162f55', '67ada0a2203047a2b8a5b875e1e0a151', 'TRUE', '0', '3', '838cf9ffc42d895');
-INSERT INTO `sb_system_nodes_parents` VALUES ('64938dac23c942ae872b54675bb5b984', 'a088cb4434f2481784e6a86775bce794', 'TRUE', '0', '3', '838cf19525e95a9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('6208f457a71e427dad7cc552e2162f55', '67ada0a2203047a2b8a5b875e1e0a151', 'TRUE', '0', '3', '068a1f012b09c82');
+INSERT INTO `sb_system_nodes_parents` VALUES ('64938dac23c942ae872b54675bb5b984', 'a088cb4434f2481784e6a86775bce794', 'TRUE', '0', '3', '068a1940e42bbf5');
 INSERT INTO `sb_system_nodes_parents` VALUES ('67ada0a2203047a2b8a5b875e1e0a151', 'f8ae97bd27e04443a2a1a32d4d12ebcc', 'TRUE', '0', '4', '068a1f012b09c8275bc7');
-INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', '22e5c57ec30d4d07963bff8290250005', 'TRUE', '0', '4', '838cf9ffc4bddde9483f');
-INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', '408b3d26444d484693b0ed38e5f56733', 'TRUE', '1', '4', '838cf9ffc4bddde9483f');
-INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', '50b134bb586942c68dab4783fcb1c5f0', 'TRUE', '6', '4', '838cf9ffc4bddde9483f');
-INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', '7d6053e92e2545998d091dc4ea54872f', 'TRUE', '3', '4', '838cf9ffc4bddde9483f');
-INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', 'be4c8ab2c2774cf090c3a05b18e9625b', 'TRUE', '5', '4', '838cf9ffc4bddde9483f');
-INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', 'cf33a52cce7a4eef99de947addd1d02f', 'TRUE', '7', '4', '838cf9ffc4bddde9483f');
-INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', 'd1e50833ff4046bb8e4be7510df78f32', 'TRUE', '2', '4', '838cf9ffc4bddde9483f');
-INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', 'ee8c719706464809976cf033155e8296', 'TRUE', '4', '4', '838cf9ffc4bddde9483f');
-INSERT INTO `sb_system_nodes_parents` VALUES ('76a2384d47b7415fb355efebcb86e663', '21b3a5cde2df43618217d40180448b4c', 'TRUE', '0', '3', '838cf9ffc43caf3');
-INSERT INTO `sb_system_nodes_parents` VALUES ('76a2384d47b7415fb355efebcb86e663', 'c447256f713b4fa2a2344cd562482c9e', 'TRUE', '1', '3', '838cf9ffc43caf3');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '15663e54221440f0a9d2a3e78d8273b2', 'TRUE', '0', '3', '838cf1e2d3d3b06');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '3a334839b2eb4b9eaa53cb291d0ad0ef', 'TRUE', '13', '3', '838cf1e2d3d3b06');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '50b193ceffa1425d852839b3a34c7376', 'TRUE', '6', '3', '838cf1e2d3d3b06');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '664ef81b1f6f4e9cb8f7d83c8694fe0e', 'TRUE', '14', '3', '068a1e14e7664e4');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '86e22252bdea494bacf904674d3711ea', 'TRUE', '1', '3', '838cf1e2d3d3b06');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '8ea185a64e394c7c83f098ba6f537073', 'TRUE', '2', '3', '838cf1e2d3d3b06');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '926b69fb3c8a4de8914d244136222e14', 'TRUE', '12', '3', '838cf1e2d3d3b06');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'a205b4cdb96442cb85d0d99caff9d530', 'TRUE', '11', '3', '838cf1e2d3d3b06');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'a6cdee339f11414b8fa732c7030aab85', 'TRUE', '3', '3', '838cf1e2d3d3b06');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'a8161f9b44144f2b8927e7f515fe4fdf', 'TRUE', '4', '3', '838cf1e2d3d3b06');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'a83b351baeff4c0c80c68945fb2266cf', 'TRUE', '9', '3', '838cf1e2d3d3b06');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'bdf4f48bab2544c7875611d79ea4a0c2', 'TRUE', '5', '3', '838cf1e2d3d3b06');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'df0faa531b374ae8afb95aeb6ffcd841', 'TRUE', '10', '3', '838cf1e2d3d3b06');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'f3d916daed12454c995cd156935a822e', 'TRUE', '8', '3', '838cf1e2d3d3b06');
-INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'f43e9b4c2a0e4e56bc2448e1c80d77f8', 'TRUE', '14', '3', '838cf1e2d3d3b06');
+INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', '22e5c57ec30d4d07963bff8290250005', 'TRUE', '0', '4', '068a1f012b417b6d2ae9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', '408b3d26444d484693b0ed38e5f56733', 'TRUE', '1', '4', '068a1f012b417b6d2ae9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', '50b134bb586942c68dab4783fcb1c5f0', 'TRUE', '6', '4', '068a1f012b417b6d2ae9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', '7d6053e92e2545998d091dc4ea54872f', 'TRUE', '3', '4', '068a1f012b417b6d2ae9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', 'be4c8ab2c2774cf090c3a05b18e9625b', 'TRUE', '5', '4', '068a1f012b417b6d2ae9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', 'cf33a52cce7a4eef99de947addd1d02f', 'TRUE', '7', '4', '068a1f012b417b6d2ae9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', 'd1e50833ff4046bb8e4be7510df78f32', 'TRUE', '2', '4', '068a1f012b417b6d2ae9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('6be12c719974477592c3668b2cfd9e8c', 'ee8c719706464809976cf033155e8296', 'TRUE', '4', '4', '068a1f012b417b6d2ae9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('76a2384d47b7415fb355efebcb86e663', '21b3a5cde2df43618217d40180448b4c', 'TRUE', '0', '3', '068a1f012bbb89c');
+INSERT INTO `sb_system_nodes_parents` VALUES ('76a2384d47b7415fb355efebcb86e663', 'c447256f713b4fa2a2344cd562482c9e', 'TRUE', '1', '3', '068a1f012bbb89c');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '15663e54221440f0a9d2a3e78d8273b2', 'TRUE', '0', '3', '068a1e14e7664e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '3a334839b2eb4b9eaa53cb291d0ad0ef', 'TRUE', '12', '3', '068a1e14e7664e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '50b193ceffa1425d852839b3a34c7376', 'TRUE', '6', '3', '068a1e14e7664e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '664ef81b1f6f4e9cb8f7d83c8694fe0e', 'TRUE', '13', '3', '068a1e14e7664e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '86e22252bdea494bacf904674d3711ea', 'TRUE', '1', '3', '068a1e14e7664e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '8ea185a64e394c7c83f098ba6f537073', 'TRUE', '2', '3', '068a1e14e7664e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', '926b69fb3c8a4de8914d244136222e14', 'TRUE', '11', '3', '068a1e14e7664e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'a205b4cdb96442cb85d0d99caff9d530', 'TRUE', '10', '3', '068a1e14e7664e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'a6cdee339f11414b8fa732c7030aab85', 'TRUE', '3', '3', '068a1e14e7664e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'a8161f9b44144f2b8927e7f515fe4fdf', 'TRUE', '4', '3', '068a1e14e7664e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'a83b351baeff4c0c80c68945fb2266cf', 'TRUE', '8', '3', '068a1e14e7664e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'bdf4f48bab2544c7875611d79ea4a0c2', 'TRUE', '5', '3', '068a1e14e7664e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'df0faa531b374ae8afb95aeb6ffcd841', 'TRUE', '9', '3', '068a1e14e7664e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'f3d916daed12454c995cd156935a822e', 'TRUE', '7', '3', '068a1e14e7664e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('7a4579077e6b4dada6ee610ff589a8ce', 'f43e9b4c2a0e4e56bc2448e1c80d77f8', 'TRUE', '14', '3', '068a1e14e7664e4');
 INSERT INTO `sb_system_nodes_parents` VALUES ('8574e415d0114caebe004f66f328086c', '08479177a247489b86078a3a0204a96e', 'TRUE', '2', '3', '068a16008f38797');
 INSERT INTO `sb_system_nodes_parents` VALUES ('8574e415d0114caebe004f66f328086c', '22c1f18313c547bd83f669b438abd3e3', 'TRUE', '1', '3', '068a16008f38797');
 INSERT INTO `sb_system_nodes_parents` VALUES ('8574e415d0114caebe004f66f328086c', '73bde0414e0e461fb8dd6512f446c8dd', 'TRUE', '3', '3', '068a16008f38797');
 INSERT INTO `sb_system_nodes_parents` VALUES ('8574e415d0114caebe004f66f328086c', 'ac58d48b6a0848dcb4330a7c5957d92d', 'TRUE', '0', '3', '068a16008f38797');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8a7441a710344cd781e1a9e73118f108', '144a8e2473914baf9370168429d8d317', 'TRUE', '6', '2', '068a1f012b3fcd04cd09');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8a7441a710344cd781e1a9e73118f108', '4741c4e861994199ae86425227836268', 'TRUE', '4', '2', '068a1f012b3fcd04cd09');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8a7441a710344cd781e1a9e73118f108', '564845c880484a1dacf31e32696bcfd9', 'TRUE', '2', '4', '838cf9ffc4a64de06800');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8a7441a710344cd781e1a9e73118f108', '71de4b6ce5cf45b09290e3c135c5fa4b', 'TRUE', '1', '4', '838cf9ffc4a64de06800');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8a7441a710344cd781e1a9e73118f108', '81e6030a37504b49b7aed01c4b9005c6', 'TRUE', '5', '2', '068a1f012b3fcd04cd09');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8a7441a710344cd781e1a9e73118f108', 'eb04110996804ef3bbc35ae492738c8a', 'TRUE', '3', '4', '838cf9ffc4a64de06800');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8a7441a710344cd781e1a9e73118f108', 'eeeffb38619340d4bca3a4194433cd30', 'TRUE', '0', '4', '838cf9ffc4a64de06800');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8ea185a64e394c7c83f098ba6f537073', '2d5ff219b6a74371984e5ce5a0ae2530', 'TRUE', '0', '5', '838cf1e2d3d3b0644b760881a');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8ea185a64e394c7c83f098ba6f537073', 'eaa56c620fab446d9690604303788b34', 'TRUE', '1', '5', '838cf1e2d3d3b0644b760881a');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', 'deadbeef0110666f72756d0000000000', 'TRUE', '1', '3', '838cf1e2d311271');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', 'deadbeef01106775657374626f6f6b00', 'TRUE', '2', '3', '838cf1e2d311271');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', 'deadbeef01106a756b65626f78000000', 'TRUE', '4', '3', '838cf1e2d311271');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', 'deadbeef01106e657773000000000000', 'TRUE', '5', '3', '838cf1e2d311271');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', 'deadbeef011073686f70000000000000', 'TRUE', '3', '3', '838cf1e2d311271');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', 'deadbeef011073797374656d00000000', 'TRUE', '0', '3', '838cf1e2d311271');
-INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', 'deadbeef01107574696c697469657300', 'TRUE', '6', '3', '838cf1e2d311271');
-INSERT INTO `sb_system_nodes_parents` VALUES ('98c88b1f427b40f6a02c26ffb63e6c66', '1148f19ee51d4283935dd32be5282312', 'TRUE', '2', '3', '838cfef41e269f0');
-INSERT INTO `sb_system_nodes_parents` VALUES ('98c88b1f427b40f6a02c26ffb63e6c66', '44509a3ab481412fabb0fe5f26332d61', 'TRUE', '0', '3', '838cfef41e269f0');
-INSERT INTO `sb_system_nodes_parents` VALUES ('98c88b1f427b40f6a02c26ffb63e6c66', '5962faaef7924ef0b6aa47346d186c8a', 'TRUE', '1', '3', '838cfef41e269f0');
-INSERT INTO `sb_system_nodes_parents` VALUES ('a205b4cdb96442cb85d0d99caff9d530', 'cbe174938fab416299930c761fa6f5de', 'TRUE', '1', '4', '838cf1e2d3d3b0612883');
-INSERT INTO `sb_system_nodes_parents` VALUES ('a205b4cdb96442cb85d0d99caff9d530', 'e2bef28bd3d64ad6aef46edbdeb1a015', 'TRUE', '0', '4', '838cf1e2d3d3b0612883');
-INSERT INTO `sb_system_nodes_parents` VALUES ('a6cdee339f11414b8fa732c7030aab85', '02eb2c9c7092418487b1a97aa669ed63', 'TRUE', '2', '5', '838cf1e2d3d3b06ed15632e5c');
-INSERT INTO `sb_system_nodes_parents` VALUES ('a6cdee339f11414b8fa732c7030aab85', '1119b9fb4d034dd2870b72ffd769aee2', 'TRUE', '1', '5', '838cf1e2d3d3b06ed15632e5c');
-INSERT INTO `sb_system_nodes_parents` VALUES ('a6cdee339f11414b8fa732c7030aab85', '870606ec4b604af88c4d542f8dda61c6', 'TRUE', '0', '5', '838cf1e2d3d3b06ed15632e5c');
-INSERT INTO `sb_system_nodes_parents` VALUES ('a6e8e84d150f4b998531c12ab933d02d', '4428b52a4aa249f4905958c4cdd9812d', 'TRUE', '0', '4', '838cf9ffc4bddde52ad9');
-INSERT INTO `sb_system_nodes_parents` VALUES ('a746beba0e28443f9e836e241b13b808', '0afa05f280404cd0a9acd4637686aa34', 'TRUE', '0', '4', '838cf71e177725b40062');
-INSERT INTO `sb_system_nodes_parents` VALUES ('a7fb0f2dbca4449189e5e6b0ccd304a1', '9022d8e26cb349bd832aa1309f177d87', 'TRUE', '0', '4', '838cf195255bb47621ea');
-INSERT INTO `sb_system_nodes_parents` VALUES ('a7fb0f2dbca4449189e5e6b0ccd304a1', 'd7a3ccd461fb4c6692e0ac7c87ddd7fe', 'TRUE', '1', '4', '838cf195255bb47621ea');
-INSERT INTO `sb_system_nodes_parents` VALUES ('a83b351baeff4c0c80c68945fb2266cf', 'a6cdee339f11414b8fa732c7030aab85', 'FALSE', '0', '4', '838cf1e2d3d3b06ed156');
-INSERT INTO `sb_system_nodes_parents` VALUES ('a83b351baeff4c0c80c68945fb2266cf', 'f3d916daed12454c995cd156935a822e', 'FALSE', '1', '2', '068a1e14e7664e4f30f7');
-INSERT INTO `sb_system_nodes_parents` VALUES ('afe9922a6e684eb88b3823174db8c072', '1a87c600430e45378f993535eb2d9183', 'TRUE', '0', '3', '838cf9ffc4a0a70');
-INSERT INTO `sb_system_nodes_parents` VALUES ('afe9922a6e684eb88b3823174db8c072', '878ca63166d4417ead30c19f20081ca6', 'TRUE', '1', '3', '838cf9ffc4a0a70');
-INSERT INTO `sb_system_nodes_parents` VALUES ('afe9922a6e684eb88b3823174db8c072', 'ffaf52b7fa714582928b061df6259546', 'TRUE', '2', '3', '838cf9ffc4a0a70');
-INSERT INTO `sb_system_nodes_parents` VALUES ('b55202ea1190484db8c575419aefe6fc', 'a746beba0e28443f9e836e241b13b808', 'TRUE', '0', '3', '838cf71e177725b');
-INSERT INTO `sb_system_nodes_parents` VALUES ('b55202ea1190484db8c575419aefe6fc', 'bd4cf50d699d4a17aad0c4bc5c4b66ae', 'TRUE', '1', '3', '838cf71e177725b');
-INSERT INTO `sb_system_nodes_parents` VALUES ('bd4cf50d699d4a17aad0c4bc5c4b66ae', 'fb039c6a472e49679773fc90597e717a', 'TRUE', '0', '4', '838cf71e177725b1f765');
-INSERT INTO `sb_system_nodes_parents` VALUES ('bdf4f48bab2544c7875611d79ea4a0c2', '03924e41ea44484bac211cb98a97bdb1', 'TRUE', '0', '5', '838cf1e2d3d3b0644b765174b');
-INSERT INTO `sb_system_nodes_parents` VALUES ('bdf4f48bab2544c7875611d79ea4a0c2', 'adcff1aa2aa544b0b1a60a5c7e56af89', 'TRUE', '1', '5', '838cf1e2d3d3b0644b765174b');
-INSERT INTO `sb_system_nodes_parents` VALUES ('bfd58271d71c44b3aab9b904d660cdba', '6be12c719974477592c3668b2cfd9e8c', 'TRUE', '0', '3', '838cf9ffc4bddde');
-INSERT INTO `sb_system_nodes_parents` VALUES ('bfd58271d71c44b3aab9b904d660cdba', 'a6e8e84d150f4b998531c12ab933d02d', 'TRUE', '1', '3', '838cf9ffc4bddde');
-INSERT INTO `sb_system_nodes_parents` VALUES ('de7762bc4e074f789ac9c1dda4ce40c5', '2ba02334a5e84f54917c30d77da84140', 'TRUE', '0', '3', '838cf1e2d3c9031');
-INSERT INTO `sb_system_nodes_parents` VALUES ('de7762bc4e074f789ac9c1dda4ce40c5', '48501470072f4be48f65a1e5ee1146ab', 'TRUE', '2', '3', '838cf1e2d3c9031');
-INSERT INTO `sb_system_nodes_parents` VALUES ('de7762bc4e074f789ac9c1dda4ce40c5', 'a2d906a38e0448f1adeb01ef455bbb01', 'TRUE', '1', '3', '838cf1e2d3c9031');
-INSERT INTO `sb_system_nodes_parents` VALUES ('de7762bc4e074f789ac9c1dda4ce40c5', 'd4341cc8a61c478d875b11007192e37d', 'TRUE', '3', '3', '838cf1e2d3c9031');
-INSERT INTO `sb_system_nodes_parents` VALUES ('df0faa531b374ae8afb95aeb6ffcd841', '8a7b4687dcea433a9355b0610dd794c1', 'TRUE', '1', '4', '838cf1e2d3d3b0654838');
-INSERT INTO `sb_system_nodes_parents` VALUES ('df0faa531b374ae8afb95aeb6ffcd841', '8ce3f563927e43ed9dc0cc43db2a3482', 'TRUE', '0', '4', '838cf1e2d3d3b0654838');
-INSERT INTO `sb_system_nodes_parents` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', '289a5b61f601431e8410a7932553b220', 'TRUE', '0', '2', '838cf9ffc4');
-INSERT INTO `sb_system_nodes_parents` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', '37cfd45559de4ab7bf15601ede1d4b44', 'TRUE', '1', '2', '838cf9ffc4');
-INSERT INTO `sb_system_nodes_parents` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', '6208f457a71e427dad7cc552e2162f55', 'TRUE', '4', '2', '838cf9ffc4');
-INSERT INTO `sb_system_nodes_parents` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', '76a2384d47b7415fb355efebcb86e663', 'TRUE', '2', '2', '838cf9ffc4');
-INSERT INTO `sb_system_nodes_parents` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', '87ca916babeb458cb61dc744f23dcd47', 'TRUE', '6', '2', '838cf9ffc4');
-INSERT INTO `sb_system_nodes_parents` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', 'afe9922a6e684eb88b3823174db8c072', 'TRUE', '3', '2', '838cf9ffc4');
-INSERT INTO `sb_system_nodes_parents` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', 'bfd58271d71c44b3aab9b904d660cdba', 'TRUE', '5', '2', '838cf9ffc4');
-INSERT INTO `sb_system_nodes_parents` VALUES ('eeeffb38619340d4bca3a4194433cd30', '3d736f78289f4f9e821ba0ac653a6dbc', 'TRUE', '0', '5', '838cf9ffc4a64de068009820a');
-INSERT INTO `sb_system_nodes_parents` VALUES ('eeeffb38619340d4bca3a4194433cd30', '45e365d9ca664c0fadd95e7faf8713a3', 'TRUE', '1', '5', '838cf9ffc4a64de068009820a');
-INSERT INTO `sb_system_nodes_parents` VALUES ('f23806d022824fe5ae510ff5ffffeb3c', 'b55202ea1190484db8c575419aefe6fc', 'TRUE', '0', '2', '838cf71e17');
-INSERT INTO `sb_system_nodes_parents` VALUES ('f81ddc601c723510a74e7c97f42353a6', '451f274d6c064b16bca1e4011f8050cf', 'TRUE', '3', '2', '838cf19525');
-INSERT INTO `sb_system_nodes_parents` VALUES ('f81ddc601c723510a74e7c97f42353a6', '4e67469947774139aafe1341dd977da6', 'TRUE', '1', '2', '838cf19525');
-INSERT INTO `sb_system_nodes_parents` VALUES ('f81ddc601c723510a74e7c97f42353a6', '64938dac23c942ae872b54675bb5b984', 'TRUE', '2', '2', '838cf19525');
-INSERT INTO `sb_system_nodes_parents` VALUES ('f81ddc601c723510a74e7c97f42353a6', 'ffaf52b7fa714582928b061df6259153', 'TRUE', '0', '2', '838cf19525');
-INSERT INTO `sb_system_nodes_parents` VALUES ('fb039c6a472e49679773fc90597e717a', '522b0b27de4644ac90f9635d3973d45d', 'TRUE', '1', '5', '838cf71e177725b1f76595809');
-INSERT INTO `sb_system_nodes_parents` VALUES ('fb039c6a472e49679773fc90597e717a', '847293d6168f4e83a68424c8c46e3e88', 'TRUE', '0', '5', '838cf71e177725b1f76595809');
-INSERT INTO `sb_system_nodes_parents` VALUES ('ffaf52b7fa714582928b061df6259153', '1fc461acb6f04c46b9a4b824e19b5675', 'TRUE', '1', '3', '838cf195255bb47');
-INSERT INTO `sb_system_nodes_parents` VALUES ('ffaf52b7fa714582928b061df6259153', 'a4252e0725a24db9a7eead99a3f05b88', 'TRUE', '3', '3', '838cf195255bb47');
-INSERT INTO `sb_system_nodes_parents` VALUES ('ffaf52b7fa714582928b061df6259153', 'a7fb0f2dbca4449189e5e6b0ccd304a1', 'TRUE', '4', '3', '838cf195255bb47');
-INSERT INTO `sb_system_nodes_parents` VALUES ('ffaf52b7fa714582928b061df6259153', 'eeeffb38619340d4bca3a4196296cd30', 'TRUE', '2', '3', '838cf195255bb47');
-INSERT INTO `sb_system_nodes_parents` VALUES ('ffaf52b7fa714582928b061df6259153', 'f3d916daed12454c995cd192435a822e', 'TRUE', '0', '3', '838cf195255bb47');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8a7441a710344cd781e1a9e73118f108', '144a8e2473914baf9370168429d8d317', 'TRUE', '6', '4', '068a1f012b3fcd04cd09');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8a7441a710344cd781e1a9e73118f108', '4741c4e861994199ae86425227836268', 'TRUE', '4', '4', '068a1f012b3fcd04cd09');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8a7441a710344cd781e1a9e73118f108', '564845c880484a1dacf31e32696bcfd9', 'TRUE', '2', '4', '068a1f012b3fcd04cd09');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8a7441a710344cd781e1a9e73118f108', '71de4b6ce5cf45b09290e3c135c5fa4b', 'TRUE', '1', '4', '068a1f012b3fcd04cd09');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8a7441a710344cd781e1a9e73118f108', '81e6030a37504b49b7aed01c4b9005c6', 'TRUE', '5', '4', '068a1f012b3fcd04cd09');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8a7441a710344cd781e1a9e73118f108', 'eb04110996804ef3bbc35ae492738c8a', 'TRUE', '3', '4', '068a1f012b3fcd04cd09');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8a7441a710344cd781e1a9e73118f108', 'eeeffb38619340d4bca3a4194433cd30', 'TRUE', '0', '4', '068a1f012b3fcd04cd09');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8ea185a64e394c7c83f098ba6f537073', '2d5ff219b6a74371984e5ce5a0ae2530', 'TRUE', '0', '5', '068a1e14e7664e4bde1a12f5f');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8ea185a64e394c7c83f098ba6f537073', 'eaa56c620fab446d9690604303788b34', 'TRUE', '1', '5', '068a1e14e7664e4bde1a12f5f');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', '0403708141058bcbd4f286eb45c70555', 'TRUE', '0', '3', '068a1e14e795ae5');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', '5172ae3fd7dc2c89766074ff53f7400a', 'TRUE', '2', '3', '068a1e14e795ae5');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', '969b3b1e5721c24ff5b48d3cedf52fe4', 'TRUE', '1', '3', '068a1e14e795ae5');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', '96b3319f5b4086db49a4093565bc8d74', 'TRUE', '7', '3', '068a1e14e795ae5');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', '9724c30b7f33877ab7c59df1f5af222d', 'TRUE', '4', '3', '068a1e14e795ae5');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', 'af86df686cb2d9b8729200e5b6910631', 'TRUE', '5', '3', '068a1e14e795ae5');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', 'd6c87690b0ee6f725ce1b620c3bed2b3', 'TRUE', '6', '3', '068a1e14e795ae5');
+INSERT INTO `sb_system_nodes_parents` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', 'e598ce16e7b2b13af2f5f93c92a6f976', 'TRUE', '3', '3', '068a1e14e795ae5');
+INSERT INTO `sb_system_nodes_parents` VALUES ('98c88b1f427b40f6a02c26ffb63e6c66', '1148f19ee51d4283935dd32be5282312', 'TRUE', '2', '3', '068a16008f4e668');
+INSERT INTO `sb_system_nodes_parents` VALUES ('98c88b1f427b40f6a02c26ffb63e6c66', '44509a3ab481412fabb0fe5f26332d61', 'TRUE', '0', '3', '068a16008f4e668');
+INSERT INTO `sb_system_nodes_parents` VALUES ('98c88b1f427b40f6a02c26ffb63e6c66', '5962faaef7924ef0b6aa47346d186c8a', 'TRUE', '1', '3', '068a16008f4e668');
+INSERT INTO `sb_system_nodes_parents` VALUES ('a205b4cdb96442cb85d0d99caff9d530', 'cbe174938fab416299930c761fa6f5de', 'TRUE', '1', '4', '068a1e14e7664e48130a');
+INSERT INTO `sb_system_nodes_parents` VALUES ('a205b4cdb96442cb85d0d99caff9d530', 'e2bef28bd3d64ad6aef46edbdeb1a015', 'TRUE', '0', '4', '068a1e14e7664e48130a');
+INSERT INTO `sb_system_nodes_parents` VALUES ('a6cdee339f11414b8fa732c7030aab85', '02eb2c9c7092418487b1a97aa669ed63', 'TRUE', '2', '5', '068a1e14e7664e4f30f72f7b5');
+INSERT INTO `sb_system_nodes_parents` VALUES ('a6cdee339f11414b8fa732c7030aab85', '1119b9fb4d034dd2870b72ffd769aee2', 'TRUE', '1', '5', '068a1e14e7664e4f30f72f7b5');
+INSERT INTO `sb_system_nodes_parents` VALUES ('a6cdee339f11414b8fa732c7030aab85', '870606ec4b604af88c4d542f8dda61c6', 'TRUE', '0', '5', '068a1e14e7664e4f30f72f7b5');
+INSERT INTO `sb_system_nodes_parents` VALUES ('a6e8e84d150f4b998531c12ab933d02d', '4428b52a4aa249f4905958c4cdd9812d', 'TRUE', '0', '4', '068a1f012b417b67d424');
+INSERT INTO `sb_system_nodes_parents` VALUES ('a746beba0e28443f9e836e241b13b808', '0afa05f280404cd0a9acd4637686aa34', 'TRUE', '0', '4', '068a106efcd8cf928081');
+INSERT INTO `sb_system_nodes_parents` VALUES ('a7fb0f2dbca4449189e5e6b0ccd304a1', '9022d8e26cb349bd832aa1309f177d87', 'TRUE', '0', '4', '068a1940e4160c926090');
+INSERT INTO `sb_system_nodes_parents` VALUES ('a7fb0f2dbca4449189e5e6b0ccd304a1', 'd7a3ccd461fb4c6692e0ac7c87ddd7fe', 'TRUE', '1', '4', '068a1940e4160c926090');
+INSERT INTO `sb_system_nodes_parents` VALUES ('a83b351baeff4c0c80c68945fb2266cf', 'a6cdee339f11414b8fa732c7030aab85', 'FALSE', '0', '4', '068a1e14e7664e4f30f7');
+INSERT INTO `sb_system_nodes_parents` VALUES ('a83b351baeff4c0c80c68945fb2266cf', 'f3d916daed12454c995cd156935a822e', 'FALSE', '1', '4', '068a1e14e7664e4f30f7');
+INSERT INTO `sb_system_nodes_parents` VALUES ('afe9922a6e684eb88b3823174db8c072', '1a87c600430e45378f993535eb2d9183', 'TRUE', '0', '3', '068a1f012bad8a9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('afe9922a6e684eb88b3823174db8c072', '878ca63166d4417ead30c19f20081ca6', 'TRUE', '1', '3', '068a1f012bad8a9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('afe9922a6e684eb88b3823174db8c072', 'ffaf52b7fa714582928b061df6259546', 'TRUE', '2', '3', '068a1f012bad8a9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('b55202ea1190484db8c575419aefe6fc', 'a746beba0e28443f9e836e241b13b808', 'TRUE', '0', '3', '068a106efcd8cf9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('b55202ea1190484db8c575419aefe6fc', 'bd4cf50d699d4a17aad0c4bc5c4b66ae', 'TRUE', '1', '3', '068a106efcd8cf9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('bd4cf50d699d4a17aad0c4bc5c4b66ae', 'fb039c6a472e49679773fc90597e717a', 'TRUE', '0', '4', '068a106efcd8cf92f51f');
+INSERT INTO `sb_system_nodes_parents` VALUES ('bdf4f48bab2544c7875611d79ea4a0c2', '03924e41ea44484bac211cb98a97bdb1', 'TRUE', '0', '5', '068a1e14e7664e4bde1adfb8a');
+INSERT INTO `sb_system_nodes_parents` VALUES ('bdf4f48bab2544c7875611d79ea4a0c2', 'adcff1aa2aa544b0b1a60a5c7e56af89', 'TRUE', '1', '5', '068a1e14e7664e4bde1adfb8a');
+INSERT INTO `sb_system_nodes_parents` VALUES ('bfd58271d71c44b3aab9b904d660cdba', '6be12c719974477592c3668b2cfd9e8c', 'TRUE', '0', '3', '068a1f012b417b6');
+INSERT INTO `sb_system_nodes_parents` VALUES ('bfd58271d71c44b3aab9b904d660cdba', 'a6e8e84d150f4b998531c12ab933d02d', 'TRUE', '1', '3', '068a1f012b417b6');
+INSERT INTO `sb_system_nodes_parents` VALUES ('de7762bc4e074f789ac9c1dda4ce40c5', '2ba02334a5e84f54917c30d77da84140', 'TRUE', '0', '3', '068a1e14e743a29');
+INSERT INTO `sb_system_nodes_parents` VALUES ('de7762bc4e074f789ac9c1dda4ce40c5', '48501470072f4be48f65a1e5ee1146ab', 'TRUE', '2', '3', '068a1e14e743a29');
+INSERT INTO `sb_system_nodes_parents` VALUES ('de7762bc4e074f789ac9c1dda4ce40c5', 'a2d906a38e0448f1adeb01ef455bbb01', 'TRUE', '1', '3', '068a1e14e743a29');
+INSERT INTO `sb_system_nodes_parents` VALUES ('de7762bc4e074f789ac9c1dda4ce40c5', 'd4341cc8a61c478d875b11007192e37d', 'TRUE', '3', '3', '068a1e14e743a29');
+INSERT INTO `sb_system_nodes_parents` VALUES ('df0faa531b374ae8afb95aeb6ffcd841', '8a7b4687dcea433a9355b0610dd794c1', 'TRUE', '1', '4', '068a1e14e7664e40591d');
+INSERT INTO `sb_system_nodes_parents` VALUES ('df0faa531b374ae8afb95aeb6ffcd841', '8ce3f563927e43ed9dc0cc43db2a3482', 'TRUE', '0', '4', '068a1e14e7664e40591d');
+INSERT INTO `sb_system_nodes_parents` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', '289a5b61f601431e8410a7932553b220', 'TRUE', '0', '2', '068a1f012b');
+INSERT INTO `sb_system_nodes_parents` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', '37cfd45559de4ab7bf15601ede1d4b44', 'TRUE', '1', '2', '068a1f012b');
+INSERT INTO `sb_system_nodes_parents` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', '6208f457a71e427dad7cc552e2162f55', 'TRUE', '4', '2', '068a1f012b');
+INSERT INTO `sb_system_nodes_parents` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', '76a2384d47b7415fb355efebcb86e663', 'TRUE', '2', '2', '068a1f012b');
+INSERT INTO `sb_system_nodes_parents` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', '87ca916babeb458cb61dc744f23dcd47', 'TRUE', '6', '2', '068a1f012b');
+INSERT INTO `sb_system_nodes_parents` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', 'afe9922a6e684eb88b3823174db8c072', 'TRUE', '3', '2', '068a1f012b');
+INSERT INTO `sb_system_nodes_parents` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', 'bfd58271d71c44b3aab9b904d660cdba', 'TRUE', '5', '2', '068a1f012b');
+INSERT INTO `sb_system_nodes_parents` VALUES ('eeeffb38619340d4bca3a4194433cd30', '3d736f78289f4f9e821ba0ac653a6dbc', 'TRUE', '0', '5', '068a1f012b3fcd04cd094f2fb');
+INSERT INTO `sb_system_nodes_parents` VALUES ('eeeffb38619340d4bca3a4194433cd30', '45e365d9ca664c0fadd95e7faf8713a3', 'TRUE', '1', '5', '068a1f012b3fcd04cd094f2fb');
+INSERT INTO `sb_system_nodes_parents` VALUES ('f23806d022824fe5ae510ff5ffffeb3c', 'b55202ea1190484db8c575419aefe6fc', 'TRUE', '0', '2', '068a106efc');
+INSERT INTO `sb_system_nodes_parents` VALUES ('f81ddc601c723510a74e7c97f42353a6', '451f274d6c064b16bca1e4011f8050cf', 'TRUE', '3', '2', '068a1940e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('f81ddc601c723510a74e7c97f42353a6', '4e67469947774139aafe1341dd977da6', 'TRUE', '1', '2', '068a1940e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('f81ddc601c723510a74e7c97f42353a6', '64938dac23c942ae872b54675bb5b984', 'TRUE', '2', '2', '068a1940e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('f81ddc601c723510a74e7c97f42353a6', 'ffaf52b7fa714582928b061df6259153', 'TRUE', '0', '2', '068a1940e4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('fb039c6a472e49679773fc90597e717a', '522b0b27de4644ac90f9635d3973d45d', 'TRUE', '1', '5', '068a106efcd8cf92f51f762a4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('fb039c6a472e49679773fc90597e717a', '847293d6168f4e83a68424c8c46e3e88', 'TRUE', '0', '5', '068a106efcd8cf92f51f762a4');
+INSERT INTO `sb_system_nodes_parents` VALUES ('ffaf52b7fa714582928b061df6259153', '1fc461acb6f04c46b9a4b824e19b5675', 'TRUE', '1', '3', '068a1940e4160c9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('ffaf52b7fa714582928b061df6259153', 'a4252e0725a24db9a7eead99a3f05b88', 'TRUE', '3', '3', '068a1940e4160c9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('ffaf52b7fa714582928b061df6259153', 'a7fb0f2dbca4449189e5e6b0ccd304a1', 'TRUE', '4', '3', '068a1940e4160c9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('ffaf52b7fa714582928b061df6259153', 'eeeffb38619340d4bca3a4196296cd30', 'TRUE', '2', '3', '068a1940e4160c9');
+INSERT INTO `sb_system_nodes_parents` VALUES ('ffaf52b7fa714582928b061df6259153', 'f3d916daed12454c995cd192435a822e', 'TRUE', '0', '3', '068a1940e4160c9');
 INSERT INTO `sb_system_nodes_properties` VALUES ('07677c2a5ad24835b008ece8c950bbf7', 'config_active', '', 0x46414C5345);
 INSERT INTO `sb_system_nodes_properties` VALUES ('07677c2a5ad24835b008ece8c950bbf7', 'config_showinmenu', '', 0x46414C5345);
 INSERT INTO `sb_system_nodes_properties` VALUES ('07677c2a5ad24835b008ece8c950bbf7', 'properties_additionaltitle', '', '');

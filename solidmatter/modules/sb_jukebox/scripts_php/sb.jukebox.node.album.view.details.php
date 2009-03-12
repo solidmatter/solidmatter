@@ -61,6 +61,15 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 					$_RESPONSE->addData($formTag);
 				}
 				
+				// EXPERIMENTAL
+				// add relations
+				$this->nodeSubject->storeRelations();
+				if (true) {
+					$formRelate = $this->buildRelateForm();
+					$formRelate->saveDOM();
+					$_RESPONSE->addData($formRelate);
+				}
+				
 				// comments
 				$niComments = $this->nodeSubject->loadChildren('comments', TRUE, TRUE, TRUE);
 				foreach ($niComments as $nodeComment) {

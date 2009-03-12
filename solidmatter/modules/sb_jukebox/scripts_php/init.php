@@ -254,6 +254,36 @@ class sbJukeboxView extends sbView {
 	* @param 
 	* @return 
 	*/
+	function buildRelateForm() {
+		
+		$formRelate = new sbDOMForm(
+			'addRelation',
+			'$locale/sbSystem/labels/relate',
+			System::getURL($this->nodeSubject, 'votes', 'addRelation'),
+			$this->crSession
+		);
+		
+		//$formRelate->addInput('relation;select;', '$locale/sbSystem/labels/relation');
+		$formRelate->addInput('relation;relation;url=/'.$this->nodeSubject->getProperty('jcr:uuid').'/votes/getTargets;', '$locale/sbSystem/labels/comment');
+		$formRelate->addSubmit('$locale/sbSystem/actions/save');
+		
+		$aRelations = $this->nodeSubject->getSupportedRelations();
+		foreach ($aRelations as $sRelation => $unused) {
+			$aOptions[$sRelation] = $sRelation;
+		}
+		$formRelate->setOptions('relation', $aOptions);
+		
+		return ($formRelate);
+		
+	}
+	
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	protected function sendPlaylist($nodeSubject = NULL, $bRandom = FALSE) {
 		import('sbJukebox:sb.jukebox.tools');
 		$nodeJukebox = $this->getJukebox();

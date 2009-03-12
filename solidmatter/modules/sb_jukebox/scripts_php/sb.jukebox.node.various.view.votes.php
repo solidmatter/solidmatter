@@ -82,6 +82,23 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));
 				break;
 				
+			case 'getTargets':
+				$aTargets = $this->nodeSubject->getPossibleTargets($_REQUEST->getParam('type_relation'), $_REQUEST->getParam('target_relation'));
+				echo '<ul>';
+				foreach ($aTargets as $sUUID => $aDetails) {
+					echo '<li><span style="display:none;">'.$sUUID.'|</span>'.'<span class="type '.$aDetails['displaytype'].'">'.$aDetails['label'].'</span></li>';
+				}
+				echo '</ul>';
+				exit();
+				break;
+				
+			case 'addRelation':
+				$sTarget = substr($_REQUEST->getParam('target_relation'), 0, strpos($_REQUEST->getParam('target_relation'), '|'));
+				$nodeSubject = $this->crSession->getNodeByIdentifier($sTarget);
+				$this->nodeSubject->addRelation($_REQUEST->getParam('type_relation'), $nodeSubject);
+				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));
+				break;
+				
 			default:
 				throw new sbException(__CLASS__.': action not recognized ('.$sAction.')');
 				

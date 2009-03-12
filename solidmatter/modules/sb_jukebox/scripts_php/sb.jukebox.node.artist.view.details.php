@@ -54,6 +54,13 @@ class sbView_jukebox_artist_details extends sbJukeboxView {
 					$_RESPONSE->addData($formComment);
 				}
 				
+				// EXPERIMENTAL
+				if (true) {
+					$formRelate = $this->buildRelateForm();
+					$formRelate->saveDOM();
+					$_RESPONSE->addData($formRelate);
+				}
+				
 				// add albums & comments
 				$niAlbums = $this->nodeSubject->loadChildren('albums', TRUE, TRUE, TRUE);
 				foreach ($niAlbums as $nodeAlbum) {
@@ -78,6 +85,9 @@ class sbView_jukebox_artist_details extends sbJukeboxView {
 				
 				// add vote
 				$this->nodeSubject->getVote(User::getUUID());
+				
+				// add relations
+				$this->nodeSubject->storeRelations();
 				
 				break;
 				

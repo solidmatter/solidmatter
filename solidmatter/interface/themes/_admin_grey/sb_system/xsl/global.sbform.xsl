@@ -261,6 +261,94 @@
 	
 	
 	
+	<!-- autocomplete -->
+	<xsl:template match="sbinput[@type='autocomplete']" mode="complete">
+		<tr>
+			<td width="30%"><label for="{@name}"><xsl:value-of select="dyn:evaluate(@label)" /></label></td>
+			<td width="70%">
+				<xsl:apply-templates select="." mode="inputonly" />
+			</td>
+		</tr>
+	</xsl:template>
+	<xsl:template match="sbinput[@type='autocomplete']" mode="inputonly">
+		<input type="text" size="{@size}" maxlength="{@maxlength}" value="{@value}" name="{@name}" id="{@name}">
+			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
+			<xsl:if test="@errorlabel"><xsl:attribute name="class">formerror</xsl:attribute></xsl:if>
+		</input>
+		<div id="suggest_{@name}" class="ac_suggestions" style="display:none;"></div>
+		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
+		<script language="Javascript" type="text/javascript">
+			Event.observe(
+				window,
+				'load',
+				function() {
+					new Ajax.Autocompleter(
+						'<xsl:value-of select="@name"/>',
+						'suggest_<xsl:value-of select="@name"/>',
+						'<xsl:value-of select="@url"/>',
+						{ minChars: 3 }
+					)
+				}
+			);
+		</script>
+	</xsl:template>
+	
+	
+	
+	<!-- relation -->
+	<xsl:template match="sbinput[@type='relation']" mode="complete">
+		<tr>
+			<td width="30%"><label for="{@name}"><xsl:value-of select="dyn:evaluate(@label)" /></label></td>
+			<td width="70%">
+				<xsl:apply-templates select="." mode="inputonly" />
+			</td>
+		</tr>
+	</xsl:template>
+	<xsl:template match="sbinput[@type='relation']" mode="inputonly">
+		<xsl:variable name="value" select="@value" />
+		<select size="1" name="type_{@name}" id="type_{@name}">
+			<xsl:for-each select="option">
+				<option value="{@value}">
+					<xsl:if test="@value = $value">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>
+					<xsl:choose>
+					<xsl:when test="@label">
+						<xsl:value-of select="dyn:evaluate(@label)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="@text" />
+					</xsl:otherwise>
+					</xsl:choose>
+				</option>
+			</xsl:for-each>
+		</select>
+		<input type="text" size="1" maxlength="250" value="{@value}" name="target_{@name}" id="target_{@name}">
+			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
+			<xsl:if test="@errorlabel"><xsl:attribute name="class">formerror</xsl:attribute></xsl:if>
+		</input>
+		<div id="suggest_{@name}" class="ac_suggestions" style="display:none;"></div>
+		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
+		<script language="Javascript" type="text/javascript">
+			Event.observe(
+				window,
+				'load',
+				function() {
+					var oType = $('target_<xsl:value-of select="@name"/>');
+					alert oType;
+					new Ajax.Autocompleter(
+						'target_<xsl:value-of select="@name"/>',
+						'suggest_<xsl:value-of select="@name"/>',
+						'<xsl:value-of select="@url"/>',
+						{ minChars: 3 }
+					)
+				}
+			);
+		</script>
+	</xsl:template>
+	
+	
+	
 	<!-- codeeditor -->
 	<xsl:template match="sbinput[@type='codeeditor']" mode="complete">
 		<tr>
@@ -287,6 +375,8 @@
 		</script>
 		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
 	</xsl:template>
+	
+	
 	
 	<!-- checkbox -->
 	<xsl:template match="sbinput[@type='checkbox']" mode="complete">
@@ -372,62 +462,6 @@
 			
 		</script>
 	</xsl:template>
-	<!--<xsl:template match="sbinput[@type='multifileupload']" mode="inputonly">
-		<div id="fileInputFrame">
-		<input type="file" /><input type="button" class="button" value="attach this file" id="addAttachmentFile" />
-		</div>
-		<div id="attachments" style="padding: 5px; display:none;">
-			<ul id="attachFileList" class="itemlist">
-				<p>attached files will be shown here</p>
-			</ul>
-			<div id="attachmentRemover" class="droptarget">drop any added files to delete</div>
-		</div>
-		<script type="text/javascript" language="javascript">
-			<![CDATA[
-			//trash bin
-			Droppables.add('attachmentRemover', {
-				accept:'attachedFile',
-				hoverclass:'droptarget_remove',
-				onDrop: function(element){
-					element.parentNode.removeChild(element);
-				}
-			});
-		
-			//attach file button
-			Event.observe("addAttachmentFile", "click", function(event){
-				var thisInputFile = $A($("fileInputFrame").getElementsByTagName("input")).find(function(element, index){
-					if(element.type.toLowerCase() == "file"){
-						return true;
-					}
-				});
-				
-				if(thisInputFile.value == ""){
-					new Effect.Highlight(thisInputFile);
-					Event.stop(event);
-					return;
-				}
-		
-				//input file element name////////////////
-				thisInputFile.name = "]]><xsl:value-of select="@name" /><![CDATA[[]";
-				/////////////////////////////////////////
-				
-				Element.hide(thisInputFile);
-				var li = Builder.node("li", {className: "attachedFile"}, thisInputFile.value);
-				
-				li.appendChild(thisInputFile);
-				
-				$("attachFileList").appendChild(li);
-				new Draggable(li, {revert: true});
-				
-				new Insertion.Before("addAttachmentFile", "<input type='file'>  ");
-				
-				Element.show($('attachments'));
-			
-			}, false);
-			
-			]]>
-		</script>
-	</xsl:template>-->
 	
 	
 	

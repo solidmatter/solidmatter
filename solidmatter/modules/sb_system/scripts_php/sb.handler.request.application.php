@@ -62,8 +62,8 @@ class ApplicationRequestHandler {
 		
 		$nodeCurrent->callView($sView, $sAction);
 		$nodeCurrent->loadAncestors();
-		$nodeCurrent->loadUserAuthorisations();
 		$nodeCurrent->storeAncestors(TRUE, TRUE);
+		$nodeCurrent->storeUserAuthorisations();
 		$nodeCurrent->setAttribute('master', 'true');
 		
 		if ($_REQUEST->getParam('sbCommand') != NULL) {

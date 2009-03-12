@@ -167,9 +167,11 @@
 				
 				</tbody>
 			</table>
+			
+			<xsl:call-template name="render_relationlist" />
 		
 		</div>
-			
+		
 		<xsl:call-template name="comments" />
 		
 	</xsl:template>

@@ -19,6 +19,9 @@ $_QUERIES['MAPPING']['{TABLE_VOTES}']		= '{PREFIX_WORKSPACE}_system_nodes_votes'
 $_QUERIES['MAPPING']['{TABLE_NODETAGS}']	= '{PREFIX_WORKSPACE}_system_nodes_tags';
 $_QUERIES['MAPPING']['{TABLE_TAGS}']		= '{PREFIX_WORKSPACE}_system_tags';
 
+$_QUERIES['MAPPING']['{TABLE_ONTOLOGY}']	= '{PREFIX_FRAMEWORK}_nodetypes_ontology';
+$_QUERIES['MAPPING']['{TABLE_RELATIONS}']	= '{PREFIX_WORKSPACE}_system_nodes_relations';
+
 //------------------------------------------------------------------------------
 // session
 //------------------------------------------------------------------------------
@@ -396,6 +399,75 @@ $_QUERIES['sbSystem/tagging/clearUnusedTags'] = '
 					SELECT	fk_tag
 					FROM	{TABLE_NODETAGS}
 				)
+';
+
+//------------------------------------------------------------------------------
+// relations
+//------------------------------------------------------------------------------
+
+$_QUERIES['sbSystem/relations/getRelations'] = '
+	SELECT		r.s_relation AS relation,
+				r.fk_entity2 AS target_uuid,
+				n.s_label AS target_label,
+				n.fk_nodetype AS target_nodetype
+	FROM		{TABLE_RELATIONS} r
+	INNER JOIN	{TABLE_NODES} n
+		ON		n.uuid = r.fk_entity2
+	WHERE		r.fk_entity1 = :source_uuid
+';
+$_QUERIES['sbSystem/relations/getSupportedRelations'] = '
+	SELECT		s_relation AS relation,
+				fk_targetnodetype AS targetnodetype
+	FROM		{TABLE_ONTOLOGY}
+	WHERE		fk_sourcenodetype = :nodetype
+	UNION
+	SELECT		s_reverserelation AS relation,
+				fk_sourcenodetype AS targetnodetype
+	FROM		{TABLE_ONTOLOGY}
+	WHERE		fk_targetnodetype = :nodetype
+		AND		s_reverserelation IS NOT NULL
+';
+$_QUERIES['sbSystem/relations/getPossibleTargets'] = '
+	SELECT		n.s_label AS label,
+				n.uuid,
+				n.fk_nodetype AS nodetype,
+				nt.s_displaytype AS displaytype
+	FROM		{TABLE_NODES} n
+	INNER JOIN	{TABLE_NODETYPES} nt
+		ON		n.fk_nodetype = nt.s_type
+	WHERE		s_label LIKE :substring
+		AND		n.fk_nodetype IN
+				(
+					SELECT		fk_targetnodetype AS targetnodetype
+					FROM		{TABLE_ONTOLOGY}
+					WHERE		fk_sourcenodetype = :sourcenodetype
+						AND		s_relation = :relation
+					UNION
+					SELECT		fk_sourcenodetype AS targetnodetype
+					FROM		{TABLE_ONTOLOGY}
+					WHERE		fk_targetnodetype = :sourcenodetype
+						AND		s_reverserelation = :relation
+				)
+	ORDER BY	CHAR_LENGTH(s_label)
+	LIMIT		0, 10
+';
+$_QUERIES['sbSystem/relations/addRelation'] = '
+	INSERT INTO {TABLE_RELATIONS}
+				(
+					s_relation,
+					fk_entity1,
+					fk_entity2
+				) VALUES (
+					:relation,
+					:source_uuid,
+					:target_uuid
+				)
+';
+$_QUERIES['sbSystem/relations/removeRelation'] = '
+	DELETE FROM {TABLE_RELATIONS}
+	WHERE		s_relation = :relation
+		AND		fk_entity1 = :source_uuid
+		AND		fk_entity2 = :target_uuid
 ';
 
 //------------------------------------------------------------------------------

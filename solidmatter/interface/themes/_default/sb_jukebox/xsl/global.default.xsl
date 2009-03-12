@@ -252,6 +252,26 @@
 		</xsl:if>
 	</xsl:template>
 	
+	<xsl:template name="addRelation">
+		<xsl:param name="form" />
+		<xsl:if test="$form" >
+			<script type="text/javascript" language="javascript">
+				function showRelationForm() {
+					document.addRelation.style.display='inline';
+					document.addRelation.elements[0].focus();
+					document.addRelation.previousSibling.style.display='none';
+				}
+			</script>
+			<!--<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>-->
+			<a href="javascript:showRelationForm();" style="line-height:25px;" class="type create"><xsl:value-of select="$locale/sbSystem/actions/new_relation" /></a>
+			<form action="{$form/@action}" name="addRelation" id="addRelation" method="post" class="addRelation" style="display:none;">
+				<xsl:apply-templates select="$form/sbinput[@type='relation']" mode="inputonly" />
+				<xsl:value-of select="' '" />
+				<xsl:apply-templates select="$form/submit" mode="inputonly" />
+			</form>
+		</xsl:if>
+	</xsl:template>
+	
 	<xsl:template name="colorize">
 		<xsl:choose>
 			<xsl:when test="position() mod 2 = 1">
@@ -398,6 +418,36 @@
 				<tr><td colspan="5"><xsl:value-of select="$locale/sbJukebox/texts/no_albums" /></td></tr>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template name="render_relationlist">
+		<xsl:if test="existingRelations/relation">
+			<table class="default" width="100%">
+				<thead>
+					<tr>
+						<th colspan="2"><span class="type relation">Relations (!)</span></th>
+					</tr>
+				</thead>
+				<tbody>
+					<xsl:for-each select="existingRelations/relation">
+						<tr>
+							<xsl:call-template name="colorize" />
+							<td width="30%">
+								<xsl:value-of select="@id" />
+							</td>
+							<td>
+								<a href="/{@target_uuid}">
+									<xsl:value-of select="@target_label" />
+								</a>
+							</td>
+						</tr>
+					</xsl:for-each>
+				</tbody>
+			</table>
+		</xsl:if>
+		<xsl:call-template name="addRelation">
+			<xsl:with-param name="form" select="$content/sbform[@id='addRelation']" />
+		</xsl:call-template>
 	</xsl:template>
 	
 	<!-- break arbeitet nur mit n -->

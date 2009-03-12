@@ -37,7 +37,7 @@ class sbView_debug extends sbView {
 		$this->nodeSubject->getTags();
 		
 		//$this->nodeSubject->loadViews(FALSE);
-		$this->nodeSubject->loadUserAuthorisations();
+		$this->nodeSubject->storeUserAuthorisations();
 		$this->nodeSubject->storeSupportedAuthorisations();
 		//$this->nodeSubject->loadLocalAuthorisations();
 		//$this->nodeSubject->loadInheritedAuthorisations();
@@ -46,6 +46,7 @@ class sbView_debug extends sbView {
 		
 		$this->nodeSubject->storeSupertypeNames();
 		$this->nodeSubject->storeSupportedLifecycleTransitions();
+		$this->nodeSubject->storeSupportedRelations();
 		
 		return (NULL);
 		
