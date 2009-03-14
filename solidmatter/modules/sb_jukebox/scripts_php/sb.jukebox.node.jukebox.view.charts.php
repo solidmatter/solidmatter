@@ -83,6 +83,7 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 					} else {
 						$stmtGetTop = $stmtGetMostPlayed;
 						$iTimeframe = 60*60*24*7; // TODO: make this customizable (even on session scope?)
+						$stmtGetTop->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
 						$stmtGetTop->bindValue('timeframe', $iTimeframe, PDO::PARAM_INT);
 					}
 					

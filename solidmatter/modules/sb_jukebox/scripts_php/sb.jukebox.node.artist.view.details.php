@@ -61,12 +61,14 @@ class sbView_jukebox_artist_details extends sbJukeboxView {
 					$_RESPONSE->addData($formRelate);
 				}
 				
-				// add albums & comments
+				// add albums
 				$niAlbums = $this->nodeSubject->loadChildren('albums', TRUE, TRUE, TRUE);
+				$niAlbums->sortAscending('info_published');
 				foreach ($niAlbums as $nodeAlbum) {
-					// TODO: show votes?
 					$nodeAlbum->setAttribute('vote', $nodeAlbum->getVote($this->getPivotUUID()));
 				}
+				
+				// add comments
 				$niComments = $this->nodeSubject->loadChildren('comments', TRUE, TRUE, TRUE);
 				foreach ($niComments as $nodeComment) {
 					// TODO: check user existence, might be deleted

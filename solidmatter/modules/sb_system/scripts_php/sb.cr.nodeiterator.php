@@ -196,6 +196,65 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
+	public function sortAscending($sProperty) {
+		$this->sortSlave($sProperty, FALSE);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function sortDescending($sProperty) {
+		$this->sortSlave($sProperty, TRUE);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function sortSlave($sProperty, $bDescending, $bNaturalSort = TRUE, $bCaseSensitive = FALSE) {
+		
+		$aOrdered	= array();
+		$aTemp		= array();
+		
+		foreach ($this->aNodeArray as $iKey => $nodeCurrent) {
+			$aTemp[$iKey] = $nodeCurrent->getProperty($sProperty);
+		}
+		
+		if ($bNaturalSort) {
+			if ($bDescending) {
+				natsort($aTemp);
+			} else {
+				natcasesort($aTemp);
+			}
+		} else {
+			sort($aTemp);
+		}
+		
+		if ($bDescending) {
+			$aTemp = array_reverse($aTemp, TRUE);
+		}
+		
+		reset($aTemp);
+		
+		foreach ($aTemp as $iKey => $mValue) {
+			$aOrdered[] = $this->aNodeArray[$iKey];
+		}
+		
+		$this->aNodeArray = $aOrdered;
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function getElement($sName = NULL) {
 		if ($sName == NULL) {
 			throw new sbException('a name is required');	
@@ -211,6 +270,8 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 		}
 		return ($elemContainer);
 	}
+	
+	
 	
 	
 }

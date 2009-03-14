@@ -121,6 +121,7 @@ $_QUERIES['sbJukebox/history/getTop'] = '
 		ON		n.uuid = h.fk_child
 	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(hi.dt_played) < :timeframe
+		AND		hi.fk_user = :user_uuid
 	GROUP BY	hi.fk_track
 	ORDER BY	COUNT(*) DESC
 	LIMIT		0, :limit

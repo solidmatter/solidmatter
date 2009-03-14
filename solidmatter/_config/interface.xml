@@ -2,29 +2,33 @@
 <config>
 	
 	<!-- primary repository, keep it clean! -->
-	<site location="sb2.localhost/" type="controller" handler="frontend" subject="demowebsite">
+	<site location="frontend.localhost/" type="controller" handler="frontend" subject="demowebsite">
 		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
 		<debug enabled="false" verbose="false" />
-		<site location="sb2.localhost/templates" type="controller" handler="xsl" subject="demotemplates" />
-		<site location="sb2.localhost/mmm" type="controller" handler="frontend" subject="demofiles" />
+		<site location="frontend.localhost/templates" type="controller" handler="xsl" subject="demotemplates" />
+		<site location="frontend.localhost/mmm" type="controller" handler="frontend" subject="demofiles" />
 	</site>
-	<site location="admin.localhost/" type="controller" handler="backend">
+	<site location="backend.localhost/" type="controller" handler="backend">
 		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
-		<site location="admin.localhost/templates" type="controller" handler="xsl" subject="demotemplates" />
-		<site location="admin.localhost/theme" type="theme" handler="backend" theme="_admin_grey" />
-		<site location="admin.localhost/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
+		<site location="backend.localhost/templates" type="controller" handler="xsl" subject="demotemplates" />
+		<site location="backend.localhost/theme" type="theme" handler="backend" theme="_admin_grey" />
+		<site location="backend.localhost/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
 	</site>
-	<!--<site location="admin.localhost/theme" type="theme" handler="backend" />
-	<site location="admin.localhost/templates" type="controller" handler="xsl">
-		<storage repository="dev" workspace="dev" user="system" pass="solidbytes"/>
+	<site location="jukebox.localhost/" type="controller" handler="application" subject="demojukebox">
+		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
-		<tiers seperated="false">
-			<tier1 host="admin.localhost" port="80" path="" />
-		</tiers>
-	</site>-->
+		<site location="jukebox.localhost/theme" type="theme" handler="backend" theme="_default" />
+		<site location="jukebox.localhost/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
+	</site>
 	
 	<!-- test repository, free to play around -->
+	<site location="test.frontend/" type="controller" handler="frontend" subject="demowebsite">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="false" verbose="false" />
+		<site location="test.frontend/templates" type="controller" handler="xsl" subject="demotemplates" />
+		<site location="test.frontend/mmm" type="controller" handler="frontend" subject="demofiles" />
+	</site>
 	<site location="test.jukebox/" type="controller" handler="application" subject="demojukebox">
 		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
@@ -38,39 +42,20 @@
 		<site location="test.backend/theme" type="theme" handler="backend" theme="_admin_grey" />
 		<site location="test.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
 	</site>
-	<site location="jukebox.sm.gotdns.org/" type="controller" handler="application" subject="demojukebox">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="jukebox.sm.gotdns.org/theme" type="theme" handler="backend" theme="_default" />
-		<site location="jukebox.sm.gotdns.org/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
-	</site>
-	<site location="admin.sm.gotdns.org/" type="controller" handler="backend">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="admin.sm.gotdns.org/templates" type="controller" handler="xsl" subject="demotemplates" />
-		<site location="admin.sm.gotdns.org/theme" type="theme" handler="backend" theme="_admin_grey" />
-		<site location="admin.sm.gotdns.org/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
-	</site>
 	
 	<!-- utilities -->
-	<site location="admin.localhost/phpinfo" type="script" handler="phpinfo.php" />
-	<site location="admin.localhost/test" type="script" handler="test.php" />
-	<site location="sb2.localhost/solidbrickz" type="redirect" destination="http://sb2.localhost/de/entwicklung/solidbrickz" />
+	<site location="backend.localhost/phpinfo" type="script" handler="phpinfo.php" />
+	<site location="backend.localhost/test" type="script" handler="test.php" />
+	<site location="frontend.localhost/google" type="redirect" destination="http://www.google.com" />
 	
-	<!-- default domains -->
-	<site location="sm.backend/phpinfo" type="script" handler="phpinfo.php" />
-	<site location="sm.backend/" type="controller" handler="backend">
-		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
+	<!-- format -->
+	<!--<site location="tier1.localhost/theme" type="theme" handler="backend" />
+	<site location="tier1.localhost/templates" type="controller" handler="xsl">
+		<storage repository="dev" workspace="dev" user="system" pass="solidbytes"/>
 		<debug enabled="true" verbose="false" />
-		<site location="sm.backend/templates" type="controller" handler="xsl" subject="demotemplates" />
-		<site location="sm.backend/theme" type="theme" handler="backend" theme="_admin_grey" />
-		<site location="sm.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
-	</site>
-	<site location="sm.jukebox/" type="controller" handler="application" subject="demojukebox">
-		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="sm.jukebox/theme" type="theme" handler="backend" theme="_default" />
-		<site location="sm.jukebox/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
-	</site>
+		<tiers seperated="false">
+			<tier1 host="tier2.localhost" port="80" path="" />
+		</tiers>
+	</site>-->
 	
 </config>
