@@ -252,6 +252,11 @@ function var_dumpp($mVar) {
 	echo '</pre>';
 }
 
+function var_dumppp($mVar) {
+	var_dumpp($mVar);
+	die();
+}
+
 //------------------------------------------------------------------------------
 /**
 * 

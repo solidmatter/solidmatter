@@ -68,6 +68,18 @@ class sbView_jukebox_artist_details extends sbJukeboxView {
 					$nodeAlbum->setAttribute('vote', $nodeAlbum->getVote($this->getPivotUUID()));
 				}
 				
+				// optionally check if files still exist
+				if (Registry::getValue('sb.jukebox.validation.missingfiles.indicate')) {
+					import('sbJukebox:sb.jukebox.tools');
+					foreach ($niAlbums as $nodeAlbum) {
+						if ($nodeAlbum->checkFileExistance()) {
+							//$nodeTrack->setAttribute('missing', 'FALSE');
+						} else {
+							$nodeAlbum->setAttribute('missing', 'TRUE');
+						}
+					}
+				}
+				
 				// add comments
 				$niComments = $this->nodeSubject->loadChildren('comments', TRUE, TRUE, TRUE);
 				foreach ($niComments as $nodeComment) {

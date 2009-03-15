@@ -138,6 +138,9 @@
 								<tr><th colspan="5"><hr style="border:1px solid white;" /></th></tr>
 							</xsl:if>
 							<tr>
+								<xsl:if test="@missing">
+									<xsl:attribute name="style">background-color:#F44;</xsl:attribute>
+								</xsl:if>
 								<xsl:call-template name="colorize" />
 								<td width="80">
 									<xsl:call-template name="render_stars">

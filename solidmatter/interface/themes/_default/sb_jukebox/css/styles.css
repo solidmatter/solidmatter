@@ -92,12 +92,12 @@ div.head a {
 	color: #A00;
 }
 
-a.logout {
+span.userstuff {
 	position: absolute;
 	top: 0;
 	right: 0;
 	color: black;
-	margin-top: 3px;
+	margin-top: 4px;
 	margin-right: 3px; 
 }
 
@@ -521,6 +521,12 @@ div.ac_suggestions ul li.selected {
 *.logout:hover {
 	background-image: url(../icons/logout_hover.png);
 }
+*.config {
+	background-image: url(../icons/config.png);
+}
+*.config:hover {
+	background-image: url(../icons/config_hover.png);
+}
 
 
 /* album details -------------------------------------------------------------*/
@@ -605,6 +611,10 @@ div.footer a {
 span.formerror {
 	color: red;
 	text-decoration: blink;
+}
+
+form.default table {
+	width: 100%;
 }
 
 form.default input.formerror,

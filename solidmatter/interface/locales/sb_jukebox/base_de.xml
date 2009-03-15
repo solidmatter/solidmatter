@@ -108,6 +108,10 @@
 		<albums_tagged>Alben mit Tag</albums_tagged>
 		<tracks_tagged>Titel mit Tag</tracks_tagged>
 		<new_playlist>neue Playlist</new_playlist>
+		<relations>Verknüpfungen</relations>
+		<config>Einstellungen</config>
+		<logout>Abmelden</logout>
+		<change_password>Passwort ändern</change_password>
 	</labels>
 	
 	<menu>

@@ -79,6 +79,7 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				$sTag = $this->requireParam('tag');
 				$this->nodeSubject->addTag($sTag);
 				$this->nodeSubject->save();
+				$this->logEvent(System::INFO, 'TAG_ADDED', $sTag);
 				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));
 				break;
 				
@@ -93,9 +94,11 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				break;
 				
 			case 'addRelation':
+				$sRelation = $_REQUEST->getParam('type_relation');
 				$sTarget = substr($_REQUEST->getParam('target_relation'), 0, strpos($_REQUEST->getParam('target_relation'), '|'));
-				$nodeSubject = $this->crSession->getNodeByIdentifier($sTarget);
-				$this->nodeSubject->addRelation($_REQUEST->getParam('type_relation'), $nodeSubject);
+				$nodeTarget = $this->crSession->getNodeByIdentifier($sTarget);
+				$this->nodeSubject->addRelation($sRelation, $nodeTarget);
+				$this->logEvent(System::INFO, 'RELATION_ADDED', $sRelation.' to '.$nodeTarget->getName().' ('.$nodeTarget->getIdentifier().')');
 				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));
 				break;
 				

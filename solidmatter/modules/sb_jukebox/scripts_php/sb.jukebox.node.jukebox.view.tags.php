@@ -86,6 +86,7 @@ class sbView_jukebox_jukebox_tags extends sbJukeboxView {
 				
 				$stmtGetItems = $this->crSession->prepareKnown('sbSystem/tagging/getItems/byTagID/byNodetype');
 				
+				// TODO: searching in tags is not supported, needs to be implemented
 				if ($_REQUEST->getParam('expand') != NULL) {
 					
 					$sCategory = $_REQUEST->getParam('expand');
@@ -100,7 +101,7 @@ class sbView_jukebox_jukebox_tags extends sbJukeboxView {
 					$stmtGetItems->bindValue('nodetype', $aCategories[$sCategory]['nodetype'], PDO::PARAM_STR);
 					$stmtGetItems->execute();
 					$_RESPONSE->addData($stmtGetItems->fetchElements(), $aCategories[$sCategory]['resultset']);
-						
+					
 				} else {
 					
 					foreach ($aCategories as $aCategory) {

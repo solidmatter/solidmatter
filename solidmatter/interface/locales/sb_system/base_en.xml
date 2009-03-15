@@ -69,6 +69,7 @@
 		<deleted_by>Deleted by</deleted_by>
 		<login>Login</login>
 		<password>Password</password>
+		<password_repeat>Repeat password</password_repeat>
 		<options>Options</options>
 		<image>Image</image>
 		<graphic>Graphic</graphic>

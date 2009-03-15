@@ -108,7 +108,7 @@ $_QUERIES['sbJukebox/jukebox/various/getTop'] = '
 	ORDER BY	n_vote DESC
 	LIMIT		0, :limit
 ';
-$_QUERIES['sbJukebox/history/getTop'] = '
+$_QUERIES['sbJukebox/history/getTop/base'] = '
 	SELECT		n.uuid,
 				n.s_label AS label,
 				n.s_name AS name,
@@ -121,6 +121,13 @@ $_QUERIES['sbJukebox/history/getTop'] = '
 		ON		n.uuid = h.fk_child
 	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(hi.dt_played) < :timeframe
+';
+$_QUERIES['sbJukebox/history/getTop/allUsers'] = $_QUERIES['sbJukebox/history/getTop/base'].'
+	GROUP BY	hi.fk_track
+	ORDER BY	COUNT(*) DESC
+	LIMIT		0, :limit
+';
+$_QUERIES['sbJukebox/history/getTop/byUser'] = $_QUERIES['sbJukebox/history/getTop/base'].'
 		AND		hi.fk_user = :user_uuid
 	GROUP BY	hi.fk_track
 	ORDER BY	COUNT(*) DESC
@@ -438,7 +445,8 @@ $_QUERIES['sbJukebox/album/properties/load/auxiliary'] = '
 				n_coverlightness,
 				n_coverhue,
 				n_coversaturation,
-				s_relpath
+				s_relpath,
+				s_abspath
 	FROM		{TABLE_JB_ALBUMS}
 	WHERE		uuid = :node_id
 ';
@@ -454,7 +462,8 @@ $_QUERIES['sbJukebox/album/properties/save/auxiliary'] = '
 					n_coverhue,
 					n_coversaturation,
 					n_coverlightness,
-					s_relpath
+					s_relpath,
+					s_abspath
 				) VALUES (
 					:node_id,
 					:info_artist,
@@ -465,7 +474,8 @@ $_QUERIES['sbJukebox/album/properties/save/auxiliary'] = '
 					:ext_coverhue,
 					:ext_coversaturation,
 					:ext_coverlightness,
-					:info_relpath
+					:info_relpath,
+					:info_abspath
 					)
 	ON DUPLICATE KEY UPDATE
 				fk_artist = :info_artist,
@@ -476,7 +486,8 @@ $_QUERIES['sbJukebox/album/properties/save/auxiliary'] = '
 				n_coverhue = :ext_coverhue,
 				n_coversaturation = :ext_coversaturation,
 				n_coverlightness = :ext_coverlightness,
-				s_relpath = :info_relpath
+				s_relpath = :info_relpath,
+				s_abspath = :info_abspath
 ';
 $_QUERIES['sbJukebox/album/quilt/findCover'] = '
 	SELECT		n.uuid,

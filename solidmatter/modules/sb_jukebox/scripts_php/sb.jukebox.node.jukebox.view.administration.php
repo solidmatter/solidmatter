@@ -56,6 +56,8 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 				
 			case 'clearLibrary':
 				
+				$this->logEvent(System::MAINTENANCE, 'CLEAR_STARTED', 'library path: '.$this->nodeSubject->getProperty('config_sourcepath'));
+				
 				$nlChildren = $this->nodeSubject->getNodes();
 				
 				//$this->nodeSubject->getSession()->beginTransaction('sbJukebox::clearLibrary');
@@ -88,6 +90,8 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 				}
 				
 				$this->clearLibraryInfo();
+				
+				$this->logEvent(System::MAINTENANCE, 'CLEAR_ENDED', 'library path: '.$this->nodeSubject->getProperty('config_sourcepath'));
 				
 				//$this->nodeSubject->getSession()->commit('sbJukebox::clearLibrary');
 				

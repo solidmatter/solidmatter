@@ -19,21 +19,28 @@
 		<xsl:param name="noLabel" select="false" />
 		<form class="default" action="{@action}" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 			<table class="default" summary="form">
-				<xsl:if test="$noLabel != 'true'">
-					<tr><th colspan="2"><xsl:value-of select="dyn:evaluate(@label)" /></th></tr>
-				</xsl:if>
-				<xsl:if test="@errorlabel"><br/><xsl:value-of select="dyn:evaluate(@errorlabel)" /></xsl:if>
+				<tr><th colspan="2"><xsl:value-of select="dyn:evaluate(@label)" /></th></tr>
 				<xsl:apply-templates select="*" mode="complete" />
+				<xsl:if test="@errorlabel">
+					<tr><td></td><td><span class="formerror"><xsl:value-of select="dyn:evaluate(@errorlabel)" /></span></td></tr>
+				</xsl:if>
 			</table>
 		</form>
 	</xsl:template>
 	
-	<!--<xsl:template match="sbform:group">
+	<!-- hidden -->
+	<xsl:template match="sbinput[@type='hidden']" mode="complete">
 		<tr>
-			<th class="th2" colspan="2"><legend><xsl:value-of select="@label" /></legend></th>
+			<td width="30%"><label for="{@name}"><xsl:value-of select="dyn:evaluate(@label)" /></label></td>
+			<td width="70%">
+				<xsl:apply-templates select="." mode="inputonly" />
+			</td>
 		</tr>
-		<xsl:apply-templates select="sbform:*" />
-	</xsl:template>-->
+	</xsl:template>
+	<xsl:template match="sbinput[@type='hidden']" mode="inputonly">
+		<input type="hidden" value="{@value}" name="{@name}" id="{@name}"></input>
+		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
+	</xsl:template>
 	
 	<!-- string -->
 	<xsl:template match="sbinput[@type='string']" mode="complete">
@@ -115,23 +122,6 @@
 	</xsl:template>
 	<xsl:template match="sbinput[@type='urlsafe']" mode="inputonly">
 		<input type="text" size="{@size}" maxlength="{@maxlength}" value="{@value}" name="{@name}" id="{@name}">
-			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
-			<xsl:if test="@errorlabel"><xsl:attribute name="class">formerror</xsl:attribute></xsl:if>
-		</input>
-		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
-	</xsl:template>
-	
-	<!-- hexcolor -->
-	<xsl:template match="sbinput[@type='color']" mode="complete">
-		<tr>
-			<td width="30%"><label for="{@name}"><xsl:value-of select="dyn:evaluate(@label)" /></label></td>
-			<td width="70%">
-				<xsl:apply-templates select="." mode="inputonly" />
-			</td>
-		</tr>
-	</xsl:template>
-	<xsl:template match="sbinput[@type='color']" mode="inputonly">
-		<input type="text" size="6" maxlength="6" value="{@value}" name="{@name}" id="{@name}">
 			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
 			<xsl:if test="@errorlabel"><xsl:attribute name="class">formerror</xsl:attribute></xsl:if>
 		</input>
@@ -354,33 +344,6 @@
 		</script>
 	</xsl:template>
 	
-	<!-- codeeditor -->
-	<xsl:template match="sbinput[@type='codeeditor']" mode="complete">
-		<tr>
-			<td width="30%"><label for="{@name}"><xsl:value-of select="dyn:evaluate(@label)" /></label></td>
-			<td width="70%">
-				<xsl:apply-templates select="." mode="inputonly" />
-			</td>
-		</tr>
-	</xsl:template>
-	<xsl:template match="sbinput[@type='codeeditor']" mode="inputonly">
-		<textarea style="height: 350px; width: 100%;" maxlength="{@maxlength}" name="{@name}" id="{@name}">
-			<xsl:if test="@errorlabel"><xsl:attribute name="class">formerror</xsl:attribute></xsl:if>
-			<xsl:value-of select="@value" />
-		</textarea>
-		<script language="Javascript" type="text/javascript">
-			editAreaLoader.init({
-				id: "<xsl:value-of select="@name" />"	// id of the textarea to transform		
-				,start_highlight: true	// if start with highlight
-				,allow_resize: "no"
-				,allow_toggle: false
-				,language: "en"
-				,syntax: "<xsl:value-of select="@syntax" />"
-			});
-		</script>
-		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
-	</xsl:template>
-	
 	<!-- checkbox -->
 	<xsl:template match="sbinput[@type='checkbox']" mode="complete">
 		<tr>
@@ -394,67 +357,6 @@
 		<input type="checkbox" name="{@name}" id="{@name}">
 			<xsl:if test="@value='TRUE'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
 		</input>
-	</xsl:template>
-	
-	<!-- multifileupload -->
-	<xsl:template match="sbinput[@type='multifileupload']" mode="complete">
-		<tr>
-			<td><label for="{@name}"><xsl:value-of select="dyn:evaluate(@label)" /></label></td>
-			<td>
-				<xsl:apply-templates select="." mode="inputonly" />
-			</td>
-		</tr>
-	</xsl:template>
-	<xsl:template match="sbinput[@type='multifileupload']" mode="inputonly">
-		<div id="fileInputFrame"><input type="file" onchange="addFile()"/></div>
-		<div id="attachments" style="padding: 5px;">
-			<!--<p>attached files will be shown here</p>-->
-			<ul id="attachFileList" class="itemlist">
-			</ul>
-		</div>
-		<script type="text/javascript" language="javascript">
-			<![CDATA[
-			
-			// thx to Woosta for helping out with this one!
-			
-			function addFile() {
-				
-				var elemList = document.getElementById("attachFileList");
-				var elemSlot = document.getElementById("fileInputFrame").firstChild;
-				
-				if (elemSlot.value == "") {
-					return (false);
-				}
-				
-				var elemEntry = document.createElement("li");
-				
-				elemSlot.name = "]]><xsl:value-of select="@name" /><![CDATA[[]";
-				elemSlot.style.display = "none";
-				elemEntry.appendChild(elemSlot);
-				
-				var elemRemove = document.createElement('button');
-				elemRemove.appendChild(document.createTextNode('X'));
-				elemRemove.onclick = function() {
-					elemEntry.removeChild(elemSlot);
-					elemList.removeChild(elemEntry);
-					li.parentNode.removeChild(li);
-				};
-				elemEntry.appendChild(elemRemove);
-				
-				var elemText = document.createTextNode(' ' + elemSlot.value);
-				elemEntry.appendChild(elemText);
-				
-				var elemNewSlot = document.createElement("input");
-				elemNewSlot.type = "file";
-				elemNewSlot.setAttribute("onclick", "addFile()");
-				document.getElementById("fileInputFrame").appendChild(elemNewSlot);
-				
-				elemList.appendChild(elemEntry);
-				
-			}
-			
-			]]>
-		</script>
 	</xsl:template>
 	
 	<!-- submit -->

@@ -35,11 +35,8 @@ class sbFilesystemObject {
 		
 		$this->aInfo['working_dir'] = getcwd();
 		
-		// TODO: actually check encoding
-		if (true) {
-			$this->aInfo['encoding'] = 'Windows-1252';
-			//$this->aInfo['encoding'] = 'UTF-8';
-		}
+		// TODO: is the encoding always the same, system-wide?
+		$this->aInfo['encoding'] = System::getFilesystemEncoding();
 		
 		if ($sRelPath != NULL) {
 			$this->__init($sRelPath);

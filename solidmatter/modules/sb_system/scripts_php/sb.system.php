@@ -200,6 +200,7 @@ class System {
 			'sbForum' => 'sb_forum',
 			'sbGuestbook' => 'sb_guestbook',
 			'sbJukebox' => 'sb_jukebox',
+			'sbPortal' => 'sb_portal',
 		);
 		if (isset($aModules[$sModule])) {
 			return ($aModules[$sModule]);
@@ -277,7 +278,11 @@ class System {
 		// TODO: actually check the server environment
 		if (self::getEnvironment() == 'windows') {
 			return ('Windows-1252');
+		} elseif (self::getEnvironment() == 'linux') {
+			return ('UTF-8');
 		}
+		
+		return ('UTF-8');
 		
 	}
 	

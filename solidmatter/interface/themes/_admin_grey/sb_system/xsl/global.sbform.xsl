@@ -218,6 +218,44 @@
 	
 	
 	
+	<!-- users -->
+	<xsl:template match="sbinput[@type='users']" mode="complete">
+		<tr>
+			<td width="30%"><label for="{@name}"><xsl:value-of select="dyn:evaluate(@label)" /></label></td>
+			<td width="70%">
+				<xsl:apply-templates select="." mode="inputonly" />
+			</td>
+		</tr>
+	</xsl:template>
+	<xsl:template match="sbinput[@type='users']" mode="inputonly">
+		<xsl:variable name="value" select="@value" />
+		<xsl:variable name="includeself" select="@includeself" />
+		<select size="{@size}" name="{@name}" id="{@name}">
+			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
+			<xsl:if test="@errorlabel"><xsl:attribute name="class">formerror</xsl:attribute></xsl:if>
+			<xsl:for-each select="option">
+				<xsl:if test="$includeself='TRUE' or @value != /response/metadata/system/userid">
+				<option value="{@value}">
+					<xsl:if test="@value = $value">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>
+					<xsl:choose>
+					<xsl:when test="@label">
+						<xsl:value-of select="dyn:evaluate(@label)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="@text" />
+					</xsl:otherwise>
+					</xsl:choose>
+				</option>
+				</xsl:if>
+			</xsl:for-each>
+		</select>
+		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
+	</xsl:template>
+	
+	
+	
 	<!-- nodeselector -->
 	<xsl:template match="sbinput[@type='nodeselector']" mode="complete">
 		<tr>
@@ -323,7 +361,7 @@
 				</option>
 			</xsl:for-each>
 		</select>
-		<input type="text" size="1" maxlength="250" value="{@value}" name="target_{@name}" id="target_{@name}">
+		<input type="text" size="50" maxlength="250" value="{@value}" name="target_{@name}" id="target_{@name}">
 			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
 			<xsl:if test="@errorlabel"><xsl:attribute name="class">formerror</xsl:attribute></xsl:if>
 		</input>
@@ -334,13 +372,18 @@
 				window,
 				'load',
 				function() {
-					var oType = $('target_<xsl:value-of select="@name"/>');
-					alert oType;
+					var oType = $('type_<xsl:value-of select="@name"/>');
 					new Ajax.Autocompleter(
 						'target_<xsl:value-of select="@name"/>',
 						'suggest_<xsl:value-of select="@name"/>',
 						'<xsl:value-of select="@url"/>',
-						{ minChars: 3 }
+						{ 
+							minChars: <xsl:value-of select="@minchars"/>, 
+							//parameters: 'type_<xsl:value-of select="@name"/>='+oType.value 
+							callback: function(oTextInput) {
+								return ('target_<xsl:value-of select="@name"/>=' + oTextInput.value + '&amp;' + ' type_<xsl:value-of select="@name"/>=' + oType.value);
+							}
+						}
 					)
 				}
 			);

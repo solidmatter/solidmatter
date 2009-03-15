@@ -370,7 +370,11 @@ class sbCR_Session {
 	* @return 
 	*/
 	public function refresh($bKeepChanges) {
-		throw new LazyBastardException();
+		if ($bKeepChanges) {
+			throw new LazyBastardException('refresh with keeping changes not supported');
+		} else {
+			$this->aSaveTasks = array();
+		}
 	}
 	
 	

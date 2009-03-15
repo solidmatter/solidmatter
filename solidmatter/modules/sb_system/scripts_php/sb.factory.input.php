@@ -36,6 +36,7 @@ class InputFactory {
 		'select',
 		'checkbox',
 		//'checkboxes',
+		'hidden',
 		//'file',
 		//'files',
 		//'image',

@@ -163,7 +163,7 @@ class sbJukeboxView extends sbView {
 		
 		$formSearch = new sbDOMForm(
 			'addComment',
-			'$locale/sbSystem/labels/comment',
+			'$locale/sbSystem/labels/add_comment',
 			System::getURL($this->nodeSubject, 'votes', 'addComment'),
 			$this->crSession
 		);
@@ -185,7 +185,7 @@ class sbJukeboxView extends sbView {
 		
 		$formTag = new sbDOMForm(
 			'addTag',
-			'$locale/sbSystem/labels/tag',
+			'$locale/sbSystem/labels/add_tag',
 			System::getURL($this->nodeSubject, 'votes', 'addTag'),
 			$this->crSession
 		);
@@ -224,10 +224,8 @@ class sbJukeboxView extends sbView {
 				$sTarget = System::getURL('-', 'library', 'search');
 				break;
 			case 'tagspecific':
-				$aParams = array();
-				$aParams['tagid'] = $_REQUEST->getParam('tagid');
 				$sID = 'searchTagSpecific';
-				$sTarget = System::getURL('-', 'tags', 'listItems', $aParams);
+				$sTarget = System::getURL('-', 'tags', 'listItems');
 				break;
 			default:
 				throw new sbException('searchform subject not recognized: "'.$sSubject.'"');
@@ -243,6 +241,12 @@ class sbJukeboxView extends sbView {
 		
 		$formSearch->addInput('searchstring;string;minlength=2;maxlength=20;', '$locale/sbSystem/labels/search/title');
 		$formSearch->addSubmit('$locale/sbSystem/actions/search');
+		
+		// TODO: this behaviour is far from optimal, needs rework
+		if ($sSubject == 'tagspecific') {
+			$formSearch->addInput('tagid;hidden;');
+			$formSearch->setValue('tagid', $_REQUEST->getParam('tagid'));
+		}
 		
 		return ($formSearch);
 		

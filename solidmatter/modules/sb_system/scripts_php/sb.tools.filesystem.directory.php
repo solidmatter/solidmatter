@@ -57,14 +57,13 @@ class sbDirectory extends sbFilesystemObject {
 		}
 		
 		// clear in case read() is called multiple times
-		$this->aDirectories[] = array();
+		$this->aDirectories = array();
 		$this->aDirectoriesBackup = array();
 		$this->aFiles = array();
 		$this->aFilesBackup = array();
 		
 		// read and store
 		$aEntries = scandir($this->aInfo['abs_path']);
-		//var_dumpp($aEntries);
 		foreach ($aEntries as $sEntry) {
 			if (is_dir($this->aInfo['abs_path'].$sEntry)) {
 				if ($bSkipParents) {
@@ -229,8 +228,6 @@ class sbDirectory extends sbFilesystemObject {
 				return (TRUE);
 			}
 		}
-//		var_dumpp($sRelPath);
-//		var_dumpp($this->aFiles);
 		return (FALSE);
 	}
 	

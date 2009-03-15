@@ -38,6 +38,18 @@ class sbNode_jukebox_album extends sbJukeboxNode {
 		$this->fillArtists($formCurrent, $nodeJukebox);
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function checkFileExistance() {
+		$sFilename = JukeboxTools::getFSPath($this);
+		$sFilename = iconv('UTF-8', System::getFilesystemEncoding(), $sFilename);
+		return (file_exists($sFilename));
+	}
+	
 }
 
 ?>

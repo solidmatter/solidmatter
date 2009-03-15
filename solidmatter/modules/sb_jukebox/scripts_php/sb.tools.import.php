@@ -164,6 +164,9 @@ class JukeboxToolkit {
 		if (count($this->aTempArtists) > 0 && $this->aVerboseFlags['ARTIST_QUERY']) {
 			$this->echoInfo('info', '[dumped] '.count($this->aTempArtists).' artists');
 		}
+		foreach ($this->aTempArtists as $nodeArtist) {
+			$nodeArtist->refresh(FALSE);	
+		}
 		$this->aTempArtists = array();
 	}
 	
@@ -451,6 +454,7 @@ class JukeboxToolkit {
 		}
 		
 		$aAlbumProps['info_relpath'] = iconv($dirAlbum->getEncoding(), 'UTF-8', $dirAlbum->getRelPath($this->nodeJukebox->getProperty('config_sourcepath')));
+		$aAlbumProps['info_abspath'] = iconv($dirAlbum->getEncoding(), 'UTF-8', $dirAlbum->getAbsPath());
 		
 		$aAlbumInfo['properties'] = $aAlbumProps;
 		
@@ -480,7 +484,7 @@ class JukeboxToolkit {
 			
 			// get basic info
 			$sRelPath = $dirCD->getRelPath($dirAlbum->getAbsPath()).$sFileName;
-			$aTrackInfo = $this->getTrackInfo($dirAlbum->getAbsPath(), $sRelPath);
+			$aTrackInfo = $this->getTrackInfo($dirAlbum, $sRelPath);
 			
 			if ($this->aVerboseFlags['TRACK_NAMES']) {
 				echo $aTrackInfo['properties']['label'];
@@ -528,7 +532,7 @@ class JukeboxToolkit {
 	* @param 
 	* @return 
 	*/
-	public function getTrackInfo($sAlbumPath, $sRelPath) {
+	public function getTrackInfo($dirAlbum, $sRelPath) {
 		
 		// init ----------------------------------------------------------------
 		
@@ -553,14 +557,12 @@ class JukeboxToolkit {
 		$oGetID3 = new getid3();
 		$oGetID3 = new getid3(); // instatiate twice because of strange heplerapps bug in getid3!
 		error_reporting(0);
-		$aInfo = $oGetID3->analyze($sAlbumPath.$sRelPath);
+		$aInfo = $oGetID3->analyze($dirAlbum->getAbsPath().$sRelPath);
 		error_reporting(E_STRICT | E_ALL);
 //		var_dumpp($aInfo); die();
 		// check premises ------------------------------------------------------
 		
 		if (!isset($aInfo['tags']['id3v2'])) {
-			var_dumpp($sAlbumPath.$sRelPath);
-			var_dumpp($aInfo); exit();
 			throw new ImportException('[abort] - no ID3v2 tags in '.$sRelPath);
 		}
 		if (!isset($aInfo['tags']['id3v1'])) {
@@ -676,9 +678,10 @@ class JukeboxToolkit {
 			$aNodeProps['info_index'] = $aInfo['tags']['id3v2']['track_number'][0];
 		}
 		// FIXME: needs to use filesystem encoding instead of getid3 encoding!
-		$aNodeProps['info_filename']	= iconv($oGetID3->encoding, 'UTF-8', $sRelPath);
+		$aNodeProps['info_filename']	= iconv($dirAlbum->getEncoding(), 'UTF-8', $sRelPath);
 		//echo ($aNodeProps['info_filename']);
 		$aNodeProps['info_playtime']	= $aInfo['playtime_string'];
+		$aNodeProps['info_published']	= $aInfo['tags']['id3v2']['year'][0];
 		$aNodeProps['enc_playtime']		= round($aInfo['playtime_seconds']);
 		$aNodeProps['enc_mode']			= strtoupper($aInfo['mpeg']['audio']['bitrate_mode']);
 		$aNodeProps['enc_bitrate']		= round($aInfo['mpeg']['audio']['bitrate'] / 1000);

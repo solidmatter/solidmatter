@@ -271,8 +271,10 @@ class sbDOMResponse extends sbDOMDocument {
 			$this->addMeta('md_modules', $elemModule);
 		}
 		
-		$elemUserID = $this->createElement('userid', User::getUUID());
-		$this->addMeta('md_system', $elemUserID);
+		if (User::isLoggedIn()) {
+			$elemUserID = $this->createElement('userid', User::getUUID());
+			$this->addMeta('md_system', $elemUserID);
+		}
 		
 	}
 	

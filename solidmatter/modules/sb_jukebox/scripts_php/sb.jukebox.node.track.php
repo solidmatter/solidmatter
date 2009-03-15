@@ -23,13 +23,14 @@ class sbNode_jukebox_track extends sbJukeboxNode {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* TODO: RealPath does not work with imports done via multiple jukebox paths
 	* @param 
 	* @return 
 	*/
 	public function getRealPath() {
 		
-		$nodeJukebox = $this->getParent()->getParent()->getParent();
+		$nodeAlbum = $this->getParent();
+		$nodeJukebox = $nodeAlbum->getParent()->getParent();
 		$sRealPath = $nodeJukebox->getProperty('config_realpath').$nodeAlbum->getProperty('info_relpath').$this->getProperty('info_filename');
 		
 		return ($sRealPath);
@@ -45,6 +46,18 @@ class sbNode_jukebox_track extends sbJukeboxNode {
 	protected function modifyForm($formCurrent, $sMode) {
 		$nodeJukebox = $this->getParent()->getParent()->getParent();
 		$this->fillArtists($formCurrent, $nodeJukebox);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function checkFileExistance() {
+		$sFilename = JukeboxTools::getFSPath($this);
+		$sFilename = iconv('UTF-8', System::getFilesystemEncoding(), $sFilename);
+		return (file_exists($sFilename));
 	}
 	
 }

@@ -240,6 +240,7 @@ class DefaultJukeboxImporter {
 				// FIXME: incomplete albums (with errors) are saved regardless of exceptions!
 				$this->jbToolkit->dumpArtists();
 				$this->nodeJukebox->refresh(FALSE);
+				$this->nodeJukebox->getSession()->refresh(FALSE);
 				
 				if ($_REQUEST->getParam('dry') != 'true') {
 					/*$aLibraryInfo['state'] = 'skipped';

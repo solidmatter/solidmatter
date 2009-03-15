@@ -105,8 +105,12 @@ class JukeboxTools {
 				$sPath = $nodeSubject->getParent()->getProperty('config_sourcepath');
 				break;
 			case 'sbJukebox:Album':
-				$sPath = normalize_path(self::getFSPath($nodeSubject->getParent()), FALSE);
-				$sPath .= $nodeSubject->getProperty('info_relpath');
+				if (Registry::getValue('sb.jukebox.paths.albums.useabspath')) {
+					$sPath = normalize_path($nodeSubject->getProperty('info_abspath'));	
+				} else {
+					$sPath = normalize_path(self::getFSPath($nodeSubject->getParent()), FALSE);
+					$sPath .= $nodeSubject->getProperty('info_relpath');
+				}
 				break;
 			case 'sbJukebox:Track':
 				$sPath = normalize_path(self::getFSPath($nodeSubject->getParent()), FALSE);

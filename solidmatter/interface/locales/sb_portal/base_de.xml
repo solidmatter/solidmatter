@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbPortal>
+	
+	<Portal>
+		<something label="something" />
+	</Portal>
+	<Page>
+		<something label="something" />
+	</Page>
+	
+	<nodetypes>
+		<type id="sbPortal:Portal">Portal</type>
+		<type id="sbPortal:Page">Portalseite</type>
+		<type id="sbPortal:Content">Portalinhalt</type>
+	</nodetypes>
+	
+	<views>
+		<view id="xxxxx">xxxxx</view>
+	</views>
+	
+</sbPortal>

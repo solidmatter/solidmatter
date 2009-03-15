@@ -60,7 +60,6 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 				);
 				
 				$stmtGetTopVoted = $this->crSession->prepareKnown('sbJukebox/jukebox/various/getTop');
-				$stmtGetMostPlayed = $this->crSession->prepareKnown('sbJukebox/history/getTop');
 				
 				foreach ($aCategories as $sCategory => $aCategory) {
 					
@@ -81,9 +80,13 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 						$stmtGetTop->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
 						$stmtGetTop->bindValue('nodetype', $aCategory['nodetype'], PDO::PARAM_STR);
 					} else {
-						$stmtGetTop = $stmtGetMostPlayed;
+						if ($this->getPivotUUID() == $this->crSession->getRootNode()->getProperty('jcr:uuid')) {
+							$stmtGetTop = $this->crSession->prepareKnown('sbJukebox/history/getTop/allUsers');
+						} else {
+							$stmtGetTop = $this->crSession->prepareKnown('sbJukebox/history/getTop/byUser');
+							$stmtGetTop->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
+						}
 						$iTimeframe = 60*60*24*7; // TODO: make this customizable (even on session scope?)
-						$stmtGetTop->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
 						$stmtGetTop->bindValue('timeframe', $iTimeframe, PDO::PARAM_INT);
 					}
 					

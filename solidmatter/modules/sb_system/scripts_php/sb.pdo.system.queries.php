@@ -417,12 +417,14 @@ $_QUERIES['sbSystem/relations/getRelations'] = '
 ';
 $_QUERIES['sbSystem/relations/getSupportedRelations'] = '
 	SELECT		s_relation AS relation,
-				fk_targetnodetype AS targetnodetype
+				fk_targetnodetype AS targetnodetype,
+				s_reverserelation AS reverserelation
 	FROM		{TABLE_ONTOLOGY}
 	WHERE		fk_sourcenodetype = :nodetype
 	UNION
 	SELECT		s_reverserelation AS relation,
-				fk_sourcenodetype AS targetnodetype
+				fk_sourcenodetype AS targetnodetype,
+				s_relation AS reverserelation
 	FROM		{TABLE_ONTOLOGY}
 	WHERE		fk_targetnodetype = :nodetype
 		AND		s_reverserelation IS NOT NULL
@@ -779,6 +781,7 @@ $_QUERIES['sb_system/folder/view/upload/getMimetypeMapping'] = '
 $_QUERIES['sbSystem/modules/getInfo'] = '
 	SELECT		*
 	FROM		{TABLE_MODULES}
+	ORDER BY	s_name
 ';
 
 //------------------------------------------------------------------------------

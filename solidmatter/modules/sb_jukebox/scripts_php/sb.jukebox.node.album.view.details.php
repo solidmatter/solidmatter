@@ -87,6 +87,18 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 					$nodeTrack->getVote($this->getPivotUUID());
 				}
 				
+				// optionally check if files still exist
+				if (Registry::getValue('sb.jukebox.validation.missingfiles.indicate')) {
+					import('sbJukebox:sb.jukebox.tools');
+					foreach ($niTracks as $nodeTrack) {
+						if ($nodeTrack->checkFileExistance()) {
+							//$nodeTrack->setAttribute('missing', 'FALSE');
+						} else {
+							$nodeTrack->setAttribute('missing', 'TRUE');
+						}
+					}
+				}
+				
 				$this->nodeSubject->storeChildren();
 				$this->nodeSubject->loadProperties();
 				$this->nodeSubject->getTags();

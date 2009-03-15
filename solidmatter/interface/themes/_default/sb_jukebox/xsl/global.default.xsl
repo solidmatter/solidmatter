@@ -129,7 +129,10 @@
 			<div class="body">
 				<div class="head">
 					<h1>sbJukebox</h1>
-					<a class="type logout" href="/-/login/logout">Logout</a>
+					<span class="userstuff">
+						<a class="type config" href="/-/config" style="margin-right:7px;"><xsl:value-of select="$locale/sbJukebox/labels/config" /></a>
+						<a class="type logout" href="/-/login/logout"><xsl:value-of select="$locale/sbJukebox/labels/logout" /></a>
+					</span>
 					<xsl:if test="$content/currentPlaylist/sbnode">
 						<span class="current_playlist">
 							<a class="type jumpToPlaylist" href="/{$content/currentPlaylist/sbnode/@uuid}"><xsl:value-of select="$content/currentPlaylist/sbnode/@label" /></a>
@@ -227,6 +230,7 @@
 		<form action="{$form/@action}" name="simplesearch" method="get" class="simplesearch">
 			<xsl:value-of select="$locale/sbSystem/labels/search/title" />:
 			<xsl:apply-templates select="$form/sbinput[@type='string']" mode="inputonly" />
+			<xsl:apply-templates select="$form/sbinput[@type='hidden']" mode="inputonly" />
 			<xsl:value-of select="' '" />
 			<xsl:apply-templates select="$form/submit" mode="inputonly" />
 		</form>
@@ -382,6 +386,9 @@
 			<xsl:when test="$albumlist">
 				<xsl:for-each select="$albumlist/child::*">
 					<tr>
+						<xsl:if test="@missing">
+							<xsl:attribute name="style">background-color:#F44;</xsl:attribute>
+						</xsl:if>
 						<xsl:call-template name="colorize" />
 						<td width="60">
 							<a class="imglink" href="/{@uuid}">
@@ -425,7 +432,7 @@
 			<table class="default" width="100%">
 				<thead>
 					<tr>
-						<th colspan="2"><span class="type relation">Relations (!)</span></th>
+						<th colspan="2"><span class="type relation"><xsl:value-of select="$locale/sbJukebox/labels/relations" /></span></th>
 					</tr>
 				</thead>
 				<tbody>

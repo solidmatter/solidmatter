@@ -1,0 +1,15 @@
+
+/*----------------------------------------------------------------------------*/
+/* types / icons
+/*----------------------------------------------------------------------------*/
+
+*.sb_portal {
+	background-image: url(../icons/type_portal.png);
+}
+*.sb_portalpage {
+	background-image: url(../icons/type_portalpage.png);
+}
+*.sb_portalcontent {
+	background-image: url(../icons/type_portalcontent.png);
+}
+

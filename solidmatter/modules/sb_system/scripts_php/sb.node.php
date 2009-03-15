@@ -1431,7 +1431,9 @@ class sbNode extends sbCR_Node {
 		$stmtGet->execute();
 		$aRelations = array();
 		foreach ($stmtGet as $aRow) {
-			$aRelations[$aRow['relation']][$aRow['targetnodetype']] = $aRow['targetnodetype'];
+			// NOTE: a reverse relation MUST exist, otherwise the array entry will not be set!
+			// TODO: check if there is demand for one-way relations
+			$aRelations[$aRow['relation']][$aRow['targetnodetype']] = $aRow['reverserelation'];
 		}
 		
 		return ($aRelations);
@@ -1452,7 +1454,7 @@ class sbNode extends sbCR_Node {
 		foreach ($aRelations as $sRelation => $aNodetypes) {
 			$elemRelation = $domOwner->createElement('relation');
 			$elemRelation->setAttribute('id', $sRelation);
-			foreach ($aNodetypes as $sNodetype) {
+			foreach ($aNodetypes as $sNodetype => $sReverseRelation) {
 				$elemNodetype = $domOwner->createElement('nodetype', $sNodetype);
 				$elemRelation->appendChild($elemNodetype);
 			}
@@ -1546,11 +1548,28 @@ class sbNode extends sbCR_Node {
 	*/
 	public function addRelation($sRelation, $nodeTarget) {
 		
-		$stmtGet = $this->prepareKnown('relations/addRelation');
-		$stmtGet->bindValue('relation', $sRelation, PDO::PARAM_STR);
-		$stmtGet->bindValue('source_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
-		$stmtGet->bindValue('target_uuid', $nodeTarget->getProperty('jcr:uuid'), PDO::PARAM_STR);
-		$stmtGet->execute();
+		// does not work on new, unsaved nodes
+		if ($this->isNew() || $nodeTarget->isNew()) {
+			throw new RepositoryException('adding relations does only work on persisted nodes, either source or target node is new');	
+		}
+		
+		// prepare
+		$aRelations = $this->getSupportedRelations();
+		$stmtAdd = $this->prepareKnown('relations/addRelation');
+		
+		// add relation only if it's valid
+		if (isset($aRelations[$sRelation][$nodeTarget->getPrimaryNodeType()])) {
+			// add the given relation
+			$stmtAdd->bindValue('relation', $sRelation, PDO::PARAM_STR);
+			$stmtAdd->bindValue('source_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+			$stmtAdd->bindValue('target_uuid', $nodeTarget->getProperty('jcr:uuid'), PDO::PARAM_STR);
+			$stmtAdd->execute();
+			// add the reverse relation to the target node
+			$stmtAdd->bindValue('relation', $aRelations[$sRelation][$nodeTarget->getPrimaryNodeType()], PDO::PARAM_STR);
+			$stmtAdd->bindValue('source_uuid', $nodeTarget->getProperty('jcr:uuid'), PDO::PARAM_STR);
+			$stmtAdd->bindValue('target_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+			$stmtAdd->execute();
+		}
 		
 		return;
 		

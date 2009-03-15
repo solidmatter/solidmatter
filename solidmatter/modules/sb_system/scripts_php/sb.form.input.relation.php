@@ -19,12 +19,7 @@ class sbInput_relation extends sbInput_select {
 	protected $sType = 'relation';
 	
 	protected $aConfig = array(
-		'size' => '30',
-		'minlength' => '0',
-		'maxlength' => '40',
-		'required' => 'FALSE',
-		'trim' => 'TRUE',
-		'regex' => '',
+		'required' => 'TRUE',
 		'url' => '',
 		'minchars' => 3
 	);
