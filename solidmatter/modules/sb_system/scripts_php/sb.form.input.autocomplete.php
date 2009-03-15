@@ -23,7 +23,8 @@ class sbInput_autocomplete extends sbInput {
 		'required' => 'FALSE',
 		'trim' => 'TRUE',
 		'regex' => '',
-		'url' => ''
+		'url' => '',
+		'minchars' => '3'
 	);
 	
 	//--------------------------------------------------------------------------

@@ -14,10 +14,14 @@
 		indent="yes"
 	/>
 	
+	
+	
+	<!-- match formrenderer -->
 	<xsl:template name="sbform" match="//sbform">
 		<xsl:param name="noLabel" select="false" />
 		<form class="default" action="{@action}" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 			<table class="default">
+				<!-- TODO: configuring label display does not work -->
 				<xsl:if test="$noLabel != 'true'"></xsl:if>
 					<tr><th colspan="2"><xsl:value-of select="dyn:evaluate(@label)" /></th></tr>
 				
@@ -53,6 +57,8 @@
 		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
 	</xsl:template>
 	
+	
+	
 	<!-- email -->
 	<xsl:template match="sbinput[@type='email']" mode="complete">
 		<tr>
@@ -70,6 +76,8 @@
 		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
 	</xsl:template>
 	
+	
+	
 	<!-- datetime -->
 	<xsl:template match="sbinput[@type='datetime']" mode="complete">
 		<tr>
@@ -86,6 +94,8 @@
 		</input>
 		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
 	</xsl:template>
+	
+	
 	
 	<!-- password -->
 	<xsl:template match="sbinput[@type='password']" mode="complete">
@@ -324,7 +334,7 @@
 						'<xsl:value-of select="@name"/>',
 						'suggest_<xsl:value-of select="@name"/>',
 						'<xsl:value-of select="@url"/>',
-						{ minChars: 3 }
+						{ minChars: <xsl:value-of select="@minchars"/> }
 					)
 				}
 			);

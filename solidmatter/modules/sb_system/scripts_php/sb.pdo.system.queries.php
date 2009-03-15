@@ -312,6 +312,13 @@ $_QUERIES['sbSystem/tagging/node/getBranchTags'] = '
 	GROUP BY	t.id
 	ORDER BY	t.s_tag
 ';
+$_QUERIES['sbSystem/tagging/tags/getMatchingTags'] = '
+	SELECT		t.s_tag AS tag
+	FROM		{TABLE_TAGS} t
+	WHERE		t.s_tag LIKE :substring
+		AND		t.e_visibility <> \'HIDDEN\'
+	ORDER BY	t.s_tag
+';
 $_QUERIES['sbSystem/tagging/tags/getID'] = '
 	SELECT		id
 	FROM		{TABLE_TAGS}

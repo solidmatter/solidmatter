@@ -83,6 +83,18 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));
 				break;
 				
+			case 'getTags':
+				$stmtGetTags = $this->crSession->prepareKnown('sbSystem/tagging/tags/getMatchingTags');
+				$stmtGetTags->bindValue('substring', '%'.$_REQUEST->getParam('tag').'%', PDO::PARAM_STR);
+				$stmtGetTags->execute();
+				echo '<ul>';
+				foreach ($stmtGetTags as $aTag) {
+					echo '<li>'.$aTag['tag'].'</li>';
+				}
+				echo '</ul>';
+				exit();
+				break;
+				
 			case 'getTargets':
 				$aTargets = $this->nodeSubject->getPossibleTargets($_REQUEST->getParam('type_relation'), $_REQUEST->getParam('target_relation'));
 				echo '<ul>';

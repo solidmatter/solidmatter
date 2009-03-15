@@ -280,7 +280,7 @@
 						'<xsl:value-of select="@name"/>',
 						'suggest_<xsl:value-of select="@name"/>',
 						'<xsl:value-of select="@url"/>',
-						{ minChars: 3 }
+						{ minChars: <xsl:value-of select="@minchars"/> }
 					)
 				}
 			);

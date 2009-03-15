@@ -190,7 +190,8 @@ class sbJukeboxView extends sbView {
 			$this->crSession
 		);
 		
-		$formTag->addInput('tag;string;minlength=2;maxlength=50;size=20;required=true;', '$locale/sbSystem/labels/tag');
+		$sAutocompleteURL = System::getURL($this->nodeSubject, 'votes', 'getTags');
+		$formTag->addInput('tag;autocomplete;minchars=2;minlength=2;maxlength=50;size=20;required=true;url='.$sAutocompleteURL, '$locale/sbSystem/labels/tag');
 		$formTag->addSubmit('$locale/sbSystem/actions/save');
 		
 		return ($formTag);
