@@ -72,9 +72,7 @@ class sbView_jukebox_artist_details extends sbJukeboxView {
 				if (Registry::getValue('sb.jukebox.validation.missingfiles.indicate')) {
 					import('sbJukebox:sb.jukebox.tools');
 					foreach ($niAlbums as $nodeAlbum) {
-						if ($nodeAlbum->checkFileExistance()) {
-							//$nodeTrack->setAttribute('missing', 'FALSE');
-						} else {
+						if (!$nodeAlbum->checkFileExistance()) {
 							$nodeAlbum->setAttribute('missing', 'TRUE');
 						}
 					}

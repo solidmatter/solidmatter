@@ -91,9 +91,7 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 				if (Registry::getValue('sb.jukebox.validation.missingfiles.indicate')) {
 					import('sbJukebox:sb.jukebox.tools');
 					foreach ($niTracks as $nodeTrack) {
-						if ($nodeTrack->checkFileExistance()) {
-							//$nodeTrack->setAttribute('missing', 'FALSE');
-						} else {
+						if (!$nodeTrack->checkFileExistance()) {
 							$nodeTrack->setAttribute('missing', 'TRUE');
 						}
 					}

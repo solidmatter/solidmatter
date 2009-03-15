@@ -186,8 +186,8 @@ function rmdirr($sPath) {
 
 //------------------------------------------------------------------------------
 /**
-* Normalizes a directory path to be absolute and ending in '/'.
-* Additionally exchanges all '\' with '/'
+* Normalizes a directory path to use "/" instead of "\" (on Windows) and ending in '/'.
+* CAUTION: ONLY use real path in combination with paths that are already in filesystem encoding, otherwise results are crap!!! 
 * @param 
 * @return 
 */
@@ -201,7 +201,5 @@ function normalize_path($sDirectory, $bUseRealpath = TRUE) {
 	}
 	return ($sDirectory);
 }
-
-
 
 ?>

@@ -101,19 +101,21 @@ class JukeboxTools {
 			case 'sbJukebox:Jukebox':
 				$sPath = $nodeSubject->getProperty('config_sourcepath');
 				break;
-			case 'sbJukebox:Artist':
+			case 'sbJukebox:Artist': // is this even used? artists have no directory
 				$sPath = $nodeSubject->getParent()->getProperty('config_sourcepath');
 				break;
 			case 'sbJukebox:Album':
 				if (Registry::getValue('sb.jukebox.paths.albums.useabspath')) {
-					$sPath = normalize_path($nodeSubject->getProperty('info_abspath'));	
+					$sPath = $nodeSubject->getProperty('info_abspath');
 				} else {
-					$sPath = normalize_path(self::getFSPath($nodeSubject->getParent()), FALSE);
+					// use normalizing in case jukebox doesn't have a trailing slash, but don't use real path!
+					// using real path with paths encoded in UTF-8 will have invalid results on non-UTF-8 filesystems!
+					$sPath = normalize_path(self::getFSPath($nodeSubject->getParent()));
 					$sPath .= $nodeSubject->getProperty('info_relpath');
 				}
 				break;
 			case 'sbJukebox:Track':
-				$sPath = normalize_path(self::getFSPath($nodeSubject->getParent()), FALSE);
+				$sPath = self::getFSPath($nodeSubject->getParent());
 				$sPath .= $nodeSubject->getProperty('info_filename');
 				break;
 			default:
@@ -247,9 +249,6 @@ class JukeboxTools {
 			
 			case 'sbJukebox:Album':
 				$sFilename = self::getFSPath($nodeSubject);
-//				$sFilename = substr($sFilename, 0, -1);
-//				var_dumpp($sFilename); die();
-//				$sFilename = str_replace('/', '\\', $sFilename);
 				$sFilename = iconv('UTF-8', System::getFilesystemEncoding(), $sFilename);
 				$aItems[] = $sFilename;
 				break;
