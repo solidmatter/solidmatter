@@ -65,6 +65,9 @@ class sbView_jukebox_track_details extends sbJukeboxView {
 				// add vote
 				$this->nodeSubject->getVote(User::getUUID());
 				
+				// add relations
+				$this->nodeSubject->storeRelations();
+				
 				// store track artist
 				$nodeArtist = $this->crSession->getNodeByIdentifier($this->nodeSubject->getProperty('info_artist'));
 				$_RESPONSE->addData($nodeArtist, 'track_artist');

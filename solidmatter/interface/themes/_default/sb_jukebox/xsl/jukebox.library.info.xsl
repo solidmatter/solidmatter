@@ -37,6 +37,7 @@
 			<xsl:apply-templates select="$content/latestAlbums" />
 			<xsl:apply-templates select="$content/nowPlaying" />
 			<xsl:apply-templates select="$content/recommendations" />
+			<xsl:apply-templates select="$content/latestComments" />
 		</div>
 	</xsl:template>
 	
@@ -158,6 +159,43 @@
 							<td width="1%" style="white-space:nowrap;">
 								<a class="type play icononly" href="/{@item_uuid}/-/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 								<a class="type remove icononly" href="/{@uuid}/actions/remove" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+							</td>
+						</tr>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<tr><td colspan="4"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>
+				</xsl:otherwise>
+			</xsl:choose>
+			
+			</tbody>
+		</table>
+		
+	</xsl:template>
+	
+	<xsl:template match="latestComments">
+		<table class="default" width="100%" summary="CHANGEME">
+			<thead>
+				<tr>
+					<th colspan="3">
+						<span class="type comment"><xsl:value-of select="$locale/sbSystem/labels/comments" /></span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+			<xsl:choose>
+				<xsl:when test="resultset/row">
+					<xsl:for-each select="resultset/row">
+						<tr>
+							<xsl:call-template name="colorize" />
+							<td>
+								<xsl:value-of select="@username" />
+							</td>
+							<td width="25%">
+								<xsl:value-of select="php:functionString('datetime_mysql2local', string(@created), string($locale/sbSystem/formats/datetime_short))" />
+							</td>
+							<td>
+								<a href="/{@item_uuid}#comments"><xsl:value-of select="@item_label" /></a>
 							</td>
 						</tr>
 					</xsl:for-each>

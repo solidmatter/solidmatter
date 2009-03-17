@@ -506,6 +506,16 @@ class JukeboxToolkit {
 				$aImportedTracks[$sNodeName] = 1;
 			}
 			
+			// prepare node name in case an album contains an exact same title multiple times
+			$sNoneName = $aTrackInfo['properties']['name'];
+			if ($nodeAlbum->hasNode($sNodeName)) {
+				$iHelper = 1;
+				while ($nodeAlbum->hasNode($sNodeName.'_'.$iHelper)) {
+					$iHelper++;
+				}
+				$aTrackInfo['properties']['name'] .= '_'.$iHelper;
+			}
+			
 			// build track node
 			$nodeTrack = $nodeAlbum->addNode($aTrackInfo['properties']['name'], 'sbJukebox:Track');
 			foreach ($aTrackInfo['properties'] as $sProperty => $mValue) {

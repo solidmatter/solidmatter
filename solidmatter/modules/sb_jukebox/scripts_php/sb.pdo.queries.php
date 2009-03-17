@@ -401,6 +401,25 @@ $_QUERIES['sbJukebox/jukebox/artists/getRandom'] = '
 	INNER JOIN	{TABLE_NODES} n
 		ON		rand.uuid = n.uuid
 ';*/
+$_QUERIES['sbJukebox/jukebox/comments/getLatest'] = '
+	SELECT		nc.uuid,
+				nc.dt_created AS created,
+				nu.s_label AS username,
+				ni.s_label AS item_label,
+				ni.uuid AS item_uuid
+	FROM		{TABLE_NODES} nc
+	INNER JOIN	{TABLE_NODES} nu
+		ON		nc.fk_createdby = nu.uuid
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		nc.uuid = h.fk_child
+	INNER JOIN	{TABLE_NODES} ni
+		ON		h.fk_parent = ni.uuid
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
+		AND		nc.fk_nodetype = \'sbSystem:Comment\'
+	ORDER BY	nc.dt_created DESC
+	LIMIT		0, :limit
+';
+
 //------------------------------------------------------------------------------
 // artist
 //------------------------------------------------------------------------------

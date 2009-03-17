@@ -303,7 +303,7 @@
 	</xsl:template>
 	
 	<xsl:template name="comments">
-		<div class="comments">
+		<div class="comments" id="comments">
 			<h2><span class="type comment"><xsl:value-of select="$locale/sbSystem/labels/comments" /></span></h2>
 			<xsl:choose>
 				<xsl:when test="children[@mode='comments']/sbnode">

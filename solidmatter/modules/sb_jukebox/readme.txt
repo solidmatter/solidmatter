@@ -1,4 +1,121 @@
 ===========================
+==      Genre Baum       ==
+===========================
+
+o Rock
+    - Alternative Rock
+        
+    - Classic Rock
+    
+o Elektro
+    - Trance
+    - 
+
+Blues music genres (4)
+Country music genres (8)
+Drum and bass subgenres (0)
+Electronic music genres (19)
+    Ambient music (6)
+    Breakbeat (2)
+    Breakcore (0)
+    Drum and bass (6)
+    Electroacoustic improvisation (0)
+    Electronica (4)
+    Eurodance (2)
+    Folktronica (0)
+    Futurepop (0)
+    Grime artists (0)
+    Hardcore music (3)
+    House music (6)
+    Industrial music (7)
+    Noise music (7)
+    Synthpop (5)
+    Techno music (6)
+    Trance music (6)
+    UK garage (5)
+    Video game music
+Flamenco styles (0)
+Folk music (20)
+Funk genres (2)
+Hardcore music genres (1)
+Heavy metal subgenres (23)
+Hip hop genres (16)
+    Alternative hip hop (1)
+    American hip hop genres (0)
+    Christian hip hop (3)
+    Detroit hip hop (2)
+    East Coast hip hop (3)
+    G-funk (1)
+    Grime artists (0)
+    Homo hop (0)
+    Jewish hip hop (2)
+    Nerdcore hip hop (2)
+    Nu metal (1)
+    Rap rock (8)
+    Southern hip hop (2)
+    Trip hop (3)
+    Underground hip hop (0)
+    West Coast hip hop (2)
+House music genres (2)
+    Ambient house
+    Chicago house
+    Dark house
+    Deep house
+    Dream house
+    Electro house
+    Freestyle music
+    French house
+    Ghetto house
+    Hip house
+    Kwaito
+    Latin house
+    Merenhouse
+    Microhouse
+    Nu-NRG
+    Progressive dance music
+    Skacid
+    Tech house
+    Tribal house
+    Tribal record labels
+    UK hard house
+    Vocal house
+Jazz genres (5)
+Polka genres (0)
+Pop music genres (18)
+Reggae genres
+    Dancehall
+    Lovers rock
+    Ragga
+    Reggae genres
+    Roots reggae
+    Seggae
+Rhythm and blues music genres (3)
+Rock music genres (28)
+Soul music genres (1)
+Techno music genres (1)
+    4-beat
+    Acid techno
+    Detroit techno
+    Freetekno
+    Ghettotech
+    Hard trance
+    Jtek
+    Microhouse
+    Minimal techno
+    Nortec
+    Rave music
+    Rotterdam techno
+    Schranz
+    Speed Limit 140 BPM+
+    Tech house
+    Tech trance
+    Techno folk
+    Wonky techno
+    Yorkshire Bleeps and
+World music genres (2)
+
+
+===========================
 ==   Wichtiger Hinweis   ==
 ===========================
 
