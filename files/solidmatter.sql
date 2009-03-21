@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: solidmatter
 Target Host: localhost
 Target Database: solidmatter
-Date: 17.03.2009 21:34:02
+Date: 21.03.2009 19:27:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -333,6 +333,19 @@ CREATE TABLE `sb_jukebox_nowplaying` (
   `n_playtime` smallint(6) NOT NULL,
   PRIMARY KEY  (`fk_user`)
 ) ENGINE=MEMORY DEFAULT CHARSET=ascii;
+
+-- ----------------------------
+-- Table structure for sb_jukebox_tokens
+-- ----------------------------
+CREATE TABLE `sb_jukebox_tokens` (
+  `fk_user` char(32) character set ascii NOT NULL,
+  `s_token` char(32) character set ascii NOT NULL,
+  `dt_activated` datetime NOT NULL,
+  `n_lifespan` int(11) NOT NULL,
+  PRIMARY KEY  (`fk_user`),
+  UNIQUE KEY `sb_jbt_tokens` (`s_token`),
+  CONSTRAINT `sb_jbt_owner` FOREIGN KEY (`fk_user`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- ----------------------------
 -- Table structure for sb_jukebox_tracks
@@ -1343,7 +1356,6 @@ INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:RecommendView', 'reco
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Track', 'details', 'display', 'TRUE', null, null, 'RENDERED', 'sb_jukebox:track.details.display.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Track', 'details', 'getCover', 'FALSE', null, null, 'STREAM', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Track', 'details', 'getM3U', 'FALSE', null, null, 'STREAM', null, null, 'FALSE');
-INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Track', 'song', 'play', 'TRUE', null, null, 'STREAM', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'addComment', 'TRUE', null, null, 'HEADERS', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'addRelation', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'addTag', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
@@ -1500,7 +1512,6 @@ INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Playlist', 'details', 'TRUE
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Recommendation', 'actions', 'FALSE', null, 'sbSystem:sb.node.message.view.actions', 'sbView_message_actions', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:RecommendView', 'recommend', 'FALSE', null, 'sbJukebox:sb.jukebox.node.various.view.communication', 'sbView_jukebox_various_communication', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Track', 'details', 'TRUE', null, 'sbJukebox:sb.jukebox.node.track.view.details', 'sbView_jukebox_track_details', '0', '1000');
-INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Track', 'song', 'FALSE', null, 'sbJukebox:sb.jukebox.node.track.view.song', 'sbView_jukebox_track_song', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:VotesView', 'votes', 'FALSE', null, 'sbJukebox:sb.jukebox.node.various.view.votes', 'sbView_jukebox_various_votes', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Debug', 'session', 'TRUE', null, 'sbSystem:sb.node.debug.view.session', 'sbView_debug_session', '0', '1000');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Debug', 'tests', 'TRUE', null, 'sbSystem:sb.node.debug.view.tests', 'sbView_debug_tests', '2', '800');

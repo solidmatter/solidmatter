@@ -28,12 +28,13 @@ class JukeboxToolkit {
 		'DIRNAME_FORMAT' => FALSE,
 		'COVER_INFO' => TRUE,
 		'TRACK_NAMES' => TRUE,
+		'TRACK_INFOS' => TRUE,
 	);
 	protected $aAbortFlags = array(
 		'NO_GENRE' => FALSE,
 		//'NO_ID3V1' => TRUE,
 		'NO_COVER' => TRUE,
-		//'DUPLIVATE_ALBUM' => TRUE,
+		//'DUPLICATE_ALBUM' => TRUE,
 		'NO_TRACKNUMBER' => TRUE,
 		'NO_YEAR' => FALSE,
 		'DIFFERING_TAGS' => TRUE,
@@ -46,6 +47,7 @@ class JukeboxToolkit {
 		'ENCODING' => TRUE,
 		'QUALITY' => TRUE,
 		'CUSTOM' => TRUE,
+		'DEFECTS' => TRUE,
 	);
 	
 	protected $aKnownDirFormats = array(
@@ -165,7 +167,7 @@ class JukeboxToolkit {
 			$this->echoInfo('info', '[dumped] '.count($this->aTempArtists).' artists');
 		}
 		foreach ($this->aTempArtists as $nodeArtist) {
-			$nodeArtist->refresh(FALSE);	
+			$nodeArtist->refresh(FALSE);
 		}
 		$this->aTempArtists = array();
 	}
@@ -232,13 +234,10 @@ class JukeboxToolkit {
 		
 		// build album node
 		$nodeAlbum = $nodeAlbumArtist->addNode($aAlbumInfo['properties']['info_title'], 'sbJukebox:Album');
-//		var_dumpp('importAlbum1:'.$nodeAlbum->getProperty('sbcr:inheritrights'));
-		
 		foreach ($aAlbumInfo['properties'] as $sProperty => $mValue) {
 			$nodeAlbum->setProperty($sProperty, $mValue);
 		}
 		$nodeAlbum->setProperty('info_artist', $nodeAlbumArtist->getProperty('jcr:uuid'));
-//		var_dumpp('importAlbum2:'.$nodeAlbum->getProperty('sbcr:inheritrights'));
 		
 		try {
 			
@@ -268,7 +267,6 @@ class JukeboxToolkit {
 			//$aInfo['tags'] = $aAlbumTags;
 			$aInfo['nodeAlbum'] = $nodeAlbum;
 			$aInfo['nodeAlbumArtist'] = $nodeAlbumArtist;
-//			var_dumpp('importAlbum3:'.$nodeAlbum->getProperty('sbcr:inheritrights'));
 		
 			return ($aInfo);
 			
@@ -427,6 +425,9 @@ class JukeboxToolkit {
 			if ($this->aAbortFlags['NO_YEAR']) {
 				throw new ImportException('[abort] - no year given in directory name');
 			}
+			if ($this->aTagFlags['DEFECTS']) {
+				$aAlbumInfo['tags'][] = 'NO YEAR';
+			}
 		}
 		
 		// check cover
@@ -450,6 +451,9 @@ class JukeboxToolkit {
 			}
 			if ($this->aVerboseFlags['COVER_INFO']) {
 				$this->echoInfo('bad', 'no cover found');
+			}
+			if ($this->aTagFlags['DEFECTS']) {
+				$aAlbumInfo['tags'][] = 'NO_YEAR';
 			}
 		}
 		
@@ -495,7 +499,6 @@ class JukeboxToolkit {
 			echo '<br>';
 			
 			// check artist
-			//var_dumpp('TrackArtist: '.$aTrackInfo['artist']);
 			$nodeTrackArtist = $this->getArtistNode($aTrackInfo['artist']);
 			
 			// TODO: find cleaner way to suppress duplicate names
@@ -525,7 +528,6 @@ class JukeboxToolkit {
 			
 			// add tags
 			$nodeTrack->addTags(array_merge($aTrackInfo['tags'], $aCustomTags));
-			//$aAlbumTags = array_merge($aAlbumTags, $aTrackInfo['tags'], $aCustomTags);
 			$nodeAlbum->addTags($nodeTrack->getTags());
 			
 		}
@@ -544,8 +546,7 @@ class JukeboxToolkit {
 	*/
 	public function getTrackInfo($dirAlbum, $sRelPath) {
 		
-		// init ----------------------------------------------------------------
-		
+		// init
 		$aTrackInfo = array(
 			'tags' => array(),
 		);
@@ -562,16 +563,14 @@ class JukeboxToolkit {
 			'enc_bitrate' => '',
 		);
 		
-		// get track info through getid3 ---------------------------------------
-		
+		// get track info through getid3
 		$oGetID3 = new getid3();
 		$oGetID3 = new getid3(); // instatiate twice because of strange heplerapps bug in getid3!
 		error_reporting(0);
 		$aInfo = $oGetID3->analyze($dirAlbum->getAbsPath().$sRelPath);
 		error_reporting(E_STRICT | E_ALL);
-//		var_dumpp($aInfo); die();
-		// check premises ------------------------------------------------------
 		
+		// check premises
 		if (!isset($aInfo['tags']['id3v2'])) {
 			throw new ImportException('[abort] - no ID3v2 tags in '.$sRelPath);
 		}
@@ -603,7 +602,6 @@ class JukeboxToolkit {
 			throw new ImportException('[abort] - artist empty in '.$sRelPath);
 		}
 		if (!isset($aInfo['playtime_string']) || !isset($aInfo['playtime_seconds'])) {
-			//var_dumpp($aInfo);
 			throw new ImportException('[abort] - playtime missing in '.$sRelPath);
 		}
 		if (!isset($aInfo['mpeg']['audio'])) {
@@ -613,19 +611,14 @@ class JukeboxToolkit {
 			throw new ImportException('[abort] - encoding or bitrate missing in '.$sRelPath);
 		}
 		
-		// set genres ----------------------------------------------------------
-		
-		//var_dumpp($aSource['content_type'][0]);
+		// set genres
 		if (isset($aSource['content_type'][0]) && $aSource['content_type'][0] != '') {
 			$sGenres = iconv($oGetID3->encoding, 'UTF-8', $aSource['content_type'][0]);
-			//var_dumpp($sGenres);
 			if (substr_count($sGenres, '/')) {
-				//echo 'split';
 				$aGenres = explode('/', $sGenres);
 			} else {
 				$aGenres[] = $sGenres;
 			}
-			//var_dumpp($aGenres);
 			foreach ($aGenres as $iKey => $sGenre) {
 				$sGenre = trim($sGenre);
 				$aGenres[$iKey] = $sGenre;
@@ -636,7 +629,6 @@ class JukeboxToolkit {
 					$aGenres[$iKey] = $sParsedGenre;
 				}
 			}
-			//var_dumpp($aGenres);
 			if ($this->aTagFlags['GENRE']) {
 				$aTrackInfo['tags'] = $aGenres;
 			}
@@ -644,12 +636,12 @@ class JukeboxToolkit {
 			if ($this->aAbortFlags['NO_GENRE']) {
 				throw new ImportException('[abort] - no genre given in '.$sRelPath);
 			}
-			if ($this->aTagFlags['GENRE']) {
+			if ($this->aTagFlags['DEFECTS']) {
 				$aTrackInfo['tags'][] = 'NO GENRE';
 			}
 		}
 		
-		// set UFID in file if necessary ---------------------------------------
+		// set UFID in file if necessary
 		// FIXME: currently broken, Mp3Tag removes them, doesn't seem to be null-terminated of something -.-
 //		if (isset($aInfo['UFID']['http://www.solidbytes.de/sm/sbJukebox']['data'])) {
 //			// $aNodeProps['UUID']
@@ -677,25 +669,34 @@ class JukeboxToolkit {
 //			echo 'added UFID tag';
 //		}
 		
-		// set properties and finish -------------------------------------------
-		
+		// set properties and finish
 		$aTrackInfo['artist'] 			= iconv($oGetID3->encoding, 'UTF-8', $sArtist);
-		
 		$aNodeProps['label']			= iconv($oGetID3->encoding, 'UTF-8', $sArtist.' - '.$sTitle);
 		$aNodeProps['name']				= str2urlsafe(iconv($oGetID3->encoding, 'UTF-8', $sArtist.'_'.$sTitle));
 		$aNodeProps['info_title']		= iconv($oGetID3->encoding, 'UTF-8', $sTitle);
 		if (isset($aInfo['tags']['id3v2']['track_number'])) {
 			$aNodeProps['info_index'] = $aInfo['tags']['id3v2']['track_number'][0];
+		} else {
+			if ($this->aTagFlags['DEFECTS']) {
+				$aTrackInfo['tags'][] = 'NO INDEX';
+			}
 		}
-		// FIXME: needs to use filesystem encoding instead of getid3 encoding!
 		$aNodeProps['info_filename']	= iconv($dirAlbum->getEncoding(), 'UTF-8', $sRelPath);
-		//echo ($aNodeProps['info_filename']);
 		$aNodeProps['info_playtime']	= $aInfo['playtime_string'];
 		$aNodeProps['info_published']	= $aInfo['tags']['id3v2']['year'][0];
+		if ($aNodeProps['info_published'] == NULL) {
+			if ($this->aAbortFlags['NO_YEAR']) {
+				throw new ImportException('[abort] - Track has no year');
+			}
+			$aNodeProps['info_published'] = 0;
+			if ($this->aTagFlags['DEFECTS']) {
+				$aTrackInfo['tags'][] = 'NO YEAR';
+			}
+		}
 		$aNodeProps['enc_playtime']		= round($aInfo['playtime_seconds']);
 		$aNodeProps['enc_mode']			= strtoupper($aInfo['mpeg']['audio']['bitrate_mode']);
 		$aNodeProps['enc_bitrate']		= round($aInfo['mpeg']['audio']['bitrate'] / 1000);
-		if ($this->aTagFlags['BITRATE'] &&  $aNodeProps['enc_mode'] == 'CBR') {
+		if ($this->aTagFlags['BITRATE'] && $aNodeProps['enc_mode'] == 'CBR') {
 			$aTrackInfo['tags'][] = $aNodeProps['enc_bitrate'].'kbs';
 		}
 		if ($this->aTagFlags['ENCODING']) {
@@ -704,8 +705,6 @@ class JukeboxToolkit {
 		
 		$aTrackInfo['properties']		= $aNodeProps;
 		
-		// cleanup
-		//var_dumpp($aInfo); die();
 		unset($aInfo);
 		
 		return ($aTrackInfo);

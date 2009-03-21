@@ -273,9 +273,12 @@ class sbCR_Session {
 	* @return 
 	*/
 	public function getRootNode() {
-		$stmtInfo = $this->DB->prepareKnown('sbCR/getNode/root');
-		$stmtInfo->execute();
-		return ($this->generateInstance($stmtInfo, '/'));
+		if (empty($this->aNodeCache['ROOT'])) {
+			$stmtInfo = $this->DB->prepareKnown('sbCR/getNode/root');
+			$stmtInfo->execute();
+			$this->aNodeCache['ROOT'] = $this->generateInstance($stmtInfo, '/');
+		}
+		return ($this->aNodeCache['ROOT']);
 	}
 	
 	//--------------------------------------------------------------------------

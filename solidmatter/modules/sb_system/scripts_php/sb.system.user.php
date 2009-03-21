@@ -32,6 +32,18 @@ class User {
 	
 	//--------------------------------------------------------------------------
 	/**
+	* Sets the UUID of the current user temporarily.
+	* Can be used for arbitrary request handling that only needs a user's UUID
+	* and does not rely on or require authorisation checks.
+	* @param 
+	* @return 
+	*/
+	public static function setUUID($sUUID) {
+		sbSession::$aData['userdata']['user_id'] = $sUUID;
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* 
 	* @param 
 	* @return 

@@ -63,7 +63,12 @@ class sbView_jukebox_artist_details extends sbJukeboxView {
 				
 				// add albums
 				$niAlbums = $this->nodeSubject->loadChildren('albums', TRUE, TRUE, TRUE);
-				$niAlbums->sortAscending('info_published');
+				// TODO: find a less dirty hack to control sorting
+				if ($this->nodeSubject->getName() == 'Various_Artists' || $this->nodeSubject->getName() == 'Soundtrack') {
+					$niAlbums->sortAscending('label');
+				} else {
+					$niAlbums->sortAscending('info_published');
+				}					
 				foreach ($niAlbums as $nodeAlbum) {
 					$nodeAlbum->setAttribute('vote', $nodeAlbum->getVote($this->getPivotUUID()));
 				}

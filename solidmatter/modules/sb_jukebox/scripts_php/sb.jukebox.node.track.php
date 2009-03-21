@@ -28,13 +28,10 @@ class sbNode_jukebox_track extends sbJukeboxNode {
 	* @return 
 	*/
 	public function getRealPath() {
-		
 		$nodeAlbum = $this->getParent();
 		$nodeJukebox = $nodeAlbum->getParent()->getParent();
 		$sRealPath = $nodeJukebox->getProperty('config_realpath').$nodeAlbum->getProperty('info_relpath').$this->getProperty('info_filename');
-		
 		return ($sRealPath);
-		
 	}
 	
 	//--------------------------------------------------------------------------

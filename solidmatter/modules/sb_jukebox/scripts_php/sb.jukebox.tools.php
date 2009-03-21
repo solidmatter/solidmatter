@@ -134,11 +134,15 @@ class JukeboxTools {
 	*/
 	public static function getPlaylist($nodeJukebox, $nodeSubject, $bShuffle = FALSE, $sFormat = 'M3U') {
 		
+		import('sb.tools.strings.conversion');
+		
 		// prepare
 		$aPlaylistItems = self::getPlaylistItems($nodeJukebox, $nodeSubject);
 		if ($bShuffle) {
 			shuffle($aPlaylistItems);
 		}
+		
+		$sToken = self::getToken();
 		
 		if ($sFormat == 'M3U') {
 			// generate plain text M3U
@@ -149,7 +153,8 @@ class JukeboxTools {
 				if ($nodeJukebox->getProperty('config_userealpath') == 'TRUE') { // use direct paths to e.g. a shared folder
 					$sPlaylist .= iconv('UTF-8', System::getFilesystemEncoding(), $nodeSubject->getSession()->getNodeByIdentifier($aItem['uuid'])->getRealPath())."\n";
 				} else { // use urls
-					$sPlaylist .= 'http://'.$_REQUEST->getDomain().'/'.$aItem['uuid'].'/song/play/'.$aItem['uuid'].'.mp3?sid='.sbSession::getID()."#.mp3\n";
+					//$sPlaylist .= 'http://'.$_REQUEST->getDomain().'/'.$aItem['uuid'].'/song/play/'.$aItem['uuid'].'.mp3?sid='.sbSession::getID()."#.mp3\n";
+					$sPlaylist .= 'http://'.$_REQUEST->getDomain().'/play/'.$aItem['uuid'].'/'.$sToken.'/'.str2urlsafe($aItem['label'], TRUE, TRUE).".mp3\n";
 				}
 			}
 		} elseif ($sFormat == 'XSPF') {
@@ -159,7 +164,7 @@ class JukeboxTools {
 				if ($nodeJukebox->getProperty('config_userealpath') == 'TRUE') { // use direct paths to e.g. a shared folder
 					//$sPlaylist .= iconv('UTF-8', System::getFilesystemEncoding(), $nodeSubject->getSession()->getNodeByIdentifier($aItem['uuid'])->getRealPath())."\n";
 				} else { // use urls
-					$sPlaylist .= '<track><location>http://'.$_REQUEST->getDomain().'/'.$aItem['uuid'].'/song/play/sid='.sbSession::getID()."</track></location>\n";
+					$sPlaylist .= '<track><location>http://'.$_REQUEST->getDomain().'/play/'.$aItem['uuid'].'/'.$sToken.'/'.$aItem['uuid']."</track></location>\n";
 				}
 			}
 			$sPlaylist .= '</trackList></playlist>';
@@ -260,6 +265,34 @@ class JukeboxTools {
 		
 		return ($aItems);
 		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public static function getToken() {
+		$nodeUser = User::getNode();
+		$stmtGetToken = $nodeUser->getSession()->prepareKnown('sbJukebox/tokens/get/byUser');
+		$stmtGetToken->bindValue('user_uuid', User::getUUID(), PDO::PARAM_STR);
+		$stmtGetToken->execute();
+		$sToken = FALSE;
+		foreach ($stmtGetToken as $aRow) {
+			$sToken = $aRow['token'];
+		}
+		$stmtGetToken->closeCursor();
+		if (!$sToken) {
+			$sToken = uuid();
+			$stmtSetToken = $nodeUser->getSession()->prepareKnown('sbJukebox/tokens/create');
+			$stmtSetToken->bindValue('user_uuid', User::getUUID(), PDO::PARAM_STR);
+			$stmtSetToken->bindValue('token', $sToken, PDO::PARAM_STR);
+			// TODO: parameterize token lifespan via registry
+			$stmtSetToken->bindValue('lifespan', 60*60*24*30, PDO::PARAM_INT);
+			$stmtSetToken->execute();
+		}
+		return ($sToken);
 	}
 	
 }

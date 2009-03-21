@@ -78,6 +78,7 @@ form.login input {
 div.head {
 	position: relative;
 	background: #C5C6DA url(../images/header_bg.png) repeat-x top left;
+	background-position: 0 -1px;
 }
 
 div.head h1 {

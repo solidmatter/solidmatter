@@ -34,7 +34,7 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 				
 				// add latest albums
 				$iLimit = 8;
-				if ($_REQUEST->getParam('expand') == 'latest') {
+				if ($_REQUEST->getParam('expand') == 'latestAlbums') {
 					$iLimit = 32;	
 				}
 				$stmtGetLatest = $this->crSession->prepareKnown('sbJukebox/jukebox/albums/getLatest');
@@ -47,6 +47,9 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 				
 				// add latest comments
 				$iLimit = 5;
+				if ($_REQUEST->getParam('expand') == 'latestComments') {
+					$iLimit = 50;
+				}
 				$stmtGetLatest = $this->crSession->prepareKnown('sbJukebox/jukebox/comments/getLatest');
 				$stmtGetLatest->bindValue('jukebox_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);
 				$stmtGetLatest->bindValue('limit', $iLimit, PDO::PARAM_INT);

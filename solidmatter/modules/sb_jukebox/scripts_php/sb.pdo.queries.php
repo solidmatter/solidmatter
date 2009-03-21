@@ -18,9 +18,10 @@ $_QUERIES['MAPPING']['{TABLE_JB_TRACKSGENRES}']		= '{PREFIX_WORKSPACE}_jukebox_t
 $_QUERIES['MAPPING']['{TABLE_JB_BLACKLIST}']		= '{PREFIX_WORKSPACE}_jukebox_blacklist';
 $_QUERIES['MAPPING']['{TABLE_JB_NOWPLAYING}']		= '{PREFIX_WORKSPACE}_jukebox_nowplaying';
 $_QUERIES['MAPPING']['{TABLE_JB_HISTORY}']			= '{PREFIX_WORKSPACE}_jukebox_history';
+$_QUERIES['MAPPING']['{TABLE_JB_TOKENS}']			= '{PREFIX_WORKSPACE}_jukebox_tokens';
 
 //------------------------------------------------------------------------------
-// nowplaying / history
+// nowplaying
 //------------------------------------------------------------------------------
 
 $_QUERIES['sbJukebox/nowPlaying/set'] = '
@@ -60,6 +61,10 @@ $_QUERIES['sbJukebox/nowPlaying/clear'] = '
 		AND		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(dt_played) > n_playtime
 ';
 
+//------------------------------------------------------------------------------
+// history
+//------------------------------------------------------------------------------
+
 $_QUERIES['sbJukebox/history/set'] = '
 	INSERT INTO	{TABLE_JB_HISTORY}
 				(
@@ -74,22 +79,81 @@ $_QUERIES['sbJukebox/history/set'] = '
 					NOW()
 				)
 ';
+$_QUERIES['sbJukebox/history/remove'] = '
+	DELETE FROM	{TABLE_JB_HISTORY}
+	WHERE		fk_user = :user_uuid
+		AND		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(dt_played) < :threshold
+';
+
+//------------------------------------------------------------------------------
+// tokens
+//------------------------------------------------------------------------------
+
+$_QUERIES['sbJukebox/tokens/create'] = '
+	INSERT INTO	{TABLE_JB_TOKENS}
+				(
+					fk_user,
+					s_token,
+					n_lifespan,
+					dt_activated
+				) VALUES (
+					:user_uuid,
+					:token,
+					:lifespan,
+					NOW()
+				)
+';
+$_QUERIES['sbJukebox/tokens/refresh'] = '
+	UPDATE		{TABLE_JB_TOKENS}
+	SET			dt_activated = NOW()
+	WHERE		fk_user = :user_uuid
+';
+$_QUERIES['sbJukebox/tokens/clear'] = '
+	DELETE FROM	{TABLE_JB_TOKENS}
+	WHERE		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(dt_activated) > n_lifespan
+';
+$_QUERIES['sbJukebox/tokens/get/byUser'] = '
+	SELECT		s_token AS token
+	FROM		{TABLE_JB_TOKENS}
+	WHERE		fk_user = :user_uuid
+';
+$_QUERIES['sbJukebox/tokens/get/byToken'] = '
+	SELECT		fk_user AS user_uuid
+	FROM		{TABLE_JB_TOKENS}
+	WHERE		s_token = :token
+';
 
 //------------------------------------------------------------------------------
 // charts
 //------------------------------------------------------------------------------
 
 $_QUERIES['sbJukebox/jukebox/getVoters'] = '
-	SELECT		n.uuid,
-				n.s_label AS label,
-				n.fk_nodetype
-	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_VOTES} v
-		ON		n.uuid = v.fk_user
-	INNER JOIN	{TABLE_HIERARCHY} h
-		ON		v.fk_subject = h.fk_child
-	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
-	ORDER BY	n.s_label
+	SELECT DISTINCT
+				uuid,
+				label,
+				fk_nodetype
+	FROM (
+		SELECT		n.uuid,
+					n.s_label AS label,
+					n.fk_nodetype
+		FROM		{TABLE_NODES} n
+		INNER JOIN	{TABLE_VOTES} v
+			ON		n.uuid = v.fk_user
+		INNER JOIN	{TABLE_HIERARCHY} h
+			ON		v.fk_subject = h.fk_child
+		WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
+		UNION
+		SELECT		n.uuid,
+					n.s_label AS label,
+					n.fk_nodetype
+		FROM		{TABLE_NODES} n
+		INNER JOIN	{TABLE_JB_HISTORY} hi
+			ON		n.uuid = hi.fk_user
+		INNER JOIN	{TABLE_HIERARCHY} h
+			ON		hi.fk_track = h.fk_child
+		WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
+	) AS dummy 
+	ORDER BY	label
 ';
 $_QUERIES['sbJukebox/jukebox/various/getTop'] = '
 	SELECT		n.uuid,

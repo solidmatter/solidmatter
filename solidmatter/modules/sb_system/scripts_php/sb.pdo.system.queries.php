@@ -1,5 +1,13 @@
 <?php
 
+//------------------------------------------------------------------------------
+/**
+*	@package solidMatter[sbSystem]
+*	@author	()((() [Oliver Müller]
+*	@version 1.00.00
+*/
+//------------------------------------------------------------------------------
+
 global $_QUERIES;
 
 $_QUERIES['MAPPING']['{TABLE_SESSIONS}']	= '{PREFIX_SYSTEM}_system_sessions';
