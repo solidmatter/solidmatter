@@ -389,7 +389,7 @@
 						<xsl:call-template name="colorize" />
 						<td width="60">
 							<a class="imglink" href="/{@uuid}">
-								<img height="50" width="50" src="/{@uuid}/details/getCover/?size=50" alt="cover" />
+								<img height="52" width="56" src="/theme/sb_jukebox/images/case_50.png" alt="cover" style="background: url('/{@uuid}/details/getCover/?size=50') 5px 1px;" />
 							</a>
 						</td>
 						<td>

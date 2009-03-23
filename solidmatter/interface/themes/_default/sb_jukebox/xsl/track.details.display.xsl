@@ -56,7 +56,10 @@
 				<tbody>
 					<tr class="odd">
 						<td style="padding:10px;" width="160" rowspan="3">
-							<a class="imglink" target="_blank" href="/{@uuid}/details/getCover/{ancestors/sbnode[@nodetype='sbJukebox:Album']/@name}.jpg"><img height="150" width="150" src="/{@uuid}/details/getCover/?size=150" alt="cover" /></a>
+							<a class="imglink" target="_blank" href="/{@uuid}/details/getCover/{ancestors/sbnode[@nodetype='sbJukebox:Album']/@name}.jpg">
+								<img height="154" width="166" src="/theme/sb_jukebox/images/case_150.png" alt="cover" style="background: url('/{ancestors/sbnode[@nodetype='sbJukebox:Album']/@uuid}/details/getCover/?size=150') 15px 3px;" />
+								<!--<a class="imglink" target="_blank" href="/{@uuid}/details/getCover/{ancestors/sbnode[@nodetype='sbJukebox:Album']/@name}.jpg"><img height="150" width="150" src="/{@uuid}/details/getCover/?size=150" alt="cover" /></a>-->
+							</a>
 						</td>
 						<td style="padding: 15px 15px 15px 0;">
 							<table width="100%">

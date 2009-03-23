@@ -294,7 +294,7 @@ table.hidden tr td {
 /* album covers --------------------------------------------------------------*/
 
 div.albumcover {
-	padding: 10px 5px 10px 10px;
+	padding: 3px 2px 3px 3px;
 	text-align: center;
 	float: left;
 }

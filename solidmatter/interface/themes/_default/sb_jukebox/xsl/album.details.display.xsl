@@ -57,7 +57,10 @@
 				<tbody>
 					<tr class="odd">
 						<td style="padding:10px;" width="160" rowspan="3">
-							<a class="imglink" target="_blank" href="/{@uuid}/details/getCover/{@name}.jpg"><img height="150" width="150" src="/{@uuid}/details/getCover/?size=150" alt="cover" /></a>
+							<a class="imglink" target="_blank" href="/{@uuid}/details/getCover/{@name}.jpg">
+								<img height="154" width="166" src="/theme/sb_jukebox/images/case_150.png" alt="cover" style="background: url('/{@uuid}/details/getCover/?size=150') 15px 3px;" />
+								<!--<img height="150" width="150" src="/{@uuid}/details/getCover/?size=150" alt="cover" />-->
+							</a>
 							<!--<a href="/{@uuid}/details/buildQuilt">Quilt</a>-->
 						</td>
 						<td style="padding: 15px 15px 15px 0;">

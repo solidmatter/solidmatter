@@ -72,7 +72,8 @@
 							<xsl:for-each select="resultset/row">
 								<div class="albumcover">
 									<a class="imglink" href="/{@uuid}" style="position:relative;">
-										<img height="100" width="100" src="/{@uuid}/details/getCover/?size=100" alt="{@label}" title="{@label}" onMouseOver="add_playbutton('{@uuid}', this)" onMouseOut="remove_playbutton(this)" />
+										<img height="104" width="112" src="/theme/sb_jukebox/images/case_100.png" alt="{@label}" title="{@label}" style="background: url('/{@uuid}/details/getCover/?size=100') 11px 2px; margin-bottom: 1px;" />
+										<!--<img height="100" width="100" src="/{@uuid}/details/getCover/?size=100" alt="{@label}" title="{@label}" onMouseOver="add_playbutton('{@uuid}', this)" onMouseOut="remove_playbutton(this)" />-->
 									</a><br />
 									<xsl:call-template name="render_stars" />
 								</div>
