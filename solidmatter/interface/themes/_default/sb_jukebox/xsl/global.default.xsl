@@ -288,12 +288,9 @@
 	</xsl:template>
 	
 	<xsl:template name="render_stars">
-		<xsl:param name="target" />
-		<xsl:param name="voting" select="0" />
 		<xsl:param name="vote" select="@vote" />
 		<xsl:param name="maxstars" select="$content/library/library/max_stars" />
 		<xsl:param name="stars" select="round(number(@vote) div 100 * ($maxstars - 1)) + 1" />
-		<xsl:param name="starsleft" select="$content/library/library/max_stars" />
 		<span id="stars_{@uuid}" class="stars"><script type="text/javascript">render_stars('<xsl:value-of select="$vote" />', <xsl:value-of select="$maxstars" />, true)</script></span>
 	</xsl:template>
 	
@@ -405,6 +402,11 @@
 									[<xsl:value-of select="@info_published" />]
 								</xsl:if>
 							</a>
+							<xsl:choose>
+								<xsl:when test="@info_type = 'SINGLE'">
+									<img src="/theme/sb_jukebox/icons/type_single.png" style="vertical-align: middle;" />
+								</xsl:when>
+							</xsl:choose>
 							<br />
 							<xsl:call-template name="render_stars" />
 						</td>

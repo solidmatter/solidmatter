@@ -177,11 +177,11 @@ class CaptchaImage extends Image {
 		}
 		
 		if ($this->eStyle == EXTENDED) {
-			$this->sCharacters .= '!§$%&/()=#*?@';
+			$this->sCharacters .= '!$%&()=#*?@';
 		}
 		
 		if ($this->eStyle == REDUCED) {
-			$this->sCharacters = '0123456789ABCDEFGHKLMNPRSTUVW';	
+			$this->sCharacters = '123456789ABCDEFGHKLMNOPRTUWXYZ';
 		}
 		
 		if ($this->sFont === NULL) {

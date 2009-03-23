@@ -1820,9 +1820,8 @@ class sbNode extends sbCR_Node {
 			foreach ($stmtAuthorisations as $aRow) {
 				$aAuthorisations[$aRow['fk_userentity']][$aRow['fk_authorisation']] = $aRow['e_granttype'];
 			}
-			
 			$stmtAuthorisations->closeCursor();
-		
+			
 			$this->aLocalAuthorisations = $aAuthorisations;
 			
 		} 

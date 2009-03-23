@@ -7,30 +7,71 @@
 */
 //------------------------------------------------------------------------------
 
+var sStarURL = "/theme/sb_jukebox/images/star_set_normal.png";
+var sStarSmallURL = "/theme/sb_jukebox/images/star_set_small.png";
+var sStarSmallerURL = "/theme/sb_jukebox/images/star_set_smaller.png";
+var sDotURL = "/theme/sb_jukebox/images/star_dot.png";
+var sHighlightURL = '/theme/sb_jukebox/images/star_select.png';
+
+var sStarHTML = '<img src="' + sStarURL + '" alt="star set" style="padding-right: 1px;" onMouseOver="highlight_star(this, true)" onMouseOut="highlight_star(this, false)" onClick="vote(this)" />';
+var sStarSmallHTML = '<img src="' + sStarSmallURL + '" alt="star set" style="padding-right: 1px;" onMouseOver="highlight_star(this, true)" onMouseOut="highlight_star(this, false)" onClick="vote(this)" />';
+var sStarSmallerHTML = '<img src="' + sStarSmallerURL + '" alt="star set" style="padding-right: 1px;" onMouseOver="highlight_star(this, true)" onMouseOut="highlight_star(this, false)" onClick="vote(this)" />';
+var sDotHTML = '<img src="' + sDotURL + '" alt="star unset"  style="padding-right: 1px;" onMouseOver="highlight_star(this, true)" onMouseOut="highlight_star(this, false)" onClick="vote(this)" />';
+
+var iGlobalMaxStars = 0;
+
 //------------------------------------------------------------------------------
 /**
 * display voting starset
 */
 function render_stars(sVote, iMaxStars, bVotingEnabled) {
 	
+	iGlobalMaxStars = iMaxStars;
+	
 	if (sVote == 'NaN') {
 		var iNumStars = 0;
 	} else {
 		var iVote = parseInt(sVote);
-		var iNumStars = Math.round(iVote / 100 * (iMaxStars-1)) + 1;
+		var iNumStars = iVote / 100 * (iGlobalMaxStars-1) + 1;	
 	}
 	
-	var sStarHTML = '<img src="/theme/sb_jukebox/images/star_set_disabled.png" alt="star set" style="padding-right: 1px;" onMouseOver="highlight_star(this, true)" onMouseOut="highlight_star(this, false)" onClick="vote(this, ' + iMaxStars + ')" />';
-	var sDotHTML = '<img src="/theme/sb_jukebox/images/star_dot.png" alt="star unset"  style="padding-right: 1px;" onMouseOver="highlight_star(this, true)" onMouseOut="highlight_star(this, false)" onClick="vote(this, ' + iMaxStars + ')" />';
-	
-	for (var i=0; i<iMaxStars; i++) {
-		if (i < iNumStars) {
+	for (var i=1; i<=iGlobalMaxStars; i++) {
+		var iHelper = Math.round((iNumStars + 1 - i) * 3);
+		if (iHelper >= 3) {
 			document.write(sStarHTML);
+		} else if (iHelper == 2) {
+			document.write(sStarSmallHTML);
+		} else if (iHelper == 1) {
+			document.write(sStarSmallerHTML);
 		} else {
 			document.write(sDotHTML);
 		}
 	}
 	
+}
+
+//------------------------------------------------------------------------------
+/**
+* updates a star set
+*/
+function update_stars(oStarContainer, iVote) {
+	
+	var iNumStars = iVote / 100 * (iGlobalMaxStars-1) + 1;
+	
+	for (var i=1; i<=iGlobalMaxStars; i++) {
+		var iHelper = Math.round((iNumStars + 1 - i) * 3);
+		if (iHelper >= 3) {
+			oStarContainer.childNodes[i].src = sStarURL;
+		} else if (iHelper == 2) {
+			oStarContainer.childNodes[i].src = sStarSmallURL;
+		} else if (iHelper == 1) {
+			oStarContainer.childNodes[i].src = sStarSmallerURL;
+		} else {
+			oStarContainer.childNodes[i].src = sDotURL;
+		}
+		oStarContainer.childNodes[i].src_orig = oStarContainer.childNodes[i].src;
+	}
+
 }
 
 //------------------------------------------------------------------------------
@@ -41,7 +82,7 @@ function highlight_star(oStarImage, bEnable) {
 	
 	if (bEnable) {
 		oStarImage.src_orig = oStarImage.src;
-		oStarImage.src = '/theme/sb_jukebox/images/star_select.png';
+		oStarImage.src = sHighlightURL;
 	} else {
 		oStarImage.src = oStarImage.src_orig;
 	}
@@ -55,7 +96,7 @@ function highlight_star(oStarImage, bEnable) {
 /**
 * casts a vote on a node
 */
-function vote(oStarImage, iMaxStars) {
+function vote(oStarImage) {
 	
 	var oStarContainer = oStarImage.parentNode;
 	
@@ -69,7 +110,7 @@ function vote(oStarImage, iMaxStars) {
 		oCurrentStar = oCurrentStar.previousSibling;
 	}
 	
-	var iVote = Math.round(100 / (iMaxStars-1) * (iSelectedStar-1));
+	var iVote = Math.round(100 / (iGlobalMaxStars-1) * (iSelectedStar-1));
 	
 	//alert(iVote);
 	//alert(sUUID);
@@ -81,30 +122,11 @@ function vote(oStarImage, iMaxStars) {
 			parameters: null,
 			asynchronous: false,
 			onComplete: function(response) {
-    			update_stars(oStarContainer, iMaxStars, response.getHeader('X-Vote'));
+    			update_stars(oStarContainer, response.getHeader('X-Vote'));
     		} 
 		}
 	);
 	//window.location.reload();
-}
-
-//------------------------------------------------------------------------------
-/**
-* updates a star set
-*/
-function update_stars(oStarContainer, iMaxStars, iVote) {
-	
-	var iNumStars = Math.round(iVote / 100 * (iMaxStars-1)) + 1;
-	
-	for (var i=1; i<=iMaxStars; i++) {
-		if (i <= iNumStars) {
-			oStarContainer.childNodes[i].src = '/theme/sb_jukebox/images/star_set_disabled.png';
-		} else {
-			oStarContainer.childNodes[i].src = '/theme/sb_jukebox/images/star_dot.png';
-		}
-		oStarContainer.childNodes[i].src_orig = oStarContainer.childNodes[i].src;
-	}
-
 }
 
 //------------------------------------------------------------------------------

@@ -59,17 +59,20 @@
 			<table class="default" width="100%">
 				<tbody>
 					<tr class="odd">
-						<td style="padding:10px;" width="160">
+						<td><a href="/{$master/@uuid}/details">back</a></td>
+					</tr>
+					<tr class="odd">
+						<!--<td style="padding:10px;" width="160">
 							<a class="imglink" target="_blank" href="/{$master/@uuid}/details/getCover"><img height="150" width="150" src="/{$master/@uuid}/details/getCover/?size=150" alt="cover" /></a>
 							<a href="/{$master/@uuid}/details">back</a>
-						</td>
-						<td style="padding:10px;">
+						</td>-->
+						<td style="padding:20px;">
 							<xsl:for-each select="$content/quilt/row">
 								<div style="clear:both;">
 									<xsl:for-each select="column">
 										<xsl:choose>
 											<xsl:when test="@uuid">
-												<a style="float:left;" class="imglink" href="/{@uuid}" title="{@label}"><img src="/{@uuid}/details/getCover/size=20" alt="cover" /></a>
+												<a style="float:left;" class="imglink" href="/{@uuid}/-/buildQuilt" title="{@label}"><img src="/{@uuid}/details/getCover/?size=50" alt="cover" /></a>
 											</xsl:when>
 											<xsl:otherwise>
 												<div style="float:left;width:20px;height:20px;background-color: rgb({@lightness}, {@lightness}, {@lightness});"></div>

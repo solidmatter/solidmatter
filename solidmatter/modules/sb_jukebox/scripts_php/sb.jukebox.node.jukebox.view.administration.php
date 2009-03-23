@@ -103,6 +103,7 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 				break;
 				
 			case 'storeUGC':
+				ini_set('max_execution_time', 6000000);
 				import('sbJukebox:sb.jukebox.tools');
 				$this->logEvent(System::MAINTENANCE, 'STORE_UGC_STARTED', 'library path: '.$this->nodeSubject->getProperty('config_sourcepath'));
 				echo 'Preparing...<br>';
@@ -124,6 +125,7 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 				break;
 				
 			case 'removeUGC':
+				ini_set('max_execution_time', 6000000);
 				import('sbJukebox:sb.jukebox.tools');
 				$this->logEvent(System::MAINTENANCE, 'REMOVE_UGC_STARTED', 'library path: '.$this->nodeSubject->getProperty('config_sourcepath'));
 				echo 'Preparing...';

@@ -61,6 +61,10 @@ abstract class sbInput {
 		
 		if ($sConfig == 'default') {
 			$this->mValue = $sValue;
+		} elseif ($sConfig == 'disabled') {
+			if ($sValue == 'true') {
+				$this->disable();
+			}
 		} else {
 			if (!isset($this->aConfig[$sConfig])) {
 				throw new sbException('config option not supported: '.$sConfig);
@@ -95,6 +99,12 @@ abstract class sbInput {
 	* @return 
 	*/
 	public function recieveInput() {
+		
+		// don't do anything if disabled (e.g. Firefox will submit nothing for disabled form elements)
+		if ($this->bDisabled) {
+			return;	
+		}
+		
 		global $_REQUEST;
 		$this->mValue = NULL;
 		if($_REQUEST->getParam($this->sName) != NULL) {

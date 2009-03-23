@@ -169,8 +169,10 @@ class sbView_root_login extends sbView {
 				import('sbSystem:sb.image.captcha');
 				// FIXME: in sbJukebox the URL/Request scheme is different!!!
 				if (true || $_REQUEST->getParam('uid') == 'login_backend') {
-					$sType = Registry::getValue('sb.system.security.login.captcha.type');
-					$imgChallenge = new CaptchaImage(200, 80, 4);
+					$sNoiseType = Registry::getValue('sb.system.security.login.captcha.noisetype');
+					$eNoiseType = constant('NOISE_'.$sNoiseType);
+					$eSequenceType = constant(Registry::getValue('sb.system.security.login.captcha.sequencetype'));
+					$imgChallenge = new CaptchaImage(200, 80, 4, $eSequenceType, CASE_UPPER, $eNoiseType);
 					$imgChallenge->generate();
 					sbSession::$aData['captcha']['login_backend'] = $imgChallenge->getSequence();
 					$imgChallenge->output(GIF);

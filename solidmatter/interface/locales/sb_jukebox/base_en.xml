@@ -43,6 +43,7 @@
 		<info_coverfilename>Cover filename</info_coverfilename>
 		<info_defects>Defects</info_defects>
 		<info_relpath>Relative path to jukebox</info_relpath>
+		<info_abspath>Absolute folder path</info_abspath>
 		<info_published>Published</info_published>
 		<info_type>Albumtype</info_type>
 		<info_title>Albumtitle</info_title>

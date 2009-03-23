@@ -30,6 +30,26 @@ class sbInput_select extends sbInput {
 	* @param 
 	* @return 
 	*/
+	public function setConfig($sConfig, $sValue) {
+		
+		if ($sConfig == 'options') {
+			$aOptions = array();
+			foreach (explode('|', $sValue) as $sOption) {
+				$aOptions[$sOption]	= $sOption;
+			}
+			$this->setOptions($aOptions);
+		} else {
+			parent::setConfig($sConfig, $sValue);
+		}
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function checkInput() {
 		
 		if (!isset($this->aOptions[$this->mValue])) {

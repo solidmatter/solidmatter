@@ -437,7 +437,7 @@ class JukeboxToolkit {
 			$aAlbumProps['info_coverfilename'] = iconv($dirAlbum->getEncoding(), 'UTF-8', $fileCover->getName());
 			// store cover luminance
 			$imgCover = new Image(Image::FROMFILE, $dirAlbum->getAbsPath().$fileCover->getName());
-			$aHSL = $imgCover->getHSL(500);
+			$aHSL = $imgCover->getHSL(700);
 			$aAlbumProps['ext_coverhue'] = $aHSL['h'];
 			$aAlbumProps['ext_coversaturation'] = $aHSL['s'];
 			$aAlbumProps['ext_coverlightness'] = $aHSL['l'];

@@ -829,7 +829,7 @@ class sbCR_RepositoryStructure {
 			),
 			'label' => array(
 				'e_type' => 'STRING',
-				's_internaltype' => 'string;minlength=1;maxlength=250;required=true;',
+				's_internaltype' => 'string;minlength=1;maxlength=250;size=60;required=true;',
 				'b_showinproperties' => 'TRUE',
 				's_labelpath' => '$locale/sbSystem/labels/label',
 				's_descriptionpath' => NULL,
@@ -841,7 +841,7 @@ class sbCR_RepositoryStructure {
 			),
 			'name' => array(
 				'e_type' => 'STRING',
-				's_internaltype' => 'urlsafe;minlength=1;maxlength=100;required=true;',
+				's_internaltype' => 'urlsafe;minlength=1;maxlength=100;size=60;required=true;',
 				'b_showinproperties' => 'TRUE',
 				's_labelpath' => '$locale/sbSystem/labels/urlname',
 				's_descriptionpath' => NULL,

@@ -159,6 +159,28 @@ class sbJukeboxView extends sbView {
 	* @param 
 	* @return 
 	*/
+	protected function addCommentForm() {
+		
+		if (!Registry::getValue('sb.jukebox.comments.enabled')) {
+			return (FALSE);
+		}
+		if (!User::isAuthorised('comment', $this->nodeSubject)) {
+			return (FALSE);
+		}
+		
+		$formComment = $this->buildCommentForm();
+		$formComment->saveDOM();
+		global $_RESPONSE;
+		$_RESPONSE->addData($formComment);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	protected function buildCommentForm() {
 		
 		$formSearch = new sbDOMForm(
@@ -172,6 +194,46 @@ class sbJukeboxView extends sbView {
 		$formSearch->addSubmit('$locale/sbSystem/actions/save');
 		
 		return ($formSearch);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function addComments() {
+		
+		if (!Registry::getValue('sb.jukebox.comments.enabled')) {
+			return (FALSE);
+		}
+		
+		$niComments = $this->nodeSubject->loadChildren('comments', TRUE, TRUE, TRUE);
+		foreach ($niComments as $nodeComment) {
+			// TODO: check user existence, might be deleted
+			$nodeUser = $this->crSession->getNodeByIdentifier($nodeComment->getProperty('jcr:createdBy'));
+			$nodeComment->setAttribute('username', $nodeUser->getProperty('label'));
+		}
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function addTagForm() {
+		
+		if (!User::isAuthorised('tag', $this->nodeSubject)) {
+			return (FALSE);
+		}
+		
+		$formTag = $this->buildTagForm();
+		$formTag->saveDOM();
+		global $_RESPONSE;
+		$_RESPONSE->addData($formTag);
 		
 	}
 	
@@ -195,6 +257,21 @@ class sbJukeboxView extends sbView {
 		$formTag->addSubmit('$locale/sbSystem/actions/save');
 		
 		return ($formTag);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function addSearchForm($sSubject) {
+		
+		$formSearch = $this->buildSearchForm($sSubject);
+		$formSearch->saveDOM();
+		global $_RESPONSE;
+		$_RESPONSE->addData($formSearch);
 		
 	}
 	
@@ -259,6 +336,23 @@ class sbJukeboxView extends sbView {
 	* @param 
 	* @return 
 	*/
+	protected function addRelateForm() {
+		// TODO: should be dependable on registry setting and authorisation
+		if (true) {
+			$formRelate = $this->buildRelateForm();
+			$formRelate->saveDOM();
+			global $_RESPONSE;
+			$_RESPONSE->addData($formRelate);
+		}
+	}
+	
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	function buildRelateForm() {
 		
 		$formRelate = new sbDOMForm(
@@ -268,7 +362,6 @@ class sbJukeboxView extends sbView {
 			$this->crSession
 		);
 		
-		//$formRelate->addInput('relation;select;', '$locale/sbSystem/labels/relation');
 		$formRelate->addInput('relation;relation;url=/'.$this->nodeSubject->getProperty('jcr:uuid').'/votes/getTargets;', '$locale/sbSystem/labels/comment');
 		$formRelate->addSubmit('$locale/sbSystem/actions/save');
 		

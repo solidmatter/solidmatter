@@ -529,7 +529,8 @@ $_QUERIES['sbJukebox/album/properties/load/auxiliary'] = '
 				n_coverhue,
 				n_coversaturation,
 				s_relpath,
-				s_abspath
+				s_abspath,
+				e_type
 	FROM		{TABLE_JB_ALBUMS}
 	WHERE		uuid = :node_id
 ';
@@ -546,7 +547,8 @@ $_QUERIES['sbJukebox/album/properties/save/auxiliary'] = '
 					n_coversaturation,
 					n_coverlightness,
 					s_relpath,
-					s_abspath
+					s_abspath,
+					e_type
 				) VALUES (
 					:node_id,
 					:info_artist,
@@ -558,7 +560,8 @@ $_QUERIES['sbJukebox/album/properties/save/auxiliary'] = '
 					:ext_coversaturation,
 					:ext_coverlightness,
 					:info_relpath,
-					:info_abspath
+					:info_abspath,
+					:info_type
 					)
 	ON DUPLICATE KEY UPDATE
 				fk_artist = :info_artist,
@@ -570,7 +573,8 @@ $_QUERIES['sbJukebox/album/properties/save/auxiliary'] = '
 				n_coversaturation = :ext_coversaturation,
 				n_coverlightness = :ext_coverlightness,
 				s_relpath = :info_relpath,
-				s_abspath = :info_abspath
+				s_abspath = :info_abspath,
+				e_type = :info_type
 ';
 $_QUERIES['sbJukebox/album/quilt/findCover'] = '
 	SELECT		n.uuid,
@@ -579,10 +583,12 @@ $_QUERIES['sbJukebox/album/quilt/findCover'] = '
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_JB_ALBUMS} a
 		ON		n.uuid = a.uuid
-	WHERE		h.s_mpath LIKE :jukebox_mpath
-	ORDER BY 	ROUND(ABS(a.n_coverlightness - :lightness) / 4) + 
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, "%")
+	ORDER BY 	ROUND(ABS(a.n_coverlightness - :lightness) / 8) + 
 				ROUND(ABS(a.n_coverhue - :hue) / 8) + 
-				ROUND(ABS(a.n_coversaturation - :saturation) / 12),
+				ROUND(ABS(a.n_coversaturation - :saturation) / 8),
 				ABS(a.n_coverlightness - :lightness),
 				ABS(a.n_coverhue - :hue),
 				ABS(a.n_coversaturation - :saturation)

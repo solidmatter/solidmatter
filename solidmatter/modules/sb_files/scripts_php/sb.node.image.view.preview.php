@@ -113,7 +113,7 @@ class sbView_image_preview extends sbView {
 				}
 				
 				$iMode = Image::DOWNSAMPLE;
-				if (Registry::getValue('sb.system.explorer.image.alwaysfit')) {
+				if (Registry::getValue('sb.files.explorer.image.alwaysfit')) {
 					$iMode |= Image::UPSAMPLE;
 				}
 				$imgCurrent->resample(140, 140, Image::KEEPASPECT, $iMode);
@@ -131,16 +131,6 @@ class sbView_image_preview extends sbView {
 				
 				// output
 				$imgCurrent->output(JPG);
-				
-				/*$sImageData = $this->nodeSubject->loadBinaryProperty('properties_content', TRUE);
-				//var_dump($sImageData);
-				//header('Content: image/jpeg');
-				//fpassthru($sImageData);
-				//exit();
-				$imgCurrent = new Image(Image::FROMSTRING, $sImageData);
-				//$imgCurrent->resample(600, 400, Image::KEEPASPECT, Image::DOWNSAMPLE);
-				//$imgCurrent->applyFilter(IMG_FILTER_GRAYSCALE);
-				$imgCurrent->output(JPG);*/
 				
 				break;
 				

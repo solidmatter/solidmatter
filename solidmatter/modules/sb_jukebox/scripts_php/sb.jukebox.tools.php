@@ -21,7 +21,7 @@ class JukeboxTools {
 	* @param 
 	* @return 
 	*/
-	protected static function getCoverFilename($nodeAlbum) {
+	public static function getCoverFilename($nodeAlbum) {
 		$sFilename = self::getFSPath($nodeAlbum);
 		$sFilename .= $nodeAlbum->getProperty('info_coverfilename');
 		$sFilename = iconv('UTF-8', System::getFilesystemEncoding(), $sFilename);

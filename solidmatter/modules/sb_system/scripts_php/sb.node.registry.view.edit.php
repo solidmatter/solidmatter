@@ -60,16 +60,18 @@ class sbView_registry_edit extends sbView {
 					$stmtWriteData->bindParam('value', $sValue, PDO::PARAM_STR);
 					$stmtWriteData->bindParam('user_uuid', $sUserUUID, PDO::PARAM_STR);
 					foreach($this->aRegistry as $aRow) {
-						$sKey = $aRow['s_key'];
-						$sFormName = str_replace('.', '_', $aRow['s_key']);
-						$sValue = $formRegistry->getValue($sFormName);
+
 						// set to random value for change detection
-						if ($sKey == 'sb.system.cache.registry.changedetection') {
+						if ($aRow['s_key'] == 'sb.system.cache.registry.changedetection') {
 							$sValue = uuid();
+						} else { // otherwise use form value
+							$sFormName = str_replace('.', '_', $aRow['s_key']);
+							$sValue = $formRegistry->getValue($sFormName);
 						}
-						//var_dumpp($sKey.$sValue);
+						$sKey = $aRow['s_key'];
+						
 						$stmtWriteData->execute();
-						//$stmtWriteData->debug();
+						
 					}
 					
 					$formRegistry->saveDOM();
@@ -118,6 +120,11 @@ class sbView_registry_edit extends sbView {
 		$stmtGetData->closeCursor();
 		
 		foreach ($this->aRegistry as $aRow) {
+			
+			// skip change detection entry
+			if ($aRow['s_key'] == 'sb.system.cache.registry.changedetection') {
+				continue;
+			}
 			
 			if (isset($aRow['s_internaltype']) && $aRow['s_internaltype']) {
 				$sConfig = $aRow['s_internaltype'];

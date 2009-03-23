@@ -39,15 +39,15 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 			
 			case 'display':
 				
-				// search form
-				$formSearch = $this->buildSearchForm('albums');
-				$formSearch->saveDOM();
-				$_RESPONSE->addData($formSearch);
+				// forms
+				$this->addSearchForm('artists');
+				$this->addCommentForm();
+//				$this->addTagForm();
+//				$this->addRelateForm();
 				
-				// comment form
-				$formComment = $this->buildCommentForm();
-				$formComment->saveDOM();
-				$_RESPONSE->addData($formComment);
+				// data
+				$this->addComments();
+				$this->nodeSubject->getVote(User::getUUID());
 				
 				// add tracks
 				$niTracks = $this->nodeSubject->loadChildren('tracks', TRUE, TRUE, FALSE);
@@ -55,23 +55,12 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 					$nodeTrack->getVote($this->getPivotUUID());
 				}
 				
-				// add comments
-				$niComments = $this->nodeSubject->loadChildren('comments', TRUE, TRUE, TRUE);
-				foreach ($niComments as $nodeComment) {
-					// TODO: check user existence, might be deleted
-					$nodeUser = $this->crSession->getNodeByIdentifier($nodeComment->getProperty('jcr:createdBy'));
-					$nodeComment->setAttribute('username', $nodeUser->getProperty('label'));
-				}
+				// save data in element
 				$this->nodeSubject->storeChildren();
-				
-				// add vote
-				$this->nodeSubject->getVote(User::getUUID());
-				
 				break;
 			
 			case 'search':
-				
-				
+				throw new LazyBastardException('searching playlists not implemented yet');
 				break;
 			
 			case 'addItem':

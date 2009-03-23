@@ -42,42 +42,17 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 					$this->execute('getM3U');
 				}*/
 				
-				// search form
-				$formSearch = $this->buildSearchForm('albums');
-				$formSearch->saveDOM();
-				$_RESPONSE->addData($formSearch);
+				// forms
+				$this->addSearchForm('albums');
+				$this->addCommentForm();
+				$this->addTagForm();
+				$this->addRelateForm();
 				
-				// comment form
-				if (User::isAuthorised('comment', $this->nodeSubject)) {
-					$formComment = $this->buildCommentForm();
-					$formComment->saveDOM();
-					$_RESPONSE->addData($formComment);
-				}
-				
-				// tag form
-				if (User::isAuthorised('tag', $this->nodeSubject)) {
-					$formTag = $this->buildTagForm();
-					$formTag->saveDOM();
-					$_RESPONSE->addData($formTag);
-				}
-				
-				// EXPERIMENTAL
-				// add relations
+				// data
+				$this->addComments();
+				$this->nodeSubject->getTags();
+				$this->nodeSubject->getVote($this->getPivotUUID());
 				$this->nodeSubject->storeRelations();
-				if (true) {
-					$formRelate = $this->buildRelateForm();
-					$formRelate->saveDOM();
-					$_RESPONSE->addData($formRelate);
-				}
-				
-				// comments
-				$niComments = $this->nodeSubject->loadChildren('comments', TRUE, TRUE, TRUE);
-				foreach ($niComments as $nodeComment) {
-					// TODO: check user existence, might be deleted
-					$nodeUser = $this->crSession->getNodeByIdentifier($nodeComment->getProperty('jcr:createdBy'));
-					$nodeComment->setAttribute('username', $nodeUser->getProperty('label'));
-				}
-				
 			
 			case 'displayInline':
 				
@@ -97,13 +72,10 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 					}
 				}
 				
-				$this->nodeSubject->storeChildren();
 				$this->nodeSubject->loadProperties();
-				$this->nodeSubject->getTags();
 				
-				// add vote
-				$this->nodeSubject->getVote(User::getUUID());
-				
+				// save data in element
+				$this->nodeSubject->storeChildren();
 				return;
 				
 			case 'getM3U':
@@ -111,25 +83,39 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 				break;
 			
 			case 'download':
+				
 				import('sbSystem:external:pclzip/pclzip.lib');
 				import('sbJukebox:sb.jukebox.tools');
+				ini_set('max_execution_time', 6000000);
+				ignore_user_abort(TRUE);
+				
+				// create the temporary zip archive
 				$sTempFile = Registry::getValue('sb.system.temp.dir').'/'.$this->nodeSubject->getProperty('name').'.zip';
 				// CAUTION: PCLZip (2.6) needs a modification because it strips away the drive letter part!!!
 				$zipAlbum = new PclZip($sTempFile);
 				$aFileList = JukeboxTools::getDownloadItems($this->nodeSubject);
 				$zipAlbum->create($aFileList, PCLZIP_OPT_REMOVE_ALL_PATH, PCLZIP_OPT_NO_COMPRESSION);
 				
-//				var_dumpp($aFileList);
-//				var_dumpp($sTempFile);
-//				var_dumpp($zipAlbum);
-//				die();
+				// open the temporary zip
+				$hTempFile = fopen($sTempFile, 'r');
+				if (!$hTempFile) {
+					die('somthing went wrong with creating the temporary zip file...');
+				}
 				
+				// transmit the file
 				$aOptions = array();
 				$aOptions['filename'] = $this->nodeSubject->getProperty('name').'.zip';
+				$aOptions['size'] = filesize($sTempFile);
 				headers('download', $aOptions);
-				$hTempFile = fopen($sTempFile, 'r');
-				fpassthru($hTempFile);
-				// this loop is necessary because it can take some time to close the handle
+				$iBandwidth = Registry::getValue('sb.jukebox.downloads.maxbandwidth');
+				while(!feof($hTempFile) && !connection_aborted()) {
+					print fread($hTempFile, round($iBandwidth * 1024));
+					sleep(1);
+				}
+				fclose($hTempFile);
+				
+				// remove temporary zip
+				// NOTE: this loop is necessary because it can take some time to close the handle
 				while (file_exists($sTempFile)) {
 					fclose($hTempFile);
 					unlink($sTempFile);
@@ -144,12 +130,7 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 			
 			case 'buildQuilt':
 				
-				throw new LazyBastardException('buildQuilt needs rework because of dependencies');
-				
-				// search form
-				$formSearch = $this->buildSearchForm('albums');
-				$formSearch->saveDOM();
-				$_RESPONSE->addData($formSearch);
+				$this->addSearchForm('albums');
 				
 				// basic init
 				$nodeJukebox = $this->getJukebox();
@@ -162,13 +143,14 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 					// nothing to do, dom elements are created later
 					
 				} else { // render based on image
-				
+					
+					import('sbJukebox:sb.jukebox.tools');
+					
 					// init rendering
-					$iColumns = 35;
-					$iRows = 35;
-					$iTolerance = 10;
+					$iColumns = 17;
+					$iRows = 17;
 					$iNumSamples = 100;
-					$imgCover = new Image(Image::FROMFILE, $this->getCoverFilename($this->nodeSubject));
+					$imgCover = new Image(Image::FROMFILE, JukeboxTools::getCoverFilename($this->nodeSubject));
 					
 					$aQuilt = array();
 					for ($i=0; $i<$iRows; $i++) {
@@ -178,8 +160,7 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 							$stmtFindCover->bindValue(':hue', $aHSL['h'], PDO::PARAM_INT);
 							$stmtFindCover->bindValue(':saturation', $aHSL['s'], PDO::PARAM_INT);
 							$stmtFindCover->bindValue(':lightness', $aHSL['l'], PDO::PARAM_INT);
-							//$stmtFindCover->bindValue(':tolerance', $iTolerance, PDO::PARAM_INT);
-							$stmtFindCover->bindValue(':jukebox_uuid', $nodeJukebox->getIdentifier(), PDO::PARAM_STR);
+							$stmtFindCover->bindValue(':jukebox_mpath', $nodeJukebox->getMPath(), PDO::PARAM_STR);
 							$stmtFindCover->execute();
 							foreach ($stmtFindCover as $aRow) {
 								$aQuilt[$i][$j]['uuid'] = $aRow['uuid'];

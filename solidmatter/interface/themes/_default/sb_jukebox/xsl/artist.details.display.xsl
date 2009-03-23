@@ -70,7 +70,7 @@
 			</xsl:call-template>
 			<br />
 			
-			<table class="default" width="100%">
+			<table class="default" width="100%" style="margin-top: 10px;">
 				<thead>
 					<tr>
 						<th colspan="2"><span class="type album"><xsl:value-of select="$locale/sbJukebox/labels/albums" /></span></th>

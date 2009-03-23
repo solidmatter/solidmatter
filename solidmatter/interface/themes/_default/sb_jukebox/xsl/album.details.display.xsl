@@ -48,9 +48,7 @@
 			<h2>
 				<span class="albumdetails" style="float:right;">
 					<xsl:call-template name="render_buttons" /> |  
-					<xsl:call-template name="render_stars">
-						<xsl:with-param name="voting" select="1" />
-					</xsl:call-template>
+					<xsl:call-template name="render_stars" />
 				</span>
 				<span class="type album"><xsl:value-of select="@label" /></span>
 			</h2>

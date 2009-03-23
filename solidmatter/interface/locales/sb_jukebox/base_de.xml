@@ -43,6 +43,7 @@
 		<info_coverfilename>Cover Dateiname</info_coverfilename>
 		<info_defects>Defekte</info_defects>
 		<info_relpath>rel. Pfad zur Jukebox</info_relpath>
+		<info_abspath>Absoluter Pfad zum Verzeichnis</info_abspath>
 		<info_published>Erscheinungsjahr</info_published>
 		<info_type>Albumtyp</info_type>
 		<info_title>Albumtitel</info_title>
