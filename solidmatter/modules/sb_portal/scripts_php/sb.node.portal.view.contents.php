@@ -86,7 +86,7 @@ class sbView_portal_portal_contents extends sbView {
 				
 				$_RESPONSE->addData($elemCurrent, 'menu');
 				
-				$niContent = $nodeLeaf->getChildren('content');
+				$niContent = $nodeLeaf->loadChildren('content', FALSE, TRUE, TRUE);
 				$_RESPONSE->addData($niContent, 'pagecontent'); 
 				
 				

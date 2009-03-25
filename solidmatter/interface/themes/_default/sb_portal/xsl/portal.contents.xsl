@@ -25,11 +25,35 @@
 	
 	<xsl:template name="content">
 		<xsl:if test="not($content/pagecontent/nodes/sbnode)">
-			NO CONTENT
+			NO CONTENT DEFINED
 		</xsl:if>
 		<xsl:for-each select="$content/pagecontent/nodes/sbnode">
-			<div>
-				<xsl:value-of select="@label" />
+			<div class="gadget">
+				<xsl:choose>
+					<xsl:when test="@width != ''">
+						<xsl:attribute name="style">width: <xsl:value-of select="@width" /></xsl:attribute>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:attribute name="style">width: 100%</xsl:attribute>
+					</xsl:otherwise>
+				</xsl:choose>
+				<div class="gadget_header"><xsl:value-of select="@label" /></div>
+				<div class="gadget_body">
+					<xsl:if test="@description != ''">
+						<div class="description">
+							<xsl:call-template name="break">
+								<xsl:with-param name="text" select="@description" />
+							</xsl:call-template>
+						</div>
+					</xsl:if>
+					<xsl:if test="@url != ''">
+						<iframe id="{@name}" width="100%" src="{@url}">
+							<xsl:if test="@height != ''">
+								<xsl:attribute name="height"><xsl:value-of select="@height" /></xsl:attribute>
+							</xsl:if>
+						</iframe>
+					</xsl:if>
+				</div>
 			</div>
 		</xsl:for-each>
 	</xsl:template>

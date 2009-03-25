@@ -105,6 +105,9 @@
 		<file>File</file>
 		<files>Files</files>
 		<tags>Tags</tags>
+		<height>Height</height>
+		<width>Width</width>
+		<url>URL</url>
 		<search>
 			<title>Search</title>
 			<search_for>Search for</search_for>

@@ -189,7 +189,7 @@
 						</td>
 					</tr>
 				</table>
-				<div class="footer"><span style="float:left;">sbPortal</span>
+				<div class="footer"><span style="float:left;"></span>
 					<xsl:apply-templates select="/response/metadata/stopwatch" />
 				</div>
 			</div>

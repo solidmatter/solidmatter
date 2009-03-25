@@ -118,7 +118,7 @@ div.menu ul {
 div.menu ul li {
 	display: block;
 	float: left;
-	margin: 0 4px 0 0;
+	margin: 0 5px 0 0;
 }
 div.menu a {
 	display: block;
@@ -292,6 +292,28 @@ ul.sortable li {
 
 table.hidden tr td {
 	padding: 0;
+}
+
+/* portal content ------------------------------------------------------------*/
+
+div.gadget {
+	border: 2px solid #0082bc;
+	margin-bottom: 20px;
+	margin-right: 20px;
+	float: left;
+}
+div.gadget div.gadget_header {
+	background-color: #0082bc;
+	padding: 4px;
+	color: white;
+}
+div.gadget div.description {
+	background-color: #81C9EB;
+	padding: 4px;
+	color: black;
+}
+div.gadget iframe {
+	border: 0;
 }
 
 /* autocompleter -------------------------------------------------------------*/
