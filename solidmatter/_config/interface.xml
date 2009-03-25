@@ -44,6 +44,12 @@
 		<site location="test.backend/theme" type="theme" handler="backend" theme="_admin_grey" />
 		<site location="test.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
 	</site>
+	<site location="test.portal/" type="controller" handler="portal" subject="demoportal">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="test.portal/theme" type="theme" handler="backend" theme="_default" />
+		<site location="test.portal/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
+	</site>
 	
 	<!-- utilities -->
 	<site location="backend.localhost/phpinfo" type="script" handler="phpinfo.php" />

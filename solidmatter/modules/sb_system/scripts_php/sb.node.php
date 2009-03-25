@@ -1621,7 +1621,7 @@ class sbNode extends sbCR_Node {
 			$sUserUUID = User::getUUID();
 		} else {
 			//TODO: handle guests correctly
-			$sUserUUID = 'sb_system:guests';
+			$sUserUUID = 'I_HAVE_NO_UUID';
 		}
 		
 		// compute authorisations if necessary

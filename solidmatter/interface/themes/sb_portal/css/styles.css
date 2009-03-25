@@ -1,0 +1,427 @@
+
+/*----------------------------------------------------------------------------*/
+/* page styles
+/*----------------------------------------------------------------------------*/
+
+html {
+	background-color: #white;
+	font-family: Arial, Helvetica, Sans-Serif;
+	font-size: 12px;
+	padding: 0;
+	background: #311 url(../images/page_bg.png) repeat top left;
+}
+
+body {
+	/*padding: 20px;*/
+	margin: 0;
+	text-align: center;
+	background: url(../images/page_bg_ramp.png) repeat-x 4px 0;
+}
+
+div.body {
+	/*width: 990px;
+	margin-top: 20px;*/
+	margin: auto;
+	padding: 0;
+	text-align: left;
+	background-color: #EEF;
+}
+
+/*----------------------------------------------------------------------------*/
+/* login
+/*----------------------------------------------------------------------------*/
+
+div.login {
+	color: white;
+	padding-top: 200px;
+	height: 270px;
+	background: transparent url(../images/login_bar.png) repeat-x bottom left;
+	/*background-color: red;*/
+}
+div.logincontainer {
+	margin: auto;
+	height: 270px;
+	width: 500px;
+	position: relative;
+	/*background-color: blue;*/
+}
+div.logingrammo {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 270px;
+	width: 230px;
+	/*background-color: green;*/
+	background: transparent url(../images/login_grammo.png) no-repeat bottom left;
+}
+form.login {
+	padding-top: 75px;
+	text-align: right;
+}
+form.login label {
+	font-weight: bold;
+	font-size: 13px;
+	font-family: Trebuchet MS, Verdana, Arial, Helvetica, sans-serif;
+	padding-left: 5px;
+}
+form.login input {
+	width: 150px;
+	margin: 4px 0 4px 4px;
+	padding: 0px;
+	vertical-align: baseline;
+}
+
+/*----------------------------------------------------------------------------*/
+/* page head
+/*----------------------------------------------------------------------------*/
+
+div.head {
+	position: relative;
+	background: #FFF url(../images/header_bg.png) repeat-x top left;
+	background-position: 0 -1px;
+}
+
+div.head h1 {
+	/*background: url(../images/logo.png) no-repeat 50px 5px;
+	padding-left: 100px;*/
+	background: url(../images/header_bg_rightbracket.png) no-repeat 0 300;
+	padding-left: 60px;
+}
+
+div.head a {
+	text-decoration: none;
+	color: #A00;
+}
+
+span.userstuff {
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: black;
+	margin-top: 4px;
+	margin-right: 3px; 
+}
+
+span.current_playlist {
+	position: absolute;
+	bottom: 3px;
+	right: 3px;
+}
+
+/*----------------------------------------------------------------------------*/
+/* menu
+/*----------------------------------------------------------------------------*/
+
+div.menu {
+	position: relative;
+	display: block;
+	height: 28px;
+	font-size: 11px;
+	font-weight: bold;
+	background: transparent url(../images/menu_bg.png) repeat-x top left;
+	font-family: Trebuchet MS, Verdana, Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	background-color: #FFF;
+}
+
+div.menu ul {
+	margin: 0 0 0 15px;
+	padding: 0;
+	list-style-type: none;
+	width:auto
+}
+div.menu ul li {
+	display: block;
+	float: left;
+	margin: 0 4px 0 0;
+}
+div.menu a {
+	display: block;
+	float: left;
+	text-decoration: none;
+	padding: 7px 7px 5px 7px;
+	/*height: 28px;*/
+	color: #FFF;
+	background-color: #9CD;
+}
+div.menu a:hover {
+	color: #fff;
+	background:transparent url(../images/menu_bg_hover.png) repeat-x top center;
+	background-color: #DDF;
+}
+div.menu a.active {
+	color: #FFF;
+	background-color: #0082bc;
+}
+
+
+div.menu2 {
+	position: relative;
+	display: block;
+	height: 32px;
+	font-size: 11px;
+	font-weight: bold;
+	clear: both;
+	background: transparent url(../images/menu_bg.png) repeat-x top left;
+	font-family: Trebuchet MS, Verdana, Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	background-color: #0082bc;
+	padding: 5px 0 0 0;
+}
+
+div.menu2 ul {
+	margin: 0 0 0 15px;
+	padding: 0;
+	list-style-type: none;
+	width:auto
+}
+div.menu2 ul li {
+	display: block;
+	float: left;
+	margin: 0 4px 0 0;
+}
+div.menu2 a {
+	display: block;
+	float: left;
+	color: black;
+	text-decoration: none;
+	padding: 5px 5px 5px 5px;
+	border-bottom: 2px solid #0082bc;
+	/*height: 28px;*/
+}
+div.menu2 a:hover {
+	color: #fff;
+	border-bottom: 2px solid #4AC;
+}
+div.menu2 a.active {
+	color: #000;
+	/*background-color: #AAD;*/
+	border-bottom: 2px solid #AAD;
+}
+
+/*----------------------------------------------------------------------------*/
+/* content
+/*----------------------------------------------------------------------------*/
+
+div.content {
+	background: #D9D9ED url(../images/content_bg.png) repeat-x top center;
+	clear: both;
+	font-size: 12px;
+	padding: 20px;
+	margin: 0;
+}
+div.content table {
+	font-size: 12px;
+}
+div.content a {
+	text-decoration: none;
+	color: #A00;
+}
+div.content a:hover {
+	color: black;
+	text-decoration: underline;
+}
+
+/* content area --------------------------------------------------------------*/
+
+h1, h2, h3 {
+	font-family: Trebuchet MS, Arial, Helvetica, Sans-Serif;
+}
+h1 {
+	font-size: 24px;
+	padding: 10px 50px;
+	margin: 0;
+}
+
+table.default {
+	font-size: 0.9em;
+	border: 3px solid white;
+	border-collapse: collapse;
+	margin-bottom: 15px;
+	clear: both;
+	background-color: white;
+}
+table.default td,
+table.default th {
+	padding: 2px;
+	font-weight: normal;
+	/*border-bottom: 1px solid #334;
+	border-top: 1px solid #334;*/
+}
+table.default td {
+	vertical-align: top;
+}
+table.default th {
+	vertical-align: bottom;
+}
+table.default th {
+	padding: 3px;
+	text-align: left;
+	background-color: #FFF;
+	color: black;
+	font-size: 14px;
+	font-family: Trebuchet MS, Arial, Helvetica, Sans-Serif;
+}
+/*table.default th.th2,
+table.default tr.th2 th {
+	font-weight: normal;
+	background-color: #334;
+}*/
+table.default tr.odd, li.odd {
+	background-color: #EFEFF3;
+}
+table.default tr.even, li.even {
+	background-color: white;
+}
+
+ul.sortable {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+ul.sortable li {
+	clear: both;
+	margin: 0 2px;
+	display: block;
+	padding: 2px;
+	cursor: n-resize;
+}
+
+table.hidden tr td {
+	padding: 0;
+}
+
+/* autocompleter -------------------------------------------------------------*/
+
+div.ac_suggestions {
+	background-color: white;
+	border: 1px solid black;
+}
+div.ac_suggestions ul {
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+div.ac_suggestions ul li {
+	cursor: pointer;
+	margin: 2px 0;
+	padding: 2px;
+}
+div.ac_suggestions ul li.selected {
+	background-color: #EEF;
+}
+
+/* icons ---------------------------------------------------------------------*/
+
+*.type {
+	padding: 1px 3px 1px 20px;
+	margin: 0 0 0 1px;
+	background-repeat: no-repeat;
+	background-image: url(../icons/type_node.gif);
+	background-position: 0px center;
+}
+
+*.button {
+	margin: 0;
+	padding: 0;
+}
+
+*.icononly {
+	padding: 0;
+}
+*.icononly img {
+	vertical-align: middle;
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+/* standard objects/types */
+
+
+
+/*----------------------------------------------------------------------------*/
+/* footer
+/*----------------------------------------------------------------------------*/
+
+div.footer {
+	background-color: black;
+	font-size: 10px;
+	font-weight: bold;
+	color: #BBB;
+	padding: 4px;
+	margin: 0px;
+	text-align: right;
+}
+
+div.footer a {
+	color: #BBB;
+}
+
+/*----------------------------------------------------------------------------*/
+/* forms
+/*----------------------------------------------------------------------------*/
+
+span.formerror {
+	color: red;
+	text-decoration: blink;
+}
+
+form.default table {
+	width: 100%;
+}
+
+form.default input.formerror,
+form.default textarea.formerror {
+	background-color: #FEE;
+	border: 2px solid red;
+	padding: 1px 2px;
+}
+
+/*----------------------------------------------------------------------------*/
+/* exceptions & errors
+/*----------------------------------------------------------------------------*/
+
+table.exception {
+	border: 2px solid red;
+	background-color: white;
+	color: red;
+	font-size: 80%;
+	border-collapse: collapse;
+	margin: 20px;
+}
+table.exception th, table.exception td {
+	text-align: left;
+	border: 1px solid red;
+	padding: 2px;
+}
+table.exception tr.root {
+	background-color: #FCC;
+}
+table.exception th.message {
+	color: white;
+	background-color: red;
+}
+
+table.warning {
+	border: 2px solid yellow;
+	background-color: white;
+	color: black;
+	font-size: 80%;
+	border-collapse: collapse;
+	margin: 20px;
+}
+table.warning th, table.warning td {
+	text-align: left;
+	border: 1px solid yellow;
+	padding: 2px;
+}
+table.warning tr.root {
+	background-color: #FCC;
+}
+table.warning th.message {
+	color: black;
+	background-color: yellow;
+}
+
+

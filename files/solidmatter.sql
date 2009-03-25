@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: solidmatter
 Target Host: localhost
 Target Database: solidmatter
-Date: 23.03.2009 08:17:10
+Date: 25.03.2009 01:00:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -1033,13 +1033,16 @@ INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbJukebox:Playlist', 'sbJukeb
 INSERT INTO `rep_nodetypes_modes` VALUES ('play', 'sbJukebox:Playlist', 'sbJukebox:Track', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('playlist', 'sbJukebox:Playlist', 'sbJukebox:Track', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tracks', 'sbJukebox:Playlist', 'sbJukebox:Track', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('content', 'sbPortal:Page', 'sbPortal:Content', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbPortal:Page', 'sbPortal:Content', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbPortal:Page', 'sbPortal:Content', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbPortal:Page', 'sbPortal:Page', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbPortal:Page', 'sbPortal:Page', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('menu', 'sbPortal:Page', 'sbPortal:Page', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbPortal:Page', 'sbPortal:Page', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbPortal:Portal', 'sbPortal:Page', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbPortal:Portal', 'sbPortal:Page', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('menu', 'sbPortal:Portal', 'sbPortal:Page', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbPortal:Portal', 'sbPortal:Page', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbSystem:Root', 'sbPortal:Portal', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbSystem:Root', 'sbPortal:Portal', 'TRUE', 'TRUE');
@@ -1217,6 +1220,7 @@ INSERT INTO `rep_nodetypes_properties` VALUES ('sbJukebox:Track', 'info_playtime
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbJukebox:Track', 'info_published', 'LONG', 'integer;minvalue=1000;maxvalue=3000', 'TRUE', '$locale/sbJukebox/Track/info_published', 'AUXILIARY', 'n_published', null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbJukebox:Track', 'info_title', 'STRING', 'string', 'TRUE', '$locale/sbJukebox/Track/info_title', 'AUXILIARY', 's_title', null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbPortal:Content', 'description', 'STRING', 'text', 'TRUE', '', 'EXTERNAL', null, null, 'FALSE', 'FALSE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbPortal:Content', 'url', 'STRING', 'string', 'TRUE', '', 'EXTERNAL', null, null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Comment', 'comment', 'STRING', 'text', 'TRUE', '$locale/sbSystem/labels/comment', 'EXTERNAL', null, '0', 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'config_active', 'BOOLEAN', 'checkbox', 'TRUE', '', 'AUXILIARY', 'b_active', null, 'TRUE', 'TRUE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbSystem:Module', 'info_installedon', 'DATE', 'datetime', 'FALSE', '', 'AUXILIARY', 'dt_installed', null, 'TRUE', 'TRUE', 'FALSE', null, '');
@@ -1365,6 +1369,12 @@ INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'getTags', 'FALSE', null, null, 'STREAM', null, null, 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'getTargets', 'FALSE', null, null, 'STREAM', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'placeVote', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbPortal:Page', 'contents', 'display', 'TRUE', null, null, 'RENDERED', 'sb_portal:portal.contents.xsl', 'text/html', 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbPortal:Portal', 'contents', 'display', 'TRUE', null, null, 'RENDERED', 'sb_portal:portal.contents.xsl', 'text/html', 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbPortal:Portal', 'login', 'display', 'TRUE', null, null, 'RENDERED', 'sb_portal:root.login.xsl', 'text/html', 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbPortal:Portal', 'login', 'getCaptcha', 'FALSE', null, null, 'RENDERED', null, null, 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbPortal:Portal', 'login', 'login', 'FALSE', null, null, 'RENDERED', 'sb_portal:root.login.xsl', 'text/html', 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbPortal:Portal', 'login', 'logout', 'FALSE', null, null, 'RENDERED', 'sb_portal:root.login.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Debug', 'session', 'display', 'TRUE', null, null, 'RENDERED', 'sb_system:debug.session.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Debug', 'tests', 'display', 'TRUE', null, null, 'RENDERED', 'sb_system:debug.tests.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Debug', 'tests', 'init_progressbar', 'FALSE', null, null, 'XML', null, null, 'TRUE');
@@ -1515,6 +1525,9 @@ INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Recommendation', 'actions',
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:RecommendView', 'recommend', 'FALSE', null, 'sbJukebox:sb.jukebox.node.various.view.communication', 'sbView_jukebox_various_communication', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Track', 'details', 'TRUE', null, 'sbJukebox:sb.jukebox.node.track.view.details', 'sbView_jukebox_track_details', '0', '1000');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:VotesView', 'votes', 'FALSE', null, 'sbJukebox:sb.jukebox.node.various.view.votes', 'sbView_jukebox_various_votes', null, '0');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbPortal:Page', 'contents', 'FALSE', null, 'sbPortal:sb.node.portal.view.contents', 'sbView_portal_portal_contents', null, '1000');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbPortal:Portal', 'contents', 'FALSE', null, 'sbPortal:sb.node.portal.view.contents', 'sbView_portal_portal_contents', null, '1000');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbPortal:Portal', 'login', 'FALSE', null, 'sbSystem:sb.node.root.view.login', 'sbView_root_login', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Debug', 'session', 'TRUE', null, 'sbSystem:sb.node.debug.view.session', 'sbView_debug_session', '0', '1000');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Debug', 'tests', 'TRUE', null, 'sbSystem:sb.node.debug.view.tests', 'sbView_debug_tests', '2', '800');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Debug', 'tree', 'TRUE', null, 'sbSystem:sb.node.debug.view.tree', 'sbView_debug_tree', '1', '900');
@@ -1670,7 +1683,7 @@ INSERT INTO `sb_system_nodes` VALUES ('c42afe4b46634ebc90946626a51c57f1', '', 's
 INSERT INTO `sb_system_nodes` VALUES ('c447256f713b4fa2a2344cd562482c9e', null, 'sbCMS:Page', 'CSS', 'CSS', null, 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', null, null, '0000-00-00 00:00:00', null, null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('c9afb8c17ab643fca4b17c1f7e5288e9', '', 'sbFiles:Image', 'statue.jpg', 'statue.jpg', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2009-02-18 21:45:00', '2009-02-19 01:41:10', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('cbe174938fab416299930c761fa6f5de', null, 'sbSystem:Tasks', 'Tasks', 'tasks', '', 'TRUE', 'TRUE', 'TRUE', 'a205b4cdb96442cb85d0d99caff9d530', 'a205b4cdb96442cb85d0d99caff9d530', null, '2008-12-21 22:24:32', '2008-12-21 22:24:32', null, null, null, null, null);
-INSERT INTO `sb_system_nodes` VALUES ('ce44f8e6b796456b869230de319f83ef', '', 'sbPortal:Portal', 'Demo Portal', 'demo_portal', null, 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2009-03-15 17:26:20', '2009-03-15 17:26:20', null, null, null, null, null);
+INSERT INTO `sb_system_nodes` VALUES ('ce44f8e6b796456b869230de319f83ef', '', 'sbPortal:Portal', 'Demo Portal', 'demoportal', null, 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2009-03-15 17:26:20', '2009-03-15 17:26:20', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('cf33a52cce7a4eef99de947addd1d02f', null, 'sbForum:Thread', 'I can\'t created topics', 'notopics', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-03-21 08:04:04', '2007-03-21 08:04:04', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('cff8de79afa84f249a906645c94cc2b5', '', 'sbCMS:CTN_Image', 'Sectionimage', 'sectionimage', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2009-02-18 23:48:48', '2009-02-18 23:48:48', null, null, null, null, null);
 INSERT INTO `sb_system_nodes` VALUES ('d1e50833ff4046bb8e4be7510df78f32', '', 'sbForum:Thread', 'WTF?', 'wtf', '', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', null, '2007-03-21 08:01:03', '2007-03-21 08:01:03', null, null, null, null, null);

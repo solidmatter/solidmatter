@@ -64,6 +64,9 @@ class User {
 	public static function getGroupUUIDs() {
 		if (isset(sbSession::$aData['userdata']['groups'])) {
 			return (sbSession::$aData['userdata']['groups']);
+		} elseif (!User::isLoggedIn()) {
+			$nodeGuests = self::$crSession->getNode('//*[@uid="sbSystem:Guests"]');
+			return (array($nodeGuests->getProperty('jcr:uuid')));
 		} else {
 			return (array());
 		}
