@@ -712,29 +712,17 @@ class sbDOMResponse extends sbDOMDocument {
 	*/
 	protected function loadStylesheet($sStylesheet) {
 		
-		/*$domXSL = new DOMDocument();
-		$hXSL = fopen($sURI, 'r');
-		if ($hXSL === FALSE) {
-			throw new sbException('Stylesheet "'.$sURI.'" not found!');
-		}
-		$sXSL = stream_get_contents($hXSL);
-		if (!$domXSL->loadXML($sXSL)) {
-			throw new sbException('Stylesheet "'.$sURI.'" has errors!');
-		}
-		return ($domXSL);*/
-		
-		if (strpos($sStylesheet, 'http://') === FALSE) {
+		if (strpos($sStylesheet, 'http://') === FALSE) { // local file
 			list($sModule, $sXSL) = explode(':', $sStylesheet);
 			$sURI = 'interface/themes/'.$this->getTheme().'/'.$sModule.'/xsl/'.$sXSL;
-		} else {
-			$sURI = $sStylesheet;
-		}
-		
-		if (file_exists($sURI)) { // local file
+			if (!file_exists($sURI)) {
+				$sURI = 'interface/themes/_global/xsl/default.xsl';
+			}
 			$domXSL = new DOMDocument();
 			$domXSL->load($sURI);
 			return ($domXSL);
 		} else { // remote file
+			$sURI = $sStylesheet;
 			$domXSL = new DOMDocument();
 			$hXSL = @fopen($sURI, 'r');
 			if ($hXSL === FALSE) {
@@ -746,6 +734,7 @@ class sbDOMResponse extends sbDOMDocument {
 			}
 			return ($domXSL);
 		}
+		
 	}
 	
 	//--------------------------------------------------------------------------

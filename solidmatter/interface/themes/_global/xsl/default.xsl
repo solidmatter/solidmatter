@@ -2,17 +2,9 @@
 <xsl:stylesheet 
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	version="1.0" 
-	exclude-result-prefixes="html sbform php" 
-	exclude-element-prefixes="html sbform" 
-	xmlns:html="http://www.w3.org/1999/xhtml"
-	xmlns:sbform="http://www.solidbytes.net/sbform"
-	xmlns:dyn="http://exslt.org/dynamic" 
-	extension-element-prefixes="dyn"
-	xmlns:php="http://php.net/xsl"
-	>
-	
-	<xsl:import href="../../sb_system/xsl/global.sbform.xsl" />
-	
+	exclude-result-prefixes="html" 
+	xmlns:html="http://www.w3.org/1999/xhtml">
+
 	<xsl:output 
 		method="html"
 		encoding="UTF-8"
@@ -26,13 +18,13 @@
 	<xsl:variable name="commands" select="/response/metadata/commands" />
 	<xsl:variable name="system" select="/response/metadata/system" />
 	<xsl:variable name="content" select="/response/content" />
-	<xsl:variable name="master" select="$content/sbnode[@master]" />
+	<xsl:variable name="errors" select="/response/errors" />
 	<xsl:variable name="stylesheets_css" select="'/theme/sb_system/css'" />
 	<xsl:variable name="scripts_js" select="'/theme/sb_system/js'" />
-	<xsl:variable name="scripts_js_jb" select="'/theme/sb_jukebox/js'" />
+	<xsl:variable name="images" select="'/theme/sb_system/images'" />
+	<xsl:variable name="master" select="$content/sbnode[@master]" />
 	<xsl:variable name="sessionid" select="/response/metadata/system/sessionid" />
-	<xsl:variable name="currentPlaylist" select="$content/currentPlaylist/sbnode" />
-	<xsl:variable name="auth" select="$master/user_authorisations/authorisation" />
+	<xsl:variable name="auth" select="$master/user_authorisations" />
 	
 	<xsl:template match="/response/locales"></xsl:template>
 	
@@ -40,10 +32,38 @@
 		<!-- title -->
 		<title><xsl:value-of select="/response/content/sbnode/@label" /> : <xsl:value-of select="$locale/*/views/view[@id=/response/content/@view]" /></title>
 		<!-- styles -->
-		<!-- for now only include jukebox css! -->
-		<link rel="stylesheet" href="/theme/sb_portal/css/styles.css" type="text/css" media="all" />
+		<xsl:for-each select="modules/*">
+			<link rel="stylesheet" href="/theme/{name()}/css/styles.css" type="text/css" media="all" />
+		</xsl:for-each>
 		<!-- static scripts -->
-		<!--<script language="Javascript" type="text/javascript" src="{$scripts_js}/edit_area/edit_area_full.js"></script>-->
+		<!-- additional scripts -->
+		<xsl:if test="//sbinput[@type='codeeditor']">
+			<script language="Javascript" type="text/javascript" src="{$scripts_js}/edit_area/edit_area_full.js"></script>
+		</xsl:if>
+		<xsl:if test="commands/command">
+			<script language="Javascript" type="text/javascript" src="{$scripts_js}/commands.js"></script>
+			<script language="Javascript" type="text/javascript">
+			<xsl:for-each select="commands/command">
+				<xsl:choose>
+				<xsl:when test="param">
+					sbCommander.issueCommand("<xsl:value-of select="@action" />", {
+					<xsl:for-each select="param">
+						<xsl:value-of select="@name" />: '<xsl:value-of select="@value" />',
+					</xsl:for-each>
+					});
+				</xsl:when>
+				<xsl:otherwise>
+					sbCommander.issueCommand("<xsl:value-of select="@action" />", null);
+				</xsl:otherwise>
+				</xsl:choose>
+			</xsl:for-each>
+			</script>
+		</xsl:if>
+		<script language="Javascript" type="text/javascript">
+			try {
+				document.execCommand("BackgroundImageCache", false, true);
+			} catch(err) {}
+		</script>
 	</xsl:template>
 	
 	<xsl:template match="/response/errors">
@@ -64,7 +84,7 @@
 			</tr>
 			<tr>
 				<th class="th2">Class</th>
-				<th class="th2">Function</th>
+				<th class="th2">Method</th>
 				<th class="th2">Line</th>
 				<th class="th2">File</th>
 			</tr>
@@ -116,59 +136,6 @@
 		</table>
 	</xsl:template>
 	
-	<xsl:template name="layout">
-		<html>
-		<head>
-			<xsl:apply-templates select="/response/metadata" />
-			<!-- <script language="Javascript" type="text/javascript" src="{$scripts_js}/prototype.js"></script>
-			<script language="Javascript" type="text/javascript" src="{$scripts_js}/scriptaculous.js"></script>
-			<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/stars.js"></script>
-			<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/dynamic.js"></script> -->
-		</head>
-		<body>
-			<div class="body">
-				<div class="head">
-					<h1>FH FFM - Portal</h1>
-					<span class="userstuff">
-						<!-- <a class="type config" href="/-/config" style="margin-right:7px;"><xsl:value-of select="$locale/sbJukebox/labels/config" /></a> -->
-						<a class="type logout" href="/-/login/logout"><xsl:value-of select="$locale/sbJukebox/labels/logout" /></a>
-					</span>
-				</div>
-				<div class="menu">
-					<ul>
-						<li><a href="#" class="active">Hochschule</a></li>
-						<li><a href="#">mein Fachbereich</a></li>
-						<li><a href="#">meine Lehre</a></li>
-					</ul>
-				</div>
-				<div class="menu2">
-					<ul>
-						<li><a href="#" class="active">Startseite</a></li>
-						<li><a href="#">Aktuelle Meldungen</a></li>
-						<li><a href="#">Studium an der FHFFM</a></li>
-					</ul>
-				</div>
-				<xsl:call-template name="content" />
-				<div class="footer"><span style="float:left;">FH FFM - Portal Mockup</span>
-					<xsl:apply-templates select="/response/metadata/stopwatch" />
-				</div>
-			</div>
-		</body>
-		</html>
-	</xsl:template>
-	
-	<xsl:template match="/response/metadata/stopwatch">
-		<span>
-			<xsl:attribute name="title">
-				LOAD:<xsl:value-of select="load" />ms | 
-				PHP:<xsl:value-of select="php" />ms |
-				PDO:<xsl:value-of select="pdo" />ms
-			</xsl:attribute>
-			<xsl:value-of select="execution_time" />ms | 
-			<a href="/{$content/@uuid}/{$content/@view}/{$content/@action}/?debug=1" target="_blank">XML</a>
-		</span>
-	</xsl:template>
-	
 	<xsl:template name="colorize">
 		<xsl:choose>
 			<xsl:when test="position() mod 2 = 1">
@@ -177,7 +144,7 @@
 			<xsl:otherwise>
 				<xsl:attribute name="class">even</xsl:attribute>
 			</xsl:otherwise>
-		</xsl:choose>
+		</xsl:choose>		
 	</xsl:template>
 	
 	<!-- break arbeitet nur mit n -->

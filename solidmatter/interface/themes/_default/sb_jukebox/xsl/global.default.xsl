@@ -11,7 +11,8 @@
 	xmlns:php="http://php.net/xsl"
 	>
 	
-	<xsl:import href="global.sbform.xsl" />
+	<xsl:import href="../../../_global/xsl/default.xsl" />
+	<xsl:import href="../../../_global/xsl/sbform.xsl" />
 	
 	<xsl:output 
 		method="html"
@@ -20,23 +21,10 @@
 		indent="no"
 	/>
 
-	<xsl:variable name="lang" select="/response/metadata/system/lang" />
-	<xsl:variable name="subjectid" select="/response/content/sbnode[last()]/@uuid" />
-	<xsl:variable name="locale" select="/response/locales/locale[@lang=$lang]" />
-	<xsl:variable name="commands" select="/response/metadata/commands" />
-	<xsl:variable name="system" select="/response/metadata/system" />
-	<xsl:variable name="content" select="/response/content" />
-	<xsl:variable name="master" select="$content/sbnode[@master]" />
-	<xsl:variable name="stylesheets_css" select="'/theme/sb_system/css'" />
-	<xsl:variable name="scripts_js" select="'/theme/sb_system/js'" />
 	<xsl:variable name="scripts_js_jb" select="'/theme/sb_jukebox/js'" />
-	<xsl:variable name="sessionid" select="/response/metadata/system/sessionid" />
 	<xsl:variable name="currentPlaylist" select="$content/currentPlaylist/sbnode" />
-	<xsl:variable name="auth" select="$master/user_authorisations/authorisation" />
 	
-	<xsl:template match="/response/locales"></xsl:template>
-	
-	<xsl:template match="/response/metadata">
+	<xsl:template match="/response/metadata" priority="10">
 		<!-- title -->
 		<title><xsl:value-of select="/response/content/sbnode/@label" /> : <xsl:value-of select="$locale/*/views/view[@id=/response/content/@view]" /></title>
 		<!-- styles -->
@@ -46,82 +34,12 @@
 		<!--<script language="Javascript" type="text/javascript" src="{$scripts_js}/edit_area/edit_area_full.js"></script>-->
 	</xsl:template>
 	
-	<xsl:template match="/response/errors">
-		<xsl:apply-templates select="exception" />
-		<xsl:apply-templates select="warnings" />
-		<xsl:apply-templates select="custom" />
-	</xsl:template>
-	
-	<xsl:template match="exception">
-		<style type="text/css">
-			@import url(<xsl:value-of select="$stylesheets_css" />/styles_default.css);
-		</style>
-		<table class="exception">
-			<tr>
-				<th colspan="4" class="message">
-					<xsl:value-of select="@type" />: <xsl:value-of select="@message" /> (<xsl:value-of select="@code" />)
-				</th>
-			</tr>
-			<tr>
-				<th class="th2">Class</th>
-				<th class="th2">Function</th>
-				<th class="th2">Line</th>
-				<th class="th2">File</th>
-			</tr>
-			<xsl:for-each select="trace/*">
-				<tr>
-					<xsl:if test="position() = 1"><xsl:attribute name="class">root</xsl:attribute></xsl:if>
-					<td><xsl:value-of select="class" /></td>
-					<td><xsl:value-of select="function" /></td>
-					<td><xsl:value-of select="line" /></td>
-					<td><xsl:value-of select="file" /></td>
-				</tr>
-			</xsl:for-each>
-		</table>
-	</xsl:template>
-	
-	<xsl:template match="warnings">
-		<style type="text/css">
-			@import url(<xsl:value-of select="$stylesheets_css" />/styles_default.css);
-		</style>
-		<table class="warning">
-			<tr>
-				<th colspan="4" class="message">
-					Warnings:
-				</th>
-			</tr>
-			<tr>
-				<th class="th2">Type</th>
-				<th class="th2">Error</th>
-			</tr>
-			<xsl:for-each select="*">
-				<tr>
-					<td>
-						<xsl:choose>
-							<xsl:when test="@errno='1'">E_ERROR</xsl:when>
-							<xsl:when test="@errno='2'">E_WARNING</xsl:when>
-							<xsl:when test="@errno='4'">E_PARSE</xsl:when>
-							<xsl:when test="@errno='8'">E_NOTICE</xsl:when>
-							<xsl:when test="@errno='2048'">E_STRICT</xsl:when>
-							<xsl:when test="@errno='4096'">E_RECOVERABLE_ERROR</xsl:when>
-							<xsl:otherwise><xsl:value-of select="@errno" /></xsl:otherwise>
-						</xsl:choose>
-					</td>
-					<td>
-						<strong><xsl:value-of select="@errstr" disable-output-escaping="yes" /></strong><br/>
-						<xsl:value-of select="@errfile" />, Line <xsl:value-of select="@errline" />
-					</td>
-				</tr>
-			</xsl:for-each>
-		</table>
-	</xsl:template>
-	
 	<xsl:template name="layout">
 		<html>
 		<head>
 			<xsl:apply-templates select="/response/metadata" />
-			<script language="Javascript" type="text/javascript" src="{$scripts_js}/prototype.js"></script>
-			<script language="Javascript" type="text/javascript" src="{$scripts_js}/scriptaculous.js"></script>
+			<script language="Javascript" type="text/javascript" src="/theme/global/js/prototype.js"></script>
+			<script language="Javascript" type="text/javascript" src="/theme/global/js/scriptaculous.js"></script>
 			<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/stars.js"></script>
 			<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/dynamic.js"></script>
 		</head>
@@ -457,27 +375,6 @@
 		<xsl:call-template name="addRelation">
 			<xsl:with-param name="form" select="$content/sbform[@id='addRelation']" />
 		</xsl:call-template>
-	</xsl:template>
-	
-	<!-- break arbeitet nur mit n -->
-	<xsl:template name="break">
-		<xsl:param name="text" select="."/>
-		<xsl:choose>
-		<xsl:when test="contains($text, '&#x0D;')">
-			<xsl:if test="string-length(substring-before($text, '&#x0D;')) > 0">
-				<xsl:value-of select="substring-before($text, '&#x0D;')"/>
-			</xsl:if>
-			<br/>
-			<xsl:call-template name="break">
-			<xsl:with-param name="text" select="substring-after($text,'&#x0D;')"/>
-			</xsl:call-template>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:if test="string-length($text) > 0">
-				<xsl:value-of select="$text"/>
-			</xsl:if>
-		</xsl:otherwise>
-		</xsl:choose>
 	</xsl:template>
 	
 </xsl:stylesheet>

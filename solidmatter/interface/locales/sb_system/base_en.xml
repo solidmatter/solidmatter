@@ -57,6 +57,7 @@
 		<new_tag>New tag</new_tag>
 		<purge>Purge</purge>
 		<new_relation>New relation</new_relation>
+		<new_comment>New comment</new_comment>
 	</actions>
 	
 	<labels>
@@ -136,6 +137,7 @@
 	<texts>
 		<no_subobjects>This object has no vsisible subobjects</no_subobjects>
 		<no_comments>No comments available</no_comments>
+		<no_relations>No relations available</no_relations>
 		<inbox_empty>Your inbox is empty</inbox_empty>
 	</texts>
 	

@@ -57,6 +57,7 @@
 		<new_tag>neuer Tag</new_tag>
 		<purge>Entleeren</purge>
 		<new_relation>Neue Verknüpfung</new_relation>
+		<new_comment>Neuer Kommentar</new_comment>
 	</actions>
 	
 	<labels>
@@ -136,6 +137,7 @@
 	<texts>
 		<no_subobjects>Dieses Objekt hat keine anzeigbaren Unterobjekte</no_subobjects>
 		<no_comments>Keine Kommentare vorhanden</no_comments>
+		<no_relations>Keine Verknüpfungen vorhanden</no_relations>
 		<inbox_empty>Ihre Inbox ist leer</inbox_empty>
 	</texts>
 	

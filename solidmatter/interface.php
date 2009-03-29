@@ -105,63 +105,37 @@ switch ((string) $elemSite['type']) {
 		break;
 		
 	case 'theme':
-		// determine requested file
-		$sHandler = (string) $elemSite['handler'];
-		$sTheme = (string) $elemSite['theme'];
-		$sMimetype = '';
 		
-		switch ($sHandler) {
-			
-			case 'backend':
-				switch ($aPath[3]) {
-					case 'css':
-						$aPath[3] = 'css';
+		// determine requested file
+		if ($aPath[2] == 'global') { // theme-independent global files
+			$sFile = 'interface/themes/_global/'.implode('/', array_slice($aPath, 3));
+		} else { // files in current theme
+			$sHandler = (string) $elemSite['handler'];
+			$sTheme = (string) $elemSite['theme'];
+			if ($sTheme == '') {
+				switch ($sHandler) {
+					case 'backend':
+						$sTheme = '_admin';
 						break;
-					case 'images':
-						$aPath[3] = 'images';
+					case 'application':
+						$sTheme = '_default';
 						break;
-					case 'icons':
-						$aPath[3] = 'icons';
-						break;
-					case 'js':
-					//case 'scripts_js':
-						$aPath[3] = 'js';
-						break;
-					default:
-						die('theme component does not exist, aborting.');
 				}
-				if ($sTheme == '') {
-					$sTheme = '_admin';
-				}
-				$sFile = 'interface/themes/'.$sTheme.'/'.$aPath[2].'/'.implode('/', array_slice($aPath, 3));
-				break;
-				
-			case 'application':
-				if ($sTheme == '') {
-					$sTheme = '_default';
-				}
-				$sFile = 'interface/themes/'.$sTheme.'/'.$aPath[2].'/'.implode('/', array_slice($aPath, 3));
-				break;
-				
+			}
+			$sFile = 'interface/themes/'.$sTheme.'/'.$aPath[2].'/'.implode('/', array_slice($aPath, 3));
 		}
 		
-		headers('cache');
-		
 		// deliver file
+		headers('cache');
+		import('sb.tools.mime');
 		if (file_exists($sFile)) {
-			if ($sMimetype == '') {
-				import('sb.tools.mime');
-				$sMimetype = get_mimetype_by_extension($sFile);
-				header('Content-type: '.$sMimetype);
-			}
+			$sMimetype = get_mimetype_by_extension($sFile);
+			header('Content-type: '.$sMimetype);
 			$hFile = fopen($sFile, 'r');
 			fpassthru($hFile);
 		} else {
 			header('HTTP/1.0 404 Not Found');
-			if ($sMimetype == '') {
-				import('sb.tools.mime');
-				$sMimetype = get_mimetype_by_extension($sFile);
-			}
+			$sMimetype = get_mimetype_by_extension($sFile);
 			if (TRUE || $sMimetype != 'text/css') {
 				die('404 - File not found: '.$sFile.'');
 			}
@@ -236,6 +210,9 @@ if ($_REQUEST->getParam('debug') != TRUE) {
 
 // output
 DEBUG('Interface: processing output now', DEBUG::BASIC);
+if (isset($elemSite['theme'])) {
+	$_RESPONSE->setTheme((string) $elemSite['theme']);
+}
 $_RESPONSE->saveOutput();
 
 //------------------------------------------------------------------------------
