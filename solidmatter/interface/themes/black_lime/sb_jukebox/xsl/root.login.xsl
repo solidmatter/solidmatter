@@ -20,7 +20,7 @@
 	/>
 	
 	<xsl:template match="/">
-		<html>
+		<html style="background-color:#222;">
 		<head>
 			<!--<xsl:apply-templates select="/response/metadata" />-->
 			<link rel="stylesheet" href="/theme/sb_jukebox/css/styles.css" type="text/css" media="all" />
@@ -28,15 +28,13 @@
 		<body>
 			<div class="login">
 				<div class="logincontainer">
-					<div class="logingrammo">
-					</div>
 					<xsl:apply-templates select="/response/content/sbform[@id='login_backend']" />
+					<div class="slogan">
+						solidbytes Jukebox 0.5beta | Share the music you like with the people you like
+					</div>
 				</div>
 			</div>
-			<div class="footer" style="text-align:center;">
-				solidbytes Jukebox 0.5beta | Share the music you like with the people you like | powered by solidMatter<br />
-				use of a decent browser recommended | grammophone image used under CC-SA license
-			</div>
+			
 			<xsl:apply-templates select="response/errors" />
 		</body>
 		</html>
@@ -82,7 +80,7 @@
 	</xsl:template>
 	
 	<xsl:template match="submit">
-		<input type="submit" name="{@value}" value="{dyn:evaluate(@label)}" style="border: 1px solid black; background-color: #DDE;"/>
+		<input type="submit" name="{@value}" value="{dyn:evaluate(@label)}" />
 		<!--<xsl:if test="@errorlabel">
 			<br/><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span>
 		</xsl:if>-->

@@ -41,28 +41,18 @@ body a:hover {
 div.login {
 	color: white;
 	padding-top: 200px;
-	height: 270px;
-	background: transparent url(../images/login_bar.png) repeat-x bottom left;
-	/*background-color: red;*/
 }
 div.logincontainer {
 	margin: auto;
-	height: 270px;
-	width: 500px;
+	padding: 0px;
+	height: 311px;
+	width: 461px;
 	position: relative;
-	/*background-color: blue;*/
-}
-div.logingrammo {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	height: 270px;
-	width: 230px;
-	/*background-color: green;*/
-	background: transparent url(../images/login_grammo.png) no-repeat bottom left;
+	background: transparent url(../images/login_bg.png) no-repeat top left;
 }
 form.login {
-	padding-top: 75px;
+	padding-top: 15px;
+	padding-right: 15px;
 	text-align: right;
 }
 form.login label {
@@ -77,13 +67,23 @@ form.login input {
 	padding: 0px;
 	vertical-align: baseline;
 }
-
+div.logincontainer div.slogan {
+	font-size: 6px;
+	text-align: center;
+	color: #3A3A3A;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	margin: 3px;
+	background: transparent;
+	width: 461px;
+}
 /*----------------------------------------------------------------------------*/
 /* page head
 /*----------------------------------------------------------------------------*/
 
 div.head {
-	background: magenta url(../images/header_bg.png) repeat-x top left;
+	background: transparent url(../images/header_bg.png) repeat-x top left;
 }
 
 div.head h1 {
@@ -128,7 +128,7 @@ div.menu {
 	font-weight: bold;
 	font-family: Trebuchet MS, Verdana, Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
-	background-color: #494;
+	background-color: transparent;
 	width: 195px;
 }
 div.menu ul {
