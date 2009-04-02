@@ -48,9 +48,9 @@
 				<div class="head">
 					<h1>sbJukebox</h1>
 					<xsl:if test="$content/currentPlaylist/sbnode">
-						<span class="current_playlist">
+						<span class="current_playlist"><span>
 							<a class="type jumpToPlaylist" href="/{$content/currentPlaylist/sbnode/@uuid}"><xsl:value-of select="$content/currentPlaylist/sbnode/@label" /></a>
-						</span>
+						</span></span>
 					</xsl:if>
 				</div>
 				<div class="menu">
@@ -313,7 +313,7 @@
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<tr><td colspan="5"><xsl:value-of select="$locale/sbJukebox/texts/no_albums" /></td></tr>
+				<!--<tr><td colspan="5"><xsl:value-of select="$locale/sbJukebox/texts/no_albums" /></td></tr>-->
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -365,7 +365,7 @@
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>
-					<tr><td><xsl:value-of select="$locale/sbSystem/texts/no_relations" /></td></tr>
+					<!--<tr><td><xsl:value-of select="$locale/sbSystem/texts/no_relations" /></td></tr>-->
 				</xsl:otherwise>
 				</xsl:choose>
 			</tbody>
@@ -425,7 +425,7 @@
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<tr><td><xsl:value-of select="$locale/sbSystem/texts/no_comments" /></td></tr>
+				<!--<tr><td><xsl:value-of select="$locale/sbSystem/texts/no_comments" /></td></tr>-->
 			</xsl:otherwise>
 		</xsl:choose>
 		</table>

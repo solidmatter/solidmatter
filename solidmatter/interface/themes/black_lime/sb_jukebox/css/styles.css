@@ -31,7 +31,7 @@ body a {
 }
 body a:hover {
 	color: #00F055;
-	text-decoration: underline;
+	/*text-decoration: underline;*/
 }
 
 /*----------------------------------------------------------------------------*/
@@ -94,8 +94,21 @@ div.head h1 {
 
 span.current_playlist {
 	position: absolute;
-	top: 5px;
-	right: 5px;
+	top: 0px;
+	right: 0px;
+	display: block;
+	line-height: 20px;
+	background: transparent url(../images/playlistcontainer_left.png) no-repeat bottom left;
+}
+span.current_playlist span {
+	margin-left: 8px;
+	line-height: 20px;
+	padding: 4px;
+	display: block;
+	background: transparent url(../images/playlistcontainer_bg.png) repeat-x bottom left;
+}
+span.current_playlist span a {
+	line-height: 20px;
 }
 
 /*----------------------------------------------------------------------------*/

@@ -37,6 +37,12 @@
 		<div class="content">
 			<xsl:apply-templates select="response/errors" />
 			<xsl:apply-templates select="$content/latestAlbums" />
+			<!--<xsl:if test="$content/nowPlaying/resultset/row">
+				<xsl:apply-templates select="$content/nowPlaying" />
+			</xsl:if>
+			<xsl:if test="$content/recommendations/entry">
+				<xsl:apply-templates select="$content/recommendations" />
+			</xsl:if>-->
 			<xsl:apply-templates select="$content/nowPlaying" />
 			<xsl:apply-templates select="$content/recommendations" />
 			<xsl:apply-templates select="$content/latestComments" />
@@ -84,7 +90,7 @@
 					</tr>
 				</xsl:when>
 				<xsl:otherwise>
-					<tr><td colspan="5"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>
+					<!--<tr><td colspan="5"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>-->
 				</xsl:otherwise>
 			</xsl:choose>
 			
@@ -126,7 +132,7 @@
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>
-					<tr><td colspan="5"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>
+					<!--<tr><td colspan="5"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>-->
 				</xsl:otherwise>
 			</xsl:choose>
 			
@@ -168,7 +174,7 @@
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>
-					<tr><td colspan="4"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>
+					<!--<tr><td colspan="4"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>-->
 				</xsl:otherwise>
 			</xsl:choose>
 			
@@ -218,7 +224,7 @@
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>
-					<tr><td colspan="4"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>
+					<!--<tr><td colspan="4"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>-->
 				</xsl:otherwise>
 			</xsl:choose>
 			
