@@ -457,8 +457,12 @@ class JukeboxToolkit {
 			}
 		}
 		
+		// file paths
 		$aAlbumProps['info_relpath'] = iconv($dirAlbum->getEncoding(), 'UTF-8', $dirAlbum->getRelPath($this->nodeJukebox->getProperty('config_sourcepath')));
 		$aAlbumProps['info_abspath'] = iconv($dirAlbum->getEncoding(), 'UTF-8', $dirAlbum->getAbsPath());
+		
+		// album type
+		$aAlbumProps['info_type'] = 'DEFAULT';
 		
 		$aAlbumInfo['properties'] = $aAlbumProps;
 		

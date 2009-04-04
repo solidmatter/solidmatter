@@ -122,13 +122,23 @@ switch ((string) $elemSite['type']) {
 						break;
 				}
 			}
+			$sThemeOverride = $sTheme;
+			if (isset($elemSite['theme_override'])) {
+				$sThemeOverride = (string) $elemSite['theme_override'];
+			}
 			$sFile = 'interface/themes/'.$sTheme.'/'.$aPath[2].'/'.implode('/', array_slice($aPath, 3));
+			$sFileOverride = 'interface/themes/'.$sThemeOverride.'/'.$aPath[2].'/'.implode('/', array_slice($aPath, 3));
 		}
 		
 		// deliver file
 		headers('cache');
 		import('sb.tools.mime');
-		if (file_exists($sFile)) {
+		if (file_exists($sFileOverride)) {
+			$sMimetype = get_mimetype_by_extension($sFileOverride);
+			header('Content-type: '.$sMimetype);
+			$hFile = fopen($sFileOverride, 'r');
+			fpassthru($hFile);
+		} elseif (file_exists($sFile)){
 			$sMimetype = get_mimetype_by_extension($sFile);
 			header('Content-type: '.$sMimetype);
 			$hFile = fopen($sFile, 'r');
