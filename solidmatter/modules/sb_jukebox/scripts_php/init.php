@@ -186,7 +186,7 @@ class sbJukeboxView extends sbView {
 		$formSearch = new sbDOMForm(
 			'addComment',
 			'$locale/sbSystem/labels/add_comment',
-			System::getURL($this->nodeSubject, 'votes', 'addComment'),
+			System::getRequestURL($this->nodeSubject, 'votes', 'addComment'),
 			$this->crSession
 		);
 		
@@ -248,11 +248,11 @@ class sbJukeboxView extends sbView {
 		$formTag = new sbDOMForm(
 			'addTag',
 			'$locale/sbSystem/labels/add_tag',
-			System::getURL($this->nodeSubject, 'votes', 'addTag'),
+			System::getRequestURL($this->nodeSubject, 'votes', 'addTag'),
 			$this->crSession
 		);
 		
-		$sAutocompleteURL = System::getURL($this->nodeSubject, 'votes', 'getTags');
+		$sAutocompleteURL = System::getRequestURL($this->nodeSubject, 'votes', 'getTags');
 		$formTag->addInput('tag;autocomplete;minchars=2;minlength=2;maxlength=50;size=20;required=true;url='.$sAutocompleteURL, '$locale/sbSystem/labels/tag');
 		$formTag->addSubmit('$locale/sbSystem/actions/save');
 		
@@ -287,23 +287,23 @@ class sbJukeboxView extends sbView {
 			
 			case 'artists':
 				$sID = 'searchArtists';
-				$sTarget = System::getURL('-', 'artists', 'search');
+				$sTarget = System::getRequestURL('-', 'artists', 'search');
 				break;
 			case 'albums':
 				$sID = 'searchAlbums';
-				$sTarget = System::getURL('-', 'albums', 'search');
+				$sTarget = System::getRequestURL('-', 'albums', 'search');
 				break;
 			case 'jukebox':
 				$sID = 'searchJukebox';
-				$sTarget = System::getURL('-', 'library', 'search');
+				$sTarget = System::getRequestURL('-', 'library', 'search');
 				break;
 			case 'tracks':
 				$sID = 'searchTracks';
-				$sTarget = System::getURL('-', 'library', 'search');
+				$sTarget = System::getRequestURL('-', 'library', 'search');
 				break;
 			case 'tagspecific':
 				$sID = 'searchTagSpecific';
-				$sTarget = System::getURL('-', 'tags', 'listItems');
+				$sTarget = System::getRequestURL('-', 'tags', 'listItems');
 				break;
 			default:
 				throw new sbException('searchform subject not recognized: "'.$sSubject.'"');
@@ -358,7 +358,7 @@ class sbJukeboxView extends sbView {
 		$formRelate = new sbDOMForm(
 			'addRelation',
 			'$locale/sbSystem/labels/relate',
-			System::getURL($this->nodeSubject, 'votes', 'addRelation'),
+			System::getRequestURL($this->nodeSubject, 'votes', 'addRelation'),
 			$this->crSession
 		);
 		

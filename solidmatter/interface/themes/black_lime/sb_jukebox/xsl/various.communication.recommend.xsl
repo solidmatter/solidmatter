@@ -27,6 +27,9 @@
 	</xsl:template>
 	
 	<xsl:template name="content">
+		<div class="toolbar">
+			
+		</div>
 		<div class="nav">
 			
 		</div>
@@ -39,15 +42,11 @@
 	
 	<xsl:template match="sbnode">
 		
-		<div class="albumcontainer">
-			
-			<h2>
-				<span class="type recommendation"><xsl:value-of select="$locale/sbJukebox/actions/recommend"/>: <xsl:value-of select="@label" /></span>
-			</h2>
-			
-			<xsl:apply-templates select="//sbform[@id='recommendation']" />
-			
+		<div class="th">
+			<span class="type recommendation"><xsl:value-of select="$locale/sbJukebox/actions/recommend"/>: <xsl:value-of select="@label" /></span>
 		</div>
+
+		<xsl:apply-templates select="//sbform[@id='recommendation']" />
 		
 	</xsl:template>
 

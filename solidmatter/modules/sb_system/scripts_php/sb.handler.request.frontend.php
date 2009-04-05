@@ -13,13 +13,6 @@ class FrontendRequestHandler {
 		try {
 			
 			global $_RESPONSE;
-			//$_RESPONSE->forceRenderMode('debug');
-			
-			/*var_dumpp($_REQUEST->getPath());
-			var_dumpp($_REQUEST->getURI());
-			var_dumpp($_REQUEST->getLocation());
-			var_dumpp($_REQUEST->getRelativePath());
-			exit;*/
 			
 			$sPath = '/'.$_REQUEST->getSubject().$_REQUEST->getRelativePath();
 			

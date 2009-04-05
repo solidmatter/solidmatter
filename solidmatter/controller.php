@@ -4,7 +4,7 @@
 /**
 *	@package solidMatter[sbSystem]
 *	@subpackage Core
-*	@author	()((() [Oliver Müller]
+*	@author	()((() [Oliver MÃ¼ller]
 *	@version 0.00.00
 */
 //------------------------------------------------------------------------------
@@ -74,11 +74,12 @@ if (TIER2_SEPARATED) {
 	$_REQUEST = new sbDOMRequest();
 	$_REQUEST->recieveData();
 	$_REQUEST->extractFiles();
-	// TODO: disabled because DB is not yet initialized
-	if ($_REQUEST->getParam('bounce') && TRUE) { //Registry::getValue('syb.system.debug.bounce.enabled')) {
-		$_REQUEST->bounce();
-	}
 }
+
+// TODO: registry disabled because DB is not yet initialized
+/*if ($_REQUEST->getParam('bounce') && TRUE) { //Registry::getValue('syb.system.debug.bounce.enabled')) {
+	$_REQUEST->bounce();
+}*/
 
 //------------------------------------------------------------------------------
 // log into repository
@@ -151,6 +152,7 @@ $aHandler = match_handler($_CONTROLLERCONFIG, $_REQUEST->getHandler());
 DEBUG('Controller: using Handler '.$aHandler['class'].'('.$aHandler['module'].':'.$aHandler['library'].')', DEBUG::HANDLER);
 import($aHandler['library'], $aHandler['module']);
 $hndProcessor = new $aHandler['class']();
+System::setRequestHandler($hndProcessor);
 $hndProcessor->handleRequest($crSession);
 
 //------------------------------------------------------------------------------
@@ -181,7 +183,14 @@ if (TIER2_SEPARATED) {
 // exception handling
 
 } catch (Exception $e) {
-	
+	if ($e instanceof SessionTimeoutException) {
+		// TODO: refresh session lifespan with current registry value
+		// TODO: differentiat between storable and unstorable (e.g. AJAX-) requests
+		sbSession::destroy(TRUE);
+		sbSession::addData('zombie_request', $_REQUEST->getURI());
+		sbSession::commit();
+		$_RESPONSE->redirect('-', 'login', NULL, NULL, 307);
+	}
 	if (TIER2_SEPARATED) {
 		$_RESPONSE = ResponseFactory::getInstance('global');
 		$_RESPONSE->addException($e);
@@ -190,7 +199,6 @@ if (TIER2_SEPARATED) {
 	} else {
 		throw $e;
 	}
-	
 }
 
 //------------------------------------------------------------------------------

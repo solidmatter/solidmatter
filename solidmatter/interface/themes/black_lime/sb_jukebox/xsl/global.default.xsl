@@ -236,7 +236,7 @@
 	<xsl:template name="render_alphanum">
 		<xsl:param name="url" />
 		<span class="alphalinks">
-			<a href="{$url}0-9">#</a>	
+			<a href="{$url}0-9">#</a>
 			<a href="{$url}A">A</a>
 			<a href="{$url}B">B</a>
 			<a href="{$url}C">C</a>
@@ -273,7 +273,7 @@
 				<xsl:for-each select="$albumlist/child::*">
 					<tr>
 						<xsl:if test="@missing">
-							<xsl:attribute name="style">background-color:red;</xsl:attribute>
+							<xsl:attribute name="style">background-color:#800;</xsl:attribute>
 						</xsl:if>
 						<xsl:call-template name="colorize" />
 						<td width="60">

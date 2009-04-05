@@ -87,7 +87,13 @@ class sbView_root_login extends sbView {
 							}
 						}*/
 						
-						$_RESPONSE->redirect('-');
+						$sZombieRequest = sbSession::getData('zombie_request');
+						if ($sZombieRequest != NULL) {
+							sbSession::removeData('zombie_request');
+							$_RESPONSE->redirectFixed($sZombieRequest);
+						} else {
+							$_RESPONSE->redirect();
+						}
 						
 						// log successful login
 						if (Registry::getValue('sb.system.privacy.login')) {
@@ -161,7 +167,7 @@ class sbView_root_login extends sbView {
 			// logout and redirect to login screen
 			case 'logout':
 				sbSession::destroy();
-				$_RESPONSE->redirect('-');
+				$_RESPONSE->redirect();
 				break;
 			
 			// used to access all generated captchas
@@ -197,7 +203,7 @@ class sbView_root_login extends sbView {
 		$formLogin = new sbDOMForm(
 			'login_backend',
 			'$locale/system/general/labels/login',
-			'/-/login/login',
+			System::getRequestURL('-', 'login', 'login'),
 			$this->crSession
 		);
 		$formLogin->addInput('login;string;required=TRUE', '$locale/sbSystem/labels/login');

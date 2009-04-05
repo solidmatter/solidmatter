@@ -57,7 +57,7 @@ class sbView_jukebox_various_communication extends sbJukeboxView {
 		$formRecommend = new sbDOMForm(
 			'recommendation',
 			'$locale/sbSystem/labels/recommend',
-			System::getURL($this->nodeSubject, 'recommend', 'sendRecommendation'),
+			System::getRequestURL($this->nodeSubject, 'recommend', 'sendRecommendation'),
 			$this->crSession
 		);
 		$formRecommend->addInput('user;users;includeself=FALSE', '$locale/sbSystem/labels/user');

@@ -66,11 +66,13 @@ class JukeboxTools {
 		// cover exists, so build path and read it
 		$sFilename = self::getCoverFilename($nodeAlbum);
 		if (file_exists($sFilename)) {
+			headers('cache');
 			if ($iSize != NULL) {
 				$imgCover = new Image(Image::FROMFILE, $sFilename);
 				$imgCover->resample($iSize, $iSize, Image::LOSEASPECT, Image::UPSAMPLE|Image::DOWNSAMPLE);
 				// cache image
 				$cacheImages->storeImage($nodeAlbum->getProperty('jcr:uuid'), $iSize, 'custom', $imgCover->getData());
+				header('Content-type: image/jpeg');
 				$imgCover->output(JPG, TRUE);
 			}
 			$hCover = fopen($sFilename, 'r');

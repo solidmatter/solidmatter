@@ -137,7 +137,7 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 		$formPivot = new sbDOMForm(
 			'changePivot',
 			'',
-			System::getURL('-', 'charts', 'changePivot'),
+			System::getRequestURL('-', 'charts', 'changePivot'),
 			$this->crSession
 		);
 		

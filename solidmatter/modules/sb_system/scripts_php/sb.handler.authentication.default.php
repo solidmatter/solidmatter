@@ -8,12 +8,13 @@
 */
 //------------------------------------------------------------------------------
 
+import('sb.handler.authentication');
 import('sb.tools.datetime');
 
 //------------------------------------------------------------------------------
 /**
 */
-class DefaultAuthenticationManager {
+class DefaultAuthenticationHandler extends AuthenticationHandler {
 	
 	protected $crSession;
 	

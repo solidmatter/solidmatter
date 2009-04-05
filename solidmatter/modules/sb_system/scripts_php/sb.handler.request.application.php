@@ -8,10 +8,12 @@
 */
 //------------------------------------------------------------------------------
 
+import('sb.handler.request');
+
 //------------------------------------------------------------------------------
 /**
 */
-class ApplicationRequestHandler {
+class ApplicationRequestHandler extends RequestHandler {
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -21,46 +23,20 @@ class ApplicationRequestHandler {
 	*/
 	public function handleRequest($crSession) {
 		
-		global $_REQUEST;
 		global $_RESPONSE;
 		
-		$sURI = $_REQUEST->getURI();
-		$aURI = parse_url($sURI);
+		DEBUG('ApplicationHandler: Request Path = '.$_REQUEST->getURI(), DEBUG::HANDLER);
 		
-		DEBUG('ApplicationHandler: Request Path = '.$sURI, DEBUG::HANDLER);
-		
-		// compute requested node / view / action / (rest of path ignored)
-		$sNodeID = NULL;
-		$sView = NULL;
-		$sAction = NULL;
-		$aPath = explode('/', $aURI['path']);
-		if (isset($aPath[1]) && $aPath[1] != '-' && $aPath[1] != '') {
-			$sNodeID = $aPath[1];
-		}
-		if (isset($aPath[2]) && $aPath[2] != '-' && $aPath[2] != '') {
-			$sView = $aPath[2];
-		}
-		if (isset($aPath[3]) && $aPath[3] != '-' && $aPath[3] != '') {
-			$sAction = $aPath[3];
-		}
-		
-		// store request parameters
-		if (isset($aURI['query'])) {
-			$aQuery = array();
-			parse_str($aURI['query'], $aQuery);
-			foreach ($aQuery as $sParam => $sValue) {
-				$_REQUEST->setParam($sParam, $sValue);
-			}
-		}
+		$aURI = $this->parseURI();
 		
 		// process request
-		if ($sNodeID === NULL) {
+		if ($aURI['node_uuid'] === NULL) {
 			$nodeCurrent = $crSession->getRootNode()->getNode($_REQUEST->getSubject());
 		} else {
-			$nodeCurrent = $crSession->getNode($sNodeID);
+			$nodeCurrent = $crSession->getNode($aURI['node_uuid']);
 		}
 		
-		$nodeCurrent->callView($sView, $sAction);
+		$nodeCurrent->callView($aURI['view'], $aURI['action']);
 		$nodeCurrent->loadAncestors();
 		$nodeCurrent->storeAncestors(TRUE, TRUE);
 		$nodeCurrent->storeUserAuthorisations();

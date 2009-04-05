@@ -73,7 +73,7 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 		$formConfig = new sbDOMForm(
 			'config',
 			'$locale/sbJukebox/labels/change_password',
-			System::getURL('-', 'config', 'save'),
+			System::getRequestURL('-', 'config', 'save'),
 			$this->crSession
 		);
 			

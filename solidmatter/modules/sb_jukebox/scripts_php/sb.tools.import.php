@@ -687,8 +687,9 @@ class JukeboxToolkit {
 		}
 		$aNodeProps['info_filename']	= iconv($dirAlbum->getEncoding(), 'UTF-8', $sRelPath);
 		$aNodeProps['info_playtime']	= $aInfo['playtime_string'];
-		$aNodeProps['info_published']	= $aInfo['tags']['id3v2']['year'][0];
-		if ($aNodeProps['info_published'] == NULL) {
+		if (isset($aInfo['tags']['id3v2']['year'][0])) {
+			$aNodeProps['info_published'] = $aInfo['tags']['id3v2']['year'][0];
+		} else {
 			if ($this->aAbortFlags['NO_YEAR']) {
 				throw new ImportException('[abort] - Track has no year');
 			}

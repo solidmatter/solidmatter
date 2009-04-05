@@ -18,7 +18,10 @@ class sbSession {
 	public static $aData = array();
 	
 	private static $sSessionID = NULL;
+	
 	private static $iTimeout = NULL;
+	private static $iLifespan = 0;
+	private static $iLifetime = 0;
 	
 	private static $oWatchdog = NULL;
 	
@@ -63,6 +66,16 @@ class sbSession {
 	
 	//--------------------------------------------------------------------------
 	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public static function save() {
+		self::storeSession();
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	*
 	* @param 
 	* @return 
@@ -78,11 +91,15 @@ class sbSession {
 	* @param 
 	* @return 
 	*/
-	public static function destroy() {
+	public static function destroy($bSoft = FALSE) {
 		self::$oWatchdog->disarm();
-		self::$aData = NULL;
-		self::destroySession();
-		self::$bClosed = TRUE;
+		self::$aData = array();
+		if ($bSoft) {
+			self::save();
+		} else {
+			self::destroySession();
+			self::$bClosed = TRUE;
+		}
 	}
 	
 	//--------------------------------------------------------------------------
@@ -114,15 +131,39 @@ class sbSession {
 	* @param 
 	* @return 
 	*/
+	public static function removeData($sKey) {
+		if (isset(self::$aData[$sKey])) {
+			unset(self::$aData[$sKey]);
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public static function isZombie() {
+		if (self::$iLifetime > self::$iLifespan) {
+			//throw new SessionTimeoutException(__CLASS__.': session '.self::$sSessionID.' has expired (lifetime='.$aRow['lifetime'].'|lifespan='.$aRow['lifespan'].')');
+			return (TRUE);
+		}
+		return (FALSE);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	private static function loadSession() {
 		$stmtLoadSession = System::getDatabase()->prepareKnown('sbSystem/session/load');
 		$stmtLoadSession->bindParam('session_id', self::$sSessionID, PDO::PARAM_STR);
 		$stmtLoadSession->execute();
 		foreach ($stmtLoadSession as $aRow) {
-			if ($aRow['lifetime'] > $aRow['lifespan']) {
-				self::destroySession();
-				throw new SessionTimeoutException(__CLASS__.': session '.self::$sSessionID.' has expired (lifetime='.$aRow['lifetime'].'|lifespan='.$aRow['lifespan'].')');
-			}
+			self::$iLifetime = $aRow['lifetime'];
+			self::$iLifespan = $aRow['lifespan'];
 			self::$aData = unserialize($aRow['data']);
 		}
 		$stmtLoadSession->closeCursor();

@@ -528,39 +528,21 @@ class sbDOMResponse extends sbDOMDocument {
 	* @param 
 	* @return 
 	*/
-	public function redirect($sNodepath, $sView = '-', $sAction = '-', $sParameters = '') {
-		
-		$iCode = 303;
-		/*if (substr_count($_SERVER['HTTP_USER_AGENT'], 'Opera') == 1 || $_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.0') {
-			$iCode = 302;
-		}*/
-		
-		$sPrefix = 'http://';
-		/*$sPrefix = '';
-		if (!$bUseHTTPS) {
-			$sPrefix = 'http://';
-		} elseif ($bUseHTTPS === NULL && is_secure_connection()) {
-			$sPrefix = 'https://';
-		} elseif ($bUseHTTPS) {
-			$sPrefix = 'https://';
-		}*/
-		
-		global $_REQUEST;
-		
-		if ($sNodepath == '-' && $sView == '-' && $sAction == '-') {
-			$sDestinationURL  = $sPrefix.$_REQUEST->getLocation();
-		} else {
-			$sDestinationURL  = $sPrefix.$_REQUEST->getLocation().$sNodepath;
-			$sDestinationURL .= '/'.$sView;
-			$sDestinationURL .= '/'.$sAction;
-			if ($sParameters != '') {
-				$sDestinationURL .= '/'.$sParameters;
-			}
-		}
-		
-		DEBUG('Response: redirect', $sDestinationURL, DEBUG::REDIRECT);
-		
-		$this->addHeader('Location: '.$sDestinationURL, TRUE, $iCode);
+	public function redirect($sNodepath = NULL, $sView = NULL, $sAction = NULL, $sParameters = NULL, $iStatusCode = 303) {
+		$sDestinationURI = System::getRequestURL($sNodepath, $sView, $sAction, $sParameters);
+		$this->addHeader('Location: '.$sDestinationURI, TRUE, $iStatusCode);
+		DEBUG('Response: redirect', $sDestinationURI, DEBUG::REDIRECT);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function redirectFixed($sDestinationURI, $iStatusCode = 303) {
+		$this->addHeader('Location: '.$sDestinationURI, TRUE, $iStatusCode);
+		DEBUG('Response: redirect', $sDestinationURI, DEBUG::REDIRECT);
 	}
 	
 	//--------------------------------------------------------------------------

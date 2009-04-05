@@ -625,7 +625,7 @@ class sbNode extends sbCR_Node {
 		// import class file and create instance
 		import($sLibrary);
 		if (!class_exists($sClass)) {
-			throw new sbException(__CLASS__.': Class does not exist: '.$sClass);
+			throw new sbException(__CLASS__.': view class "'.$sClass.'" does not exist in library "'.$sLibrary.'"');
 		}
 		$viewCurrent = new $sClass($this);
 		
@@ -633,9 +633,12 @@ class sbNode extends sbCR_Node {
 		
 		// check if login is necessary
 		if ($viewCurrent->requiresLogin() && !User::isLoggedIn()) {
-			//$nodeRoot = $this->getSession()->getRootNode();
-			//return($this->redirect($nodeRoot->getProperty('jcr:uuid'), 'login'));
 			$_RESPONSE->redirect('-', 'login');
+		}
+		
+		// on session timeout redirect to login
+		if ($viewCurrent->requiresLogin() && sbSession::isZombie()) {
+			throw new SessionTimeoutException();
 		}
 		
 		if (!$_RESPONSE->hasRequestData()) {
@@ -769,12 +772,12 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	private function redirect($iNodeID, $sView = NULL, $sAction = NULL) {
+	/*private function redirect($iNodeID, $sView = NULL, $sAction = NULL) {
 		$nodeCurrent = $this->crSession->getNode($iNodeID);
 		$elemViews = $nodeCurrent->loadViews(TRUE);
 		$elemData = $nodeCurrent->callView($sView, $sAction);
 		return ($elemData);
-	}
+	}*/
 	
 	//--------------------------------------------------------------------------
 	/**

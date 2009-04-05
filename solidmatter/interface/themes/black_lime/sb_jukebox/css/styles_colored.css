@@ -1,0 +1,26 @@
+
+/*----------------------------------------------------------------------------*/
+/* colored elements (override this file for derived themes)
+/*----------------------------------------------------------------------------*/
+
+body a {
+	color: #5A5;
+}
+body a:hover {
+	color: #00F055;
+}
+
+div.menu a:hover {
+	color: #00F055;
+}
+div.menu a.active {
+	color: #00F055;
+}
+
+span.alphalinks a:hover {
+	background-color: #00F055;
+}
+
+div.ac_suggestions ul li.selected {
+	color: #00F055;
+}

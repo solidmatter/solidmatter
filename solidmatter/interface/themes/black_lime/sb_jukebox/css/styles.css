@@ -1,4 +1,6 @@
 
+@import url("styles_colored.css");
+
 /*----------------------------------------------------------------------------*/
 /* page styles
 /*----------------------------------------------------------------------------*/
@@ -7,13 +9,12 @@ html {
 	font-family: Arial, Helvetica, Sans-Serif;
 	font-size: 12px;
 	padding: 0;
-	background: black url(../images/page_bgxxxxxx.png) repeat top left;
+	background-color: black;
 }
 
 body {
 	padding: 0px;
 	margin: 0;
-	background: url(../images/page_bg_rampxxxxx.png) repeat-x 4px 0;
 	color: #DDD;
 }
 
@@ -27,10 +28,8 @@ div.body {
 
 body a {
 	text-decoration: none;
-	color: #5A5;
 }
 body a:hover {
-	color: #00F055;
 	/*text-decoration: underline;*/
 }
 
@@ -144,19 +143,15 @@ div.menu a {
 	display: block;
 	color: white;
 	text-decoration: none;
-	padding:14px 22px 0 22px;
-	height:28px;
+	padding: 14px 22px 0 22px;
+	height: 28px;
 	background: transparent url(../images/menu_bg.png) repeat-x top left;
 }
 div.menu a:hover {
-	color: #00F055;
 	background: transparent url(../images/menu_bg_hover.png) repeat-x top center;
-	background-color: #7B7;
 }
 div.menu a.active {
-	color: #00F055;
 	background: transparent url(../images/menu_bg_active.png) repeat-x top center;
-	background-color: #7B7;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -191,7 +186,6 @@ span.alphalinks a {
 	font-size: 1.1em;
 }
 span.alphalinks a:hover {
-	background-color: #00F055;
 	color: black;
 }
 
@@ -297,7 +291,7 @@ a.imglink img {
 	border: 0;
 }
 td.timesplayed {
-	color: #03AEED;
+	color: #AAA;
 }
 
 
@@ -319,7 +313,6 @@ div.ac_suggestions ul li {
 	padding: 2px 4px;
 }
 div.ac_suggestions ul li.selected {
-	color: #00F055;
 	background-color: #000;
 }
 
@@ -341,29 +334,6 @@ div.albumcontainer h2 {
 
 span.stars img {
 	cursor: pointer;
-}
-
-/* comments ------------------------------------------------------------------*/
-
-div.comments {
-	background-color: black;
-	padding: 20px;
-}
-div.comments h2 {
-	font-size: 1.2em;
-	padding: 5px;
-	margin: 0 0 10px 0;
-	border-bottom: 1px solid white;
-}
-div.comments h3 {
-	font-weight: normal;
-	padding: 2px;
-	margin: 0;
-	border-bottom: 1px solid #DDE;
-}
-div.comments div {
-	padding: 5px;
-	background: url(../images/comment_bg.png) repeat-x top left;
 }
 
 /* tags ----------------------------------------------------------------------*/
@@ -680,7 +650,4 @@ table.warning th.message {
 	color: black;
 	background-color: yellow;
 }
-
-
-
 

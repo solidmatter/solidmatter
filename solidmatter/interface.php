@@ -134,15 +134,9 @@ switch ((string) $elemSite['type']) {
 		headers('cache');
 		import('sb.tools.mime');
 		if (file_exists($sFileOverride)) {
-			$sMimetype = get_mimetype_by_extension($sFileOverride);
-			header('Content-type: '.$sMimetype);
-			$hFile = fopen($sFileOverride, 'r');
-			fpassthru($hFile);
+			$sCurrentFile = $sFileOverride;
 		} elseif (file_exists($sFile)){
-			$sMimetype = get_mimetype_by_extension($sFile);
-			header('Content-type: '.$sMimetype);
-			$hFile = fopen($sFile, 'r');
-			fpassthru($hFile);
+			$sCurrentFile = $sFile;
 		} else {
 			header('HTTP/1.0 404 Not Found');
 			$sMimetype = get_mimetype_by_extension($sFile);
@@ -150,6 +144,12 @@ switch ((string) $elemSite['type']) {
 				die('404 - File not found: '.$sFile.'');
 			}
 		}
+		
+		$sMimetype = get_mimetype_by_extension($sCurrentFile);
+		header('Content-type: '.$sMimetype);
+		$hFile = fopen($sCurrentFile, 'r');
+		fpassthru($hFile);
+		
 		exit;
 		
 	case 'script':
@@ -193,7 +193,6 @@ if (count($_FILES) > 0) {
 	}
 	$_FILES = $aNewFiles;
 	Stopwatch::check('tier1_rearrangefiles', 'php');
-	//var_dump($_FILES);
 }
 
 //------------------------------------------------------------------------------

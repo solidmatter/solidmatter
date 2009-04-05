@@ -61,7 +61,7 @@ class sbView_logs_events extends sbView {
 		$formFilter = new sbDOMForm(
 			'filter_events',
 			'$locale/sbSystem/labels/filter',
-			System::getURL($this->nodeSubject, 'events', 'filter'),
+			System::getRequestURL($this->nodeSubject, 'events', 'filter'),
 			$this->crSession
 		);
 		

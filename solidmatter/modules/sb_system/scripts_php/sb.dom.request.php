@@ -380,7 +380,11 @@ class sbDOMRequest extends sbDOMDocument {
 	* @return 
 	*/
 	public function getLocation() {
-		return ($this->firstChild->getAttribute('location'));
+		$sLocation = $this->firstChild->getAttribute('location');
+		if (substr($sLocation, -1) == '/') {
+			$sLocation = substr($sLocation, 0, -1);
+		}
+		return ($sLocation);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -404,10 +408,10 @@ class sbDOMRequest extends sbDOMDocument {
 			if ($this->getServerValue('HTTPS') == NULL) {
 				$sProtocol = 'http';
 			} else {
-				$sProtocol = 'https';	
-			}	
+				$sProtocol = 'https';
+			}
 		} else {
-			$sProtocol = 'unknown';	
+			$sProtocol = 'unknown';
 		}
 		return ($sProtocol.'://'.$this->getServerValue('HTTP_HOST').$this->getServerValue('REQUEST_URI'));
 	}
@@ -432,7 +436,7 @@ class sbDOMRequest extends sbDOMDocument {
 		$sFullPath = $this->getServerValue('HTTP_HOST').$this->getServerValue('REQUEST_URI');
 		$sRelativePath = str_replace($this->getLocation(), '', $sFullPath);
 		if ($sRelativePath{0} != '/') {
-			$sRelativePath = '/'.$sRelativePath;	
+			$sRelativePath = '/'.$sRelativePath;
 		}
 		return ($sRelativePath);
 	}

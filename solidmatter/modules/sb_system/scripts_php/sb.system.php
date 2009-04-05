@@ -31,6 +31,7 @@ class System {
 	private static $iLogLevel = 63;
 	private static $crSession;
 	private static $dbSystem;
+	private static $hndRequest;
 	
 	private static $sSystemDirectory = NULL;
 	
@@ -210,45 +211,38 @@ class System {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* TODO: URL generation is a task for the handler, so it should be moved there.
+	* Sets the handler processing the current request.
+	*/
+	public static function setRequestHandler($hndProcessor) {
+		self::$hndRequest = $hndProcessor;
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* Returns the handler processing the current request.
+	*/
+	public static function getRequestHandler() {
+		return (self::$hndRequest);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* Returns a fully qualified request URL based on the current handler.
 	* @param 
 	* @return 
 	*/
-	public static function getURL($mSubject, $sView = NULL, $sAction = NULL, $aParams = NULL) {
-		
-		$sURL = '';
-		
-		if (TRUE) { // generate backend URL
-			
-			if ($sView == NULL) {
-				$sView = '-';	
-			}
-			if ($sAction == NULL) {
-				$sAction = '-';
-			}
-			
-			if ($mSubject instanceof sbNode) {
-				$sURL .= '/'.$mSubject->getProperty('jcr:uuid');
-			} elseif (is_string($mSubject)) {
-				$sURL .= '/'.$mSubject;
-			} else {
-				throw new sbException('only nodes and strings supported');	
-			}
-			
-			$sURL .= '/'.$sView.'/'.$sAction.'/';
-			
-			if ($aParams != NULL) {
-				$aTemp = array();
-				foreach ($aParams as $sKey => $sValue) {
-					$aTemp[] = $sKey.'='.$sValue;	
-				}
-				$sURL .= '?'.implode('&', $aTemp);
-			}
-			
-		}
-		
-		return ($sURL);
-		
+	public static function getRequestURL($mSubject = NULL, $sView = NULL, $sAction = NULL, $aParameters = NULL) {
+		return(self::getRequestHandler()->generateRequestURL($mSubject, $sView, $sAction, $aParameters));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* Returns a request path and query based on the current handler.
+	* @param 
+	* @return 
+	*/
+	public static function getRequestPath($mSubject = NULL, $sView = NULL, $sAction = NULL, $aParameters = NULL) {
+		return(self::getRequestHandler()->generateRequestPath($mSubject, $sView, $sAction, $aParameters));
 	}
 	
 	//--------------------------------------------------------------------------

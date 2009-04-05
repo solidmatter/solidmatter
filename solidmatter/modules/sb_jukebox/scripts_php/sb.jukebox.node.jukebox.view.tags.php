@@ -135,7 +135,7 @@ class sbView_jukebox_jukebox_tags extends sbJukeboxView {
 		$formWeighting = new sbDOMForm(
 			'changeWeighting',
 			'',
-			System::getURL('-', 'tags', 'changeWeighting'),
+			System::getRequestURL('-', 'tags', 'changeWeighting'),
 			$this->crSession
 		);
 		

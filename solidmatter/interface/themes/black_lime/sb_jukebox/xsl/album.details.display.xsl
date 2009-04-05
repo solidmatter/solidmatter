@@ -51,9 +51,9 @@
 				<xsl:call-template name="addtag">
 					<xsl:with-param name="form" select="$content/sbform[@id='addTag']" />
 				</xsl:call-template>
-				 | 
+				<span style="margin-left: 15px;"></span>
 				<xsl:call-template name="render_buttons" />
-				 |  
+				<span style="margin-left: 15px;"></span>
 				<xsl:call-template name="render_stars" />
 			</span>
 			<span class="type album"><xsl:value-of select="@label" /></span>
@@ -137,7 +137,7 @@
 						</xsl:if>
 						<tr>
 							<xsl:if test="@missing">
-								<xsl:attribute name="style">background-color:red;</xsl:attribute>
+								<xsl:attribute name="style">background-color:#800;</xsl:attribute>
 							</xsl:if>
 							<xsl:call-template name="colorize" />
 							<td width="80">

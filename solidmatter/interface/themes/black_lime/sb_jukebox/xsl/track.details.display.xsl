@@ -48,12 +48,10 @@
 				<xsl:call-template name="addtag">
 					<xsl:with-param name="form" select="$content/sbform[@id='addTag']" />
 				</xsl:call-template>
-				 | 
+				<span style="margin-left: 15px;"></span>
 				<xsl:call-template name="render_buttons" />
-				 | 
-				<xsl:call-template name="render_stars">
-					<xsl:with-param name="voting" select="1" />
-				</xsl:call-template>
+				<span style="margin-left: 15px;"></span>
+				<xsl:call-template name="render_stars" />
 			</span>
 			<span class="type track"><xsl:value-of select="@label" /></span>
 		</div>

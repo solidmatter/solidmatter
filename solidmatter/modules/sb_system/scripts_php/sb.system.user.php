@@ -88,7 +88,7 @@ class User {
 	* @param 
 	* @return 
 	*/
-	protected static function getAuthenticationManager() {
+	protected static function getAuthenticationHandler() {
 		
 		if (self::$sbAuthManager != NULL) {
 			return (self::$sbAuthManager);
@@ -96,8 +96,8 @@ class User {
 		
 		switch (Registry::getValue('sb.system.security.login.authentication.method')) {
 			case 'default': // solidMatter internal storage
-				import('sb.system.authentication.default');
-				return (new DefaultAuthenticationManager(self::$crSession));
+				import('sb.handler.authentication.default');
+				return (new DefaultAuthenticationHandler(self::$crSession));
 				//break;
 			default:
 				throw new sbException('unrecognized auth method: "'.Registry::getValue('sb.system.security.login.auth.method').'"');
@@ -112,7 +112,7 @@ class User {
 	* @return 
 	*/
 	public static function attemptLogin($sUser, $sPassword) {
-		return (self::getAuthenticationManager()->login($sUser, $sPassword));
+		return (self::getAuthenticationHandler()->login($sUser, $sPassword));
 	}
 	
 	//--------------------------------------------------------------------------

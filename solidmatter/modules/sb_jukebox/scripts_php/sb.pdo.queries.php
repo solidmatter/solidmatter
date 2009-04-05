@@ -244,6 +244,7 @@ $_QUERIES['sbJukebox/jukebox/search/anything/byLabel'] = '
 		ON		n.uuid = h.fk_child
 	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		n.s_label LIKE :searchstring
+		AND		h.b_primary = \'TRUE\'
 	ORDER BY	n.fk_nodetype,
 				n.s_label
 ';
