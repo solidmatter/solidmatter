@@ -23,47 +23,23 @@ class BackendRequestHandler extends RequestHandler {
 	*/
 	public function handleRequest($crSession) {
 		
-		global $_REQUEST;
+		
 		global $_RESPONSE;
 		
-		$sNodeID = NULL;
-		$sView = NULL;
-		$sAction = NULL;
+		DEBUG('ApplicationHandler: Request Path = '.$_REQUEST->getURI(), DEBUG::HANDLER);
 		
-		$aStuff = explode('/', $_REQUEST->getPath(), 5);
-		//var_dumpp($aStuff);
-		if (isset($aStuff[1]) && $aStuff[1] != '-' && $aStuff[1] != '') {
-			$sNodeID = $aStuff[1];
+		$aURI = $this->parseURI();
+		
+		// process request
+		if ($aURI['node_uuid'] === NULL) {
+			$aURI['node_uuid'] = '/';
 		}
-		if (isset($aStuff[2]) && $aStuff[2] != '-' && $aStuff[2] != '') {
-			$sView = $aStuff[2];
-		}
-		if (isset($aStuff[3]) && $aStuff[3] != '-' && $aStuff[3] != '') {
-			$sAction = $aStuff[3];
-		}
-		// extract parameters
-		if (isset($aStuff[4]) && $aStuff[4] != '') {
-			$aParams = explode('&', $aStuff[4]);
-			foreach ($aParams as $sParam) {
-				if (substr_count($sParam, '=') > 0) {
-					list($sKey, $sValue) = explode('=', $sParam);
-					//var_dump($sKey.'|'.$sValue);
-					$_REQUEST->setParam($sKey, $sValue);
-				} else {
-					$_REQUEST->setParam($sParam, TRUE);
-				}
-			}
+		if ($aURI['view'] === NULL && $aURI['node_uuid'] == '/') {
+			$aURI['view'] = 'backend';
 		}
 		
-		if ($sNodeID === NULL) {
-			$sNodeID = '/';
-		}
-		if ($sView === NULL && $sNodeID == '/') {
-			$sView = 'backend';
-		}
-		
-		$nodeCurrent = $crSession->getNode($sNodeID);
-		$nodeCurrent->callView($sView, $sAction);
+		$nodeCurrent = $crSession->getNode($aURI['node_uuid']);
+		$nodeCurrent->callView($aURI['view'], $aURI['action']);
 		$nodeCurrent->loadAncestors();
 		$nodeCurrent->storeAncestors(TRUE, TRUE);
 		$nodeCurrent->setAttribute('master', 'true');

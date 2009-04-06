@@ -9,7 +9,7 @@
 
 	<xsl:import href="global.default.xsl" />
 	<xsl:import href="global.views.xsl" />
-	<xsl:import href="global.sbform.xsl" />
+	<xsl:import href="../../../_global/xsl/sbform.xsl" />
 	
 	<xsl:output 
 		method="html"
@@ -58,7 +58,7 @@
 					<td width="20%"><xsl:value-of select="@n_popularity" /></td>
 					<td width="20%"><xsl:value-of select="@n_customweight" /></td>
 					<td width="20%"><xsl:value-of select="@e_visibility" /></td>
-					<td width="0%"><a href="/{$master/@uuid}/manage/edit/tagid={@id}" class="option"><img src="/theme/sb_system/icons/doc_edit.gif" /></a></td>
+					<td width="0%"><a href="/{$master/@uuid}/manage/edit/?tagid={@id}" class="option"><img src="/theme/sb_system/icons/doc_edit.gif" /></a></td>
 				</tr>
 			</xsl:for-each>
 		</table>

@@ -248,6 +248,7 @@
 		<view id="content">Inhalt</view>
 		<view id="groups">Gruppen</view>
 		<view id="maintenance">Wartung</view>
+		<view id="registry">Registry</view>
 	</views>
 	
 	<config>

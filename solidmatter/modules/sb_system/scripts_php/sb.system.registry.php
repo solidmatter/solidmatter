@@ -33,6 +33,27 @@ abstract class Registry {
 	* @param 
 	* @return 
 	*/
+	protected static function isUserSpecific($sKey) {
+		$stmtGetEntry = self::$crSession->prepareKnown('sbSystem/registry/getEntry');
+		$stmtGetEntry->bindValue('key', $sKey, PDO::PARAM_STR);
+		$stmtGetEntry->execute();
+		$bUserSpecific = NULL;
+		foreach ($stmtGetEntry as $aRow) {
+			$bUserSpecific = constant($aRow['b_userspecific']);
+		}
+		$stmtGetValue->closeCursor();
+		if ($bUserSpecific === NULL) {
+			throw new sbException('registry entry "'.$sKey.'" does not exist');
+		}
+		return ($bUserSpecific);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public static function getValue($sKey, $bForced = FALSE) {
 		
 		// cache
@@ -49,11 +70,11 @@ abstract class Registry {
 		// logic
 		$stmtGetValue = self::$crSession->prepareKnown('sbSystem/registry/getValue');
 		$stmtGetValue->bindValue('key', $sKey, PDO::PARAM_STR);
-		// TODO: implement user-specific registry entries
-		$stmtGetValue->bindValue('user_uuid', 'SYSTEM', PDO::PARAM_STR);
+		$stmtGetValue->bindValue('user_uuid', User::getUUID(), PDO::PARAM_STR);
 		$stmtGetValue->execute();
 		
 		$bEmpty = TRUE;
+		// NOTE: system values are returned first, so looping will suffice
 		foreach ($stmtGetValue as $aRow) {
 			$mValue = $aRow['s_value'];
 			$sType = $aRow['e_type'];
@@ -98,17 +119,21 @@ abstract class Registry {
 	* @param 
 	* @return 
 	*/
-	public static function setValue($sKey, $mValue) {
+	public static function setValue($sKey, $mValue, $sUserID = 'SYSTEM') {
+		
+		if ($sUserID != 'SYSTEM' && !self::isUserSpecific($sKey)) {
+			throw new sbException('attempt to set a registry value for a user that is not user-specific');
+		}
 		
 		// logic
 		$sValue = (string) $mValue;
 		
-		$stmtGetValue = self::$crSession->prepareKnown('sbSystem/registry/setValue');
-		$stmtGetValue->bindValue('key', $sKey, PDO::PARAM_STRING);
-		$stmtGetValue->bindValue('value', $sValue, PDO::PARAM_STRING);
-		$stmtGetValue->bindValue('user_uuid', 'SYSTEM', PDO::PARAM_STRING);
-		$stmtGetValue->execute();
-		$stmtGetValue->closeCursor();
+		$stmtSetValue = self::$crSession->prepareKnown('sbSystem/registry/setValue');
+		$stmtSetValue->bindValue('key', $sKey, PDO::PARAM_STR);
+		$stmtSetValue->bindValue('value', $sValue, PDO::PARAM_STR);
+		$stmtSetValue->bindValue('user_uuid', $sUserID, PDO::PARAM_STR);
+		$stmtSetValue->execute();
+		$stmtSetValue->closeCursor();
 		
 		// cache
 		if (USE_REGISTRYCACHE) {

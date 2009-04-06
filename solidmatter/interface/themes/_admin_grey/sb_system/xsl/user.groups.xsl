@@ -55,10 +55,10 @@
 					<td>
 						<xsl:choose>
 							<xsl:when test="@member = 'TRUE'">
-								<a href="/{$master/@uuid}/groups/remove/group={@uuid}" class="option"><img src="/theme/sb_system/icons/remove.gif" /></a>
+								<a href="/{$master/@uuid}/groups/remove/?group={@uuid}" class="option"><img src="/theme/sb_system/icons/remove.gif" /></a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a href="/{$master/@uuid}/groups/add/group={@uuid}" class="option"><img src="/theme/sb_system/icons/add.gif" /></a>
+								<a href="/{$master/@uuid}/groups/add/?group={@uuid}" class="option"><img src="/theme/sb_system/icons/add.gif" /></a>
 							</xsl:otherwise>
 						</xsl:choose>
 					</td>

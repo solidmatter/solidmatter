@@ -921,7 +921,7 @@ class sbNode extends sbCR_Node {
 					$formCreate = new sbDOMForm(
 						'create',
 						'$locale/sbSystem/actions/create',
-						'/-/structure/saveChild/nodetype='.$this->getProperty('nodetype').'&parentnode='.$sParentUUID,
+						'/-/structure/saveChild/?nodetype='.$this->getProperty('nodetype').'&parentnode='.$sParentUUID,
 						$this->crSession
 					);
 					foreach ($this->crPropertyDefinitionCache as $sName => $aDetails) {

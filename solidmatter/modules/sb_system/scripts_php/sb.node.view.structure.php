@@ -188,7 +188,7 @@ class sbView_structure extends sbView {
 					}
 					$nodeParent->save();
 					
-					$_RESPONSE->redirect($nodeChild->getProperty('jcr:uuid'), NULL, NULL, 'sbCommand=reloadTree');
+					$_RESPONSE->redirect($nodeChild->getProperty('jcr:uuid'), NULL, NULL, array('sbCommand' => 'reloadTree'));
 					
 				} else {
 					

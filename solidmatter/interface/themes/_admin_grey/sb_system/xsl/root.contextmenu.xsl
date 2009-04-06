@@ -29,7 +29,7 @@
 					<ul>
 					<xsl:for-each select="new">
 						<xsl:variable name="type" select="@nodetype" />
-						<li><a href="/-/structure/createChild/parentnode={$content/contextmenu/@uuid}&amp;nodetype={$type}" target="main"><span class="type {@displaytype}"><xsl:value-of select="$locale//nodetypes/type[@id=$type]" /></span></a></li>
+						<li><a href="/-/structure/createChild/?parentnode={$content/contextmenu/@uuid}&amp;nodetype={$type}" target="main"><span class="type {@displaytype}"><xsl:value-of select="$locale//nodetypes/type[@id=$type]" /></span></a></li>
 					</xsl:for-each>
 					</ul>
 				</li>
@@ -53,7 +53,7 @@
 				<li><a href="javascript:sbMenu.cut('{@parent}', '{@uuid}');"><span class="type cut"><xsl:value-of select="$locale/sbSystem/actions/cut" /></span></a></li>
 			</xsl:if>
 			<xsl:if test="@delete='TRUE'">
-				<li><a href="javascript:top.sbUtilities.execute('/-/structure/copy/parentnode={@parent}&amp;childnode={@uuid}');"><span class="type copy"><xsl:value-of select="$locale/sbSystem/actions/copy" /></span></a></li>
+				<li><a href="javascript:top.sbUtilities.execute('/-/structure/copy/?parentnode={@parent}&amp;childnode={@uuid}');"><span class="type copy"><xsl:value-of select="$locale/sbSystem/actions/copy" /></span></a></li>
 			</xsl:if>
 			<xsl:if test="@refresh='TRUE'">
 				<hr />
@@ -62,7 +62,7 @@
 			<!-- TODO: check if user is admin or something like that -->
 			<xsl:if test="boolean('true')">
 				<hr />
-				<li><a href="/-/utilities/export_branch/subject_uuid={@uuid}" target="_blank"><span class="type export"><xsl:value-of select="$locale/sbSystem/actions/export" /></span></a></li>
+				<li><a href="/-/utilities/export_branch/?subject_uuid={@uuid}" target="_blank"><span class="type export"><xsl:value-of select="$locale/sbSystem/actions/export" /></span></a></li>
 				<li><a href="#"><span class="type import"><xsl:value-of select="$locale/sbSystem/actions/import" /></span></a></li>
 			</xsl:if>
 			<xsl:if test="@delete='TRUE'">

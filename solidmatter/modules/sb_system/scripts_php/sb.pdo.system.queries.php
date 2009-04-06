@@ -871,12 +871,20 @@ $_QUERIES['sbSystem/node/trashcan/getAbandonedNodes'] = '
 // view:edit -------------------------------------------------------------------
 
 $_QUERIES['sbSystem/registry/getAllEntries'] = '
+	SELECT		*,
+				(
+					SELECT s_value
+					FROM		{TABLE_REGVALUES} rv
+					WHERE		r.s_key = rv.s_key
+						AND		rv.fk_user = :user_uuid
+				) as s_value
+	FROM		{TABLE_REGISTRY} r
+	ORDER BY	r.s_key
+';
+$_QUERIES['sbSystem/registry/getEntry'] = '
 	SELECT		*
 	FROM		{TABLE_REGISTRY} r
-	INNER JOIN	{TABLE_REGVALUES} rv
-		ON		r.s_key = rv.s_key
-	WHERE		rv.fk_user = :user_uuid
-	ORDER BY	r.s_key
+	WHERE		r.s_key = :key
 ';
 $_QUERIES['sbSystem/registry/getValue'] = '
 	SELECT		rv.s_value,
@@ -885,15 +893,27 @@ $_QUERIES['sbSystem/registry/getValue'] = '
 	INNER JOIN	{TABLE_REGVALUES} rv
 		ON		r.s_key = rv.s_key
 	WHERE		rv.s_key = :key
-		AND		fk_user = :user_uuid
+		AND		(
+					fk_user = :user_uuid
+				OR	
+					fk_user = \'SYSTEM\'
+				)
+	ORDER BY	fk_user DESC
 ';
 $_QUERIES['sbSystem/registry/setValue'] = '
-	UPDATE		{TABLE_REGVALUES}
-	SET			s_value = :value
-	WHERE		s_key = :key
-		AND		fk_user = :user_uuid
+	INSERT INTO {TABLE_REGVALUES}
+				(
+					s_key,
+					fk_user,
+					s_value
+				) VALUES (
+					:key,
+					:user_uuid,
+					:value
+				)
+	ON DUPLICATE KEY UPDATE
+				s_value = :value
 ';
-
 
 //------------------------------------------------------------------------------
 // node:root 

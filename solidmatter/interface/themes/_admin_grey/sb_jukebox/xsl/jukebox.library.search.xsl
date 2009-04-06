@@ -9,7 +9,7 @@
 
 	<xsl:import href="../../sb_system/stylesheets_views/global.views.xsl" />
 	<xsl:import href="../../sb_system/stylesheets_views/global.default.xsl" />
-	<xsl:import href="../../sb_system/stylesheets_views/global.sbform.xsl" />
+	<xsl:import href="../../../_global/xsl/sbform.xsl" />
 	
 	<xsl:output 
 		method="html"

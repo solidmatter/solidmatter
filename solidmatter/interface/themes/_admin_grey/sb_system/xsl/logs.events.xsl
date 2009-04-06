@@ -7,7 +7,7 @@
 
 	<xsl:import href="global.views.xsl" />
 	<xsl:import href="global.default.xsl" />
-	<xsl:import href="global.sbform.xsl" />
+	<xsl:import href="../../../_global/xsl/sbform.xsl" />
 	
 	<xsl:output 
 		method="html"

@@ -33,8 +33,6 @@ class sbView_registry_edit extends sbView {
 				
 				$formRegistry = $this->buildForm();
 				$formRegistry->saveDOM();
-				
-				$_RESPONSE = ResponseFactory::getInstance('global');
 				$_RESPONSE->addData($formRegistry);
 				
 				return (NULL);
@@ -46,24 +44,26 @@ class sbView_registry_edit extends sbView {
 				
 				if ($formRegistry->checkInputs()) {
 					
-					//throw new LazyBastardException();
-
-					//var_dump($formRegistry->getValues());
-					
 					$aData = $formRegistry->getValues();
 					
 					$stmtWriteData = $this->crSession->prepareKnown('sbSystem/registry/setValue');
 					$sKey = '';
 					$sValue = '';
-					$sUserUUID = 'SYSTEM';
+					if ($this->nodeSubject->isNodeType('sbSystem:User')) {
+						$sUserUUID = $this->nodeSubject->getProperty('jcr:uuid');	
+					} else {
+						$sUserUUID = 'SYSTEM';
+					}
 					$stmtWriteData->bindParam('key', $sKey, PDO::PARAM_STR);
 					$stmtWriteData->bindParam('value', $sValue, PDO::PARAM_STR);
 					$stmtWriteData->bindParam('user_uuid', $sUserUUID, PDO::PARAM_STR);
 					foreach($this->aRegistry as $aRow) {
-
+						
 						// set to random value for change detection
 						if ($aRow['s_key'] == 'sb.system.cache.registry.changedetection') {
 							$sValue = uuid();
+						} elseif ($this->nodeSubject->isNodeType('sbSystem:User') && $aRow['b_userspecific'] == 'FALSE') {
+							continue;
 						} else { // otherwise use form value
 							$sFormName = str_replace('.', '_', $aRow['s_key']);
 							$sValue = $formRegistry->getValue($sFormName);
@@ -105,14 +105,22 @@ class sbView_registry_edit extends sbView {
 	*/
 	protected function buildForm() {
 		
+		$sAction = '/'.$this->nodeSubject->getProperty('jcr:uuid').'/edit/save';
+		if ($this->nodeSubject->isNodeType('sbSystem:User')) {
+			$sAction = '/'.$this->nodeSubject->getProperty('jcr:uuid').'/registry/save';
+		}
 		$formRegistry = new sbDOMForm(
 			'registry',
 			'$locale/sbSystem/registry/label',
-			'/'.$this->nodeSubject->getProperty('jcr:uuid').'/edit/save',
+			$sAction,
 			$this->crSession
 		);
 		
-		$sUserUUID = 'SYSTEM';
+		if ($this->nodeSubject->isNodeType('sbSystem:User')) {
+			$sUserUUID = $this->nodeSubject->getProperty('jcr:uuid');	
+		} else {
+			$sUserUUID = 'SYSTEM';
+		}
 		$stmtGetData = $this->crSession->prepareKnown('sbSystem/registry/getAllEntries');
 		$stmtGetData->bindParam('user_uuid', $sUserUUID, PDO::PARAM_STR);
 		$stmtGetData->execute();
@@ -123,6 +131,11 @@ class sbView_registry_edit extends sbView {
 			
 			// skip change detection entry
 			if ($aRow['s_key'] == 'sb.system.cache.registry.changedetection') {
+				continue;
+			}
+			
+			// skip non-userspecific entries for user registry
+			if ($this->nodeSubject->isNodeType('sbSystem:User') && $aRow['b_userspecific'] == 'FALSE') {
 				continue;
 			}
 			

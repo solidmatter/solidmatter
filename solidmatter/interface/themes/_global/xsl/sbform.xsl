@@ -442,6 +442,7 @@
 	</xsl:template>
 	<xsl:template match="sbinput[@type='checkbox']" mode="inputonly">
 		<input type="checkbox" name="{@name}" id="{@name}">
+			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
 			<xsl:if test="@value='TRUE'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
 		</input>
 	</xsl:template>
