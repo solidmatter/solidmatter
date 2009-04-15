@@ -113,6 +113,7 @@
 		<config>Einstellungen</config>
 		<logout>Abmelden</logout>
 		<change_password>Passwort ändern</change_password>
+		<upload_playlist>Playlist hochladen</upload_playlist>
 	</labels>
 	
 	<menu>
@@ -128,6 +129,7 @@
 	
 	<actions>
 		<play>abspielen</play>
+		<play_random>abspielen (zufällig)</play_random>
 		<search_lyrics>Songtext suchen</search_lyrics>
 		<add_to_favorites>zu Favoriten hinzufügen</add_to_favorites>
 		<add_to_playlist>zu Playlist hinzufügen</add_to_playlist>

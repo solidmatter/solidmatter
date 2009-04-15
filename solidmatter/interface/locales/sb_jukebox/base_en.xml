@@ -113,6 +113,7 @@
 		<config>Config</config>
 		<logout>Logout</logout>
 		<change_password>Change password</change_password>
+		<upload_playlist>Upload playlist</upload_playlist>
 	</labels>
 	
 	<menu>
@@ -128,6 +129,7 @@
 	
 	<actions>
 		<play>play</play>
+		<play_random>play (random)</play_random>
 		<search_lyrics>search lyrics</search_lyrics>
 		<add_to_favorites>add to favorites</add_to_favorites>
 		<add_to_playlist>add to playlist</add_to_playlist>

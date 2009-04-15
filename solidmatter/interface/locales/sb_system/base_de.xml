@@ -33,6 +33,7 @@
 		<move_down>nach unten verschieben</move_down>
 		<add>Hinzufügen</add>
 		<remove>Entfernen</remove>
+		<remove_all>Alle entfernen</remove_all>
 		<set_default>als Standard festlegen</set_default>
 		<set_favorite>als Favorit festlegen</set_favorite>
 		<empty>Leeren</empty>

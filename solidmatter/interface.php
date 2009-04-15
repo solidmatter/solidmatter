@@ -160,8 +160,18 @@ switch ((string) $elemSite['type']) {
 		$sMimetype = (string) $elemSite['mimetype'];
 		if ($sMimetype != '') {
 			header('Content-type: '.$sMimetype);
-		} 
+		}
 		$hFile = fopen((string) $elemSite['file'], 'r');
+		fpassthru($hFile);
+		exit;
+	
+	case 'rewrite':
+		$sFile = str_replace($elemSite['location'], $elemSite['destination'], $sRequestLocation);
+		//var_dump($sFile);
+		import('sb.tools.mime');
+		$sMimetype = get_mimetype_by_extension($sFile);
+		header('Content-type: '.$sMimetype);
+		$hFile = fopen((string) $sFile, 'r');
 		fpassthru($hFile);
 		exit;
 		
@@ -183,12 +193,20 @@ Stopwatch::check('tier1_siteswitch', 'php');
 if (count($_FILES) > 0) {
 	import('sb.tools.mime');
 	foreach ($_FILES as $sFieldname => $aField) {
-		for ($i=0; $i<count($aField['name']); $i++) {
-			$aNewFiles[$sFieldname][$i]['name'] = $_FILES[$sFieldname]['name'][$i];
-			$aNewFiles[$sFieldname][$i]['size'] = $_FILES[$sFieldname]['size'][$i];
-			$aNewFiles[$sFieldname][$i]['type'] = get_mimetype($_FILES[$sFieldname]['tmp_name'][$i], TRUE, FALSE, $_FILES[$sFieldname]['name'][$i]);
-			$aNewFiles[$sFieldname][$i]['error'] = $_FILES[$sFieldname]['error'][$i];
-			$aNewFiles[$sFieldname][$i]['tmp_name'] = $_FILES[$sFieldname]['tmp_name'][$i];
+		if (is_array($aField['name'])) {
+			for ($i=0; $i<count($aField['name']); $i++) {
+				$aNewFiles[$sFieldname][$i]['name'] = $_FILES[$sFieldname]['name'][$i];
+				$aNewFiles[$sFieldname][$i]['size'] = $_FILES[$sFieldname]['size'][$i];
+				$aNewFiles[$sFieldname][$i]['type'] = get_mimetype($_FILES[$sFieldname]['tmp_name'][$i], TRUE, FALSE, $_FILES[$sFieldname]['name'][$i]);
+				$aNewFiles[$sFieldname][$i]['error'] = $_FILES[$sFieldname]['error'][$i];
+				$aNewFiles[$sFieldname][$i]['tmp_name'] = $_FILES[$sFieldname]['tmp_name'][$i];
+			}
+		} else {
+			$aNewFiles[$sFieldname]['name'] = $_FILES[$sFieldname]['name'];
+			$aNewFiles[$sFieldname]['size'] = $_FILES[$sFieldname]['size'];
+			$aNewFiles[$sFieldname]['type'] = get_mimetype($_FILES[$sFieldname]['tmp_name'], TRUE, FALSE, $_FILES[$sFieldname]['name'][$i]);
+			$aNewFiles[$sFieldname]['error'] = $_FILES[$sFieldname]['error'];
+			$aNewFiles[$sFieldname]['tmp_name'] = $_FILES[$sFieldname]['tmp_name'];
 		}
 	}
 	$_FILES = $aNewFiles;

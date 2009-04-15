@@ -28,12 +28,12 @@
 	
 	<xsl:template name="content">
 		<div class="toolbar">
-			<xsl:call-template name="simplesearch">
-				<xsl:with-param name="form" select="$content/sbform[@id='searchPlaylists']" />
+			<xsl:call-template name="import">
+				<xsl:with-param name="form" select="$content/sbform[@id='importM3U']" />
 			</xsl:call-template>
 		</div>
 		<div class="nav">
-			
+			<a class="type remove" href="/{$master/@uuid}/details/clear"><xsl:value-of select="$locale/sbSystem/actions/remove_all" /></a>
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="response/errors" />
@@ -200,6 +200,17 @@
 			
 		<xsl:call-template name="comments" />
 		
+	</xsl:template>
+	
+	<xsl:template name="import">
+		<xsl:param name="form" />
+		<!--<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>-->
+		<form action="{$form/@action}" name="import" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+			<xsl:value-of select="$locale/sbJukebox/labels/upload_playlist" />:
+			<xsl:apply-templates select="$form/sbinput[@type='fileupload']" mode="inputonly" />
+			<xsl:value-of select="' '" />
+			<xsl:apply-templates select="$form/submit" mode="inputonly" />
+		</form>
 	</xsl:template>
 
 </xsl:stylesheet>

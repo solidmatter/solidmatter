@@ -23,6 +23,7 @@
 
 	<xsl:variable name="scripts_js_jb" select="'/theme/sb_jukebox/js'" />
 	<xsl:variable name="currentPlaylist" select="$content/currentPlaylist/sbnode" />
+	<xsl:variable name="jbParams" select="$content/library/library" />
 	
 	<xsl:template match="/response/metadata" priority="10">
 		<!-- title -->
@@ -202,6 +203,25 @@
 				<xsl:attribute name="class">even</xsl:attribute>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template name="render_tags">
+		<xsl:if test="tags/tag">
+			<div class="tags">
+				<xsl:for-each select="tags/tag">
+					<a href="/-/tags/listItems/?tagid={@id}">
+						<xsl:value-of select="." />
+					</a>
+					<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW'] and $jbParams/adminmode = '1'">
+						<xsl:value-of select="' '" />
+						<a class="type remove icononly" href="/{$master/@uuid}/votes/removeTag/?tagid={@id}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+					</xsl:if>
+					<xsl:if test="position() != last()">
+						<xsl:value-of select="' - '" />
+					</xsl:if>
+				</xsl:for-each>
+			</div>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template name="render_stars">
@@ -392,6 +412,7 @@
 			</div>
 		</xsl:if>
 	</xsl:template>
+	
 	<xsl:template name="comments">
 		<div class="th" id="comments">
 			<xsl:if test="$content/sbform[@id='addComment']">
@@ -420,6 +441,11 @@
 						</td>
 						<td width="15%" style="text-align:right;">
 							<xsl:value-of select="php:functionString('datetime_mysql2local', @created)" />
+						</td>
+						<td width="10">
+						<xsl:if test="@createdby = $system/userid or ($master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW'] and $jbParams/adminmode = '1')">
+							<a class="type remove icononly" href="/{$master/@uuid}/votes/removeComment/?comment={@uuid}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+						</xsl:if>
 						</td>
 					</tr>
 				</xsl:for-each>

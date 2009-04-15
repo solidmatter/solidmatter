@@ -46,29 +46,35 @@ class sbJukeboxView extends sbView {
 		// check cache
 		$sCacheKey = 'JBINFO:'.$nodeJukebox->getProperty('jcr:uuid');
 		$cacheData = CacheFactory::getInstance('misc');
+		
 		if ($cacheData->exists($sCacheKey)) {
+		
 			$aData = $cacheData->loadData($sCacheKey);
 			$_RESPONSE->addData($aData, 'library');
-			return;
+			
+		} else {
+		
+			// query and build data array
+			$stmtInfo = $this->crSession->prepareKnown('sbJukebox/jukebox/gatherInfo');
+			$stmtInfo->bindValue('jukebox_mpath', $nodeJukebox->getMPath(), PDO::PARAM_STR);
+			$stmtInfo->execute();
+			
+			foreach ($stmtInfo as $aRow) {
+				$aData['albums'] = $aRow['n_numalbums'];
+				$aData['artists'] = $aRow['n_numartists'];
+				$aData['tracks'] = $aRow['n_numtracks'];
+				$aData['playlists'] = $aRow['n_numplaylists'];
+			}
+			
+			$aData['min_stars'] = Registry::getValue('sb.jukebox.voting.scale.min');
+			$aData['max_stars'] = Registry::getValue('sb.jukebox.voting.scale.max');
+			
+			$cacheData->storeData($sCacheKey, $aData);
+			
 		}
 		
-		// query and build data array
-		$stmtInfo = $this->crSession->prepareKnown('sbJukebox/jukebox/gatherInfo');
-		$stmtInfo->bindValue('jukebox_mpath', $nodeJukebox->getMPath(), PDO::PARAM_STR);
-		$stmtInfo->execute();
-		
-		foreach ($stmtInfo as $aRow) {
-			$aData['albums'] = $aRow['n_numalbums'];
-			$aData['artists'] = $aRow['n_numartists'];
-			$aData['tracks'] = $aRow['n_numtracks'];
-			$aData['playlists'] = $aRow['n_numplaylists'];
-		}
-		
-		$aData['min_stars'] = Registry::getValue('sb.jukebox.voting.scale.min');
-		$aData['max_stars'] = Registry::getValue('sb.jukebox.voting.scale.max');
-		
-		// store data
-		$cacheData->storeData($sCacheKey, $aData);
+		// add volatile data
+		$aData['adminmode'] = Registry::getValue('sb.jukebox.adminmode.enabled');
 		
 		$_RESPONSE->addData($aData, 'library');
 	

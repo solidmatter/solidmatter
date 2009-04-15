@@ -33,6 +33,7 @@
 		<move_down>move down</move_down>
 		<add>Add</add>
 		<remove>Remove</remove>
+		<remove_all>Remove all</remove_all>
 		<set_default>set as default</set_default>
 		<set_favorite>set as favorite</set_favorite>
 		<empty>Empty</empty>

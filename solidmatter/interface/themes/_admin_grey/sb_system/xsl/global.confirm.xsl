@@ -73,8 +73,8 @@
 					</xsl:for-each>
 					</ul>
 				</xsl:if>
-				<a class="ok" href="javascript:confirm('{@url_confirm}/-/structure/deleteChild/parentnode={parent/sbnode/@uuid}&amp;childnode={child/sbnode/@uuid}&amp;confirm=true');" style="float:left">OK</a>
-				<!--<a class="ok" target="_blank" href="{@url_confirm}/-/structure/deleteChild/parentnode={parent/sbnode/@uuid}&amp;childnode={child/sbnode/@uuid}&amp;confirm=true" style="float:left">OK</a>-->
+				<a class="ok" href="javascript:confirm('{@url_confirm}/-/structure/deleteChild/?parentnode={parent/sbnode/@uuid}&amp;childnode={child/sbnode/@uuid}&amp;confirm=true');" style="float:left">OK</a>
+				<!--<a class="ok" target="_blank" href="{@url_confirm}/-/structure/deleteChild/?parentnode={parent/sbnode/@uuid}&amp;childnode={child/sbnode/@uuid}&amp;confirm=true" style="float:left">OK</a>-->
 				<a class="cancel" href="javascript:window.close();" style="float:right">Cancel</a>
 				<hr class="clear" />
 			</xsl:when>

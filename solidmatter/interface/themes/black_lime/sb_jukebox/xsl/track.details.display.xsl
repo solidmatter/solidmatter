@@ -55,16 +55,7 @@
 			</span>
 			<span class="type track"><xsl:value-of select="@label" /></span>
 		</div>
-		<div class="tags">
-			<xsl:for-each select="tags/tag">
-				<a href="/-/tags/listItems/?tagid={@id}">
-					<xsl:value-of select="." />
-				</a>
-				<xsl:if test="position() != last()">
-					<xsl:value-of select="' - '" />
-				</xsl:if>
-			</xsl:for-each>
-		</div>
+		<xsl:call-template name="render_tags" />
 		
 		<table class="default" width="100%">
 			<tbody>

@@ -14,9 +14,12 @@
 class sbView_jukebox_various_votes extends sbJukeboxView {
 	
 	protected $aRequiredAuthorisations = array(
-		'addComment' => array('comment'),
-		'addTag' => array('tag'),
 		'placeVote' => array('vote'),
+		'addComment' => array('comment'),
+		//'removeComment' => array('write'),
+		'addTag' => array('tag'),
+		'removeTag' => array('write'),
+		'addRelation' => array('special'), // TODO: use 'relate' auth instead?
 	);
 	
 	//--------------------------------------------------------------------------
@@ -66,6 +69,18 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				}
 				break;
 				
+			case 'removeComment':
+				$sCommentUUID = $this->requireParam('comment');
+				$nodeComment = $this->nodeSubject->getNode($sCommentUUID);
+				if (!User::isAuthorised('write', $this->nodeSubject) && User::getUUID() != $nodeComment->getProperty('jcr:createdBy')) {
+					throw new SecurityException('you are neither the author of the comment nor authorised to edit the comments of this object');	
+				} 
+				$nodeTrashcan = $this->crSession->getNode('//*[@uid="sbSystem:Trashcan"]');
+				$this->crSession->moveBranchByNodes($nodeComment, $this->nodeSubject, $nodeTrashcan);
+				$this->crSession->save();
+				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));
+				break;
+				
 			case 'placeVote':
 				$iVote = $this->requireParam('vote');
 				$nodeJukebox = $this->nodeSubject->getAncestorOfType('sbJukebox:Jukebox');
@@ -93,6 +108,15 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				}
 				echo '</ul>';
 				exit();
+				break;
+				
+			case 'removeTag':
+				$iTagID = $this->requireParam('tagid');
+				$sTag = $this->nodeSubject->getTag($iTagID);
+				$this->nodeSubject->removeTag($sTag);
+				$this->nodeSubject->save();
+				$this->logEvent(System::INFO, 'TAG_REMOVED', $sTag);
+				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));
 				break;
 				
 			case 'getTargets':

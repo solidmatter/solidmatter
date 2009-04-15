@@ -30,9 +30,9 @@
 			</xsl:call-template> -->
 		</div>
 		<div class="nav">
-			<a class="type play" href="/-/favorites/getM3U/playlist.m3u?sid={$sessionid}">play</a>
-			<a class="type play" href="/-/favorites/getM3U/playlist.m3u?random&amp;sid={$sessionid}">play (random)</a>
-			<a class="type remove" href="/-/favorites/removeItem/item=all">remove all</a>
+			<a class="type play" href="/-/favorites/getM3U/playlist.m3u?sid={$sessionid}"><xsl:value-of select="$locale/sbJukebox/actions/play" /></a>
+			<a class="type play" href="/-/favorites/getM3U/playlist.m3u?random&amp;sid={$sessionid}"><xsl:value-of select="$locale/sbJukebox/actions/play_random" /></a>
+			<a class="type remove" href="/-/favorites/removeItem/item=all"><xsl:value-of select="$locale/sbSystem/actions/remove_all" /></a>
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="/response/errors" />

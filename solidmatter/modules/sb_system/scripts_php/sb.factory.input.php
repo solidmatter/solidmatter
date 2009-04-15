@@ -42,6 +42,7 @@ class InputFactory {
 		//'image',
 		'relation',
 		'autocomplete',
+		'fileupload',
 		'multifileupload',
 		'color',
 		'captcha',

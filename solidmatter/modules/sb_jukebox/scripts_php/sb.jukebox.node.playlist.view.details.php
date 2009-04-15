@@ -22,6 +22,7 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 		'orderBefore' => array('write'),
 		'activate' => array('add_titles'),
 		'getM3U' => array('read'),
+		'importM3U' => array('write'),
 	);
 	
 	//--------------------------------------------------------------------------
@@ -44,6 +45,9 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 				$this->addCommentForm();
 //				$this->addTagForm();
 //				$this->addRelateForm();
+				$formImport = $this->buildImportForm();
+				$formImport->saveDOM();
+				$_RESPONSE->addData($formImport);
 				
 				// data
 				$this->addComments();
@@ -94,15 +98,15 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 				
 			case 'removeItem':
 				$nodeItem = $this->crSession->getNodeByIdentifier($_REQUEST->getParam('item'));
-				foreach ($nodeItem->getSharedSet() as $nodeShared) {
-					if ($nodeShared->getParent()->isSame($this->nodeSubject)) {
-						$nodeShared->removeShare();
-						$this->crSession->save();
-					}
-				}
+				$this->removeItem($nodeItem);
 				if (!isset($_GET['silent'])) {
 					$_RESPONSE->redirect($this->nodeSubject->getIdentifier());
 				}
+				break;
+				
+			case 'clear':
+				$this->clearPlaylist();
+				$_RESPONSE->redirect($this->nodeSubject->getIdentifier());
 				break;
 				
 			case 'orderBefore':
@@ -118,6 +122,37 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 				$_RESPONSE->redirect('-', 'playlists');
 				break;
 			
+			case 'importM3U':
+				if (!isset($_FILES['playlist_file'])) {
+					throw new sbException(__CLASS__.': no file submitted');
+				}
+				$hPlaylist = fopen($_FILES['playlist_file']['tmp_name'], 'r');
+				if (trim(fgets($hPlaylist)) != '#EXTM3U') {
+					throw new sbException(__CLASS__.': file is no playlist');
+				}
+				$this->clearPlaylist();
+				while (!feof($hPlaylist)) {
+					// skip info lines
+					fgets($hPlaylist, 4096);
+			    	// process lines with stream urls
+			    	$sLine = fgets($hPlaylist, 4096);
+			    	$aMatches = array();
+				    if (preg_match('/play\/([0-9a-f]{32})/', $sLine, $aMatches)) {
+				    	$sTrackUUID = $aMatches[1];
+				    	//var_dumpp($aMatches);
+				    	try {
+					    	$nodeTrack = $this->crSession->getNodeByIdentifier($sTrackUUID);
+					    	$this->nodeSubject->addExistingNode($nodeTrack);
+				    	} catch (NodeNotFoundException $e) {
+				    		// invalid node id / obsolete track
+				    	} 
+				    }
+				}
+				$this->nodeSubject->save();
+				//die('ttttttt');
+				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));
+				break;
+			
 			case 'getM3U':
 				$this->sendPlaylist();
 				break;
@@ -128,6 +163,62 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 		}
 		
 				
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function buildImportForm() {
+		
+		$formImport = new sbDOMForm(
+			'importM3U',
+			'',
+			System::getRequestURL($this->nodeSubject, 'details', 'importM3U'),
+			$this->crSession
+		);
+		
+		$formImport->addInput('playlist_file;fileupload;required=true;', '');
+		$formImport->addSubmit('$locale/sbSystem/actions/save');
+		
+		return ($formImport);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function clearPlaylist() {
+		
+		$niTracks = $this->nodeSubject->getNodes();
+		foreach ($niTracks as $nodeTrack) {
+			$this->removeItem($nodeTrack);	
+		}
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function removeItem($nodeItem) {
+		
+		foreach ($nodeItem->getSharedSet() as $nodeShared) {
+			if ($nodeShared->getParent()->isSame($this->nodeSubject)) {
+				$nodeShared->removeShare();
+				$this->crSession->save();
+				return (TRUE);
+			}
+		}
+		return (FALSE);
+		
 	}
 	
 }

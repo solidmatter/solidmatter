@@ -449,6 +449,24 @@
 	
 	
 	
+	<!-- fileupload -->
+	<xsl:template match="sbinput[@type='fileupload']" mode="complete">
+		<tr>
+			<td><label for="{@name}"><xsl:value-of select="dyn:evaluate(@label)" /></label></td>
+			<td>
+				<xsl:apply-templates select="." mode="inputonly" />
+			</td>
+		</tr>
+	</xsl:template>
+	<xsl:template match="sbinput[@type='fileupload']" mode="inputonly">
+		<input type="file" name="{@name}" id="{@name}">
+			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
+		</input>
+		<xsl:if test="@errorlabel"><span class="formerror"><xsl:value-of select="concat(' ', dyn:evaluate(@errorlabel))" /></span></xsl:if>
+	</xsl:template>
+	
+	
+	
 	<!-- multifileupload -->
 	<xsl:template match="sbinput[@type='multifileupload']" mode="complete">
 		<tr>
