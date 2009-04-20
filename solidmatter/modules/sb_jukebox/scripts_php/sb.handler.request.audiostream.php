@@ -64,6 +64,8 @@ class JBAudioStreamHandler {
 		
 		$this->playTrack();
 		
+		exit();
+		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -86,11 +88,6 @@ class JBAudioStreamHandler {
 		
 		DEBUG('Play Track: SessionID = '.sbSession::getID(), DEBUG::SESSION);
 		
-		header("Accept-Ranges: bytes" );
-		
-		// Prevent the script from timing out
-		set_time_limit(0);
-		
 		// Send file, possible at a byte offset
 		$hMP3 = fopen($sFilename, 'rb');
 		
@@ -102,15 +99,16 @@ class JBAudioStreamHandler {
 		
 		$this->setNowPlaying();
 		$this->refreshToken();
-		
 		sbSession::close();
 		
+		// Prevent the script from timing out
+		set_time_limit(0);
 		header('Content-type: audio/mpeg');
-		
+		header("Accept-Ranges: bytes" );
 		if ($start) {
-			header('Content-Disposition: attachment; filename='.$this->nodeTrack->getProperty('info_filename'));
 			fseek($hMP3, $start);
 			$range = $start ."-". $iFilesize . "/" . $iFilesize;
+			header('Content-Disposition: attachment; filename='.$this->nodeTrack->getProperty('info_filename'));
 			header("HTTP/1.1 206 Partial Content");
 			header("Content-Range: bytes=$range");
 			header("Content-Length: ".($iFilesize-$start));
@@ -120,7 +118,14 @@ class JBAudioStreamHandler {
 			header('Content-Disposition: attachment; filename='.$this->nodeTrack->getProperty('info_filename'));
 		}
 		
-		fpassthru($hMP3);
+		// fpassthru() causse problems with output buffering and/or buggy php versions
+		//fpassthru($hMP3);
+		while (!feof($hMP3)) {
+			$buf = fread($hMP3, 4096);
+			echo $buf;
+			ob_flush();
+		}
+		
 	}
 	
 	//--------------------------------------------------------------------------

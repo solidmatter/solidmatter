@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: solidmatter
 Target Host: localhost
 Target Database: solidmatter
-Date: 15.04.2009 23:11:09
+Date: 21.04.2009 00:01:35
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -1304,7 +1304,7 @@ INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:AutoFolder', 'maintenan
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:Folder', 'upload', 'display', 'TRUE', null, null, 'RENDERED', 'sb_files:folder.upload.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:Folder', 'upload', 'send', 'FALSE', null, null, 'RENDERED', 'sb_files:folder.upload.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:Image', 'preview', 'display', 'TRUE', null, null, 'RENDERED', 'sb_files:image.preview.xsl', 'text/html', 'TRUE');
-INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:Image', 'preview', 'output', 'FALSE', null, null, 'STREAM', null, null, 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:Image', 'preview', 'output', 'FALSE', null, null, 'STREAM', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:Image', 'preview', 'outputresized', 'FALSE', null, null, 'STREAM', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:Image', 'render', 'onthefly', 'TRUE', null, null, 'STREAM', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbFiles:ThumbnailView', 'thumbnails', 'display', 'TRUE', null, null, 'RENDERED', 'sb_files:folder.thumbnails.xsl', 'text/html', 'TRUE');
@@ -1370,12 +1370,13 @@ INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details',
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'addItem', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'clear', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'display', 'TRUE', null, null, 'RENDERED', 'sb_jukebox:playlist.details.display.xsl', 'text/html', 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'download', 'FALSE', null, null, 'STREAM', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'getM3U', 'FALSE', null, null, 'STREAM', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'importM3U', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'orderBefore', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'remove', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'removeItem', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
-INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Recommendation', 'actions', 'remove', 'FALSE', null, null, 'HEADERS', null, null, 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Recommendation', 'actions', 'remove', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:RecommendView', 'recommend', 'newRecommendation', 'TRUE', null, null, 'RENDERED', 'sb_jukebox:various.communication.recommend.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:RecommendView', 'recommend', 'sendRecommendation', 'FALSE', null, null, 'HEADERS', null, null, 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Track', 'details', 'display', 'TRUE', null, null, 'RENDERED', 'sb_jukebox:track.details.display.xsl', 'text/html', 'TRUE');
@@ -2343,6 +2344,10 @@ INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.charts.amount.default', 'in
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.comments.enabled', 'boolean', null, 'FALSE', 'UNUSED - ');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.comments.perpage', 'integer', null, 'TRUE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.downloads.maxbandwidth', 'integer', 'integer;minvalue=1;maxvalue=10000', 'FALSE', 'KiloBYTE/s');
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.latestalbums.amount.default', 'integer', 'integer;minvalue=1;maxvalue=1000', 'TRUE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.latestalbums.amount.expanded', 'integer', 'integer;minvalue=1;maxvalue=1000', 'TRUE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.latestcomments.amount.default', 'integer', 'integer;minvalue=1;maxvalue=1000', 'TRUE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.latestcomments.amount.expanded', 'integer', 'integer;minvalue=1;maxvalue=1000', 'TRUE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.nowplaying.refresh', 'integer', null, 'FALSE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.paths.albums.useabspath', 'boolean', null, 'FALSE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.search.defaultconstraint', 'string', 'select;options=ARTISTS|ALBUMS|TRACKS', 'FALSE', 'unused');
@@ -2400,11 +2405,15 @@ INSERT INTO `sb_system_registry` VALUES ('sb.system.temp.dir', 'string', null, '
 INSERT INTO `sb_system_registry` VALUES ('_sb.system.backend.output.prettyprint', 'boolean', null, 'FALSE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('_sb.system.debug.bounce.enabled', 'boolean', null, 'FALSE', 'unused');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.files.explorer.image.alwaysfit', 'SYSTEM', 'TRUE');
-INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.adminmode.enabled', 'SYSTEM', 'TRUE');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.adminmode.enabled', 'SYSTEM', 'FALSE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.charts.amount.default', 'SYSTEM', '5');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.comments.enabled', 'SYSTEM', 'TRUE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.comments.perpage', 'SYSTEM', '10');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.downloads.maxbandwidth', 'SYSTEM', '500');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.latestalbums.amount.default', 'SYSTEM', '8');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.latestalbums.amount.expanded', 'SYSTEM', '32');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.latestcomments.amount.default', 'SYSTEM', '5');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.latestcomments.amount.expanded', 'SYSTEM', '50');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.nowplaying.refresh', 'SYSTEM', '30');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.paths.albums.useabspath', 'SYSTEM', 'TRUE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.search.defaultconstraint', 'SYSTEM', 'ALBUMS');

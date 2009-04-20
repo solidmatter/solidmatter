@@ -37,7 +37,7 @@
 			<br/>
 			<br/>
 			<a href="/{$subjectid}/administration/startImport" target="_blank">Import starten</a><br/>
-			<a href="/{$subjectid}/administration/startImport/dry=true" target="_blank">Import starten (Trockenlauf)</a><br/>
+			<a href="/{$subjectid}/administration/startImport/?dry=true" target="_blank">Import starten (Trockenlauf)</a><br/>
 			<a href="/{$subjectid}/administration/clearLibrary">Bibliothek löschen</a>
 			<br/>
 			<br/>

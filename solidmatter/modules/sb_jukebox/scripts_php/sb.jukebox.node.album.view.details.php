@@ -83,44 +83,8 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 				break;
 			
 			case 'download':
-				
-				import('sbSystem:external:pclzip/pclzip.lib');
 				import('sbJukebox:sb.jukebox.tools');
-				ini_set('max_execution_time', 6000000);
-				ignore_user_abort(TRUE);
-				
-				// create the temporary zip archive
-				$sTempFile = Registry::getValue('sb.system.temp.dir').'/'.$this->nodeSubject->getProperty('name').'.zip';
-				// CAUTION: PCLZip (2.6) needs a modification because it strips away the drive letter part!!!
-				$zipAlbum = new PclZip($sTempFile);
-				$aFileList = JukeboxTools::getDownloadItems($this->nodeSubject);
-				$zipAlbum->create($aFileList, PCLZIP_OPT_REMOVE_ALL_PATH, PCLZIP_OPT_NO_COMPRESSION);
-				
-				// open the temporary zip
-				$hTempFile = fopen($sTempFile, 'r');
-				if (!$hTempFile) {
-					die('somthing went wrong with creating the temporary zip file...');
-				}
-				
-				// transmit the file
-				$aOptions = array();
-				$aOptions['filename'] = $this->nodeSubject->getProperty('name').'.zip';
-				$aOptions['size'] = filesize($sTempFile);
-				headers('download', $aOptions);
-				$iBandwidth = Registry::getValue('sb.jukebox.downloads.maxbandwidth');
-				while(!feof($hTempFile) && !connection_aborted()) {
-					print fread($hTempFile, round($iBandwidth * 1024));
-					sleep(1);
-				}
-				fclose($hTempFile);
-				
-				// remove temporary zip
-				// NOTE: this loop is necessary because it can take some time to close the handle
-				while (file_exists($sTempFile)) {
-					fclose($hTempFile);
-					unlink($sTempFile);
-				}
-				exit();
+				JukeboxTools::sendDownloadArchive($this->nodeSubject);
 				break;
 			
 			case 'getCover':

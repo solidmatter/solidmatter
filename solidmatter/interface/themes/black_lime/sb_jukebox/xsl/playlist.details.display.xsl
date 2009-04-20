@@ -45,11 +45,9 @@
 			
 		<div class="th">
 			<div class="albumdetails" style="float:right;">
-				<a class="type play" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}">Play</a>
-				 | 
-				<xsl:call-template name="render_stars">
-					<xsl:with-param name="voting" select="1" />
-				</xsl:call-template>
+				<xsl:call-template name="render_buttons"/>
+				<span style="margin-left: 15px;"></span>
+				<xsl:call-template name="render_stars" />
 			</div>
 			<span class="type playlist"><xsl:value-of select="@label" /></span>
 		</div>

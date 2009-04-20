@@ -169,7 +169,7 @@ $_QUERIES['sbJukebox/jukebox/various/getTop'] = '
 	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		n.fk_nodetype = :nodetype
 		AND		v.fk_user = :user_uuid
-	ORDER BY	n_vote DESC
+	ORDER BY	n_vote DESC, dt_created DESC
 	LIMIT		0, :limit
 ';
 $_QUERIES['sbJukebox/history/getTop/base'] = '

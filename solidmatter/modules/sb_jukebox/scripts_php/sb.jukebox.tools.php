@@ -259,6 +259,27 @@ class JukeboxTools {
 				$sFilename = iconv('UTF-8', System::getFilesystemEncoding(), $sFilename);
 				$aItems[] = $sFilename;
 				break;
+			
+			case 'sbJukebox:Playlist':
+				// generate M3U along the way
+				$sM3UFilename = Registry::getValue('sb.system.temp.dir').'/'.$nodeSubject->getName().'.m3u';
+				$sM3U = "#EXTM3U\n";
+				$aItems[] = $sM3UFilename;
+				$niTracks = $nodeSubject->getChildren('play');
+				foreach ($niTracks as $nodeTrack) {
+					$nodeTrack_PrimaryParent = $nodeSubject->getSession()->getNodeByIdentifier($nodeTrack->getProperty('jcr:uuid'));
+					$sFilename = self::getFSPath($nodeTrack_PrimaryParent);
+					$sFilename = iconv('UTF-8', System::getFilesystemEncoding(), $sFilename);
+					$aItems[] = $sFilename;
+					// title row is always the same / convert label back from UTF8
+					$sM3U .= '#EXTINF:'.$nodeTrack->getProperty('enc_playtime').','.iconv('UTF-8', 'ISO-8859-1', $nodeTrack->getProperty('label'))."\n";
+					$sCurrentFilename = $nodeTrack->getProperty('info_filename');
+					$sCurrentFilename = substr($sCurrentFilename, strpos($sCurrentFilename, '/'));
+					$sM3U .= iconv('UTF-8', System::getFilesystemEncoding(), $sCurrentFilename)."\n";
+				}
+				// TODO: save the M3U and include it in archive
+				file_put_contents($sM3UFilename, $sM3U);
+				break;
 				
 			default:
 				throw new sbException(__CLASS__.': getDownloadItems() doesn\'t support nodetype '.$nodeSubject->getPrimaryNodeType());
@@ -266,6 +287,55 @@ class JukeboxTools {
 		}
 		
 		return ($aItems);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public static function sendDownloadArchive($nodeSubject) {
+		
+		$sFilename = $nodeSubject->getName().'.zip';
+		$aFileList = self::getDownloadItems($nodeSubject);
+		
+		import('sbSystem:external:pclzip/pclzip.lib');
+		ini_set('max_execution_time', 6000000);
+		ignore_user_abort(TRUE);
+		
+		// create the temporary zip archive
+		$sTempFile = Registry::getValue('sb.system.temp.dir').'/'.$sFilename;
+		// CAUTION: PCLZip (2.6) needs a modification because it strips away the drive letter part!!!
+		$zipAlbum = new PclZip($sTempFile);
+		$zipAlbum->create($aFileList, PCLZIP_OPT_REMOVE_ALL_PATH, PCLZIP_OPT_NO_COMPRESSION);
+		
+		// open the temporary zip
+		$hTempFile = fopen($sTempFile, 'r');
+		if (!$hTempFile) {
+			die('somthing went wrong with creating the temporary zip file...');
+		}
+		
+		// transmit the file
+		$aOptions = array();
+		$aOptions['filename'] = $sFilename;
+		$aOptions['size'] = filesize($sTempFile);
+		headers('download', $aOptions);
+		$iBandwidth = Registry::getValue('sb.jukebox.downloads.maxbandwidth');
+		while(!feof($hTempFile) && !connection_aborted()) {
+			print fread($hTempFile, round($iBandwidth * 1024));
+			sleep(1);
+		}
+		fclose($hTempFile);
+		
+		// remove temporary zip
+		// NOTE: this loop is necessary because it can take some time to close the handle
+		while (file_exists($sTempFile)) {
+			fclose($hTempFile);
+			unlink($sTempFile);
+		}
+		exit();
 		
 	}
 	

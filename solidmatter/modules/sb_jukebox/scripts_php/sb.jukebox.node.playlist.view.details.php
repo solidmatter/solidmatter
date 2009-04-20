@@ -139,12 +139,12 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 			    	$aMatches = array();
 				    if (preg_match('/play\/([0-9a-f]{32})/', $sLine, $aMatches)) {
 				    	$sTrackUUID = $aMatches[1];
-				    	//var_dumpp($aMatches);
 				    	try {
 					    	$nodeTrack = $this->crSession->getNodeByIdentifier($sTrackUUID);
 					    	$this->nodeSubject->addExistingNode($nodeTrack);
 				    	} catch (NodeNotFoundException $e) {
 				    		// invalid node id / obsolete track
+				    		// TODO: log an event at the end of import
 				    	} 
 				    }
 				}
@@ -155,6 +155,11 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 			
 			case 'getM3U':
 				$this->sendPlaylist();
+				break;
+			
+			case 'download':
+				import('sbJukebox:sb.jukebox.tools');
+				JukeboxTools::sendDownloadArchive($this->nodeSubject);
 				break;
 			
 			default:

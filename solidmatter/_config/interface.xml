@@ -47,8 +47,16 @@
 	<site location="test.portal/" type="controller" handler="portal" subject="demoportal">
 		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
+		<site location="test.portal/stuff" type="rewrite" destination="X:/DigitalerCampus/!NeueDokumente/Mockups" />
 		<site location="test.portal/theme" type="theme" handler="backend" theme="_default" />
 		<site location="test.portal/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
+	</site>
+	<site location="portal.sm.gotdns.org/" type="controller" handler="portal" subject="demoportal">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="portal.sm.gotdns.org/stuff" type="rewrite" destination="X:/DigitalerCampus/!NeueDokumente/Mockups" />
+		<site location="portal.sm.gotdns.org/theme" type="theme" handler="backend" theme="_default" />
+		<site location="portal.sm.gotdns.org/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
 	</site>
 	
 	<!-- utilities -->
