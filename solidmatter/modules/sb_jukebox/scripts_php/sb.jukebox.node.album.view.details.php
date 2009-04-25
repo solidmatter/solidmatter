@@ -109,10 +109,11 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 				} else { // render based on image
 					
 					import('sbJukebox:sb.jukebox.tools');
+					import('sb.tools.colors');
 					
 					// init rendering
-					$iColumns = 17;
-					$iRows = 17;
+					$iColumns = 25;
+					$iRows = 25;
 					$iNumSamples = 100;
 					$imgCover = new Image(Image::FROMFILE, JukeboxTools::getCoverFilename($this->nodeSubject));
 					
@@ -124,6 +125,7 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 							$stmtFindCover->bindValue(':hue', $aHSL['h'], PDO::PARAM_INT);
 							$stmtFindCover->bindValue(':saturation', $aHSL['s'], PDO::PARAM_INT);
 							$stmtFindCover->bindValue(':lightness', $aHSL['l'], PDO::PARAM_INT);
+							$stmtFindCover->bindValue(':entropy', $aHSL['e'], PDO::PARAM_INT);
 							$stmtFindCover->bindValue(':jukebox_mpath', $nodeJukebox->getMPath(), PDO::PARAM_STR);
 							$stmtFindCover->execute();
 							foreach ($stmtFindCover as $aRow) {
@@ -133,6 +135,14 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 							$aQuilt[$i][$j]['h'] = $aHSL['h'];
 							$aQuilt[$i][$j]['s'] = $aHSL['s'];
 							$aQuilt[$i][$j]['l'] = $aHSL['l'];
+							$aQuilt[$i][$j]['e'] = $aHSL['e'];
+							$aTemp['h'] = $aHSL['h'] / 255; 
+							$aTemp['s'] = $aHSL['s'] / 255; 
+							$aTemp['l'] = $aHSL['l'] / 255; 
+							$aRGB = hsl2rgb($aTemp);
+							$aQuilt[$i][$j]['r'] = $aRGB['r'];
+							$aQuilt[$i][$j]['g'] = $aRGB['g'];
+							$aQuilt[$i][$j]['b'] = $aRGB['b'];
 						}
 					}
 					// store in cache
@@ -150,6 +160,10 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 						$elemColumn->setAttribute('hue', $aColumn['h']);
 						$elemColumn->setAttribute('saturation', $aColumn['s']);
 						$elemColumn->setAttribute('lightness', $aColumn['l']);
+						$elemColumn->setAttribute('entropy', $aColumn['e']);
+						$elemColumn->setAttribute('red', $aColumn['r']);
+						$elemColumn->setAttribute('green', $aColumn['g']);
+						$elemColumn->setAttribute('blue', $aColumn['b']);
 						$elemRow->appendChild($elemColumn);
 					}
 					$elemQuilt->appendChild($elemRow);

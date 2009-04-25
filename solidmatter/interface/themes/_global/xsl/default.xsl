@@ -13,7 +13,7 @@
 	/>
 
 	<xsl:variable name="lang" select="/response/metadata/system/lang" />
-	<xsl:variable name="subjectid" select="/response/content/sbnode[last()]/@uuid" />
+	<xsl:variable name="subjectid" select="$content/sbnode[@master]/@uuid" />
 	<xsl:variable name="locale" select="/response/locales/locale[@lang=$lang]" />
 	<xsl:variable name="commands" select="/response/metadata/commands" />
 	<xsl:variable name="system" select="/response/metadata/system" />

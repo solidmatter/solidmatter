@@ -692,8 +692,8 @@ class sbCR_Session {
 			$nodeCurrent = $this->getInstanceByUUID($sQuery);
 		}
 		
-		$this->aNodecache[$nodeCurrent->getIdentifier()] = $nodeCurrent;
-		$this->aNodecache[$sQuery] = $nodeCurrent;
+		//$this->aNodecache[$nodeCurrent->getIdentifier()] = $nodeCurrent;
+		//$this->aNodecache[$sQuery] = $nodeCurrent;
 		
 		return ($nodeCurrent);
 		

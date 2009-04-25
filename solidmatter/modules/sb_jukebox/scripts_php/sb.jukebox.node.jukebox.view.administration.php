@@ -62,18 +62,19 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 				
 				//$this->nodeSubject->getSession()->beginTransaction('sbJukebox::clearLibrary');
 				
-				foreach ($nlChildren as $nodeChild) {
+				/*foreach ($nlChildren as $nodeChild) {
 					if ($nodeChild->getPrimaryNodeType() == 'sbJukebox:Album') {
 						$nodeChild->remove();
 						$nodeChild->save();
 					}
-				}
+				}*/
 				
 				foreach ($nlChildren as $nodeChild) {
 					if ($nodeChild->getPrimaryNodeType() == 'sbJukebox:Artist') {
 						$nodeChild->remove();
 						$nodeChild->save();
 					}
+					unset ($nodeChild);
 				}
 				
 				//$this->nodeSubject->getSession()->save();
@@ -82,8 +83,8 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 				import('sb.tools.strings.conversion');
 				
 				$dirAlbums = new sbDirectory($this->nodeSubject->getProperty('config_sourcepath'));
-				foreach ($dirAlbums->getDirectories(TRUE) as $dirAlbum) {
-					$fileInfo = $dirAlbum->getFile('sbJukebox.txt');
+				foreach ($dirAlbums->getDirectories() as $sAlbumDirectory) {
+					$fileInfo = $dirAlbums->getFile($sAlbumDirectory.'/sbJukebox.txt');
 					if ($fileInfo) {
 						$fileInfo->delete();
 					}

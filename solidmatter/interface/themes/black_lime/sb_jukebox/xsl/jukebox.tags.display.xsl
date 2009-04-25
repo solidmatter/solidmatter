@@ -76,8 +76,18 @@
 		<xsl:param name="weighting" />
 		<xsl:choose>
 			<xsl:when test="$weighting='numItems'">
-				<xsl:variable name="maxitems" select="php:function('max_value', branchtags/tag/@numitems)" />
-				<xsl:variable name="minitems" select="php:function('min_value', branchtags/tag/@numitems)" />
+				<xsl:variable name="maxitems">
+					<xsl:for-each select="branchtags/tag/@numitems">
+						<xsl:sort data-type="number" order="descending" />
+						<xsl:if test="position()=1"><xsl:value-of select="."/></xsl:if>
+					</xsl:for-each>
+				</xsl:variable>
+				<xsl:variable name="minitems">
+					<xsl:for-each select="branchtags/tag/@numitems">
+						<xsl:sort data-type="number" order="ascending" />
+						<xsl:if test="position()=1"><xsl:value-of select="."/></xsl:if>
+					</xsl:for-each>
+				</xsl:variable>
 				<xsl:for-each select="branchtags/tag">
 					<a>
 						<xsl:attribute name="href">/-/tags/listItems/?tagid=<xsl:value-of select="@id" /></xsl:attribute>
@@ -90,8 +100,18 @@
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:variable name="maxpopularity" select="php:function('max_value', branchtags/tag/@popularity)" />
-				<xsl:variable name="minpopularity" select="php:function('min_value', branchtags/tag/@popularity)" />
+				<xsl:variable name="maxpopularity">
+					<xsl:for-each select="branchtags/tag/@popularity">
+						<xsl:sort data-type="number" order="descending" />
+						<xsl:if test="position()=1"><xsl:value-of select="."/></xsl:if>
+					</xsl:for-each>
+				</xsl:variable>
+				<xsl:variable name="minpopularity">
+					<xsl:for-each select="branchtags/tag/@popularity">
+						<xsl:sort data-type="number" order="ascending" />
+						<xsl:if test="position()=1"><xsl:value-of select="."/></xsl:if>
+					</xsl:for-each>
+				</xsl:variable>
 				<xsl:for-each select="branchtags/tag">
 					<a>
 						<xsl:attribute name="href">/-/tags/listItems/?tagid=<xsl:value-of select="@id" /></xsl:attribute>

@@ -248,7 +248,7 @@ $_RESPONSE->saveOutput();
 } catch (Exception $e) {
 	$_RESPONSE = ResponseFactory::getInstance('global');
 	$_RESPONSE->addException($e);
-	$_RESPONSE->addMetadata();
+	$_RESPONSE->finalizeMetadata();
 	// FIXME: this has no effect
 	$sMethod = 'rendered';
 	if (DEBUG) {

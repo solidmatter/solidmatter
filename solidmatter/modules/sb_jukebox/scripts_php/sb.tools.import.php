@@ -437,13 +437,14 @@ class JukeboxToolkit {
 			$aAlbumProps['info_coverfilename'] = iconv($dirAlbum->getEncoding(), 'UTF-8', $fileCover->getName());
 			// store cover luminance
 			$imgCover = new Image(Image::FROMFILE, $dirAlbum->getAbsPath().$fileCover->getName());
-			$aHSL = $imgCover->getHSL(700);
+			$aHSL = $imgCover->getHSL(1000);
 			$aAlbumProps['ext_coverhue'] = $aHSL['h'];
 			$aAlbumProps['ext_coversaturation'] = $aHSL['s'];
 			$aAlbumProps['ext_coverlightness'] = $aHSL['l'];
+			$aAlbumProps['ext_coverentropy'] = $aHSL['e'];
 			unset($imgCover);
 			if ($this->aVerboseFlags['COVER_INFO']) {
-				$this->echoInfo('good', 'cover found: '.$fileCover->getName().' (hue: '.$aHSL['h'].', saturation: '.$aHSL['s'].', lightness: '.$aHSL['l'].')');
+				$this->echoInfo('good', 'cover found: '.$fileCover->getName().' (hue: '.$aHSL['h'].', saturation: '.$aHSL['s'].', lightness: '.$aHSL['l'].', entropy: '.$aHSL['e'].')');
 			}
 		} else {
 			if ($this->aAbortFlags['NO_COVER']) {

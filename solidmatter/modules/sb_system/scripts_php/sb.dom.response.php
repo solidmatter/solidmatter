@@ -47,62 +47,23 @@ class sbDOMResponse extends sbDOMDocument {
 		$this->aNodeCache['response'] = $this->firstChild;
 		
 		// metadata
-		$elemMetadata = $this->createElement('metadata');
-		$elemMetadata->setAttribute('xml:id', 'metadata');
-		$this->aNodeCache['metadata'] = $elemMetadata;
-		
-		$elemModules = $this->createElement('modules');
-		$elemModules->setAttribute('xml:id', 'md_modules');
-		$elemMetadata->appendChild($elemModules);
-		$this->aNodeCache['md_modules'] = $elemModules;
-		
-		$elemSystem = $this->createElement('system');
-		$elemSystem->setAttribute('xml:id', 'md_system');
-		$elemMetadata->appendChild($elemSystem);
-		$this->aNodeCache['md_system'] = $elemSystem;
-		
-		$elemSystem = $this->createElement('commands');
-		$elemSystem->setAttribute('xml:id', 'md_commands');
-		$elemMetadata->appendChild($elemSystem);
-		$this->aNodeCache['md_commands'] = $elemSystem;
-		
-		$elemHeaders = $this->createElement('headers');
-		$elemHeaders->setAttribute('xml:id', 'md_headers');
-		$elemMetadata->appendChild($elemHeaders);
-		$this->aNodeCache['md_headers'] = $elemHeaders;
-		
-		$elemStopwatch = $this->createElement('stopwatch');
-		$elemStopwatch->setAttribute('xml:id', 'md_stopwatch');
-		$elemMetadata->appendChild($elemStopwatch);
-		$this->aNodeCache['md_stopwatch'] = $elemStopwatch;
-		
-		$elemOther = $this->createElement('other');
-		$elemOther->setAttribute('xml:id', 'md_other');
-		$elemMetadata->appendChild($elemOther);
-		$this->aNodeCache['md_other'] = $elemOther;
-		
-		$this->firstChild->appendChild($elemMetadata);
+		$elemMetadata = $this->createSection('metadata', 'metadata');
+		$elemModules = $this->createSection('md_modules', 'modules', $elemMetadata);
+		$this->createSection('md_system', 'system', $elemMetadata);
+		$this->createSection('md_commands', 'commands', $elemMetadata);
+		$this->createSection('md_headers', 'headers', $elemMetadata);
+		$this->createSection('md_stopwatch', 'stopwatch', $elemMetadata);
 		
 		// insert modules
 		$this->aModules = System::getModules();
+		foreach ($this->aModules as $sModule => $unused) {
+			$this->createSection($sModule, $sModule, $elemModules);
+		}
 		
 		// content
-		$elemContent = $this->createElement('content');
-		$elemContent->setAttribute('xml:id', 'content');
-		$this->firstChild->appendChild($elemContent);
-		$this->aNodeCache['content'] = $elemContent;
-		
-		//errors
-		$elemErrors = $this->createElement('errors');
-		$elemErrors->setAttribute('xml:id', 'errors');
-		$this->firstChild->appendChild($elemErrors);
-		$this->aNodeCache['errors'] = $elemErrors;
-		
-		//locales
-		$elemLocales = $this->createElement('locales');
-		$elemLocales->setAttribute('xml:id', 'locales');
-		$this->firstChild->appendChild($elemLocales);
-		$this->aNodeCache['locales'] = $elemLocales;
+		$this->createSection('content', 'content');
+		$this->createSection('errors', 'errors');
+		$this->createSection('locales', 'locales');
 		
 		// default status is success
 		$this->setStatus(200);
@@ -111,6 +72,44 @@ class sbDOMResponse extends sbDOMDocument {
 		
 		//$this->firstChild->setAttribute('xmlns:sbform', 'http://www.solidbytes.net/sbform');
 		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function createSection($sID, $sNodeName, $elemParent = NULL) {
+		
+		$elemSection = $this->createElement($sNodeName);
+		$elemSection->setAttribute('xml:id', $sID);
+		$this->aNodeCache[$sID] = $elemSection;
+		
+		if ($elemParent == NULL) { // top level section
+			$this->firstChild->appendChild($elemSection);
+		} else {
+			$elemParent->appendChild($elemSection);
+		}
+		
+		return ($elemSection);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getSectionElement($sID) {
+		if (!isset($this->aNodeCache[$sID])) {
+			$this->aNodeCache[$sID] = $this->getElementById($sID);
+			if ($this->aNodeCache[$sID] == NULL) {
+				throw new exception('section element not found: '.$sID);
+			}
+		}
+		return ($this->aNodeCache[$sID]);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -193,9 +192,9 @@ class sbDOMResponse extends sbDOMDocument {
 	* @param 
 	* @return 
 	*/
-	public function addSystemMeta($sLabel, $sValue) {
-		$elemSystemValue = $this->createElement($sLabel, $sValue);
-		$this->addMeta('md_system', $elemSystemValue);
+	public function addMetadata($sSection, $sLabel, $sValue) {
+		$elemValue = $this->createElement($sLabel, $sValue);
+		$this->addMeta($sSection, $elemValue);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -251,13 +250,14 @@ class sbDOMResponse extends sbDOMDocument {
 	* @param 
 	* @return 
 	*/
-	public function addMetadata($aAttributes = NULL) {
+	public function finalizeMetadata($aAttributes = NULL) {
 		
 		foreach ($this->aModules as $sModule => $aDetails) {
-			$elemModule = $this->createElement($sModule);
-			foreach ($aDetails as $sParam => $sValue) {
+			$elemModule = $this->getSectionElement($sModule);
+			// TODO: disabled; transport some static metadata via details?
+			/*foreach ($aDetails as $sParam => $sValue) {
 				$elemModule->setAttribute($sParam, $sValue);
-			}
+			}*/
 			if (isset($this->aLocales[$sModule])) {
 				foreach ($this->aLocales[$sModule] as $sLanguage => $aLocales) {
 					foreach ($aLocales as $sLocale => $unused) {
@@ -551,22 +551,6 @@ class sbDOMResponse extends sbDOMDocument {
 	* @param 
 	* @return 
 	*/
-	public function getSectionElement($sID) {
-		if (!isset($this->aNodeCache[$sID])) {
-			$this->aNodeCache[$sID] = $this->getElementById($sID);
-			if ($this->aNodeCache[$sID] == NULL) {
-				throw new exception('section element not found: '.$sID);
-			}
-		}
-		return ($this->aNodeCache[$sID]);
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	* 
-	* @param 
-	* @return 
-	*/
 	public function saveOutput($sMethod = NULL) {
 		
 		Stopwatch::check('end', 'php');
@@ -597,11 +581,7 @@ class sbDOMResponse extends sbDOMDocument {
 				
 				// register PHP functions, note: support can be checked with hasExsltSupport()
 				$aAllowedFunctions = array(
-					'datetime_mysql2local',
-					'max_value',
-					'min_value',
-					'avg_value',
-					'nl2br',
+					'datetime_mysql2local'
 				);
 				$procGenerator->registerPHPFunctions($aAllowedFunctions);
 				
@@ -766,60 +746,6 @@ class sbDOMResponse extends sbDOMDocument {
 		$elemWarnings->appendChild($elemError);
 	}
 	
-	
 }
-
-//--------------------------------------------------------------------------
-/**
-* 
-* @param 
-* @return 
-*/
-function max_value($aElements) {
-	$iMax = NULL;
-	foreach ($aElements AS $nodeCurrent) {
-		$iTemp = (int) $nodeCurrent->nodeValue;
-		if (is_null($iMax) || $iMax < $iTemp) {
-			$iMax = $iTemp;
-		}
-	}
-	return ($iMax);
-}
-
-//--------------------------------------------------------------------------
-/**
-* 
-* @param 
-* @return 
-*/
-function min_value($aElements) {
-	$iMin = NULL;
-	foreach ($aElements AS $nodeCurrent) {
-		$iTemp = (int) $nodeCurrent->nodeValue;
-		if (is_null($iMin) || $iMin > $iTemp) {
-			$iMin = $iTemp;
-		}
-	}
-	return ($iMin);
-}
-
-//--------------------------------------------------------------------------
-/**
-* 
-* @param 
-* @return 
-*/
-function avg_value($aElements) {
-	$flSum = 0;
-	$iCounter = 0;
-	foreach ($aElements AS $nodeCurrent) {
-		$flSum += (float) $nodeCurrent->nodeValue;
-		$iCounter++;
-	}
-	return ($flSum / $iCounter);
-}
-
-
-
 
 ?>

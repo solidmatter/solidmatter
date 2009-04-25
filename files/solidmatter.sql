@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: solidmatter
 Target Host: localhost
 Target Database: solidmatter
-Date: 21.04.2009 00:01:35
+Date: 25.04.2009 23:33:07
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -293,6 +293,7 @@ CREATE TABLE `sb_jukebox_albums` (
   `n_coverhue` smallint(6) default NULL,
   `n_coversaturation` smallint(6) default NULL,
   `n_coverlightness` smallint(6) default NULL,
+  `n_coverentropy` smallint(6) default NULL,
   `s_relpath` varchar(250) NOT NULL,
   `s_abspath` varchar(250) default NULL,
   `e_type` enum('DEFAULT','LIVE','FAKE','BOOTLEG','SINGLE','MAXI','BESTOF','TRIBUTE','REMIXES') character set ascii NOT NULL default 'DEFAULT',
@@ -1204,6 +1205,7 @@ INSERT INTO `rep_nodetypes_properties` VALUES ('sbForum:Forum', 'threads_sortcri
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbForum:Forum', 'threads_sortdirection', 'STRING', 'string', 'TRUE', '$locale/sbForum/Forum/threads_sortdirection', 'EXTERNAL', null, '14', 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbGuestbook:Guestbook', 'config_maxlength', 'LONG', 'integer;minvalue=100;maxvalue=20000;default=2000', 'TRUE', '$locale/sbGuestbook/Guestbook/config_maxlength', 'EXTERNAL', null, '0', 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbGuestbook:Guestbook', 'display_layout', 'REFERENCE', 'nodeselector;mode=chooseLayout;nodetype=sbCMS:Layout', 'TRUE', '', 'EXTERNAL', null, null, 'FALSE', 'FALSE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbJukebox:Album', 'ext_coverentropy', 'LONG', 'integer', 'FALSE', '$locale/sbJukebox/Album/ext_coverentropy', 'AUXILIARY', 'n_coverentropy', null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbJukebox:Album', 'ext_coverhue', 'LONG', 'integer', 'FALSE', '$locale/sbJukebox/Album/ext_coverhue', 'AUXILIARY', 'n_coverhue', null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbJukebox:Album', 'ext_coverlightness', 'LONG', 'integer', 'FALSE', '$locale/sbJukebox/Album/ext_coverlightness', 'AUXILIARY', 'n_coverlightness', null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbJukebox:Album', 'ext_coversaturation', 'LONG', 'integer', 'FALSE', '$locale/sbJukebox/Album/ext_coversaturation', 'AUXILIARY', 'n_coversaturation', null, 'FALSE', 'FALSE', 'FALSE', null, '');
@@ -1336,6 +1338,7 @@ INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Album', 'details', 'g
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Artist', 'details', 'display', 'TRUE', null, null, 'RENDERED', 'sb_jukebox:artist.details.display.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Artist', 'details', 'getM3U', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'administration', 'clearLibrary', 'FALSE', null, null, 'RENDERED', 'sb_jukebox:jukebox.administration.info.xsl', 'text/html', 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'administration', 'clearQuilts', 'FALSE', null, null, 'RENDERED', 'sb_jukebox:jukebox.administration.info.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'administration', 'info', 'TRUE', null, null, 'RENDERED', 'sb_jukebox:jukebox.administration.info.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'administration', 'removeUGC', 'FALSE', null, null, 'STREAM', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'administration', 'startImport', 'FALSE', null, null, 'STREAM', null, null, 'FALSE');
@@ -2356,8 +2359,9 @@ INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.tags.weighting.default', 's
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.validation.missingfiles.indicate', 'boolean', null, 'FALSE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.display.default', 'string', null, 'FALSE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.enabled', 'boolean', null, 'FALSE', 'unused');
-INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.scale.max', 'integer', null, 'FALSE', null);
-INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.scale.min', 'integer', null, 'FALSE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.scale.max', 'integer', 'integer;minvalue=1;maxvalue=10', 'TRUE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.scale.min', 'integer', 'integer;minvalue=-10;maxvalue=0', 'TRUE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.style', 'string', 'select;options=HOTEL|MARKED|RELATIVE', 'TRUE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.system.backend.ui.form.labels.width', 'string', null, 'FALSE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.system.backend.ui.path.enabled', 'boolean', null, 'FALSE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.system.backend.ui.path.steps', 'integer', null, 'FALSE', 'unused');
@@ -2422,8 +2426,9 @@ INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.tags.weighting.defau
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.validation.missingfiles.indicate', 'SYSTEM', 'TRUE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.display.default', 'SYSTEM', 'average');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.enabled', 'SYSTEM', 'FALSE');
-INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.scale.max', 'SYSTEM', '5');
-INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.scale.min', 'SYSTEM', '1');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.scale.max', 'SYSTEM', '3');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.scale.min', 'SYSTEM', '-2');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.style', 'SYSTEM', 'HOTEL');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.system.backend.ui.form.labels.width', 'SYSTEM', '25%');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.system.backend.ui.path.enabled', 'SYSTEM', 'TRUE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.system.backend.ui.path.steps', 'SYSTEM', '0');

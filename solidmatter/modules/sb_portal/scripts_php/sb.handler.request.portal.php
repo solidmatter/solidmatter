@@ -73,7 +73,7 @@ class PortalHandler {
 		
 		$_RESPONSE->addData($nodeCurrent);
 		$_RESPONSE->addLocale('sb_system', User::getCurrentLocale());
-		$_RESPONSE->addSystemMeta('lang', User::getCurrentLocale());
+		$_RESPONSE->addMetadata('sb_system', 'lang', User::getCurrentLocale());
 		$_RESPONSE->setTheme('_default');
 		
 		// output debug if desired 

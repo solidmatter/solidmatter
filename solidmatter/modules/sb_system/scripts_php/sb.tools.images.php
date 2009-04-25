@@ -189,6 +189,7 @@ function image_gethsl($resImage, $iNumSamples = 100, $iWidth = NULL, $iHeight = 
 	}
 	
 	//$flHue = 0;
+	$flEntropy = 0;
 	$flSaturation = 0;
 	$flLightness = 0;
 	$aSummedRGB = array(
@@ -196,6 +197,7 @@ function image_gethsl($resImage, $iNumSamples = 100, $iWidth = NULL, $iHeight = 
 		'g' => 0,
 		'b' => 0
 	);
+	$aLastRGB = NULL;
 	
 	for ($i=0; $i<$iNumSamples; $i++) {
 		
@@ -223,6 +225,11 @@ function image_gethsl($resImage, $iNumSamples = 100, $iWidth = NULL, $iHeight = 
 		$aSummedRGB['g'] += $aRGB['g'];
 		$aSummedRGB['b'] += $aRGB['b'];
 		
+		if ($aLastRGB != NULL) {
+			$flEntropy += (abs($aRGB['r'] - $aLastRGB['r']) + abs($aRGB['g'] - $aLastRGB['g']) + abs($aRGB['b'] - $aLastRGB['b'])) / 3;
+		}
+		
+		$aLastRGB = $aRGB;
 	}
 	
 	// get hsl average
@@ -234,6 +241,7 @@ function image_gethsl($resImage, $iNumSamples = 100, $iWidth = NULL, $iHeight = 
 	$aHSL['h'] = round($aTempHSL['h'] * 255);
 	$aHSL['s'] = round($flSaturation / $iNumSamples);
 	$aHSL['l'] = round($flLightness / $iNumSamples);
+	$aHSL['e'] = round($flEntropy / $iNumSamples);
 	
 	return ($aHSL);
 	

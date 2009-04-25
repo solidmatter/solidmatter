@@ -27,13 +27,13 @@
 	</xsl:template>
 	
 	<xsl:template name="content">
-		<div class="nav">
+		<div class="toolbar">
 			<xsl:call-template name="simplesearch">
 				<xsl:with-param name="form" select="$content/sbform[@id='searchAlbums']" />
 			</xsl:call-template>
-			<xsl:call-template name="render_alphanum">
-				<xsl:with-param name="url" select="'/-/albums/-/show='"/>
-			</xsl:call-template>
+		</div>
+		<div class="nav">
+			<a href="/{$master/@uuid}">back</a>
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="response/errors" />
@@ -43,50 +43,50 @@
 	
 	<xsl:template match="sbnode">
 		
-		<div class="albumcontainer">
-			
-			<h2>
-				<div class="albumdetails" style="float:right;">
-					<xsl:call-template name="render_buttons" />
-					Vote: 
-					<xsl:call-template name="render_stars">
-						<xsl:with-param name="voting" select="1" />
-					</xsl:call-template>
-				</div>
-				<span class="type album"><xsl:value-of select="@label" /></span>
-			</h2>
-			
-			<table class="default" width="100%">
-				<tbody>
-					<tr class="odd">
-						<td><a href="/{$master/@uuid}/details">back</a></td>
-					</tr>
-					<tr class="odd">
-						<!--<td style="padding:10px;" width="160">
-							<a class="imglink" target="_blank" href="/{$master/@uuid}/details/getCover"><img height="150" width="150" src="/{$master/@uuid}/details/getCover/?size=150" alt="cover" /></a>
-							<a href="/{$master/@uuid}/details">back</a>
-						</td>-->
-						<td style="padding:20px;">
-							<xsl:for-each select="$content/quilt/row">
-								<div style="clear:both;">
-									<xsl:for-each select="column">
-										<xsl:choose>
-											<xsl:when test="@uuid">
-												<a style="float:left;" class="imglink" href="/{@uuid}/-/buildQuilt" title="{@label}"><img src="/{@uuid}/details/getCover/?size=50" alt="cover" /></a>
-											</xsl:when>
-											<xsl:otherwise>
-												<div style="float:left;width:20px;height:20px;background-color: rgb({@lightness}, {@lightness}, {@lightness});"></div>
-											</xsl:otherwise>
-										</xsl:choose>
-									</xsl:for-each>
-								</div>
-							</xsl:for-each>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			
+		<div class="th">
+			<span class="albumdetails" style="float:right;">
+				<xsl:call-template name="addtag">
+					<xsl:with-param name="form" select="$content/sbform[@id='addTag']" />
+				</xsl:call-template>
+				<span style="margin-left: 15px;"></span>
+				<xsl:call-template name="render_buttons" />
+				<span style="margin-left: 15px;"></span>
+				<xsl:call-template name="render_stars" />
+			</span>
+			<span class="type album"><xsl:value-of select="@label" /></span>
 		</div>
+		
+		<script type="text/javascript" language="javascript">
+			function hidecover(oCover) {
+				oCover.firstChild.firstChild.style.visibility = 'hidden';
+			}
+			function showcover(oCover) {
+				oCover.firstChild.firstChild.style.visibility = 'visible';
+			}
+		</script>
+		
+		<table class="default" width="100%">
+			<tbody>
+				<tr class="odd">
+					<td style="padding: 20px" width="500">
+						<img src="/{@uuid}/details/getCover/?size=500" style="width:500px; height:500px;" alt="" />
+					</td>
+					<td style="padding: 20px 0 20px 0;">
+						<table class="default">
+							<xsl:for-each select="$content/quilt/row">
+								<tr>
+									<xsl:for-each select="column">
+										<td style="width:20px;height:20px;background-color: rgb({@red}, {@green}, {@blue}); padding:0;">
+											<a class="imglink" href="/{@uuid}/-/buildQuilt" title="{@label}"><img src="/{@uuid}/details/getCover/?size=20" alt="" /></a>
+										</td>
+									</xsl:for-each>
+								</tr>
+							</xsl:for-each>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</xsl:template>
 
 </xsl:stylesheet>

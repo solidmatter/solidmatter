@@ -23,7 +23,7 @@
 
 	<xsl:variable name="scripts_js_jb" select="'/theme/sb_jukebox/js'" />
 	<xsl:variable name="currentPlaylist" select="$content/currentPlaylist/sbnode" />
-	<xsl:variable name="jbParams" select="$content/library/library" />
+	<xsl:variable name="jukebox" select="/response/metadata/modules/sb_jukebox" />
 	
 	<xsl:template match="/response/metadata" priority="10">
 		<!-- title -->
@@ -41,7 +41,20 @@
 			<xsl:apply-templates select="/response/metadata" />
 			<script language="Javascript" type="text/javascript" src="/theme/global/js/prototype.js"></script>
 			<script language="Javascript" type="text/javascript" src="/theme/global/js/scriptaculous.js"></script>
-			<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/stars.js"></script>
+			<xsl:choose>
+				<xsl:when test="$jukebox/votingstyle = 'RELATIVE'">
+					<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/stars_relative.js"></script>
+				</xsl:when>
+				<xsl:otherwise><!-- hotel style -->
+					<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/stars.js"></script>
+				</xsl:otherwise>
+			</xsl:choose>
+			<script language="Javascript" type="text/javascript">
+				var iMinStars = <xsl:value-of select="$jukebox/minstars" />;
+				var iMaxStars = <xsl:value-of select="$jukebox/maxstars" />;
+				var sVotingStyle = <xsl:value-of select="$jukebox/votingstyle" />;
+				//init_stars();
+			</script>
 			<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/dynamic.js"></script>
 		</head>
 		<body>
@@ -133,10 +146,10 @@
 					</div>
 					<div class="menufooter_info">
 						in Library:<br />
-						<xsl:value-of select="$content/library/library/albums" /> Albums<br /> 
-						<xsl:value-of select="$content/library/library/artists" /> Artists<br /> 
-						<xsl:value-of select="$content/library/library/tracks" /> Tracks<br /> 
-						<xsl:value-of select="$content/library/library/playlists" /> Playlists<br />
+						<xsl:value-of select="$jukebox/albums" /> Albums<br /> 
+						<xsl:value-of select="$jukebox/artists" /> Artists<br /> 
+						<xsl:value-of select="$jukebox/tracks" /> Tracks<br /> 
+						<xsl:value-of select="$jukebox/playlists" /> Playlists<br />
 					</div>
 				</div>
 			</div>
@@ -212,7 +225,7 @@
 					<a href="/-/tags/listItems/?tagid={@id}">
 						<xsl:value-of select="." />
 					</a>
-					<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW'] and $jbParams/adminmode = '1'">
+					<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1'">
 						<xsl:value-of select="' '" />
 						<a class="type remove icononly" href="/{$master/@uuid}/votes/removeTag/?tagid={@id}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 					</xsl:if>
@@ -226,9 +239,8 @@
 	
 	<xsl:template name="render_stars">
 		<xsl:param name="vote" select="@vote" />
-		<xsl:param name="maxstars" select="$content/library/library/max_stars" />
-		<xsl:param name="stars" select="round(number(@vote) div 100 * ($maxstars - 1)) + 1" />
-		<span id="stars_{@uuid}" class="stars"><script type="text/javascript">render_stars('<xsl:value-of select="$vote" />', <xsl:value-of select="$maxstars" />, true)</script></span>
+		<!--<xsl:param name="stars" select="round(number(@vote) div 100 * ($maxstars - 1)) + 1" />-->
+		<span id="stars_{@uuid}" class="stars"><script type="text/javascript">render_stars('<xsl:value-of select="$vote" />', true)</script></span>
 	</xsl:template>
 	
 	<xsl:template name="render_timesplayed">
@@ -447,7 +459,7 @@
 							<xsl:value-of select="php:functionString('datetime_mysql2local', @created)" />
 						</td>
 						<td width="10">
-						<xsl:if test="@createdby = $system/userid or ($master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW'] and $jbParams/adminmode = '1')">
+						<xsl:if test="@createdby = $system/userid or ($master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1')">
 							<a class="type remove icononly" href="/{$master/@uuid}/votes/removeComment/?comment={@uuid}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 						</xsl:if>
 						</td>

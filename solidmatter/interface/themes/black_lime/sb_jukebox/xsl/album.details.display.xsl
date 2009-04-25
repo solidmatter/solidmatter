@@ -33,6 +33,7 @@
 			</xsl:call-template>
 		</div>
 		<div class="nav">
+			<span style="float: right;"><a class="type coverwall" href="/{$master/@uuid}/details/buildQuilt">Quilt</a></span>
 			<xsl:call-template name="render_alphanum">
 				<xsl:with-param name="url" select="'/-/albums/-/?show='"/>
 			</xsl:call-template>
@@ -44,7 +45,6 @@
 	</xsl:template>
 	
 	<xsl:template match="sbnode">
-		
 		
 		<div class="th">
 			<span class="albumdetails" style="float:right;">
@@ -68,7 +68,6 @@
 							<img height="154" width="166" src="/theme/sb_jukebox/images/case_150.png" alt="cover" style="background: url('/{@uuid}/details/getCover/?size=150') 15px 3px;" />
 							<!--<img height="150" width="150" src="/{@uuid}/details/getCover/?size=150" alt="cover" />-->
 						</a>
-						<!--<a href="/{@uuid}/details/buildQuilt">Quilt</a>-->
 					</td>
 					<td style="padding: 15px 15px 15px 0;">
 						<table width="100%">

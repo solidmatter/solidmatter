@@ -529,6 +529,7 @@ $_QUERIES['sbJukebox/album/properties/load/auxiliary'] = '
 				n_coverlightness,
 				n_coverhue,
 				n_coversaturation,
+				n_coverentropy,
 				s_relpath,
 				s_abspath,
 				e_type
@@ -547,6 +548,7 @@ $_QUERIES['sbJukebox/album/properties/save/auxiliary'] = '
 					n_coverhue,
 					n_coversaturation,
 					n_coverlightness,
+					n_coverentropy,
 					s_relpath,
 					s_abspath,
 					e_type
@@ -560,6 +562,7 @@ $_QUERIES['sbJukebox/album/properties/save/auxiliary'] = '
 					:ext_coverhue,
 					:ext_coversaturation,
 					:ext_coverlightness,
+					:ext_coverentropy,
 					:info_relpath,
 					:info_abspath,
 					:info_type
@@ -573,6 +576,7 @@ $_QUERIES['sbJukebox/album/properties/save/auxiliary'] = '
 				n_coverhue = :ext_coverhue,
 				n_coversaturation = :ext_coversaturation,
 				n_coverlightness = :ext_coverlightness,
+				n_coverentropy = :ext_coverentropy,
 				s_relpath = :info_relpath,
 				s_abspath = :info_abspath,
 				e_type = :info_type
@@ -587,12 +591,10 @@ $_QUERIES['sbJukebox/album/quilt/findCover'] = '
 	INNER JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child
 	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, "%")
-	ORDER BY 	ROUND(ABS(a.n_coverlightness - :lightness) / 8) + 
-				ROUND(ABS(a.n_coverhue - :hue) / 8) + 
-				ROUND(ABS(a.n_coversaturation - :saturation) / 8),
-				ABS(a.n_coverlightness - :lightness),
-				ABS(a.n_coverhue - :hue),
-				ABS(a.n_coversaturation - :saturation)
+	ORDER BY 	ROUND(ABS(a.n_coverlightness - :lightness) / 1) + 
+				ROUND(ABS(a.n_coverhue - :hue) / 1) + 
+				ROUND(ABS(a.n_coversaturation - :saturation) / 2) + 
+				ROUND(ABS(a.n_coverentropy - :entropy) / 3)
 	LIMIT		0, 1
 ';
 

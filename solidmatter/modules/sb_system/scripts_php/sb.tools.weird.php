@@ -2,16 +2,43 @@
 
 //------------------------------------------------------------------------------
 /**
-*	@package solidMatter[sbSystem]
-*	@author ()((() [Oliver Müller]
-* 	@version 0.50.00
+* @package solidMatter[sbWeird]
+* @author ()((() [Oliver Müller]
+* @version ?.00.00
+* 
+* Für den dunklen Turm.
+* Für die Rose.
+* Für die Balken.
+* Für Roland, Eddie, Susannah & Detta, Jake (den auch ich bereits mehrmals 
+* verloren habe) und Oy.
+* Auch für den Schriftsteller, Sai Schildkröte, Susan Delgado, Lilian o' Tego, 
+* Daniela Ruiz, alle meine Ka-Tets und besonders für mich.
+* 
+* Ich designe nicht mit der Hand;
+* wer mit der Hand designt, hat das Angesicht seines Vaters vergessen.
+* Ich designe mit dem Auge.
+* 
+* Ich lese nicht mit dem Auge;
+* wer mit dem Auge liest, hat das Angesicht seines Vaters vergessen.
+* Ich lese mit dem Verstand.
+* 
+* Ich programmiere nicht mit dem Verstand;
+* wer mit dem Verstand programmiert, hat das Angesicht seines Vaters vergessen.
+* Ich programmiere mit dem Herzen.
+* 
+* Oliver Müller von Ensdorf, Sohn des Ferdinand, aus der Linie des C=64
+* 
+* Verwendung von solidMatter für die Tet-Corporation uneingeschränkt und
+* unentgeltlich freigegeben.
+* Es wurden keine Technologien von North Central Positronics verwendet.
+* solidbytes steht in keiner Beziehung mit der Sombra Corporation.
+* 
 */
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 /**
-* @param 
-* @return 
+* @param user a computer user trying to write code
 */
 function change_programmer_status($user) {
 	
@@ -38,8 +65,8 @@ function change_programmer_status($user) {
 	} elseif ($user->status == ':-)') {
 		
 		$errorcode = Program::produceIncomprehensibleError();
-		Program::storeErrorInMoronicPlace($errorcode);
 		Program::obscureError($errorcode);
+		Program::storeErrorInMoronicPlace($errorcode);
 		$user->setStatus('>8-(');
 		
 	}
@@ -48,12 +75,13 @@ function change_programmer_status($user) {
 
 //------------------------------------------------------------------------------
 /**
-* @param 
-* @return 
+* @param string a string to be escaped
 */
-function escape_doublequote() {
+function escape_doublequote($sStringWithDoubleQuotes) {
 	
 	die('escaped in the last second!');
+	echo $sStringWithDoubleQuotes;
+	
 	echo '<@Agnar> heute code ich, morgen debug ich und uebermorgen cast ich die koenigin auf int.'."\r\n";
 	echo '<apples> the program \'apt-get\' is currently not installed. You can install it by typing: apt-get install apt'."\r\n";
 	
@@ -61,7 +89,7 @@ function escape_doublequote() {
 
 //------------------------------------------------------------------------------
 /**
-* @param 
+* @param string 'normal' for a 6-sided dice, 'binary' for a 2-sided dice
 * @return 
 */
 function throw_dice($type) {
@@ -76,8 +104,7 @@ function throw_dice($type) {
 
 //------------------------------------------------------------------------------
 /**
-* @param 
-* @return 
+* @return int a random number
 */
 function get_random_number() {
 	
@@ -87,8 +114,6 @@ function get_random_number() {
 
 //------------------------------------------------------------------------------
 /**
-* @param 
-* @return 
 */
 function fix_insomnia() {
 	
@@ -103,8 +128,6 @@ function fix_insomnia() {
 
 //------------------------------------------------------------------------------
 /**
-* @param 
-* @return 
 */
 class Boolean {
 

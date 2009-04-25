@@ -50,7 +50,6 @@ class sbJukeboxView extends sbView {
 		if ($cacheData->exists($sCacheKey)) {
 		
 			$aData = $cacheData->loadData($sCacheKey);
-			$_RESPONSE->addData($aData, 'library');
 			
 		} else {
 		
@@ -66,17 +65,20 @@ class sbJukeboxView extends sbView {
 				$aData['playlists'] = $aRow['n_numplaylists'];
 			}
 			
-			$aData['min_stars'] = Registry::getValue('sb.jukebox.voting.scale.min');
-			$aData['max_stars'] = Registry::getValue('sb.jukebox.voting.scale.max');
-			
 			$cacheData->storeData($sCacheKey, $aData);
 			
 		}
 		
 		// add volatile data
+		$aData['minstars'] = Registry::getValue('sb.jukebox.voting.scale.min');
+		$aData['maxstars'] = Registry::getValue('sb.jukebox.voting.scale.max');
+		$aData['votingstyle'] = Registry::getValue('sb.jukebox.voting.style');
 		$aData['adminmode'] = Registry::getValue('sb.jukebox.adminmode.enabled');
 		
-		$_RESPONSE->addData($aData, 'library');
+		// store in response
+		foreach ($aData as $sKey => $sValue) {
+			$_RESPONSE->addMetadata('sb_jukebox', $sKey, $sValue);
+		}
 	
 	}
 	

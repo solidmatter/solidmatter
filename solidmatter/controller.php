@@ -159,8 +159,8 @@ $hndProcessor->handleRequest($crSession);
 // add metadata
 
 Stopwatch::check('tier2_main', 'php');
-$_RESPONSE->addSystemMeta('sessionid', sbSession::getID());
-$_RESPONSE->addMetadata();
+$_RESPONSE->addMetadata('md_system', 'sessionid', sbSession::getID());
+$_RESPONSE->finalizeMetadata();
 //$swTier2->check('tier2_metadata');
 Stopwatch::stop('tier2_complete', 'php');
 

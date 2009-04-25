@@ -51,7 +51,7 @@ class BackendRequestHandler extends RequestHandler {
 		$_RESPONSE->addData($nodeCurrent);
 		$_RESPONSE->addLocale('sbSystem', User::getCurrentLocale());
 		$_RESPONSE->addLocale($nodeCurrent->getModule(), User::getCurrentLocale());
-		$_RESPONSE->addSystemMeta('lang', User::getCurrentLocale());
+		$_RESPONSE->addMetadata('md_system', 'lang', User::getCurrentLocale());
 		// FIXME: the theme should be a matter of interface layer!
 		$_RESPONSE->setTheme('_admin_grey');
 		

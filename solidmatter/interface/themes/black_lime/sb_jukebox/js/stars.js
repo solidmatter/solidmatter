@@ -18,24 +18,54 @@ var sStarSmallHTML = '<img src="' + sStarSmallURL + '" alt="star set" style="pad
 var sStarSmallerHTML = '<img src="' + sStarSmallerURL + '" alt="star set" style="padding-right: 1px;" onMouseOver="highlight_star(this, true)" onMouseOut="highlight_star(this, false)" onClick="vote(this)" />';
 var sDotHTML = '<img src="' + sDotURL + '" alt="star unset"  style="padding-right: 1px;" onMouseOver="highlight_star(this, true)" onMouseOut="highlight_star(this, false)" onClick="vote(this)" />';
 
-var iGlobalMaxStars = 0;
-
 //------------------------------------------------------------------------------
 /**
-* display voting starset
+* init star display
 */
-function render_stars(sVote, iMaxStars, bVotingEnabled) {
+function init_stars() {
 	
-	iGlobalMaxStars = iMaxStars;
+	if (sVotingStyle == 'HOTEL') {
+		for (var i=0; i<iMaxStars; i++) {
+			
+		}
+	}
 	
 	if (sVote == 'NaN') {
 		var iNumStars = 0;
 	} else {
 		var iVote = parseInt(sVote);
-		var iNumStars = iVote / 100 * (iGlobalMaxStars-1) + 1;	
+		var iNumStars = iVote / 100 * (iMaxStars-1) + 1;	
 	}
 	
-	for (var i=1; i<=iGlobalMaxStars; i++) {
+	for (var i=1; i<=iMaxStars; i++) {
+		var iHelper = Math.round((iNumStars + 1 - i) * 3);
+		if (iHelper >= 3) {
+			document.write(sStarHTML);
+		} else if (iHelper == 2) {
+			document.write(sStarSmallHTML);
+		} else if (iHelper == 1) {
+			document.write(sStarSmallerHTML);
+		} else {
+			document.write(sDotHTML);
+		}
+	}
+	
+}
+
+//------------------------------------------------------------------------------
+/**
+* display voting starset
+*/
+function render_stars(sVote, bVotingEnabled) {
+	
+	if (sVote == 'NaN') {
+		var iNumStars = 0;
+	} else {
+		var iVote = parseInt(sVote);
+		var iNumStars = iVote / 100 * (iMaxStars-1) + 1;	
+	}
+	
+	for (var i=1; i<=iMaxStars; i++) {
 		var iHelper = Math.round((iNumStars + 1 - i) * 3);
 		if (iHelper >= 3) {
 			document.write(sStarHTML);
@@ -56,9 +86,9 @@ function render_stars(sVote, iMaxStars, bVotingEnabled) {
 */
 function update_stars(oStarContainer, iVote) {
 	
-	var iNumStars = iVote / 100 * (iGlobalMaxStars-1) + 1;
+	var iNumStars = iVote / 100 * (iMaxStars-1) + 1;
 	
-	for (var i=1; i<=iGlobalMaxStars; i++) {
+	for (var i=1; i<=iMaxStars; i++) {
 		var iHelper = Math.round((iNumStars + 1 - i) * 3);
 		if (iHelper >= 3) {
 			oStarContainer.childNodes[i].src = sStarURL;
@@ -110,7 +140,7 @@ function vote(oStarImage) {
 		oCurrentStar = oCurrentStar.previousSibling;
 	}
 	
-	var iVote = Math.round(100 / (iGlobalMaxStars-1) * (iSelectedStar-1));
+	var iVote = Math.round(100 / (iMaxStars-1) * (iSelectedStar-1));
 	
 	//alert(iVote);
 	//alert(sUUID);

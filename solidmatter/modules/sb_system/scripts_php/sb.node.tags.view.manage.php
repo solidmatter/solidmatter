@@ -96,7 +96,7 @@ class sbView_tags_manage extends sbView {
 		$formTag = new sbDOMForm(
 			'edit_tag',
 			'$locale/sbSystem/tags/edit_tag',
-			'/'.$this->nodeSubject->getProperty('jcr:uuid').'/manage/save/tagid='.$iTagID,
+			System::getRequestURL($this->nodeSubject->getProperty('jcr:uuid'), 'manage', 'save', array('tagid' => $iTagID)),
 			$this->crSession
 		);
 		$formTag->addInput('tag;string;minlength=1;maxlength=100', '$locale/sbSystem/tags/tag');

@@ -930,7 +930,7 @@ class sbNode extends sbCR_Node {
 							//$formCurrent->setValue($sName, $this->getProperty($aDetails['s_attributename']));
 						}
 					}
-					$_RESPONSE->addSystemMeta('displaytype', $this->getProperty('displaytype'));
+					$_RESPONSE->addMetadata('md_system', 'displaytype', $this->getProperty('displaytype'));
 					$formCreate->addSubmit('$locale/sbSystem/actions/save');
 					$this->modifyForm($formCreate, 'create');
 					return ($formCreate);
