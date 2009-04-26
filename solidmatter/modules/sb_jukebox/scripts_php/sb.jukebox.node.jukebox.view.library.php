@@ -39,7 +39,7 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 				}
 				$stmtGetLatest = $this->crSession->prepareKnown('sbJukebox/jukebox/albums/getLatest');
 				$stmtGetLatest->bindValue('jukebox_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);
-				$stmtGetLatest->bindValue('limit', $iLimit, PDO::PARAM_INT);
+				$stmtGetLatest->bindValue('limit', (int) $iLimit, PDO::PARAM_INT);
 				$stmtGetLatest->bindValue('nodetype', 'sbJukebox:Album', PDO::PARAM_STR);
 				$stmtGetLatest->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
 				$stmtGetLatest->execute();
@@ -52,7 +52,7 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 				}
 				$stmtGetLatest = $this->crSession->prepareKnown('sbJukebox/jukebox/comments/getLatest');
 				$stmtGetLatest->bindValue('jukebox_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);
-				$stmtGetLatest->bindValue('limit', $iLimit, PDO::PARAM_INT);
+				$stmtGetLatest->bindValue('limit', (int) $iLimit, PDO::PARAM_INT);
 				$stmtGetLatest->execute();
 				$_RESPONSE->addData($stmtGetLatest->fetchElements(), 'latestComments');
 				

@@ -65,19 +65,22 @@
 			}
 		</script>
 		
+		<xsl:variable name="coversize" select="$jukebox/quiltcoversize" />
+		<xsl:variable name="numcovers" select="$jukebox/quiltcovers" />
+		<xsl:variable name="quiltsize" select="$numcovers * $coversize" />
 		<table class="default" width="100%">
 			<tbody>
 				<tr class="odd">
-					<td style="padding: 20px" width="500">
-						<img src="/{@uuid}/details/getCover/?size=500" style="width:500px; height:500px;" alt="" />
+					<td style="padding: 20px" width="{$quiltsize}">
+						<img src="/{@uuid}/details/getCover/?size={$quiltsize}" style="width:{$quiltsize}px; height:{$quiltsize}px;" alt="" />
 					</td>
 					<td style="padding: 20px 0 20px 0;">
 						<table class="default">
 							<xsl:for-each select="$content/quilt/row">
 								<tr>
 									<xsl:for-each select="column">
-										<td style="width:20px;height:20px;background-color: rgb({@red}, {@green}, {@blue}); padding:0;">
-											<a class="imglink" href="/{@uuid}/-/buildQuilt" title="{@label}"><img src="/{@uuid}/details/getCover/?size=20" alt="" /></a>
+										<td style="width:{$coversize}px;height:{$coversize}px;background-color: rgb({@red}, {@green}, {@blue}); padding:0;">
+											<a class="imglink" href="/{@uuid}/-/buildQuilt" title="{@label}"><img src="/{@uuid}/details/getCover/?size={$coversize}" alt="" /></a>
 										</td>
 									</xsl:for-each>
 								</tr>

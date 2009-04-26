@@ -32,7 +32,8 @@
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="response/errors" />
-			<xsl:apply-templates select="$content/sbform[@id='config']" />
+			<xsl:apply-templates select="$content/sbform[@id='password']" />
+			<xsl:apply-templates select="$content/sbform[@id='settings']" />
 		</div>
 	</xsl:template>
 	

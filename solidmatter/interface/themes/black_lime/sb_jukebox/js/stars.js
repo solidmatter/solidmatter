@@ -10,13 +10,16 @@
 var sStarURL = "/theme/sb_jukebox/images/star_set_normal.png";
 var sStarSmallURL = "/theme/sb_jukebox/images/star_set_small.png";
 var sStarSmallerURL = "/theme/sb_jukebox/images/star_set_smaller.png";
+var sCrapURL = "/theme/sb_jukebox/images/star_crap_normal.png";
+var sCrapSmallURL = "/theme/sb_jukebox/images/star_crap_small.png";
+var sCrapSmallerURL = "/theme/sb_jukebox/images/star_crap_smaller.png";
 var sDotURL = "/theme/sb_jukebox/images/star_dot.png";
 var sHighlightURL = '/theme/sb_jukebox/images/star_select.png';
 
-var sStarHTML = '<img src="' + sStarURL + '" alt="star set" style="padding-right: 1px;" onMouseOver="highlight_star(this, true)" onMouseOut="highlight_star(this, false)" onClick="vote(this)" />';
-var sStarSmallHTML = '<img src="' + sStarSmallURL + '" alt="star set" style="padding-right: 1px;" onMouseOver="highlight_star(this, true)" onMouseOut="highlight_star(this, false)" onClick="vote(this)" />';
-var sStarSmallerHTML = '<img src="' + sStarSmallerURL + '" alt="star set" style="padding-right: 1px;" onMouseOver="highlight_star(this, true)" onMouseOut="highlight_star(this, false)" onClick="vote(this)" />';
 var sDotHTML = '<img src="' + sDotURL + '" alt="star unset"  style="padding-right: 1px;" onMouseOver="highlight_star(this, true)" onMouseOut="highlight_star(this, false)" onClick="vote(this)" />';
+
+var aStarDefinition = new Array();
+var iTotalStars = 0;
 
 //------------------------------------------------------------------------------
 /**
@@ -24,30 +27,16 @@ var sDotHTML = '<img src="' + sDotURL + '" alt="star unset"  style="padding-righ
 */
 function init_stars() {
 	
-	if (sVotingStyle == 'HOTEL') {
-		for (var i=0; i<iMaxStars; i++) {
-			
-		}
+	iTotalStars = iMaxStars - iMinStars + 1;
+	
+	for (var i=0; i<Math.abs(iMinStars); i++) {
+		aStarDefinition[i] = new Object();
+		aStarDefinition[i]['vote'] = Math.round( i * 50 / (Math.abs(iMinStars)) );
 	}
 	
-	if (sVote == 'NaN') {
-		var iNumStars = 0;
-	} else {
-		var iVote = parseInt(sVote);
-		var iNumStars = iVote / 100 * (iMaxStars-1) + 1;	
-	}
-	
-	for (var i=1; i<=iMaxStars; i++) {
-		var iHelper = Math.round((iNumStars + 1 - i) * 3);
-		if (iHelper >= 3) {
-			document.write(sStarHTML);
-		} else if (iHelper == 2) {
-			document.write(sStarSmallHTML);
-		} else if (iHelper == 1) {
-			document.write(sStarSmallerHTML);
-		} else {
-			document.write(sDotHTML);
-		}
+	for (var i=0; i<=iMaxStars; i++) {
+		aStarDefinition[i+Math.abs(iMinStars)] = new Object();
+		aStarDefinition[i+Math.abs(iMinStars)]['vote'] = Math.round( 50 + i * 50 / (iMaxStars) );
 	}
 	
 }
@@ -56,27 +45,14 @@ function init_stars() {
 /**
 * display voting starset
 */
-function render_stars(sVote, bVotingEnabled) {
+function render_stars(sVote, sUUID, bVotingEnabled) {
 	
-	if (sVote == 'NaN') {
-		var iNumStars = 0;
-	} else {
-		var iVote = parseInt(sVote);
-		var iNumStars = iVote / 100 * (iMaxStars-1) + 1;	
+	for (var i=0; i<iTotalStars; i++) {
+		document.write(sDotHTML);
 	}
 	
-	for (var i=1; i<=iMaxStars; i++) {
-		var iHelper = Math.round((iNumStars + 1 - i) * 3);
-		if (iHelper >= 3) {
-			document.write(sStarHTML);
-		} else if (iHelper == 2) {
-			document.write(sStarSmallHTML);
-		} else if (iHelper == 1) {
-			document.write(sStarSmallerHTML);
-		} else {
-			document.write(sDotHTML);
-		}
-	}
+	var oContainer = document.getElementById('stars_' + sUUID);
+	update_stars(oContainer, sVote);
 	
 }
 
@@ -84,24 +60,71 @@ function render_stars(sVote, bVotingEnabled) {
 /**
 * updates a star set
 */
-function update_stars(oStarContainer, iVote) {
+function update_stars(oStarContainer, sVote) {
 	
-	var iNumStars = iVote / 100 * (iMaxStars-1) + 1;
+	if (sVote == "") {
+		var iVote = -1;
+	} else {
+		var iVote = parseInt(sVote);
+	}
 	
-	for (var i=1; i<=iMaxStars; i++) {
-		var iHelper = Math.round((iNumStars + 1 - i) * 3);
-		if (iHelper >= 3) {
-			oStarContainer.childNodes[i].src = sStarURL;
-		} else if (iHelper == 2) {
-			oStarContainer.childNodes[i].src = sStarSmallURL;
-		} else if (iHelper == 1) {
-			oStarContainer.childNodes[i].src = sStarSmallerURL;
-		} else {
-			oStarContainer.childNodes[i].src = sDotURL;
-		}
-		oStarContainer.childNodes[i].src_orig = oStarContainer.childNodes[i].src;
+	for (var i=0; i<iTotalStars; i++) {
+		oStarContainer.childNodes[i+1].src = getStarURL(iVote, i);
+		oStarContainer.childNodes[i+1].src_orig = oStarContainer.childNodes[i+1].src;
 	}
 
+}
+
+//------------------------------------------------------------------------------
+/**
+* returns the correct star image based on type and step fraction
+*/
+function getStarURL(iVote, iPosition) {
+	
+	if (sVotingStyle == 'HOTEL' || iVote >= 37) {
+		var sType = 'good';
+	} else {
+		//var sType = aStarDefinition[iPosition]['type'];
+		var sType = 'bad';
+	}
+	
+	if (iVote == -1) {
+		return (sDotURL);
+	}
+	
+	if (iPosition == 0) {
+		if (sType == 'good') {
+			return (sStarURL);
+		} else {
+			return (sCrapURL);
+		}
+	}
+	
+	var iRange = aStarDefinition[iPosition]['vote'] - aStarDefinition[iPosition-1]['vote'];
+	var iModulo = iVote - aStarDefinition[iPosition-1]['vote'];
+	
+	if (iModulo <= iRange / 8) {
+		return (sDotURL);
+	} else if (iModulo <= iRange / 8 * 3) {
+		if (sType == 'good') {
+			return (sStarSmallerURL);
+		} else {
+			return (sCrapSmallerURL);
+		}
+	} else if (iModulo <= iRange / 8 * 5) {
+		if (sType == 'good') {
+			return (sStarSmallURL);
+		} else {
+			return (sCrapSmallURL);
+		}
+	} else {
+		if (sType == 'good') {
+			return (sStarURL);
+		} else {
+			return (sCrapURL);
+		}
+	}
+	
 }
 
 //------------------------------------------------------------------------------
@@ -140,10 +163,8 @@ function vote(oStarImage) {
 		oCurrentStar = oCurrentStar.previousSibling;
 	}
 	
-	var iVote = Math.round(100 / (iMaxStars-1) * (iSelectedStar-1));
+	var iVote = aStarDefinition[iSelectedStar-1]['vote'];
 	
-	//alert(iVote);
-	//alert(sUUID);
 	var sURL = '/' + sUUID + '/votes/placeVote/?vote=' + iVote;
 	var myAjaxVoter = new Ajax.Request( 
 		sURL, 
@@ -156,7 +177,7 @@ function vote(oStarImage) {
     		} 
 		}
 	);
-	//window.location.reload();
+	
 }
 
 //------------------------------------------------------------------------------

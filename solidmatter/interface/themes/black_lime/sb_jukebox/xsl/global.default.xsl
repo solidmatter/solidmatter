@@ -52,8 +52,8 @@
 			<script language="Javascript" type="text/javascript">
 				var iMinStars = <xsl:value-of select="$jukebox/minstars" />;
 				var iMaxStars = <xsl:value-of select="$jukebox/maxstars" />;
-				var sVotingStyle = <xsl:value-of select="$jukebox/votingstyle" />;
-				//init_stars();
+				var sVotingStyle = '<xsl:value-of select="$jukebox/votingstyle" />';
+				init_stars();
 			</script>
 			<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/dynamic.js"></script>
 		</head>
@@ -240,7 +240,7 @@
 	<xsl:template name="render_stars">
 		<xsl:param name="vote" select="@vote" />
 		<!--<xsl:param name="stars" select="round(number(@vote) div 100 * ($maxstars - 1)) + 1" />-->
-		<span id="stars_{@uuid}" class="stars"><script type="text/javascript">render_stars('<xsl:value-of select="$vote" />', true)</script></span>
+		<span id="stars_{@uuid}" class="stars"><script type="text/javascript">render_stars('<xsl:value-of select="$vote" />', '<xsl:value-of select="@uuid" />', true)</script></span>
 	</xsl:template>
 	
 	<xsl:template name="render_timesplayed">

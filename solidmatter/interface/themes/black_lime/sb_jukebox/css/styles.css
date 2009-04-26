@@ -270,6 +270,10 @@ div.tags {
 	padding: 6px;
 }
 
+table.default label {
+	float: right;
+}
+
 /* album covers --------------------------------------------------------------*/
 
 div.albumcover {

@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: solidmatter
 Target Host: localhost
 Target Database: solidmatter
-Date: 25.04.2009 23:33:07
+Date: 26.04.2009 21:47:41
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -1352,7 +1352,8 @@ INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'blacklist'
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'charts', 'changePivot', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'charts', 'display', 'TRUE', null, null, 'RENDERED', 'sb_jukebox:jukebox.charts.display.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'config', 'display', 'TRUE', null, null, 'RENDERED', 'sb_jukebox:jukebox.config.display.xsl', 'text/html', 'TRUE');
-INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'config', 'save', 'FALSE', null, null, 'RENDERED', 'sb_jukebox:jukebox.config.display.xsl', 'text/html', 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'config', 'savePassword', 'FALSE', null, null, 'RENDERED', 'sb_jukebox:jukebox.config.display.xsl', 'text/html', 'TRUE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'config', 'saveSettings', 'FALSE', null, null, 'RENDERED', 'sb_jukebox:jukebox.config.display.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'favorites', 'addItem', 'FALSE', null, null, 'RENDERED', 'sb_jukebox:jukebox.favorites.display.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'favorites', 'display', 'TRUE', null, null, 'RENDERED', 'sb_jukebox:jukebox.favorites.display.xsl', 'text/html', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'favorites', 'getM3U', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE');
@@ -2343,24 +2344,28 @@ INSERT INTO `sb_system_nodes_properties_binary` VALUES ('f4a089e751c64350ba66fcc
 INSERT INTO `sb_system_progress` VALUES ('a6cdee339f11414b8fa732c7030aab85', '2ba02334a5e84f54917c30d77da84140', 'testcounter', '75% done', '75');
 INSERT INTO `sb_system_registry` VALUES ('sb.files.explorer.image.alwaysfit', 'boolean', null, 'FALSE', 'controls upscaling of images for thumbnail view (downscaling only is default)');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.adminmode.enabled', 'boolean', null, 'TRUE', null);
-INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.charts.amount.default', 'integer', null, 'TRUE', 'how many entries should be displayed for the various chart lists');
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.charts.amount.default', 'integer', 'integer;minvalue=1;maxvalue=100', 'TRUE', 'how many entries should be displayed for the various chart lists');
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.charts.amount.expanded', 'integer', 'integer;minvalue=10;maxvalue=1000', 'TRUE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.comments.enabled', 'boolean', null, 'FALSE', 'UNUSED - ');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.comments.perpage', 'integer', null, 'TRUE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.downloads.maxbandwidth', 'integer', 'integer;minvalue=1;maxvalue=10000', 'FALSE', 'KiloBYTE/s');
-INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.latestalbums.amount.default', 'integer', 'integer;minvalue=1;maxvalue=1000', 'TRUE', null);
-INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.latestalbums.amount.expanded', 'integer', 'integer;minvalue=1;maxvalue=1000', 'TRUE', null);
-INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.latestcomments.amount.default', 'integer', 'integer;minvalue=1;maxvalue=1000', 'TRUE', null);
-INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.latestcomments.amount.expanded', 'integer', 'integer;minvalue=1;maxvalue=1000', 'TRUE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.latestalbums.amount.default', 'integer', 'integer;minvalue=1;maxvalue=100', 'TRUE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.latestalbums.amount.expanded', 'integer', 'integer;minvalue=10;maxvalue=1000', 'TRUE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.latestcomments.amount.default', 'integer', 'integer;minvalue=1;maxvalue=100', 'TRUE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.latestcomments.amount.expanded', 'integer', 'integer;minvalue=10;maxvalue=1000', 'TRUE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.nowplaying.refresh', 'integer', null, 'FALSE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.paths.albums.useabspath', 'boolean', null, 'FALSE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.quilts.coveramount', 'integer', 'integer;minvalue=2;maxvalue=100', 'FALSE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.quilts.coversize', 'integer', 'integer;minvalue=10;maxvalue=100', 'FALSE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.quilts.numsamples', 'integer', 'integer;minvalue=10;maxvalue=2000', 'FALSE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.search.defaultconstraint', 'string', 'select;options=ARTISTS|ALBUMS|TRACKS', 'FALSE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.tags.popularity.timeout', 'integer', null, 'FALSE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.tags.weighting.default', 'string', 'select;options=popularity|numfiles', 'TRUE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.validation.missingfiles.indicate', 'boolean', null, 'FALSE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.display.default', 'string', null, 'FALSE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.enabled', 'boolean', null, 'FALSE', 'unused');
-INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.scale.max', 'integer', 'integer;minvalue=1;maxvalue=10', 'TRUE', null);
-INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.scale.min', 'integer', 'integer;minvalue=-10;maxvalue=0', 'TRUE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.scale.max', 'integer', 'integer;minvalue=1;maxvalue=5', 'TRUE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.scale.min', 'integer', 'integer;minvalue=-5;maxvalue=-1', 'TRUE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.style', 'string', 'select;options=HOTEL|MARKED|RELATIVE', 'TRUE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.system.backend.ui.form.labels.width', 'string', null, 'FALSE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.system.backend.ui.path.enabled', 'boolean', null, 'FALSE', 'unused');
@@ -2411,6 +2416,7 @@ INSERT INTO `sb_system_registry` VALUES ('_sb.system.debug.bounce.enabled', 'boo
 INSERT INTO `sb_system_registry_values` VALUES ('sb.files.explorer.image.alwaysfit', 'SYSTEM', 'TRUE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.adminmode.enabled', 'SYSTEM', 'FALSE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.charts.amount.default', 'SYSTEM', '5');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.charts.amount.expanded', 'SYSTEM', '100');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.comments.enabled', 'SYSTEM', 'TRUE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.comments.perpage', 'SYSTEM', '10');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.downloads.maxbandwidth', 'SYSTEM', '500');
@@ -2420,15 +2426,18 @@ INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.latestcomments.amoun
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.latestcomments.amount.expanded', 'SYSTEM', '50');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.nowplaying.refresh', 'SYSTEM', '30');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.paths.albums.useabspath', 'SYSTEM', 'TRUE');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.quilts.coveramount', 'SYSTEM', '15');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.quilts.coversize', 'SYSTEM', '32');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.quilts.numsamples', 'SYSTEM', '500');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.search.defaultconstraint', 'SYSTEM', 'ALBUMS');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.tags.popularity.timeout', 'SYSTEM', '120');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.tags.weighting.default', 'SYSTEM', 'popularity');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.validation.missingfiles.indicate', 'SYSTEM', 'TRUE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.display.default', 'SYSTEM', 'average');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.enabled', 'SYSTEM', 'FALSE');
-INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.scale.max', 'SYSTEM', '3');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.scale.max', 'SYSTEM', '2');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.scale.min', 'SYSTEM', '-2');
-INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.style', 'SYSTEM', 'HOTEL');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.style', 'SYSTEM', 'MARKED');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.system.backend.ui.form.labels.width', 'SYSTEM', '25%');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.system.backend.ui.path.enabled', 'SYSTEM', 'TRUE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.system.backend.ui.path.steps', 'SYSTEM', '0');

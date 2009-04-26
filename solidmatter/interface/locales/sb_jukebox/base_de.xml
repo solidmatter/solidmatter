@@ -114,6 +114,16 @@
 		<logout>Abmelden</logout>
 		<change_password>Passwort ändern</change_password>
 		<upload_playlist>Playlist hochladen</upload_playlist>
+		<adminmode>Adminmodus</adminmode>
+		<amount_latestalbums>Anzahl neuester Alben</amount_latestalbums>
+		<amount_latestalbums_expanded>Anzahl neuester Alben (aufgeklappt)</amount_latestalbums_expanded>
+		<amount_latestcomments>Anzahl neuester Kommentare</amount_latestcomments>
+		<amount_latestcomments_expanded>Anzahl neuester Kommentare (aufgeklappt)</amount_latestcomments_expanded>
+		<amount_charts>Anzahl Charteinträge</amount_charts>
+		<amount_charts_expanded>Anzahl Charteinträge (aufgeklappt)</amount_charts_expanded>
+		<votingstyle>Bewertungsstil</votingstyle>
+		<minstars>Negativsterne</minstars>
+		<maxstars>Positivsterne</maxstars>
 	</labels>
 	
 	<menu>

@@ -112,9 +112,9 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 					import('sb.tools.colors');
 					
 					// init rendering
-					$iColumns = 25;
-					$iRows = 25;
-					$iNumSamples = 100;
+					$iColumns = Registry::getValue('sb.jukebox.quilts.coveramount');
+					$iRows = Registry::getValue('sb.jukebox.quilts.coveramount');
+					$iNumSamples = Registry::getValue('sb.jukebox.quilts.numsamples');
 					$imgCover = new Image(Image::FROMFILE, JukeboxTools::getCoverFilename($this->nodeSubject));
 					
 					$aQuilt = array();

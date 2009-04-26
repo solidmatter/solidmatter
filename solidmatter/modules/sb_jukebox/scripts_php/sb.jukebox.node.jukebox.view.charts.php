@@ -70,7 +70,7 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 						if ($sCategory != $_REQUEST->getParam('expand')) {
 							continue;
 						}
-						$iLimit = 100;
+						$iLimit = Registry::getValue('sb.jukebox.charts.amount.expanded');
 					} else {
 						$iLimit = Registry::getValue('sb.jukebox.charts.amount.default');
 					}
@@ -91,7 +91,7 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 					}
 					
 					$stmtGetTop->bindValue('jukebox_mpath', $this->getJukebox()->getMPath(), PDO::PARAM_STR);
-					$stmtGetTop->bindValue('limit', $iLimit, PDO::PARAM_INT);
+					$stmtGetTop->bindValue('limit', (int) $iLimit, PDO::PARAM_INT);
 					$stmtGetTop->execute();
 					$_RESPONSE->addData($stmtGetTop->fetchElements(), $aCategory['resultset']);
 				}

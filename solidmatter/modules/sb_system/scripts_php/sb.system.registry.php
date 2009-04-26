@@ -41,7 +41,7 @@ abstract class Registry {
 		foreach ($stmtGetEntry as $aRow) {
 			$bUserSpecific = constant($aRow['b_userspecific']);
 		}
-		$stmtGetValue->closeCursor();
+		$stmtGetEntry->closeCursor();
 		if ($bUserSpecific === NULL) {
 			throw new sbException('registry entry "'.$sKey.'" does not exist');
 		}
@@ -122,7 +122,7 @@ abstract class Registry {
 	public static function setValue($sKey, $mValue, $sUserID = 'SYSTEM') {
 		
 		if ($sUserID != 'SYSTEM' && !self::isUserSpecific($sKey)) {
-			throw new sbException('attempt to set a registry value for a user that is not user-specific');
+			throw new sbException('attempt to set a registry value ('.$sKey.') for a user that is not user-specific');
 		}
 		
 		// logic
