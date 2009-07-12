@@ -22,6 +22,9 @@ class JBAudioStreamHandler {
 	//--------------------------------------------------------------------------
 	/**
 	* 
+	* Request URI Format:
+	* http://<site>/play/<nodeid>/<tokenid>
+	* 
 	* @param 
 	* @return 
 	*/
@@ -33,6 +36,8 @@ class JBAudioStreamHandler {
 		$this->crSession = $crSession;
 		$sNodeID = NULL;
 		$sTokenID = NULL;
+		
+		
 		
 		// parse request
 		$aStuff = explode('/', $_REQUEST->getPath(), 5);

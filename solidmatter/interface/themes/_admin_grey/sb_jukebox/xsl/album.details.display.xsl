@@ -34,8 +34,6 @@
 	
 	<xsl:template match="sbnode">
 		
-		<a href="/{@uuid}/details/getM3U" class="type sb_playlist">Playlist</a><br/><br/>
-		
 		<table class="default" width="100%">
 			<thead>
 				<tr>

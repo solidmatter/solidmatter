@@ -20,6 +20,7 @@
 		<debug enabled="true" verbose="false" />
 		<site location="jukebox.localhost/theme" type="theme" handler="backend" theme="_default" />
 		<site location="jukebox.localhost/play" type="controller" handler="jbaudiostream" />
+		<site location="jukebox.localhost/rss" type="controller" handler="jbrss" />
 		<site location="jukebox.localhost/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
 	</site>
 	
@@ -35,6 +36,7 @@
 		<debug enabled="true" verbose="false" />
 		<site location="test.jukebox/theme" type="theme" handler="backend" theme="black_lime" theme_override="black_ice" />
 		<site location="test.jukebox/play" type="controller" handler="jbaudiostream" />
+		<site location="test.jukebox/rss" type="controller" handler="jbrss" />
 		<site location="test.jukebox/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
 	</site>
 	<site location="test.backend/" type="controller" handler="backend">
@@ -80,6 +82,7 @@
 		<site location="jukebox.sm.gotdns.org/theme" type="theme" handler="backend" theme="black_lime" theme_override="black_ice" />
 		<site location="jukebox.sm.gotdns.org/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
 		<site location="jukebox.sm.gotdns.org/play" type="controller" handler="jbaudiostream" />
+		<site location="jukebox.sm.gotdns.org/rss" type="controller" handler="jbrss" />
 	</site>
 	<site location="admin.sm.gotdns.org/" type="controller" handler="backend">
 		<storage repository="test" workspace="test" user="system" pass="solidbytes" />

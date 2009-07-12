@@ -69,6 +69,7 @@
 							</xsl:choose>
 						</span>
 						<span class="type album"><xsl:value-of select="$locale/sbJukebox/labels/latest_albums" /></span>
+						<a class="type rss" href="/rss/latestalbums/{$jukebox/usertoken}" target="_blank" style="margin-left: 20px;">RSS</a> 
 					</th>
 				</tr>
 			</thead>
@@ -202,6 +203,7 @@
 							</xsl:choose>
 						</span>
 						<span class="type comment"><xsl:value-of select="$locale/sbSystem/labels/comments" /></span>
+						<a class="type rss" href="/rss/latestcomments/{$jukebox/usertoken}" target="_blank" style="margin-left: 20px;">RSS</a>
 					</th>
 				</tr>
 			</thead>

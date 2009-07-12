@@ -186,8 +186,11 @@ if (TIER2_SEPARATED) {
 	if ($e instanceof SessionTimeoutException) {
 		// TODO: refresh session lifespan with current registry value
 		// TODO: differentiat between storable and unstorable (e.g. AJAX-) requests
+		$sZombieRequest = sbSession::getData('last_recallable_action');
 		sbSession::destroy(TRUE);
-		sbSession::addData('zombie_request', $_REQUEST->getURI());
+		if ($sZombieRequest != NULL) {
+			sbSession::addData('last_recallable_action', $sZombieRequest);
+		}
 		sbSession::commit();
 		$_RESPONSE->redirect('-', 'login', NULL, NULL, 307);
 	}

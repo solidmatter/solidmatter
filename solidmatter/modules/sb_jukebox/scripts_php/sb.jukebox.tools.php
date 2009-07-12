@@ -15,6 +15,28 @@ import('sbJukebox:sb.pdo.queries');
 */
 class JukeboxTools {
 	
+	protected static $nodeCurrentJukebox = null;
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public static function setCurrentJukebox($nodeJukebox) {
+		self::$nodeCurrentJukebox = $nodeJukebox;
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public static function getCurrentJukebox() {
+		return (self::$nodeCurrentJukebox);
+	}
+	
 	//--------------------------------------------------------------------------
 	/**
 	* 

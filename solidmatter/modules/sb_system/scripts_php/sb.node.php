@@ -631,13 +631,13 @@ class sbNode extends sbCR_Node {
 		
 		global $_RESPONSE;
 		
-		// check if login is necessary
-		if ($viewCurrent->requiresLogin() && !User::isLoggedIn()) {
-			$_RESPONSE->redirect('-', 'login');
+		// store recallable action if possible
+		if ($adCurrentAction->isRecallable()) {
+			sbSession::addData('last_recallable_action', $_REQUEST->getURI());
 		}
 		
-		// on session timeout redirect to login
-		if ($viewCurrent->requiresLogin() && sbSession::isZombie()) {
+		// check if login is necessary and user is logged in / session is valid
+		if ($viewCurrent->requiresLogin() && (!User::isLoggedIn() || sbSession::isZombie())) {
 			throw new SessionTimeoutException();
 		}
 		

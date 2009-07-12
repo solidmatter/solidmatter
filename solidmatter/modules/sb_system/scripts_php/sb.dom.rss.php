@@ -10,6 +10,7 @@
 //------------------------------------------------------------------------------
 
 import('sb.tools.datetime');
+import('sb.tools.forms');
 import('sb.tools.xml');
 
 //------------------------------------------------------------------------------
@@ -174,6 +175,7 @@ class RSSFeed extends sbDOMDocument {
 	* @return 
 	*/
 	public function outputXML() {
+		header('Content-type: application/rss+xml');
 		echo pretty_print($this->domFeed->saveXML());
 	}
 	

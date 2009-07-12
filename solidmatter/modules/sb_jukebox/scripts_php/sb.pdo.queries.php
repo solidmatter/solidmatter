@@ -359,6 +359,7 @@ $_QUERIES['sbJukebox/jukebox/albums/getLatest'] = '
 				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
+				n.dt_created AS created,
 				a.b_coverexists,
 				(SELECT 	n_vote 
 					FROM	{TABLE_VOTES} v

@@ -24,6 +24,7 @@ class sbCR_ActionDefinition {
 		'Stylesheet' => '',
 		'Mimetype' => '',
 		'UseLocale' => FALSE,
+		'IsRecallable' => FALSE,
 	);
 	
 	protected $crRepositoryStructure = NULL;
@@ -34,7 +35,7 @@ class sbCR_ActionDefinition {
 	* @param 
 	* @return 
 	*/
-	public function __construct($crRepositoryStructure, $sNodeTypeName, $sViewName, $sActionName, $sClass, $sClassFile, $iPriority, $sOutputtype, $sStylesheet, $sMimetype, $bUseLocale) {
+	public function __construct($crRepositoryStructure, $sNodeTypeName, $sViewName, $sActionName, $sClass, $sClassFile, $iPriority, $sOutputtype, $sStylesheet, $sMimetype, $bUseLocale, $bIsRecallable) {
 		
 		// store basic info
 		$this->crRepositoryStructure = $crRepositoryStructure;
@@ -48,6 +49,7 @@ class sbCR_ActionDefinition {
 		$this->aActionInformation['Stylesheet'] = $sStylesheet;
 		$this->aActionInformation['Mimetype'] = $sMimetype;
 		$this->aActionInformation['UseLocale'] = $bUseLocale;
+		$this->aActionInformation['IsRecallable'] = $bIsRecallable;
 		
 	}
 	
@@ -119,6 +121,16 @@ class sbCR_ActionDefinition {
 	*/
 	public function usesLocale() {
 		return ($this->aActionInformation['UseLocale']);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return
+	*/
+	public function isRecallable() {
+		return ($this->aActionInformation['IsRecallable']);
 	}
 	
 	//--------------------------------------------------------------------------

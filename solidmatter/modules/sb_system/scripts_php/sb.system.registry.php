@@ -85,7 +85,7 @@ abstract class Registry {
 		if ($bEmpty) {
 			throw new sbException('Registry value does not exist! ('.$sKey.')');
 		}
-		
+		//var_dumpp($sKey.'|'.$sType);
 		switch ($sType) {
 			case 'boolean':
 				if ($mValue == 'TRUE') {
@@ -138,7 +138,7 @@ abstract class Registry {
 		// cache
 		if (USE_REGISTRYCACHE) {
 			$cacheRegistry = CacheFactory::getInstance('registry');
-			$cacheRegistry->storeData($sKey, $mValue);
+			$cacheRegistry->clear();
 		}
 		
 	}

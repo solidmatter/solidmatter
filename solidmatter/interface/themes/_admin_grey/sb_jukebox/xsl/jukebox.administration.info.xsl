@@ -11,6 +11,8 @@
 	<xsl:import href="../../sb_system/xsl/global.default.xsl" />
 	<xsl:import href="../../../_global/xsl/sbform.xsl" />
 	
+	<xsl:variable name="jukebox" select="/response/metadata/modules/sb_jukebox" />
+	
 	<xsl:output 
 		method="html"
 		encoding="UTF-8"
@@ -27,10 +29,10 @@
 		<xsl:call-template name="views" />
 		<div class="workbench">
 			<xsl:apply-templates select="response/errors" />
-			Number of Albums: <xsl:value-of select="$content/library/library/albums" /><br/>
-			Number of Artists: <xsl:value-of select="$content/library/library/artists" /><br/>
-			Number of Tracks: <xsl:value-of select="$content/library/library/tracks" /><br/>
-			Number of Playlists: <xsl:value-of select="$content/library/library/playlists" /><br/>
+			Number of Albums: <xsl:value-of select="$jukebox/albums" /><br/>
+			Number of Artists: <xsl:value-of select="$jukebox/artists" /><br/>
+			Number of Tracks: <xsl:value-of select="$jukebox/tracks" /><br/>
+			Number of Playlists: <xsl:value-of select="$jukebox/playlists" /><br/>
 			<br/>
 			<br/>
 			<a href="/{$subjectid}/administration/clearQuilts">Quilts löschen</a>

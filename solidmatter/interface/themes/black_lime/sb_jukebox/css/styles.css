@@ -590,6 +590,12 @@ div.menufooter_info {
 *.coverwall:hover {
 	background-image: url(../icons/coverwall_hover.png);
 }
+*.rss {
+	background-image: url(../icons/rss.png);
+}
+*.rss:hover {
+	background-image: url(../icons/rss_hover.png);
+}
 
 /*----------------------------------------------------------------------------*/
 /* forms

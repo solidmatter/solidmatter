@@ -87,9 +87,9 @@ class sbView_root_login extends sbView {
 							}
 						}*/
 						
-						$sZombieRequest = sbSession::getData('zombie_request');
+						$sZombieRequest = sbSession::getData('last_recallable_action');
 						if ($sZombieRequest != NULL) {
-							sbSession::removeData('zombie_request');
+							sbSession::removeData('last_recallable_action');
 							$_RESPONSE->redirectFixed($sZombieRequest);
 						} else {
 							$_RESPONSE->redirect();

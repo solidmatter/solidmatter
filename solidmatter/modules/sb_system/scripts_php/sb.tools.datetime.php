@@ -83,5 +83,17 @@ function date_mysql2timestamp($sMySQLDate) {
 	return (datetime_mysql2timestamp($sMySQLDate.' 00:00:00'));	
 }
 
+//------------------------------------------------------------------------------
+/**
+* Converts a MySQL-datetime value to a datetime value according to RFC822.
+* This format is use in various situations, e.g. eMails and RSS-feeds.
+* @param string the MySQL-Datetime value ('YYYY-MM-DD HH:MM:SS')
+* @return string the datetime in RFC822 format
+*/
+function datetime_mysql2rfc822($sMySQLDateTime) {
+	$iTime = datetime_mysql2timestamp($sMySQLDateTime);
+	$sRFC822DateTime = gmdate('D, d M Y H:i:s \G\M\T', $iTime+3600*date("I"));
+	return ($sRFC822DateTime);
+}
 
 ?>

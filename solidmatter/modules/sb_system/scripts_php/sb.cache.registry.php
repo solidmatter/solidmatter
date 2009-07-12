@@ -14,7 +14,7 @@ import('sb.cache.database');
 //------------------------------------------------------------------------------
 /** 
 */
-class RegistryCache extends DatabaseCache implements sbCache {
+class RegistryCache extends SessionCache implements sbCache {
 	
 	protected $sPrefix = 'REGISTRY:';
 

@@ -167,6 +167,11 @@ class sbCR_ViewDefinition {
 		if ($aActionDetails['b_uselocale'] == 'TRUE') {
 			$bUseLocale = TRUE;
 		}
+		// transform isrecallable flag
+		$bIsRecallable = FALSE;
+		if ($aActionDetails['b_isrecallable'] == 'TRUE') {
+			$bIsRecallable = TRUE;
+		}
 		
 		// create object
 		$adCurrentAction = new sbCR_ActionDefinition(
@@ -180,7 +185,8 @@ class sbCR_ViewDefinition {
 			$aActionDetails['e_outputtype'],
 			$aActionDetails['s_stylesheet'],
 			$aActionDetails['s_mimetype'],
-			$bUseLocale
+			$bUseLocale,
+			$bIsRecallable
 		);
 		
 		return ($adCurrentAction);
@@ -226,6 +232,7 @@ class sbCR_ViewDefinition {
 				's_stylesheet' => 'sb_system:node.debug.xsl',
 				's_mimetype' => 'text/html',
 				'b_uselocale' => 'TRUE',
+				'b_isrecallable' => 'FALSE',
 			);
 		}
 		
@@ -237,6 +244,7 @@ class sbCR_ViewDefinition {
 					's_stylesheet' => 'sb_system:node.security.xsl',
 					's_mimetype' => 'text/html',
 					'b_uselocale' => 'TRUE',
+					'b_isrecallable' => 'FALSE',
 				),
 				'changeInheritance' => array(
 					's_action' => 'changeInheritance',
@@ -244,6 +252,7 @@ class sbCR_ViewDefinition {
 					's_stylesheet' => 'sb_system:node.security.xsl',
 					's_mimetype' => 'text/html',
 					'b_uselocale' => 'TRUE',
+					'b_isrecallable' => 'FALSE',
 				),
 				'editAuthorisations' => array(
 					's_action' => 'editAuthorisations',
@@ -251,6 +260,7 @@ class sbCR_ViewDefinition {
 					's_stylesheet' => 'sb_system:node.security.editauthorisations.xsl',
 					's_mimetype' => 'text/html',
 					'b_uselocale' => 'TRUE',
+					'b_isrecallable' => 'FALSE',
 				),
 				'saveAuthorisations' => array(
 					's_action' => 'saveAuthorisations',
@@ -258,6 +268,7 @@ class sbCR_ViewDefinition {
 					's_stylesheet' => 'sb_system:node.security.editauthorisations.xsl',
 					's_mimetype' => 'text/html',
 					'b_uselocale' => 'TRUE',
+					'b_isrecallable' => 'FALSE',
 				),
 				'addUser' => array(
 					's_action' => 'addUser',
@@ -265,6 +276,7 @@ class sbCR_ViewDefinition {
 					's_stylesheet' => 'sb_system:node.security.xsl',
 					's_mimetype' => 'text/html',
 					'b_uselocale' => 'TRUE',
+					'b_isrecallable' => 'FALSE',
 				),
 				'removeUser' => array(
 					's_action' => 'removeUser',
@@ -272,6 +284,7 @@ class sbCR_ViewDefinition {
 					's_stylesheet' => 'sb_system:node.security.xsl',
 					's_mimetype' => 'text/html',
 					'b_uselocale' => 'TRUE',
+					'b_isrecallable' => 'FALSE',
 				),
 			);
 			if ($sActionName == NULL) {

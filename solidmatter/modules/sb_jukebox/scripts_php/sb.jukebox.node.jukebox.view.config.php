@@ -67,7 +67,7 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 					Registry::setValue('sb.jukebox.latestcomments.amount.expanded',	$formSettings->getValue('latestcommentsexpanded'),	User::getUUID());
 					Registry::setValue('sb.jukebox.charts.amount.default',			$formSettings->getValue('charts'),					User::getUUID());
 					Registry::setValue('sb.jukebox.charts.amount.expanded',			$formSettings->getValue('chartsexpanded'),			User::getUUID());
-					Registry::setValue('sb.jukebox.adminmode.enabled',				constant($formSettings->getValue('adminmode')),		User::getUUID());
+					Registry::setValue('sb.jukebox.adminmode.enabled',				$formSettings->getValue('adminmode'),				User::getUUID());
 					
 				} else {
 					// do nothing, errors are set
@@ -145,7 +145,11 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 		$formConfig->setValue('latestcommentsexpanded',	Registry::getValue('sb.jukebox.latestcomments.amount.expanded'));
 		$formConfig->setValue('charts',					Registry::getValue('sb.jukebox.charts.amount.default'));
 		$formConfig->setValue('chartsexpanded',			Registry::getValue('sb.jukebox.charts.amount.expanded'));
-		$formConfig->setValue('adminmode',				Registry::getValue('sb.jukebox.adminmode.enabled'));
+		$sAdminMode = 'FALSE';
+		if (Registry::getValue('sb.jukebox.adminmode.enabled')) {
+			$sAdminMode = 'TRUE';
+		}
+		$formConfig->setValue('adminmode',				$sAdminMode);
 		
 		return ($formConfig);
 		

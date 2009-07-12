@@ -84,7 +84,11 @@ switch ((string) $elemSite['type']) {
 		$_REQUEST = new sbDOMRequest();
 		$_REQUEST->setLocation((string) $elemSite['location']);
 		$_REQUEST->setHandler((string) $elemSite['handler']);
-		$_REQUEST->setSubject((string) $elemSite['subject']);
+		if ($elemSite['subject'] == NULL) {
+			$_REQUEST->setSubject((string) $elemController['subject']);
+		} else {
+			$_REQUEST->setSubject((string) $elemSite['subject']);
+		}
 		$_REQUEST->setRepository(
 			(string) $elemController->storage['repository'],
 			(string) $elemController->storage['workspace'],

@@ -57,7 +57,7 @@
 					</span>
 				</a></li>
 			</xsl:for-each>
-			<li><a href="/{$content/@uuid}/{$content/@view}/{$content/@action}/debug" target="_blank"><span>XML</span></a></li>
+			<li><a href="/{$content/@uuid}/{$content/@view}/{$content/@action}/?debug=1" target="_blank"><span>XML</span></a></li>
 			</ul></div>
 		<xsl:apply-templates select="/response/content/errors" />
 	</xsl:template>

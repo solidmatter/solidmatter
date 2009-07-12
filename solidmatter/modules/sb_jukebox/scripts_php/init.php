@@ -15,6 +15,8 @@ import('sbJukebox:sb.pdo.queries');
 */
 class sbJukeboxView extends sbView {
 	
+	protected $nodeJukebox;
+	
 	//--------------------------------------------------------------------------
 	/**
 	* 
@@ -69,6 +71,17 @@ class sbJukeboxView extends sbView {
 			
 		}
 		
+		// user token
+		if (User::isLoggedin()) {
+			$sJukeboxUUID = $nodeJukebox->getProperty('jcr:uuid');
+			if (!isset(sbSession::$aData['sbJukebox'][$sJukeboxUUID]['usertoken'])) {
+				import('sbJukebox:sb.jukebox.tools');
+				$sTokenUUID = JukeboxTools::getToken();
+				sbSession::$aData['sbJukebox'][$sJukeboxUUID]['usertoken'] = $sTokenUUID;
+			}
+			$aData['usertoken'] = sbSession::$aData['sbJukebox'][$sJukeboxUUID]['usertoken'];
+		}
+		
 		// add volatile data
 		$aData['minstars'] = Registry::getValue('sb.jukebox.voting.scale.min');
 		$aData['maxstars'] = Registry::getValue('sb.jukebox.voting.scale.max');
@@ -76,6 +89,7 @@ class sbJukeboxView extends sbView {
 		$aData['adminmode'] = Registry::getValue('sb.jukebox.adminmode.enabled');
 		$aData['quiltcovers'] = Registry::getValue('sb.jukebox.quilts.coveramount');
 		$aData['quiltcoversize'] = Registry::getValue('sb.jukebox.quilts.coversize');
+		
 		
 		// store in response
 		foreach ($aData as $sKey => $sValue) {
@@ -122,14 +136,17 @@ class sbJukeboxView extends sbView {
 	* @return 
 	*/
 	public function getJukebox() {
-		// is subject node the jukebox?
-		if ($this->nodeSubject->getPrimaryNodeType() == 'sbJukebox:Jukebox') {
-			$nodeJukebox = $this->nodeSubject;
-		} else {
-			$nodeJukebox = $this->nodeSubject->getAncestorOfType('sbJukebox:Jukebox');
+		
+		if ($this->nodeJukebox == NULL) { 
+			// is subject node the jukebox?
+			if ($this->nodeSubject->getPrimaryNodeType() == 'sbJukebox:Jukebox') {
+				$this->nodeJukebox = $this->nodeSubject;
+			} else {
+				$this->nodeJukebox = $this->nodeSubject->getAncestorOfType('sbJukebox:Jukebox');
+			}
 		}
 		
-		return ($nodeJukebox);
+		return ($this->nodeJukebox);
 		
 	}
 	
@@ -293,27 +310,32 @@ class sbJukeboxView extends sbView {
 	*/
 	protected function buildSearchForm($sSubject) {
 		
+		$sSubjectNode = '-';
+		if ($_REQUEST->getHandler() != 'application') {
+			$sSubjectNode = $this->getJukebox()->getProperty('jcr:uuid');
+		}
+		
 		switch ($sSubject) {
 			
 			case 'artists':
 				$sID = 'searchArtists';
-				$sTarget = System::getRequestURL('-', 'artists', 'search');
+				$sTarget = System::getRequestURL($sSubjectNode, 'artists', 'search');
 				break;
 			case 'albums':
 				$sID = 'searchAlbums';
-				$sTarget = System::getRequestURL('-', 'albums', 'search');
+				$sTarget = System::getRequestURL($sSubjectNode, 'albums', 'search');
 				break;
 			case 'jukebox':
 				$sID = 'searchJukebox';
-				$sTarget = System::getRequestURL('-', 'library', 'search');
+				$sTarget = System::getRequestURL($sSubjectNode, 'library', 'search');
 				break;
 			case 'tracks':
 				$sID = 'searchTracks';
-				$sTarget = System::getRequestURL('-', 'library', 'search');
+				$sTarget = System::getRequestURL($sSubjectNode, 'library', 'search');
 				break;
 			case 'tagspecific':
 				$sID = 'searchTagSpecific';
-				$sTarget = System::getRequestURL('-', 'tags', 'listItems');
+				$sTarget = System::getRequestURL($sSubjectNode, 'tags', 'listItems');
 				break;
 			default:
 				throw new sbException('searchform subject not recognized: "'.$sSubject.'"');

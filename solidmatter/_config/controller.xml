@@ -35,6 +35,10 @@
 			<library>sbJukebox:sb.handler.request.audiostream</library>
 			<class>JBAudioStreamHandler</class>
 		</handler>
+		<handler id="jbrss">
+			<library>sbJukebox:sb.handler.request.rss</library>
+			<class>JBRSSHandler</class>
+		</handler>
 		<handler id="portal">
 			<library>sbPortal:sb.handler.request.portal</library>
 			<class>PortalHandler</class>

@@ -27,10 +27,7 @@
 		<xsl:call-template name="views" />
 		<div class="workbench">
 			<xsl:apply-templates select="response/errors" />
-			<xsl:apply-templates select="$content/sbform[@id='search_jukebox']" />
-			Number of Albums: <xsl:value-of select="$content/resultset/row/@n_numalbums" /><br/>
-			Number of Artists: <xsl:value-of select="$content/resultset/row/@n_numartists" /><br/>
-			Number of Titles: <xsl:value-of select="$content/resultset/row/@n_numtitles" /><br/>
+			<xsl:apply-templates select="$content/sbform[@id='searchJukebox']" />
 		</div>
 	</body>
 	</html>
