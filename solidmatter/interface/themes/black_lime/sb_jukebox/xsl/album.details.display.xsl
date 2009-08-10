@@ -76,7 +76,10 @@
 									<xsl:value-of select="$locale/sbJukebox/labels/artist" />:
 								</td>
 								<td width="70%">
-									<a href="/{ancestors/sbnode[@nodetype='sbJukebox:Artist']/@uuid}"><xsl:value-of select="ancestors/sbnode[@nodetype='sbJukebox:Artist']/@label" /></a>
+									<span style="float:right;">
+										<a class="type wikipedia icononly" target="_blank" href="http://www.wikipedia.org/wiki/{ancestors/sbnode[@nodetype='sbJukebox:Artist']/@label}" title="{$locale/sbJukebox/actions/wikipedia}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+									</span>
+									<a href="/{ancestors/sbnode[@nodetype='sbJukebox:Artist']/@uuid}"><xsl:value-of select="ancestors/sbnode[@nodetype='sbJukebox:Artist']/@label" /></a> 
 								</td>
 							</tr>
 							<tr class="odd">

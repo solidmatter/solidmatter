@@ -596,6 +596,12 @@ div.menufooter_info {
 *.rss:hover {
 	background-image: url(../icons/rss_hover.png);
 }
+*.wikipedia {
+	background-image: url(../icons/wikipedia.png);
+}
+*.wikipedia:hover {
+	background-image: url(../icons/wikipedia_hover.png);
+}
 
 /*----------------------------------------------------------------------------*/
 /* forms

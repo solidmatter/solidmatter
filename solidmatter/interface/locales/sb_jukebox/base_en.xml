@@ -150,6 +150,7 @@
 		<download>download</download>
 		<activate>activate</activate>
 		<remove>remove</remove>
+		<wikipedia>search in Wikipedia</wikipedia>
 	</actions>
 	
 	<texts>

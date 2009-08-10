@@ -74,6 +74,9 @@
 								</td>
 								<xsl:variable name="track_artist" select="$content/track_artist/sbnode" />
 								<td width="75%">
+									<span style="float:right;">
+										<a class="type wikipedia icononly" target="_blank" href="http://www.wikipedia.org/wiki/{$track_artist/@label}" title="{$locale/sbJukebox/actions/wikipedia}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+									</span>
 									<a href="/{$track_artist/@uuid}"><xsl:value-of select="$track_artist/@label" /></a>
 								</td>
 							</tr>

@@ -267,6 +267,9 @@
 		<!--  and $master/user_authorisations/authorisation[@name='download' and @grant_type='ALLOW'] -->
 			<a class="type download icononly" href="/{@uuid}/details/download" title="{$locale/sbJukebox/actions/download}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
+		<xsl:if test="@nodetype = 'sbJukebox:Artist'">
+			<a class="type wikipedia icononly" target="_blank" href="http://www.wikipedia.org/wiki/{@label}" title="{$locale/sbJukebox/actions/wikipedia}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template name="render_alphanum">
