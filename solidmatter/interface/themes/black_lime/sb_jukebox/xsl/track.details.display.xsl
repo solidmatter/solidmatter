@@ -109,7 +109,7 @@
 									<xsl:value-of select="$locale/sbJukebox/labels/bitrate" />:
 								</td>
 								<td>
-									<xsl:value-of select="round(@enc_bitrate div 1000)" /> Kbps (<xsl:value-of select="@enc_mode" />)
+									<xsl:value-of select="@enc_bitrate" /> Kbps (<xsl:value-of select="@enc_mode" />)
 								</td>
 							</tr>
 						</table>

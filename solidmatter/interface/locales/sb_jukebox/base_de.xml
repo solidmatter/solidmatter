@@ -124,6 +124,7 @@
 		<votingstyle>Bewertungsstil</votingstyle>
 		<minstars>Negativsterne</minstars>
 		<maxstars>Positivsterne</maxstars>
+		<series>Serie</series>
 	</labels>
 	
 	<menu>
@@ -141,6 +142,7 @@
 		<play>abspielen</play>
 		<play_random>abspielen (zufällig)</play_random>
 		<search_lyrics>Songtext suchen</search_lyrics>
+		<search_videos>Videos suchen</search_videos>
 		<add_to_favorites>zu Favoriten hinzufügen</add_to_favorites>
 		<add_to_playlist>zu Playlist hinzufügen</add_to_playlist>
 		<vote>bewerten</vote>

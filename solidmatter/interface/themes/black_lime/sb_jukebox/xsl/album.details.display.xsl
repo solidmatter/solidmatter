@@ -105,6 +105,23 @@
 									</xsl:choose>
 								</td>
 							</tr>
+							<xsl:if test="tags/tag[starts-with(., 'Series:')]">
+							<tr class="odd">
+								<td>
+									<xsl:value-of select="$locale/sbJukebox/labels/series" />:
+								</td>
+								<td>
+									<xsl:for-each select="tags/tag[starts-with(., 'Series:')]">
+										<a href="/-/tags/listItems/?tagid={@id}">
+											<xsl:value-of select="substring-after(., 'Series:')" />
+										</a>
+										<xsl:if test="position() != last()">
+											<xsl:value-of select="' - '" />
+										</xsl:if>
+									</xsl:for-each>
+								</td>
+							</tr>
+							</xsl:if>
 						</table>
 					</td>
 				</tr>

@@ -124,6 +124,7 @@
 		<votingstyle>Voting style</votingstyle>
 		<minstars>Minimum stars</minstars>
 		<maxstars>Maximum stars</maxstars>
+		<series>Series</series>
 	</labels>
 	
 	<menu>
@@ -141,6 +142,7 @@
 		<play>play</play>
 		<play_random>play (random)</play_random>
 		<search_lyrics>search lyrics</search_lyrics>
+		<search_videos>search videos</search_videos>
 		<add_to_favorites>add to favorites</add_to_favorites>
 		<add_to_playlist>add to playlist</add_to_playlist>
 		<vote>rate</vote>
