@@ -291,6 +291,7 @@ $_QUERIES['sbJukebox/jukebox/search/albums/byLabel'] = '
 				n.s_name AS name,
 				/*a.b_coverexists AS coverexists,*/
 				a.n_published AS published,
+				a.e_type AS info_type,
 				(SELECT 	n_vote 
 					FROM	{TABLE_VOTES} v
 					WHERE	v.fk_subject = n.uuid
@@ -312,6 +313,7 @@ $_QUERIES['sbJukebox/jukebox/search/albums/numeric'] = '
 				n.s_name AS name,
 				/*a.b_coverexists AS coverexists,*/
 				a.n_published AS published,
+				a.e_type AS info_type,
 				(SELECT 	n_vote 
 					FROM	{TABLE_VOTES} v
 					WHERE	v.fk_subject = n.uuid
@@ -336,6 +338,7 @@ $_QUERIES['sbJukebox/jukebox/albums/getRandom'] = '
 				n.s_label AS label,
 				n.s_name AS name,
 				a.n_published AS published,
+				a.e_type AS info_type,
 				(SELECT 	n_vote 
 					FROM	{TABLE_VOTES} v
 					WHERE	v.fk_subject = n.uuid

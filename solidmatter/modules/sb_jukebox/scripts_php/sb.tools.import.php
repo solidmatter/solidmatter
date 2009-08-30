@@ -31,12 +31,12 @@ class JukeboxToolkit {
 		'TRACK_INFOS' => TRUE,
 	);
 	protected $aAbortFlags = array(
-		'NO_GENRE' => FALSE,
+		'NO_GENRE' => TRUE,
 		//'NO_ID3V1' => TRUE,
 		'NO_COVER' => TRUE,
 		//'DUPLICATE_ALBUM' => TRUE,
 		'NO_TRACKNUMBER' => TRUE,
-		'NO_YEAR' => FALSE,
+		'NO_YEAR' => TRUE,
 		'DIFFERING_TAGS' => TRUE,
 		
 	);
@@ -102,7 +102,65 @@ class JukeboxToolkit {
 		return ($aCustomTags);
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function filterTags($aTags, $sType) {
+		$aTemp = array();
+		if ($sType == 'Track') {
+			foreach ($aTags as $sTag) {
+				if (strpos($sTag, 'Album:') === FALSE && strpos($sTag, 'Series:') === FALSE) {
+					$aTemp[] = $sTag;
+				}
+			}
+		} else {
+			foreach ($aTags as $sTag) {
+				if (strpos($sTag, 'Album:') === FALSE) {
+					$aTemp[] = $sTag;
+				} else {
+					$aTemp[] = str_replace('Album:', '', $sTag);
+				}
+			}
+		}
+		return ($aTemp);
+	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function setAlbumtype($nodeAlbum) {
+		foreach ($nodeAlbum->getTags() as $sTag) {
+			var_dumpp($sTag);
+			switch ($sTag) {
+				case 'Maxi':
+				case 'EP':
+					$nodeAlbum->setProperty('info_type', 'MAXI');
+					break;
+				case 'Single':
+					$nodeAlbum->setProperty('info_type', 'SINGLE');
+					break;
+				case 'Best Of':
+					$nodeAlbum->setProperty('info_type', 'BESTOF');
+					break;
+				case 'Bootleg':
+					$nodeAlbum->setProperty('info_type', 'BOOTLEG');
+					break;
+				case 'Tribute':
+					$nodeAlbum->setProperty('info_type', 'TRIBUTE');
+					break;
+				case 'Live':
+					$nodeAlbum->setProperty('info_type', 'LIVE');
+					break;
+			}
+		}
+	}
+		
 	//--------------------------------------------------------------------------
 	/**
 	* 
@@ -264,6 +322,9 @@ class JukeboxToolkit {
 			$nodeAlbum->addTags($aAlbumInfo['tags']);
 			$nodeAlbumArtist->addTags($nodeAlbum->getTags());
 			
+			// set album type
+			$this->setAlbumtype($nodeAlbum);
+			
 			//$aInfo['tags'] = $aAlbumTags;
 			$aInfo['nodeAlbum'] = $nodeAlbum;
 			$aInfo['nodeAlbumArtist'] = $nodeAlbumArtist;
@@ -419,14 +480,14 @@ class JukeboxToolkit {
 		if (isset($aAlbumInfo['year'])) {
 			$aAlbumProps['info_published'] = $aAlbumInfo['year'];
 			if ($this->aTagFlags['YEAR']) {
-				$aAlbumInfo['tags'][] = $aAlbumInfo['year'];
+				$aAlbumInfo['tags'][] = 'Year:'.$aAlbumInfo['year'];
 			}
 		} else {
 			if ($this->aAbortFlags['NO_YEAR']) {
 				throw new ImportException('[abort] - no year given in directory name');
 			}
 			if ($this->aTagFlags['DEFECTS']) {
-				$aAlbumInfo['tags'][] = 'NO YEAR';
+				$aAlbumInfo['tags'][] = 'Defects:NO YEAR';
 			}
 		}
 		
@@ -454,7 +515,7 @@ class JukeboxToolkit {
 				$this->echoInfo('bad', 'no cover found');
 			}
 			if ($this->aTagFlags['DEFECTS']) {
-				$aAlbumInfo['tags'][] = 'NO_YEAR';
+				$aAlbumInfo['tags'][] = 'Defects:NO YEAR';
 			}
 		}
 		
@@ -462,7 +523,7 @@ class JukeboxToolkit {
 		$aAlbumProps['info_relpath'] = iconv($dirAlbum->getEncoding(), 'UTF-8', $dirAlbum->getRelPath($this->nodeJukebox->getProperty('config_sourcepath')));
 		$aAlbumProps['info_abspath'] = iconv($dirAlbum->getEncoding(), 'UTF-8', $dirAlbum->getAbsPath());
 		
-		// album type
+		// album type - check later against tags
 		$aAlbumProps['info_type'] = 'DEFAULT';
 		
 		$aAlbumInfo['properties'] = $aAlbumProps;
@@ -482,9 +543,9 @@ class JukeboxToolkit {
 		// init helpers
 		$bTracksPresent = FALSE;
 		
-		// scan for tags first
+		// scan for tags first and prepare tag array
 		$aCustomTags = $this->getCustomTags($dirAlbum);
-		$nodeAlbum->addTags($aCustomTags);
+		$aAggregatedTags = $aCustomTags;
 		
 		foreach ($dirCD->getFiles() as $sFileName) {
 			
@@ -531,11 +592,14 @@ class JukeboxToolkit {
 			}
 			$nodeTrack->setProperty('info_artist', $nodeTrackArtist->getProperty('jcr:uuid'));
 			
-			// add tags
-			$nodeTrack->addTags(array_merge($aTrackInfo['tags'], $aCustomTags));
-			$nodeAlbum->addTags($nodeTrack->getTags());
+			// add tags to track and merge for album use
+			$aAggregatedTags = array_merge($aTrackInfo['tags'], $aAggregatedTags);
+			$nodeTrack->addTags($this->filterTags(array_merge($aTrackInfo['tags'], $aCustomTags), 'Track'));
 			
 		}
+		
+		// add aggregated and filtered tags to album
+		$nodeAlbum->addTags($this->filterTags($aAggregatedTags, 'Album'));
 		
 		if (!$bTracksPresent) {
 			throw new ImportException('[abort] - no tracks present in directory');
@@ -635,14 +699,16 @@ class JukeboxToolkit {
 				}
 			}
 			if ($this->aTagFlags['GENRE']) {
-				$aTrackInfo['tags'] = $aGenres;
+				foreach ($aGenres as $sGenre) {
+					$aTrackInfo['tags'][] = 'Genre:'.$sGenre;
+				}
 			}
 		} else {
 			if ($this->aAbortFlags['NO_GENRE']) {
 				throw new ImportException('[abort] - no genre given in '.$sRelPath);
 			}
 			if ($this->aTagFlags['DEFECTS']) {
-				$aTrackInfo['tags'][] = 'NO GENRE';
+				$aTrackInfo['tags'][] = 'Defects:NO GENRE';
 			}
 		}
 		
@@ -683,7 +749,7 @@ class JukeboxToolkit {
 			$aNodeProps['info_index'] = $aInfo['tags']['id3v2']['track_number'][0];
 		} else {
 			if ($this->aTagFlags['DEFECTS']) {
-				$aTrackInfo['tags'][] = 'NO INDEX';
+				$aTrackInfo['tags'][] = 'Defects:NO INDEX';
 			}
 		}
 		$aNodeProps['info_filename']	= iconv($dirAlbum->getEncoding(), 'UTF-8', $sRelPath);
@@ -696,17 +762,17 @@ class JukeboxToolkit {
 			}
 			$aNodeProps['info_published'] = 0;
 			if ($this->aTagFlags['DEFECTS']) {
-				$aTrackInfo['tags'][] = 'NO YEAR';
+				$aTrackInfo['tags'][] = 'Defects:NO YEAR';
 			}
 		}
 		$aNodeProps['enc_playtime']		= round($aInfo['playtime_seconds']);
 		$aNodeProps['enc_mode']			= strtoupper($aInfo['mpeg']['audio']['bitrate_mode']);
 		$aNodeProps['enc_bitrate']		= round($aInfo['mpeg']['audio']['bitrate'] / 1000);
 		if ($this->aTagFlags['BITRATE'] && $aNodeProps['enc_mode'] == 'CBR') {
-			$aTrackInfo['tags'][] = $aNodeProps['enc_bitrate'].'kbs';
+			$aTrackInfo['tags'][] = 'Encoding:'.$aNodeProps['enc_bitrate'].'kbs';
 		}
 		if ($this->aTagFlags['ENCODING']) {
-			$aTrackInfo['tags'][] = $aNodeProps['enc_mode'];
+			$aTrackInfo['tags'][] = 'Encoding:'.$aNodeProps['enc_mode'];
 		}
 		
 		$aTrackInfo['properties']		= $aNodeProps;

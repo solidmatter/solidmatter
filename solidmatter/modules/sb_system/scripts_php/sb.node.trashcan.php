@@ -19,9 +19,9 @@ class sbNode_trashcan extends sbNode {
 	* @param 
 	* @return 
 	*/
-	protected function __Queries() {
+	protected function __setQueries() {
 		parent::__setQueries();
-		$this->aQueries['getAbandonedNodes'] = 'sb_system/node/trashcan/getAbandonedNodes';
+		$this->aQueries['getAbandonedNodes'] = 'sbSystem/node/trashcan/getAbandonedNodes';
 	}
 	
 	//--------------------------------------------------------------------------

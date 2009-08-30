@@ -201,6 +201,10 @@ class DefaultJukeboxImporter {
 				
 				$aResult = $this->jbToolkit->importAlbum($dirAlbum);
 				
+				if (!is_writable($dirAlbum->getAbsPath())) {
+					throw new ImportException('[abort] - album "'.$aResult['nodeAlbum']->getProperty('label').'", directory "'.$dirAlbum->getAbsPath().'" is not writable');
+				}
+				
 				if ($_REQUEST->getParam('dry') != 'true') {
 					
 					$this->nodeJukebox->getSession()->beginTransaction('sbJukebox::importAlbum');

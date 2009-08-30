@@ -223,7 +223,23 @@
 			<div class="tags">
 				<xsl:for-each select="tags/tag">
 					<a href="/-/tags/listItems/?tagid={@id}">
-						<xsl:value-of select="." />
+						<xsl:choose>
+							<xsl:when test="contains(., 'Genre:')">
+								<xsl:value-of select="substring-after(., 'Genre:')" />
+							</xsl:when>
+							<xsl:when test="contains(., 'Year:')">
+								<xsl:value-of select="substring-after(., 'Year:')" />
+							</xsl:when>
+							<xsl:when test="contains(., 'Encoding:')">
+								<xsl:value-of select="substring-after(., 'Encoding:')" />
+							</xsl:when>
+							<xsl:when test="contains(., 'Series:')">
+								<!--<xsl:value-of select="substring-after(., 'Series:')" />-->
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="." />
+							</xsl:otherwise>
+						</xsl:choose>
 					</a>
 					<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1'">
 						<xsl:value-of select="' '" />
@@ -330,11 +346,26 @@
 									[<xsl:value-of select="@info_published" />]
 								</xsl:if>
 							</a>
+							<span style="color:grey;">
 							<xsl:choose>
 								<xsl:when test="@info_type = 'SINGLE'">
-									<img src="/theme/sb_jukebox/icons/type_single.png" style="vertical-align: middle;" />
+									<!--<img src="/theme/sb_jukebox/icons/type_single.png" style="vertical-align: middle;" />-->
+									- Single
+								</xsl:when>
+								<xsl:when test="@info_type = 'MAXI'">
+									- Maxi
+								</xsl:when>
+								<xsl:when test="@info_type = 'BESTOF'">
+									- Best Of
+								</xsl:when>
+								<xsl:when test="@info_type = 'BOOTLEG'">
+									- Bootleg
+								</xsl:when>
+								<xsl:when test="@info_type = 'LIVE'">
+									- Live
 								</xsl:when>
 							</xsl:choose>
+							</span>
 							<br />
 							<xsl:call-template name="render_stars" />
 						</td>

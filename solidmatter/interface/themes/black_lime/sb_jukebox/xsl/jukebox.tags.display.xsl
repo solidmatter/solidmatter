@@ -52,78 +52,108 @@
 				</tr>
 			</thead>
 			<tbody>
-				<xsl:choose>
-					<xsl:when test="branchtags/tag">
-						<tr>
-							<td>
-								<div class="tagcontainer">
-									<xsl:call-template name="render_tags">
-										<xsl:with-param name="weighting" select="$content/weighting/weighting" />
-									</xsl:call-template>
-								</div>
-							</td>
-						</tr>
-					</xsl:when>
-					<xsl:otherwise>
-						<tr><td colspan="5"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:call-template name="render_tags">
+					<xsl:with-param name="group" select="'Genre:'" />
+					<xsl:with-param name="tags" select="branchtags/tag[contains(., 'Genre:')]" />
+					<xsl:with-param name="weighting" select="$content/weighting/weighting" />
+				</xsl:call-template>
+				<tr><th colspan="5" style="padding:4px 8px;"><hr style="border:1px solid #222;" /></th></tr>
+				<xsl:call-template name="render_tags">
+					<xsl:with-param name="group" select="''" />
+					<xsl:with-param name="tags" select="branchtags/tag[not(contains(., 'Year:') or contains(., 'Genre:') or contains(., 'Encoding:') or contains(., 'Defects:') or contains(., 'Series:'))]" />
+					<xsl:with-param name="weighting" select="$content/weighting/weighting" />
+				</xsl:call-template>
+				<!--<tr><th colspan="5" style="padding:4px 8px;"><hr style="border:1px solid #222;" /></th></tr>
+				<xsl:call-template name="render_tags">
+					<xsl:with-param name="group" select="'Series:'" />
+					<xsl:with-param name="tags" select="branchtags/tag[contains(., 'Series:')]" />
+					<xsl:with-param name="weighting" select="$content/weighting/weighting" />
+				</xsl:call-template>-->
+				<tr><th colspan="5" style="padding:4px 8px;"><hr style="border:1px solid #222;" /></th></tr>
+				<xsl:call-template name="render_tags">
+					<xsl:with-param name="group" select="'Year:'" />
+					<xsl:with-param name="tags" select="branchtags/tag[contains(., 'Year:')]" />
+					<xsl:with-param name="weighting" select="$content/weighting/weighting" />
+				</xsl:call-template>
+				<tr><th colspan="5" style="padding:4px 8px;"><hr style="border:1px solid #222;" /></th></tr>
+				<xsl:call-template name="render_tags">
+					<xsl:with-param name="group" select="'Encoding:'" />
+					<xsl:with-param name="tags" select="branchtags/tag[contains(., 'Encoding:')]" />
+					<xsl:with-param name="weighting" select="$content/weighting/weighting" />
+				</xsl:call-template>
+				<tr><th colspan="5" style="padding:4px 8px;"><hr style="border:1px solid #222;" /></th></tr>
+				<xsl:call-template name="render_tags">
+					<xsl:with-param name="group" select="'Defects:'" />
+					<xsl:with-param name="tags" select="branchtags/tag[contains(., 'Defects:')]" />
+					<xsl:with-param name="weighting" select="$content/weighting/weighting" />
+				</xsl:call-template>
 			</tbody>
 		</table>
 	</xsl:template>
 	
 	<xsl:template name="render_tags">
+		<xsl:param name="title" />
+		<xsl:param name="tags" />
+		<xsl:param name="group" />
 		<xsl:param name="weighting" />
-		<xsl:choose>
-			<xsl:when test="$weighting='numItems'">
-				<xsl:variable name="maxitems">
-					<xsl:for-each select="branchtags/tag/@numitems">
-						<xsl:sort data-type="number" order="descending" />
-						<xsl:if test="position()=1"><xsl:value-of select="."/></xsl:if>
-					</xsl:for-each>
-				</xsl:variable>
-				<xsl:variable name="minitems">
-					<xsl:for-each select="branchtags/tag/@numitems">
-						<xsl:sort data-type="number" order="ascending" />
-						<xsl:if test="position()=1"><xsl:value-of select="."/></xsl:if>
-					</xsl:for-each>
-				</xsl:variable>
-				<xsl:for-each select="branchtags/tag">
-					<a>
-						<xsl:attribute name="href">/-/tags/listItems/?tagid=<xsl:value-of select="@id" /></xsl:attribute>
-						<xsl:attribute name="style">font-size:<xsl:value-of select="round(11 + 12 * (@numitems) div $maxitems)" />px;</xsl:attribute>
-						<xsl:value-of select="." />
-					</a>
-					<xsl:if test="position() != last()">
-						<xsl:value-of select="' '" />
-					</xsl:if>
-				</xsl:for-each>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:variable name="maxpopularity">
-					<xsl:for-each select="branchtags/tag/@popularity">
-						<xsl:sort data-type="number" order="descending" />
-						<xsl:if test="position()=1"><xsl:value-of select="."/></xsl:if>
-					</xsl:for-each>
-				</xsl:variable>
-				<xsl:variable name="minpopularity">
-					<xsl:for-each select="branchtags/tag/@popularity">
-						<xsl:sort data-type="number" order="ascending" />
-						<xsl:if test="position()=1"><xsl:value-of select="."/></xsl:if>
-					</xsl:for-each>
-				</xsl:variable>
-				<xsl:for-each select="branchtags/tag">
-					<a>
-						<xsl:attribute name="href">/-/tags/listItems/?tagid=<xsl:value-of select="@id" /></xsl:attribute>
-						<xsl:attribute name="style">font-size:<xsl:value-of select="round(11 + 12 * (@popularity) div $maxpopularity)" />px;</xsl:attribute>
-						<xsl:value-of select="." />
-					</a>
-					<xsl:if test="position() != last()">
-						<xsl:value-of select="' '" />
-					</xsl:if>
-				</xsl:for-each>
-			</xsl:otherwise>
-		</xsl:choose>
+		<xsl:if test="count($tags) > 0">
+			<tr>
+			<td>
+				<div class="tagcontainer">
+					<xsl:choose>
+						<xsl:when test="$weighting='numItems'">
+							<xsl:variable name="maxitems">
+								<xsl:for-each select="$tags/@numitems">
+									<xsl:sort data-type="number" order="descending" />
+									<xsl:if test="position()=1"><xsl:value-of select="."/></xsl:if>
+								</xsl:for-each>
+							</xsl:variable>
+							<xsl:variable name="minitems">
+								<xsl:for-each select="$tags/@numitems">
+									<xsl:sort data-type="number" order="ascending" />
+									<xsl:if test="position()=1"><xsl:value-of select="."/></xsl:if>
+								</xsl:for-each>
+							</xsl:variable>
+							<xsl:for-each select="$tags">
+								<a>
+									<xsl:attribute name="href">/-/tags/listItems/?tagid=<xsl:value-of select="@id" /></xsl:attribute>
+									<xsl:attribute name="style">font-size:<xsl:value-of select="round(11 + 12 * (@numitems) div $maxitems)" />px;</xsl:attribute>
+									<xsl:value-of select="substring-after(., $group)" />
+								</a>
+								<xsl:if test="position() != last()">
+									<xsl:value-of select="' '" />
+								</xsl:if>
+							</xsl:for-each>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:variable name="maxpopularity">
+								<xsl:for-each select="$tags/@popularity">
+									<xsl:sort data-type="number" order="descending" />
+									<xsl:if test="position()=1"><xsl:value-of select="."/></xsl:if>
+								</xsl:for-each>
+							</xsl:variable>
+							<xsl:variable name="minpopularity">
+								<xsl:for-each select="$tags/@popularity">
+									<xsl:sort data-type="number" order="ascending" />
+									<xsl:if test="position()=1"><xsl:value-of select="."/></xsl:if>
+								</xsl:for-each>
+							</xsl:variable>
+							<xsl:for-each select="$tags">
+								<a>
+									<xsl:attribute name="href">/-/tags/listItems/?tagid=<xsl:value-of select="@id" /></xsl:attribute>
+									<xsl:attribute name="style">font-size:<xsl:value-of select="round(11 + 12 * (@popularity) div $maxpopularity)" />px;</xsl:attribute>
+									<xsl:value-of select="substring-after(., $group)" />
+								</a>
+								<xsl:if test="position() != last()">
+									<xsl:value-of select="' '" />
+								</xsl:if>
+							</xsl:for-each>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
+				</td>
+			</tr>
+		</xsl:if>
 	</xsl:template>
 
 </xsl:stylesheet>
