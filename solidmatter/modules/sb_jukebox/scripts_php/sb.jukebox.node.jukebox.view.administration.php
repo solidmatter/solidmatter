@@ -58,6 +58,8 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 				
 				$this->logEvent(System::MAINTENANCE, 'CLEAR_STARTED', 'library path: '.$this->nodeSubject->getProperty('config_sourcepath'));
 				
+				ini_set('max_execution_time', 6000000);
+				
 				$nlChildren = $this->nodeSubject->getNodes();
 				
 				//$this->nodeSubject->getSession()->beginTransaction('sbJukebox::clearLibrary');

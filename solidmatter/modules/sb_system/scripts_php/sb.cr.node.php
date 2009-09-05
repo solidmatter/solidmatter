@@ -1482,7 +1482,9 @@ class sbCR_Node {
 	*/
 	public function remove() {
 		if ($this->isNew()) {
-			unset($this);
+			//unset($this); // does not work in PHP5 anymore
+			//$this->getParent()->refresh(); // might be better, but affects all other changes, too
+			throw new LazyBastardException('unsaved nodes cannot be removed yet');
 		} else {
 			$this->addSaveTask('remove_node');
 		}

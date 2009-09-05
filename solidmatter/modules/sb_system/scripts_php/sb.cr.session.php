@@ -674,10 +674,6 @@ class sbCR_Session {
 	*/
 	public function getInstance($sQuery) {
 		
-		if (isset($this->aNodecache[$sQuery])) {
-			return ($this->aNodecache[$sQuery]);
-		}
-		
 		// helper array
 		$aMatches = array();
 		
@@ -692,9 +688,6 @@ class sbCR_Session {
 			$nodeCurrent = $this->getInstanceByUUID($sQuery);
 		}
 		
-		//$this->aNodecache[$nodeCurrent->getIdentifier()] = $nodeCurrent;
-		//$this->aNodecache[$sQuery] = $nodeCurrent;
-		
 		return ($nodeCurrent);
 		
 	}
@@ -706,6 +699,16 @@ class sbCR_Session {
 	* @return 
 	*/
 	public function getInstanceByUUID($sQuery, $sParentUUID = NULL) {
+		// needs a thinkover, too many references prevent object destruction
+		/*if (isset($this->aNodeCache[$sQuery])) {
+			if (isset($this->aNodeCache[$sQuery][$sParentUUID])) {
+				return ($this->aNodeCache[$sQuery][$sParentUUID]);
+			} else {
+				foreach ($this->aNodeCache[$sQuery] as $nodeCurrent) {
+					return ($nodeCurrent);
+				}
+			}
+		}*/
 		$stmtInfo = $this->DB->prepareKnown('sbCR/getNode/byUUID');
 		$stmtInfo->bindParam('id', $sQuery, PDO::PARAM_STR);
 		$stmtInfo->execute();
@@ -808,6 +811,9 @@ class sbCR_Session {
 		$elemSubject->setAttribute('bequeathlocalrights', $aRow['b_bequeathlocalrights']);
 		$elemSubject->setAttribute('currentlifecyclestate', $aRow['s_currentlifecyclestate']);
 		
+		// needs a thinkover, too many references prevent object destruction
+		//$this->aNodeCache[$aRow['uuid']][$aRow['fk_parent']] = $nodeSubject;
+		
 		return ($nodeSubject);
 		
 	}
@@ -846,8 +852,6 @@ class sbCR_Session {
 	* @return 
 	*/
 	private function resolvePath($sPath) {
-		
-		//var_dumpp($sPath);
 		
 		$cachePaths = CacheFactory::getInstance('paths');
 		$sUUID = $cachePaths->loadData($sPath);

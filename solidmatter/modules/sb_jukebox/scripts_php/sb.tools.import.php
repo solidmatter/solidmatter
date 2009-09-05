@@ -15,7 +15,7 @@ import('sb_jukebox:sb.tools.import.genres');
 */
 class JukeboxToolkit {
 	
-	protected $nodeJukbox = NULL;
+	protected $nodeJukebox = NULL;
 	protected $jbGenreLib = NULL;
 	
 	protected $aArtists = array();
@@ -35,7 +35,7 @@ class JukeboxToolkit {
 		//'NO_ID3V1' => TRUE,
 		'NO_COVER' => TRUE,
 		//'DUPLICATE_ALBUM' => TRUE,
-		'NO_TRACKNUMBER' => TRUE,
+		'NO_INDEX' => TRUE,
 		'NO_YEAR' => TRUE,
 		'DIFFERING_TAGS' => TRUE,
 		
@@ -332,7 +332,8 @@ class JukeboxToolkit {
 			return ($aInfo);
 			
 		} catch (ImportException $e) {
-			$nodeAlbum->remove();	
+			// remove the newly added album from artist / discard artist changes
+			$nodeAlbumArtist->refresh();
 			throw ($e);
 		}
 		
@@ -748,6 +749,9 @@ class JukeboxToolkit {
 		if (isset($aInfo['tags']['id3v2']['track_number'])) {
 			$aNodeProps['info_index'] = $aInfo['tags']['id3v2']['track_number'][0];
 		} else {
+			if ($this->aAbortFlags['NO_INDEX']) {
+				throw new ImportException('[abort] - Track has no index');
+			}
 			if ($this->aTagFlags['DEFECTS']) {
 				$aTrackInfo['tags'][] = 'Defects:NO INDEX';
 			}

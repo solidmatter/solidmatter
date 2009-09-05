@@ -199,6 +199,8 @@ class DefaultJukeboxImporter {
 			
 			try {
 				
+				$this->nodeJukebox->getSession()->beginTransaction('sbJukebox::importAlbum');
+				
 				$aResult = $this->jbToolkit->importAlbum($dirAlbum);
 				
 				if (!is_writable($dirAlbum->getAbsPath())) {
@@ -206,8 +208,6 @@ class DefaultJukeboxImporter {
 				}
 				
 				if ($_REQUEST->getParam('dry') != 'true') {
-					
-					$this->nodeJukebox->getSession()->beginTransaction('sbJukebox::importAlbum');
 					
 					try {
 						
@@ -226,22 +226,23 @@ class DefaultJukeboxImporter {
 						$this->jbToolkit->storeArtists();
 						
 					} catch (Exception $e) {
-						$this->nodeJukebox->getSession()->rollback();
+						
 						// FIXME: newly created (and aborted) albums should be removed from memory, artist and session
-						$this->jbToolkit->dumpArtists();
+						//$this->jbToolkit->dumpArtists();
 						throw $e;
 					}
 					
-					$this->nodeJukebox->getSession()->commit('sbJukebox::importAlbum');
-					
 				}
+				
+				$this->nodeJukebox->getSession()->commit('sbJukebox::importAlbum');
 				
 				$this->iImportedAlbums++;
 				$this->echoInfo('good', '[imported] new album as "'.$aResult['nodeAlbum']->getProperty('label').'"');
 				
 			} catch (ImportException $e) {
 				
-				// FIXME: incomplete albums (with errors) are saved regardless of exceptions!
+				// cleanup stuff created while importing the album
+				$this->nodeJukebox->getSession()->rollback();
 				$this->jbToolkit->dumpArtists();
 				$this->nodeJukebox->refresh(FALSE);
 				$this->nodeJukebox->getSession()->refresh(FALSE);
