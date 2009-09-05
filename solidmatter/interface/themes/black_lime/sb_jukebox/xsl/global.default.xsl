@@ -94,19 +94,19 @@
 							</a>
 						</li>
 						<li>
-							<a href="/-/charts">
-								<xsl:if test="$content/@view = 'charts'">
-									<xsl:attribute name="class">active</xsl:attribute> 
-								</xsl:if>
-								<span class="type menu_charts"><xsl:value-of select="$locale/sbJukebox/menu/charts" /></span>
-							</a>
-						</li>
-						<li>
 							<a href="/-/tags">
 								<xsl:if test="$content/@view = 'tags'">
 									<xsl:attribute name="class">active</xsl:attribute> 
 								</xsl:if>
 								<span class="type menu_tags"><xsl:value-of select="$locale/sbJukebox/menu/tags" /></span>
+							</a>
+						</li>
+						<li>
+							<a href="/-/charts">
+								<xsl:if test="$content/@view = 'charts'">
+									<xsl:attribute name="class">active</xsl:attribute> 
+								</xsl:if>
+								<span class="type menu_charts"><xsl:value-of select="$locale/sbJukebox/menu/charts" /></span>
 							</a>
 						</li>
 						<li>
@@ -490,7 +490,7 @@
 							</xsl:call-template>
 						</td>
 						<td width="15%" style="text-align:right;">
-							<xsl:value-of select="php:functionString('datetime_mysql2local', @created)" />
+							<xsl:value-of select="php:functionString('datetime_mysql2local', string(@created), string($locale/sbSystem/formats/datetime_short))" />
 						</td>
 						<td width="10">
 						<xsl:if test="@createdby = $system/userid or ($master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1')">

@@ -51,7 +51,7 @@ class sbView_jukebox_jukebox_favorites extends sbJukeboxView {
 			case 'getM3U':
 				$bRandom = FALSE;
 				if ($_REQUEST->getParam('random') != NULL) {
-					$bRandom = TRUE;	
+					$bRandom = TRUE;
 				}
 				$this->sendPlaylist($nodeFavorites, $bRandom);
 				break;
@@ -61,11 +61,21 @@ class sbView_jukebox_jukebox_favorites extends sbJukeboxView {
 			
 		}
 		
+		// get favorites
 		$niFavorites = $nodeFavorites->loadChildren('debug', TRUE, TRUE);
 		if ($niFavorites->getSize() > 0) {
 			$nodeFavorites->storeChildren('debug');
 			$_RESPONSE->addData($niFavorites->getElement('favorites'));
 		}
+		
+		// get personal history
+		$iLimit = 100;
+		$stmtGetHistory = $this->crSession->prepareKnown('sbJukebox/history/getLatest/byUser');
+		$stmtGetHistory->bindValue('jukebox_mpath', $this->getJukebox()->getMPath(), PDO::PARAM_STR);
+		$stmtGetHistory->bindValue('user_uuid', User::getUUID(), PDO::PARAM_STR);
+		$stmtGetHistory->execute();
+		$_RESPONSE->addData($stmtGetHistory->fetchElements('history'));
+		
 		
 	}
 	

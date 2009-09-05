@@ -6,7 +6,9 @@
 	exclude-element-prefixes="html sbform" 
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:sbform="http://www.solidbytes.net/sbform"
-	xmlns:dyn="http://exslt.org/dynamic" extension-element-prefixes="dyn">
+	xmlns:dyn="http://exslt.org/dynamic"
+	xmlns:php="http://php.net/xsl"
+	extension-element-prefixes="dyn">
 
 	<xsl:import href="global.default.xsl" />
 	
@@ -51,29 +53,23 @@
 				<xsl:with-param name="nodes" select="$content/favorites/sbnode[@nodetype='sbJukebox:Track']" />
 				<xsl:with-param name="type" select="'track'" />
 			</xsl:call-template>
+			<xsl:call-template name="renderHistory">
+				<xsl:with-param name="label" select="$locale/sbJukebox/labels/most_recently_played" />
+				<xsl:with-param name="nodes" select="$content/history/row" />
+				<xsl:with-param name="type" select="'ear'" />
+			</xsl:call-template>
 		</div>
 	</xsl:template>
 	
 	<xsl:template name="renderResult">
 		<xsl:param name="label" />
 		<xsl:param name="nodes" />
-		<xsl:param name="icon" />
 		<xsl:param name="expand" />
 		<xsl:param name="type" />
 		<table class="default" width="100%" summary="CHANGEME">
 			<thead>
 				<tr>
-					<th colspan="3">
-						<!--<span style="float: right;">
-							<xsl:choose>
-								<xsl:when test="$content/@expand = $expand">
-									<a class="type collapse" href="/-/tags/listItems/tagid={$content/@tagid}">Collapse</a>
-								</xsl:when>
-								<xsl:otherwise>
-									<a class="type expand" href="/-/tags/listItems/tagid={$content/@tagid}&amp;expand={$expand}">Expand</a>
-								</xsl:otherwise>
-							</xsl:choose>
-						</span>-->
+					<th colspan="2">
 						<span class="type {$type}">
 							<xsl:value-of select="concat(' ', $label)" />
 						</span>
@@ -86,9 +82,6 @@
 					<xsl:for-each select="$nodes">
 						<tr>
 							<xsl:call-template name="colorize" />
-							<!--<td width="10" style="text-align: right;">
-								<xsl:value-of select="position()" />.
-							</td>-->
 							<td>
 								<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
 							</td>
@@ -105,6 +98,47 @@
 			</xsl:choose>
 			</tbody>
 		</table>
+	</xsl:template>
+	
+	<xsl:template name="renderHistory">
+		<xsl:param name="label" />
+		<xsl:param name="nodes" />
+		<xsl:param name="type" />
+		<table class="default" width="100%" summary="CHANGEME">
+			<thead>
+				<tr>
+					<th colspan="3">
+						<span class="type {$type}">
+							<xsl:value-of select="$label" />
+						</span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+			<xsl:choose>
+				<xsl:when test="$nodes">
+					<xsl:for-each select="$nodes">
+						<tr>
+							<xsl:call-template name="colorize" />
+							<td>
+								<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
+							</td>
+							<td width="25%">
+								<xsl:value-of select="php:functionString('datetime_mysql2local', string(@played), string($locale/sbSystem/formats/datetime_short))" />
+							</td>
+							<td align="right">
+								<xsl:call-template name="render_buttons" />
+							</td>
+						</tr>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<!--<tr><td colspan="5"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>-->
+				</xsl:otherwise>
+			</xsl:choose>
+			</tbody>
+		</table>
+		
 	</xsl:template>
 
 </xsl:stylesheet>

@@ -84,6 +84,21 @@ $_QUERIES['sbJukebox/history/remove'] = '
 	WHERE		fk_user = :user_uuid
 		AND		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(dt_played) < :threshold
 ';
+$_QUERIES['sbJukebox/history/getLatest/byUser'] = '
+	SELECT		n.uuid,
+				n.s_label AS label,
+				n.s_name AS name,
+				\'sbJukebox:Track\' as nodetype,
+				hi.dt_played as played
+	FROM		{TABLE_NODES} n
+	INNER JOIN	{TABLE_JB_HISTORY} hi
+		ON		n.uuid = hi.fk_track
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
+		AND		hi.fk_user = :user_uuid
+	ORDER BY	hi.dt_played DESC
+';
 
 //------------------------------------------------------------------------------
 // tokens

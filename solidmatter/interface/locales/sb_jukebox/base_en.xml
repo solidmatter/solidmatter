@@ -125,6 +125,8 @@
 		<minstars>Minimum stars</minstars>
 		<maxstars>Maximum stars</maxstars>
 		<series>Series</series>
+		<most_recently_played>Most recently played</most_recently_played>
+		<more>more...</more>
 	</labels>
 	
 	<menu>

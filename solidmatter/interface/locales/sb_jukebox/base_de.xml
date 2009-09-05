@@ -125,6 +125,8 @@
 		<minstars>Negativsterne</minstars>
 		<maxstars>Positivsterne</maxstars>
 		<series>Serie</series>
+		<most_recently_played>zuletzt gespielt</most_recently_played>
+		<more>mehr...</more>
 	</labels>
 	
 	<menu>
