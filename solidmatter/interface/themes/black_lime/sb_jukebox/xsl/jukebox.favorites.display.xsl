@@ -86,7 +86,10 @@
 								<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
 							</td>
 							<td style="text-align:right;">
-								<a class="type play icononly" href="/{@uuid}/-/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+								<xsl:call-template name="render_buttons">
+									<xsl:with-param name="with_favorites" select="boolean(false)" />
+								</xsl:call-template>
+								<!--<a class="type play icononly" href="/{@uuid}/-/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>-->
 								<a class="type remove icononly" href="/-/favorites/removeItem/?item={@uuid}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 							</td>
 						</tr>
@@ -120,13 +123,13 @@
 					<xsl:for-each select="$nodes">
 						<tr>
 							<xsl:call-template name="colorize" />
-							<td>
+							<td width="70%">
 								<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
 							</td>
-							<td width="25%">
+							<td width="15%">
 								<xsl:value-of select="php:functionString('datetime_mysql2local', string(@played), string($locale/sbSystem/formats/datetime_short))" />
 							</td>
-							<td align="right">
+							<td width="15%" align="right">
 								<xsl:call-template name="render_buttons" />
 							</td>
 						</tr>

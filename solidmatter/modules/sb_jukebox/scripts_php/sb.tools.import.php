@@ -151,6 +151,9 @@ class JukeboxToolkit {
 				case 'Bootleg':
 					$nodeAlbum->setProperty('info_type', 'BOOTLEG');
 					break;
+				/*case 'Compilation':
+					$nodeAlbum->setProperty('info_type', 'COMPILATION');
+					break;*/
 				case 'Tribute':
 					$nodeAlbum->setProperty('info_type', 'TRIBUTE');
 					break;

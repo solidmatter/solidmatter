@@ -234,7 +234,7 @@
 								<xsl:value-of select="substring-after(., 'Encoding:')" />
 							</xsl:when>
 							<xsl:when test="contains(., 'Series:')">
-								<!--<xsl:value-of select="substring-after(., 'Series:')" />-->
+								<xsl:value-of select="substring-after(., 'Series:')" />
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:value-of select="." />
@@ -265,6 +265,7 @@
 	</xsl:template>
 	
 	<xsl:template name="render_buttons">
+		<xsl:param name="with_favorites" select="'true'" />
 		<a class="type play icononly" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		<xsl:if test="@nodetype != 'sbJukebox:Playlist'">
 			<a class="type recommend icononly" href="/{@uuid}/recommend" title="{$locale/sbJukebox/actions/recommend}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
@@ -273,7 +274,7 @@
 			<a class="type lyrics icononly" href="http://www.google.de/search?q=lyrics {@label}" title="{$locale/sbJukebox/actions/search_lyrics}" target="_blank"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 			<a class="type videos icononly" href="http://www.youtube.com/results?search_query={@label}" title="{$locale/sbJukebox/actions/search_videos}" target="_blank"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
-		<xsl:if test="@nodetype != 'sbJukebox:Playlist'">
+		<xsl:if test="@nodetype != 'sbJukebox:Playlist' and $with_favorites">
 			<a class="type addToFavorites icononly" href="/-/favorites/addItem/?item={@uuid}" title="{$locale/sbJukebox/actions/add_to_favorites}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
 		<xsl:if test="$content/currentPlaylist and (@nodetype='sbJukebox:Album' or @nodetype='sbJukebox:Track')">
@@ -358,6 +359,12 @@
 								<xsl:when test="@info_type = 'BESTOF'">
 									- Best Of
 								</xsl:when>
+								<xsl:when test="@info_type = 'COMPILATION'">
+									- Compilation
+								</xsl:when>
+								<xsl:when test="@info_type = 'TRIBUTE'">
+									- Tribute
+								</xsl:when>
 								<xsl:when test="@info_type = 'BOOTLEG'">
 									- Bootleg
 								</xsl:when>
@@ -372,7 +379,7 @@
 						<td align="right">
 							<xsl:call-template name="render_buttons" />
 							<br /><br />
-							<a href="javascript:toggle_albumdetails('{@uuid}');">more...</a>
+							<a href="javascript:toggle_albumdetails('{@uuid}');"><xsl:value-of select="$locale/sbJukebox/labels/more" /></a>
 						</td>
 					</tr>
 					<tr style="display:none;">

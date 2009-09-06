@@ -75,18 +75,20 @@
 					<xsl:with-param name="tags" select="branchtags/tag[contains(., 'Year:')]" />
 					<xsl:with-param name="weighting" select="$content/weighting/weighting" />
 				</xsl:call-template>
-				<tr><th colspan="5" style="padding:4px 8px;"><hr style="border:1px solid #222;" /></th></tr>
-				<xsl:call-template name="render_tags">
-					<xsl:with-param name="group" select="'Encoding:'" />
-					<xsl:with-param name="tags" select="branchtags/tag[contains(., 'Encoding:')]" />
-					<xsl:with-param name="weighting" select="$content/weighting/weighting" />
-				</xsl:call-template>
-				<tr><th colspan="5" style="padding:4px 8px;"><hr style="border:1px solid #222;" /></th></tr>
-				<xsl:call-template name="render_tags">
-					<xsl:with-param name="group" select="'Defects:'" />
-					<xsl:with-param name="tags" select="branchtags/tag[contains(., 'Defects:')]" />
-					<xsl:with-param name="weighting" select="$content/weighting/weighting" />
-				</xsl:call-template>
+				<xsl:if test="$jukebox/adminmode = '1'">
+					<tr><th colspan="5" style="padding:4px 8px;"><hr style="border:1px solid #222;" /></th></tr>
+					<xsl:call-template name="render_tags">
+						<xsl:with-param name="group" select="'Encoding:'" />
+						<xsl:with-param name="tags" select="branchtags/tag[contains(., 'Encoding:')]" />
+						<xsl:with-param name="weighting" select="$content/weighting/weighting" />
+					</xsl:call-template>
+					<tr><th colspan="5" style="padding:4px 8px;"><hr style="border:1px solid #222;" /></th></tr>
+					<xsl:call-template name="render_tags">
+						<xsl:with-param name="group" select="'Defects:'" />
+						<xsl:with-param name="tags" select="branchtags/tag[contains(., 'Defects:')]" />
+						<xsl:with-param name="weighting" select="$content/weighting/weighting" />
+					</xsl:call-template>
+				</xsl:if>
 			</tbody>
 		</table>
 	</xsl:template>
