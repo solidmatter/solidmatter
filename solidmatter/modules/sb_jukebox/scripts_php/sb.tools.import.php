@@ -29,6 +29,7 @@ class JukeboxToolkit {
 		'COVER_INFO' => TRUE,
 		'TRACK_NAMES' => TRUE,
 		'TRACK_INFOS' => TRUE,
+		'ALBUM_TAGS' => TRUE,
 	);
 	protected $aAbortFlags = array(
 		'NO_GENRE' => TRUE,
@@ -135,8 +136,13 @@ class JukeboxToolkit {
 	* @return 
 	*/
 	public function setAlbumtype($nodeAlbum) {
+		if ($this->aVerboseFlags['ALBUM_TAGS']) {
+			echo '<br/>Album Tags:<br/>';
+		}
 		foreach ($nodeAlbum->getTags() as $sTag) {
-			var_dumpp($sTag);
+			if ($this->aVerboseFlags['ALBUM_TAGS']) {
+				echo $sTag.'<br/>';
+			}
 			switch ($sTag) {
 				case 'Maxi':
 				case 'EP':

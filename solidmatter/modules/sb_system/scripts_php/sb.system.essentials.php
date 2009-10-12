@@ -309,6 +309,9 @@ function headers($sType, $aOptions = NULL) {
 			if (isset($aOptions['size'])) {
 				header('Content-Length: '.$aOptions['size']);
 			}
+			if (isset($aOptions['mime'])) {
+				header('Content-type: '.$aOptions['mime']);
+			}
 			break;
 		default:
 			die('unknown header type "'.$sType.'"');

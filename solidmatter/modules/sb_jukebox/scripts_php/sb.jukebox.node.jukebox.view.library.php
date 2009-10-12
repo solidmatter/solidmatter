@@ -69,15 +69,21 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 					}*/
 					// add relevant data
 					$elemRecommendation = $_RESPONSE->createElement('entry');
-					$nodeSubject = $this->crSession->getNodeByIdentifier($nodeRecommendation->getProperty('subject'));
-					$nodeRecommentor = $this->crSession->getNodeByIdentifier($nodeRecommendation->getProperty('jcr:createdBy'));
-					$elemRecommendation->setAttribute('uuid', $nodeRecommendation->getProperty('jcr:uuid'));
-					$elemRecommendation->setAttribute('comment', $nodeRecommendation->getProperty('comment'));
-					$elemRecommendation->setAttribute('item_uuid', $nodeSubject->getProperty('jcr:uuid'));
-					$elemRecommendation->setAttribute('label', $nodeSubject->getProperty('label'));
-					$elemRecommendation->setAttribute('nodetype', $nodeSubject->getProperty('nodetype'));
-					$elemRecommendation->setAttribute('username', $nodeRecommentor->getProperty('label'));
-					$elemRecommendation->setAttribute('user_uuid', $nodeRecommentor->getProperty('jcr:uuid'));
+					try {
+						$nodeSubject = $this->crSession->getNodeByIdentifier($nodeRecommendation->getProperty('subject'));
+						$nodeRecommentor = $this->crSession->getNodeByIdentifier($nodeRecommendation->getProperty('jcr:createdBy'));
+						$elemRecommendation->setAttribute('uuid', $nodeRecommendation->getProperty('jcr:uuid'));
+						$elemRecommendation->setAttribute('comment', $nodeRecommendation->getProperty('comment'));
+						$elemRecommendation->setAttribute('item_uuid', $nodeSubject->getProperty('jcr:uuid'));
+						$elemRecommendation->setAttribute('label', $nodeSubject->getProperty('label'));
+						$elemRecommendation->setAttribute('nodetype', $nodeSubject->getProperty('nodetype'));
+						$elemRecommendation->setAttribute('username', $nodeRecommentor->getProperty('label'));
+						$elemRecommendation->setAttribute('user_uuid', $nodeRecommentor->getProperty('jcr:uuid'));
+					} catch (NodeNotFoundException $e) {
+						$elemRecommendation->setAttribute('uuid', $nodeRecommendation->getProperty('jcr:uuid'));
+						$elemRecommendation->setAttribute('comment', $nodeRecommendation->getProperty('comment'));
+						$elemRecommendation->setAttribute('label', 'recommended object does not exist');
+					}
 					$elemRecommendations->appendChild($elemRecommendation);
 				}
 				$_RESPONSE->addData($elemRecommendations);

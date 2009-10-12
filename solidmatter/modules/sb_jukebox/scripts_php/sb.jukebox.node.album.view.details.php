@@ -84,7 +84,10 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 			
 			case 'download':
 				import('sbJukebox:sb.jukebox.tools');
+				$this->logEvent(System::INFO, 'DOWNLOAD_STARTED', 'Album: '.$this->nodeSubject->getProperty('label'));
 				JukeboxTools::sendDownloadArchive($this->nodeSubject);
+				$this->logEvent(System::INFO, 'DOWNLOAD_ENDED', 'Album: '.$this->nodeSubject->getProperty('label'));
+				exit();
 				break;
 			
 			case 'getCover':

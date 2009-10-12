@@ -159,7 +159,10 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 			
 			case 'download':
 				import('sbJukebox:sb.jukebox.tools');
+				$this->logEvent(System::INFO, 'DOWNLOAD_STARTED', 'Playlist: '.$this->nodeSubject->getProperty('label'));
 				JukeboxTools::sendDownloadArchive($this->nodeSubject);
+				$this->logEvent(System::INFO, 'DOWNLOAD_ENDED', 'Playlist: '.$this->nodeSubject->getProperty('label'));
+				exit();
 				break;
 			
 			default:

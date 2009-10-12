@@ -343,6 +343,7 @@ class JukeboxTools {
 		$aOptions = array();
 		$aOptions['filename'] = $sFilename;
 		$aOptions['size'] = filesize($sTempFile);
+		$aOptions['mime'] = 'application/zip';
 		headers('download', $aOptions);
 		$iBandwidth = Registry::getValue('sb.jukebox.downloads.maxbandwidth');
 		while(!feof($hTempFile) && !connection_aborted()) {
@@ -357,7 +358,8 @@ class JukeboxTools {
 			fclose($hTempFile);
 			unlink($sTempFile);
 		}
-		exit();
+		// deactivated for logging
+		//exit();
 		
 	}
 	
