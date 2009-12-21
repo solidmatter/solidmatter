@@ -24,10 +24,11 @@
 	</xsl:template>
 	
 	<xsl:template name="content">
+		<div class="toolbar">
+			
+		</div>
 		<div class="nav">
-			<xsl:call-template name="simplesearch">
-				<xsl:with-param name="form" select="$content/sbform[@id='searchAlbums']" />
-			</xsl:call-template>
+			
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="response/errors" />

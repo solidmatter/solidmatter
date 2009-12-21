@@ -49,6 +49,7 @@ class sbView_jukebox_jukebox_favorites extends sbJukeboxView {
 				break;
 				
 			case 'getM3U':
+				// TODO: playing the complete favorits does not sort after label yet
 				$bRandom = FALSE;
 				if ($_REQUEST->getParam('random') != NULL) {
 					$bRandom = TRUE;
@@ -64,6 +65,7 @@ class sbView_jukebox_jukebox_favorites extends sbJukeboxView {
 		// get favorites
 		$niFavorites = $nodeFavorites->loadChildren('debug', TRUE, TRUE);
 		if ($niFavorites->getSize() > 0) {
+			$niFavorites->sortAscending('label');
 			$nodeFavorites->storeChildren('debug');
 			$_RESPONSE->addData($niFavorites->getElement('favorites'));
 		}
@@ -73,6 +75,7 @@ class sbView_jukebox_jukebox_favorites extends sbJukeboxView {
 		$stmtGetHistory = $this->crSession->prepareKnown('sbJukebox/history/getLatest/byUser');
 		$stmtGetHistory->bindValue('jukebox_mpath', $this->getJukebox()->getMPath(), PDO::PARAM_STR);
 		$stmtGetHistory->bindValue('user_uuid', User::getUUID(), PDO::PARAM_STR);
+		$stmtGetHistory->bindValue('limit', $iLimit, PDO::PARAM_INT);
 		$stmtGetHistory->execute();
 		$_RESPONSE->addData($stmtGetHistory->fetchElements('history'));
 		

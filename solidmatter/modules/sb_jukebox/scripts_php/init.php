@@ -369,13 +369,16 @@ class sbJukeboxView extends sbView {
 	* @return 
 	*/
 	protected function addRelateForm() {
-		// TODO: should be dependable on registry setting and authorisation
-		if (true) {
-			$formRelate = $this->buildRelateForm();
-			$formRelate->saveDOM();
-			global $_RESPONSE;
-			$_RESPONSE->addData($formRelate);
+		
+		if (!User::isAuthorised('relate', $this->nodeSubject)) {
+			return (FALSE);
 		}
+	
+		$formRelate = $this->buildRelateForm();
+		$formRelate->saveDOM();
+		global $_RESPONSE;
+		$_RESPONSE->addData($formRelate);
+		
 	}
 	
 	

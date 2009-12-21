@@ -19,10 +19,12 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 		'display' => array('read'),
 		'addItem' => array('add_titles'),
 		'removeItem' => array('write'),
+		'clear' => array('write'),
 		'orderBefore' => array('write'),
 		'activate' => array('add_titles'),
 		'getM3U' => array('read'),
 		'importM3U' => array('write'),
+		'download' => array('download'),
 	);
 	
 	//--------------------------------------------------------------------------
@@ -92,7 +94,7 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 				}
 				$this->nodeSubject->save();
 				
-				$_RESPONSE->redirect($this->nodeSubject->getIdentifier());
+				//$_RESPONSE->redirect($this->nodeSubject->getIdentifier());
 				
 				break;
 				

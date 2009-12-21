@@ -26,12 +26,17 @@ class sbView_jukebox_jukebox_playlists extends sbJukeboxView {
 		switch ($sAction) {
 			
 			case 'display':
+				$stmtGetPlaylists = $this->nodeSubject->getSession()->prepareKnown('sbJukebox/jukebox/playlists/getAll');
+				$stmtGetPlaylists->bindValue('jukebox_uuid', $this->getJukebox()->getProperty('jcr:uuid'), PDO::PARAM_STR);
+				$stmtGetPlaylists->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
+				$stmtGetPlaylists->execute();
+				$_RESPONSE->addData($stmtGetPlaylists->fetchElements('playlists'));
 				// add existing playlists
-				$niPlaylists = $this->nodeSubject->loadChildren('playlists', TRUE, TRUE, TRUE);
+				/*$niPlaylists = $this->nodeSubject->loadChildren('playlists', TRUE, TRUE, TRUE);
 				foreach ($niPlaylists as $nodePlaylist) {
 					$nodePlaylist->getVote($this->getPivotUUID());
 				}
-				$this->nodeSubject->storeChildren();
+				$this->nodeSubject->storeChildren();*/
 				break;
 				
 			case 'create':
@@ -47,6 +52,10 @@ class sbView_jukebox_jukebox_playlists extends sbJukeboxView {
 						$nodeChild->setProperty($sName, $mValue);
 					}
 					$nodeParent->save();
+					// TODO: integrate authorisation changes into node's save() method
+					// TODO: since read auth incorporates download auth playlists can be used to bypass download restrictions
+					$nodeChild->setAuthorisation('read');
+					$nodeChild->setAuthorisation('write');
 					$_RESPONSE->redirect('-', 'playlists');
 				} else {
 					$formCreate->saveDOM();

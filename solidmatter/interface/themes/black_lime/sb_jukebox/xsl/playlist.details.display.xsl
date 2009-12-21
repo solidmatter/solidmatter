@@ -33,7 +33,9 @@
 			</xsl:call-template>
 		</div>
 		<div class="nav">
-			<a class="type remove" href="/{$master/@uuid}/details/clear"><xsl:value-of select="$locale/sbSystem/actions/remove_all" /></a>
+			<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
+				<a class="type remove" href="/{$master/@uuid}/details/clear"><xsl:value-of select="$locale/sbSystem/actions/remove_all" /></a>
+			</xsl:if>
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="response/errors" />
@@ -45,6 +47,17 @@
 			
 		<div class="th">
 			<div class="albumdetails" style="float:right;">
+				<xsl:if test="@nodetype='sbJukebox:Playlist' and $master/user_authorisations/authorisation[@name='add_titles' and @grant_type='ALLOW']">
+					<xsl:choose>
+						<xsl:when test="@uuid = $currentPlaylist/@uuid">
+							<a class="type activated icononly" href="/{@uuid}/details/activate" title="{$locale/sbJukebox/actions/activate}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+						</xsl:when>
+						<xsl:otherwise>
+							<a class="type activate icononly" href="/{@uuid}/details/activate" title="{$locale/sbJukebox/actions/activate}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:if>
+				<span style="margin-left: 15px;"></span>
 				<xsl:call-template name="render_buttons"/>
 				<span style="margin-left: 15px;"></span>
 				<xsl:call-template name="render_stars" />
@@ -58,7 +71,9 @@
 					<xsl:for-each select="children[@mode='tracks']/sbnode">
 						<li style="position:relative;top:0;left:0;" id="item_{@uuid}">
 							<xsl:call-template name="colorize" />
-							<a style="position:absolute;top:3px;right:3px;" class="type remove icononly" href="javascript:remove('{@uuid}')" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+							<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
+								<a style="position:absolute;top:3px;right:3px;" class="type remove icononly" href="javascript:remove('{@uuid}')" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+							</xsl:if>
 							<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
 						</li>
 					</xsl:for-each>
@@ -68,15 +83,17 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</ul>
-	
+		
 		<script language="Javascript">
 			
 			//--------------------------------------------------------------
 			// init
 			//
+			<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
 			var oPlaylist = $('playlist');
 			var aInitialState = getOrder(oPlaylist);
 			Sortable.create('playlist', { onChange: redraw, onUpdate: reorder } );
+			</xsl:if>
 			
 			//--------------------------------------------------------------
 			// remove an entry and fade it out
@@ -173,7 +190,7 @@
 					{
 						method: 'get', 
 						parameters: null,
-						asynchronous: true 
+						asynchronous: false 
 					}
 				);
 				

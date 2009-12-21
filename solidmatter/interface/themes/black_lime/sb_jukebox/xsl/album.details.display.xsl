@@ -161,12 +161,23 @@
 							</td>
 							<td>
 								<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
+								<xsl:if test="string-length(@info_lyrics) &gt; 0">
+									<a class="type searchLyrics icononly" href="javascript:toggle('lyrics_{@uuid}');" style="margin-left:10px;"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+								</xsl:if>
 							</td>
 							<td width="10" style="text-align: right;">
 								<xsl:value-of select="@info_playtime" />
 							</td>
-							<td width="150" style="text-align: right;">
+							<td width="120" style="text-align: right;">
 								<xsl:call-template name="render_buttons" />
+							</td>
+						</tr>
+						<tr id="lyrics_{@uuid}" style="display:none;">
+							<xsl:call-template name="colorize" />
+							<td colspan="5">
+								<div style="padding:10px; text-align:center; white-space:pre; color:lightgrey;">
+									<xsl:value-of select="@info_lyrics" />
+								</div>
 							</td>
 						</tr>
 					</xsl:for-each>

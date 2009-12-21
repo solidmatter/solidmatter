@@ -40,6 +40,25 @@ function remove_playbutton(oCover) {
 /**
 * 
 */
+function toggle(sID) {
+	
+	var oContainer = $(sID);
+	
+	if (oContainer.style.display != 'none') {
+		oContainer.style.display = 'none';
+	} else {
+		if (oContainer.tagName == 'TR') {
+			oContainer.style.display = 'table-row';
+		} else {
+			oContainer.style.display = 'block';
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+/**
+* 
+*/
 function toggle_albumdetails(sAlbumUUID) {
 	
 	var oContainer = $('details_' + sAlbumUUID).parentNode;
@@ -62,4 +81,23 @@ function toggle_albumdetails(sAlbumUUID) {
 			oContainer.loaded = true;
 		}
 	}
+}
+
+//------------------------------------------------------------------------------
+/**
+* 
+*/
+function add_to_playlist(sSubjectUUID, sPlaylistUUID, oButton) {
+	
+	var sUrl = '/' + sPlaylistUUID + '/details/addItem/?item=' + sSubjectUUID; //{$currentPlaylist/@uuid}/details/addItem/?item={@uuid}
+	var myAjaxOpener = new Ajax.Request(
+		sUrl,
+		{
+			method: 'get', 
+			parameters: null,
+			asynchronous: false
+		}
+	);
+	alert('items have been added to playlist');
+	
 }

@@ -271,14 +271,14 @@
 			<a class="type recommend icononly" href="/{@uuid}/recommend" title="{$locale/sbJukebox/actions/recommend}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
 		<xsl:if test="@nodetype='sbJukebox:Track'">
-			<a class="type lyrics icononly" href="http://www.google.de/search?q=lyrics {@label}" title="{$locale/sbJukebox/actions/search_lyrics}" target="_blank"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+			<a class="type searchLyrics icononly" href="http://www.google.de/search?q=lyrics {@label}" title="{$locale/sbJukebox/actions/search_lyrics}" target="_blank"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 			<a class="type videos icononly" href="http://www.youtube.com/results?search_query={@label}" title="{$locale/sbJukebox/actions/search_videos}" target="_blank"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
 		<xsl:if test="@nodetype != 'sbJukebox:Playlist' and $with_favorites">
 			<a class="type addToFavorites icononly" href="/-/favorites/addItem/?item={@uuid}" title="{$locale/sbJukebox/actions/add_to_favorites}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
 		<xsl:if test="$content/currentPlaylist and (@nodetype='sbJukebox:Album' or @nodetype='sbJukebox:Track')">
-			<a class="type addToPlaylist icononly" href="/{$currentPlaylist/@uuid}/details/addItem/?item={@uuid}" title="{$locale/sbJukebox/actions/add_to_playlist}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+			<a class="type addToPlaylist icononly" href="javascript:add_to_playlist('{@uuid}', '{$content/currentPlaylist/sbnode/@uuid}', this);" title="{$locale/sbJukebox/actions/add_to_playlist}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
 		<xsl:if test="@nodetype='sbJukebox:Album' or @nodetype='sbJukebox:Playlist'">
 		<!--  and $master/user_authorisations/authorisation[@name='download' and @grant_type='ALLOW'] -->
@@ -339,6 +339,19 @@
 						</td>
 						<td>
 							<a href="/{@uuid}">
+								<!--<xsl:choose>
+									<xsl:when test="position()=1">
+										<xsl:attribute name="accesskey"><xsl:value-of select="substring(@label, 2, 1)" /></xsl:attribute>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:variable name="prevpos" select="position()-1" />
+										<xsl:if test="substring(@label, 2, 1) != substring(preceding-sibling::*[position() = $prevpos]/@label, 2, 1)">
+											<xsl:attribute name="accesskey"><xsl:value-of select="substring(@label, 2, 1)" /></xsl:attribute>
+											<xsl:value-of select="substring(@label, 2, 1)" />
+											
+										</xsl:if>
+									</xsl:otherwise>
+								</xsl:choose>-->
 								<xsl:value-of select="@label" />
 								<xsl:if test="@published">
 									[<xsl:value-of select="@published" />]
@@ -438,6 +451,11 @@
 									<xsl:value-of select="@target_label" />
 								</a>
 							</td>
+							<td width="10">
+							<xsl:if test="($master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1')">
+								<a class="type remove icononly" href="/{$master/@uuid}/votes/removeRelation/?type_relation={@id}&amp;target_relation={@target_uuid}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+							</xsl:if>
+							</td>
 						</tr>
 					</xsl:for-each>
 				</xsl:when>
@@ -460,10 +478,10 @@
 				}
 			</script>
 			<!--<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>-->
-			<div class="odd" style="display:none; text-align:right;" id="addComment">
+			<div class="odd" style="display:none; text-align:center;" id="addComment">
 				<form action="{$form/@action}#comments" name="addComment" method="post" class="addComment" style="padding:10px; vertical-align:top;">
 					<xsl:apply-templates select="$form/sbinput[@type='text']" mode="inputonly" />
-					<xsl:value-of select="' '" />
+					<br />
 					<xsl:apply-templates select="$form/submit" mode="inputonly" />
 				</form>
 			</div>

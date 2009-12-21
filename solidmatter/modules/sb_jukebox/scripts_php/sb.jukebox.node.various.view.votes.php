@@ -19,7 +19,9 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 		//'removeComment' => array('write'),
 		'addTag' => array('tag'),
 		'removeTag' => array('write'),
-		'addRelation' => array('special'), // TODO: use 'relate' auth instead?
+		'addRelation' => array('relate'),
+		'removeRelation' => array('write'),
+		'editLyrics' => array('edit_lyrics'),
 	);
 	
 	//--------------------------------------------------------------------------
@@ -135,6 +137,23 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				$nodeTarget = $this->crSession->getNodeByIdentifier($sTarget);
 				$this->nodeSubject->addRelation($sRelation, $nodeTarget);
 				$this->logEvent(System::INFO, 'RELATION_ADDED', $sRelation.' to '.$nodeTarget->getName().' ('.$nodeTarget->getIdentifier().')');
+				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));
+				break;
+				
+			case 'removeRelation':
+				$sRelation = $_REQUEST->getParam('type_relation');
+				$sTarget = $_REQUEST->getParam('target_relation');
+				$nodeTarget = $this->crSession->getNodeByIdentifier($sTarget);
+				$this->nodeSubject->removeRelation($sRelation, $nodeTarget);
+				$this->logEvent(System::INFO, 'RELATION_REMOVED', $sRelation.' to '.$nodeTarget->getName().' ('.$nodeTarget->getIdentifier().')');
+				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));
+				break;
+				
+			case 'saveLyrics':
+				$sLyrics = $this->requireParam('lyrics');
+				$this->nodeSubject->setProperty('info_lyrics', $sLyrics);
+				$this->nodeSubject->save();
+				$this->logEvent(System::INFO, 'LYRICS_SAVED', $sLyrics);
 				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));
 				break;
 				

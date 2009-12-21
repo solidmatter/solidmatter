@@ -28,9 +28,9 @@
 	
 	<xsl:template name="content">
 		<div class="toolbar">
-			<xsl:call-template name="simplesearch">
+			<!--<xsl:call-template name="simplesearch">
 				<xsl:with-param name="form" select="$content/sbform[@id='searchAlbums']" />
-			</xsl:call-template>
+			</xsl:call-template>-->
 		</div>
 		<div class="nav">
 			
@@ -118,6 +118,37 @@
 			</tbody>
 		
 		</table>
+		
+		<xsl:variable name="form" select="$content/sbform[@id='editLyrics']" />
+		<div class="th" id="lyrics">
+			<xsl:if test="$form">
+			<script type="text/javascript" language="javascript">
+				function showLyricsForm() {
+					document.getElementById('editLyrics').style.display='inline';
+					document.getElementById('showLyrics').style.display='none';
+					document.editLyrics.elements[0].focus();
+				}
+			</script>
+			<span style="float:right;">
+				<a href="javascript:showLyricsForm();" class="type create"><xsl:value-of select="$locale/sbJukebox/actions/edit_lyrics" /></a>
+			</span>
+			</xsl:if>
+			<span class="type lyrics"><xsl:value-of select="$locale/sbJukebox/Track/info_lyrics" /></span>
+		</div>
+		<xsl:if test="$form">
+		<div class="odd" style="display:none; text-align:center;" id="editLyrics">
+			<form action="{$form/@action}#lyrics" name="editLyrics" method="post" class="editLyrics" style="padding:10px; vertical-align:top;">
+				<xsl:apply-templates select="$form/sbinput[@type='text']" mode="inputonly" />
+				<br />
+				<xsl:apply-templates select="$form/submit" mode="inputonly" />
+			</form>
+		</div>
+		</xsl:if>
+		<xsl:if test="string-length(@info_lyrics) &gt; 0">
+			<div class="odd" style="padding:10px; white-space:pre; text-align:center; color:lightgrey;" id="showLyrics">
+				<xsl:value-of select="@info_lyrics" />
+			</div>
+		</xsl:if>
 		
 		<xsl:call-template name="render_relationlist" />
 		

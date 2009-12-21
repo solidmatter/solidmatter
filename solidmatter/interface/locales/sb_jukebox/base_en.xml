@@ -55,6 +55,7 @@
 		<info_filename>Filename</info_filename>
 		<info_published>Published</info_published>
 		<info_playtime>Playtime</info_playtime>
+		<info_lyrics>Lyrics</info_lyrics>
 		<enc_playtime>Playtime (in seconds)</enc_playtime>
 		<enc_mode>Encoding</enc_mode>
 		<enc_bitrate>Bitrate (kbit/s)</enc_bitrate>
@@ -68,6 +69,8 @@
 		<clear_library>Clear library</clear_library>
 		<add_playlists>Add playlists</add_playlists>
 		<add_titles>Add titles</add_titles>
+		<edit_lyrics>Edit lyrics</edit_lyrics>
+		<relate>Relate</relate>
 	</authorisations>
 	
 	<labels>
@@ -155,6 +158,7 @@
 		<activate>activate</activate>
 		<remove>remove</remove>
 		<wikipedia>search in Wikipedia</wikipedia>
+		<edit_lyrics>Edit lyrics</edit_lyrics>
 	</actions>
 	
 	<texts>

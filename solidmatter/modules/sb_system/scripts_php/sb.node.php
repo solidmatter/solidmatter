@@ -1579,6 +1579,35 @@ class sbNode extends sbCR_Node {
 	}
 	
 	//--------------------------------------------------------------------------
+	/**
+	* 
+	* TODO: not finished
+	*/
+	public function removeRelation($sRelation, $nodeTarget) {
+		
+		// prepare
+		$aRelations = $this->getSupportedRelations();
+		$stmtRemove = $this->prepareKnown('relations/removeRelation');
+		
+		// remove relation only if it's valid
+		if (isset($aRelations[$sRelation][$nodeTarget->getPrimaryNodeType()])) {
+			// remove the given relation
+			$stmtRemove->bindValue('relation', $sRelation, PDO::PARAM_STR);
+			$stmtRemove->bindValue('source_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+			$stmtRemove->bindValue('target_uuid', $nodeTarget->getProperty('jcr:uuid'), PDO::PARAM_STR);
+			$stmtRemove->execute();
+			// remove the reverse relation from the target node
+			$stmtRemove->bindValue('relation', $aRelations[$sRelation][$nodeTarget->getPrimaryNodeType()], PDO::PARAM_STR);
+			$stmtRemove->bindValue('source_uuid', $nodeTarget->getProperty('jcr:uuid'), PDO::PARAM_STR);
+			$stmtRemove->bindValue('target_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+			$stmtRemove->execute();
+		}
+		
+		return;
+		
+	}
+	
+	//--------------------------------------------------------------------------
 	// authorisations
 	//--------------------------------------------------------------------------
 	/**
@@ -1974,6 +2003,48 @@ class sbNode extends sbCR_Node {
 			}
 		}
 		return ($aUserAuth);
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return
+	*/
+	public function setAuthorisation($sAuthorisation, $sGrantType = 'ALLOW', $sEntityID = NULL) {
+		
+		$this->loadSupportedAuthorisations();
+		if (!isset($this->aSupportedAuthorisations[$sAuthorisation])) {
+			throw new sbException('Authorisation "'.$sAuthorisation.'" is not supported by the nodetype "'.$this->getPrimaryNodeType().'"');
+		}
+		
+		// use current user if no entity is specified
+		if ($sEntityID == NULL) {
+			$sEntityID = User::getUUID();
+		}
+		
+		if ($sGrantType == 'ALLOW' || $sGrantType == 'DENY') {
+			$stmtSaveAuth = $this->getSession()->prepareKnown('sbSystem/node/setAuthorisation');
+			$stmtSaveAuth->bindValue('entity_uuid', $sEntityID, PDO::PARAM_STR);
+			$stmtSaveAuth->bindValue('subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+			$stmtSaveAuth->bindValue('authorisation', $sAuthorisation, PDO::PARAM_STR);
+			$stmtSaveAuth->bindValue('granttype', $sGrantType, PDO::PARAM_STR);
+			$stmtSaveAuth->execute();
+		} elseif ($sGrantType == NULL) {
+			$stmtRemoveAuth = $this->nodeSubject->getSession()->prepareKnown('sbSystem/node/removeAuthorisation');
+			$stmtRemoveAuth->bindValue('entity_uuid', $_REQUEST->getParam('userentity'), PDO::PARAM_STR);
+			$stmtRemoveAuth->bindValue('subject_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
+			$stmtRemoveAuth->bindValue('authorisation', $sAuthorisation, PDO::PARAM_STR);
+			$stmtRemoveAuth->execute();
+		} else {
+			throw new sbException('Invalid grant type "'.$sGrantType.'"');
+		}
+		
+		// clear cache
+		$cacheAuth = CacheFactory::getInstance('authorisations');
+		$cacheAuth->clearAuthorisations($sEntityID);
+		
+		return;
 	}
 	
 }

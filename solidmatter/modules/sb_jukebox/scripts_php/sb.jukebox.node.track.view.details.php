@@ -29,6 +29,7 @@ class sbView_jukebox_track_details extends sbJukeboxView {
 				$this->addCommentForm();
 				$this->addTagForm();
 				$this->addRelateForm();
+				$this->addLyricsForm();
 				
 				// data
 				$this->addComments();
@@ -58,6 +59,36 @@ class sbView_jukebox_track_details extends sbJukeboxView {
 				throw new sbException(__CLASS__.': action not recognized ('.$sAction.')');
 				
 		}
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function addLyricsForm() {
+		
+		if (!User::isAuthorised('edit_lyrics', $this->nodeSubject)) {
+			return (FALSE);
+		}
+		
+		$formLyrics = new sbDOMForm(
+			'editLyrics',
+			'$locale/sbJukebox/labels/edit_lyrics',
+			System::getRequestURL($this->nodeSubject, 'votes', 'saveLyrics'),
+			$this->crSession
+		);
+		
+		$formLyrics->addInput('lyrics;text;minlength=3;columns=100;rows=30;maxlength=10000;', '$locale/sbSystem/labels/comment');
+		$formLyrics->addSubmit('$locale/sbSystem/actions/save');
+		
+		$formLyrics->setValue('lyrics', $this->nodeSubject->getProperty('info_lyrics'));
+		
+		$formLyrics->saveDOM();
+		global $_RESPONSE;
+		$_RESPONSE->addData($formLyrics);
 		
 	}
 	

@@ -28,9 +28,9 @@
 	
 	<xsl:template name="content">
 		<div class="toolbar">
-			<xsl:call-template name="simplesearch">
+			<!--<xsl:call-template name="simplesearch">
 				<xsl:with-param name="form" select="$content/sbform[@id='searchTagSpecific']" />
-			</xsl:call-template>
+			</xsl:call-template>-->
 		</div>
 		<div class="nav">
 			

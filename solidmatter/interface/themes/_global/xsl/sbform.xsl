@@ -18,13 +18,22 @@
 	
 	<!-- match formrenderer -->
 	<xsl:template name="sbform" match="//sbform">
-		<xsl:param name="noLabel" select="false" />
+		<xsl:param name="noLabel" />
+		<xsl:param name="label" />
 		<form class="default" action="{@action}" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 			<table class="default">
 				<!-- TODO: configuring label display does not work -->
-				<xsl:if test="$noLabel != 'true'"></xsl:if>
-					<tr><th colspan="2"><xsl:value-of select="dyn:evaluate(@label)" /></th></tr>
-				
+				<xsl:choose>
+					<xsl:when test="$label">
+						<tr><th colspan="2"><xsl:value-of select="$label" /></th></tr>
+					</xsl:when>
+					<xsl:when test="$noLabel">
+						
+					</xsl:when>
+					<xsl:otherwise>
+						<tr><th colspan="2"><xsl:value-of select="dyn:evaluate(@label)" /></th></tr>
+					</xsl:otherwise>
+				</xsl:choose>
 				<xsl:if test="@errorlabel"><br/><xsl:value-of select="dyn:evaluate(@errorlabel)" /></xsl:if>
 				<xsl:apply-templates select="*" mode="complete" />
 			</table>

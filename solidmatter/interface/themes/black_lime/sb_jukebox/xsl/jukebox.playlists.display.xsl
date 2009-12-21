@@ -25,25 +25,23 @@
 	
 	<xsl:template name="content">
 		<div class="toolbar">
-			<xsl:call-template name="simplesearch">
-				<xsl:with-param name="form" select="$content/sbform[@id='searchAlbums']" />
-			</xsl:call-template>
+			
 		</div>
 		<div class="nav">
 			
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="response/errors" />
-			<xsl:apply-templates select="$master/children[@mode='playlists']" />
+			<xsl:apply-templates select="$content/playlists" />
 		</div>
 	</xsl:template>
 	
-	<xsl:template match="children">
+	<xsl:template match="playlists">
 		
 		<table class="default" width="100%" summary="">
 			<thead>
 				<tr>
-					<th colspan="2">
+					<th colspan="5">
 						<a style="float:right;" class="type create" href="/-/playlists/create">
 							<xsl:value-of select="$locale/sbJukebox/labels/new_playlist"/>
 						</a>
@@ -53,27 +51,24 @@
 			</thead>
 			<tbody>
 			<xsl:choose>
-				<xsl:when test="sbnode">
-					<xsl:for-each select="sbnode">
+				<xsl:when test="row">
+					<xsl:for-each select="row">
 						<tr>
 							<xsl:call-template name="colorize" />
 							<td width="80">
 								<xsl:call-template name="render_stars" />
 							</td>
 							<td>
-								<span style="float:right;">
-									<a class="type play icononly" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
-									<xsl:choose>
-										<xsl:when test="@uuid = $currentPlaylist/@uuid">
-											<a class="type activated icononly" href="/{@uuid}/details/activate" title="{$locale/sbJukebox/actions/activate}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
-										</xsl:when>
-										<xsl:otherwise>
-											<a class="type activate icononly" href="/{@uuid}/details/activate" title="{$locale/sbJukebox/actions/activate}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
-										</xsl:otherwise>
-									</xsl:choose>
-								</span>
 								<a href="/{@uuid}"><xsl:value-of select="@label" /></a><br />
-								
+							</td>
+							<td>
+								<xsl:value-of select="@numtracks" />
+							</td>
+							<td>
+								<xsl:value-of select="@user" />
+							</td>
+							<td width="10">
+								<a class="type play icononly" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 							</td>
 						</tr>
 					</xsl:for-each>

@@ -726,10 +726,19 @@ class sbCR_Node {
 				$aDestinationInfo = $aDestinationInfo[0];
 				
 				// update position info on moved siblings
+				if ($aDestinationInfo['n_order'] < $aSourceInfo['n_order']) {
+					$iOffset = 1;
+					$iLow = $aDestinationInfo['n_order'];
+					$iHigh = $aSourceInfo['n_order'];
+				} else {
+					$iOffset = -1;
+					$iLow = $aSourceInfo['n_order'];
+					$iHigh = $aDestinationInfo['n_order'];
+				}
 				$stmtOrder = $this->crSession->prepareKnown($this->aQueries['reorder']['moveSiblings']);
-				$stmtOrder->bindValue('offset', 1, PDO::PARAM_INT);
-				$stmtOrder->bindValue('low_position', $aDestinationInfo['n_order'], PDO::PARAM_INT);
-				$stmtOrder->bindValue('high_position', $aSourceInfo['n_order'], PDO::PARAM_INT);
+				$stmtOrder->bindValue('offset', $iOffset, PDO::PARAM_INT);
+				$stmtOrder->bindValue('low_position', $iLow, PDO::PARAM_INT);
+				$stmtOrder->bindValue('high_position', $iHigh, PDO::PARAM_INT);
 				$stmtOrder->bindValue('parent_uuid', $sUUID, PDO::PARAM_STR);
 				$stmtOrder->execute();
 				

@@ -55,6 +55,7 @@
 		<info_filename>Dateiname</info_filename>
 		<info_published>Erscheinungsjahr</info_published>
 		<info_playtime>Spieldauer</info_playtime>
+		<info_lyrics>Songtext</info_lyrics>
 		<enc_playtime>Spieldauer (Sek.)</enc_playtime>
 		<enc_mode>Kodierung</enc_mode>
 		<enc_bitrate>Bitrate (kbit/s)</enc_bitrate>
@@ -68,6 +69,8 @@
 		<clear_library>Bibliothek löschen</clear_library>
 		<add_playlists>Playlisten anlegen</add_playlists>
 		<add_titles>Titel hinzufügen</add_titles>
+		<edit_lyrics>Songtexte bearbeiten</edit_lyrics>
+		<relate>Verknüpfen</relate>
 	</authorisations>
 	
 	<labels>
@@ -155,6 +158,7 @@
 		<activate>aktivieren</activate>
 		<remove>entfernen</remove>
 		<wikipedia>in Wikipedia suchen</wikipedia>
+		<edit_lyrics>Songtext bearbeiten</edit_lyrics>
 	</actions>
 	
 	<texts>

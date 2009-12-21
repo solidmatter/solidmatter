@@ -98,6 +98,7 @@ $_QUERIES['sbJukebox/history/getLatest/byUser'] = '
 	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		hi.fk_user = :user_uuid
 	ORDER BY	hi.dt_played DESC
+	LIMIT		0, :limit
 ';
 
 //------------------------------------------------------------------------------
@@ -502,6 +503,32 @@ $_QUERIES['sbJukebox/jukebox/comments/getLatest'] = '
 		AND		nc.fk_nodetype = \'sbSystem:Comment\'
 	ORDER BY	nc.dt_created DESC
 	LIMIT		0, :limit
+';
+$_QUERIES['sbJukebox/jukebox/playlists/getAll'] = '
+	SELECT		n.uuid,
+				n.s_label AS label,
+				n.s_name AS name,
+				n2.s_label AS user,
+				(SELECT			v.n_vote
+					FROM		{TABLE_VOTES} v
+					WHERE		v.fk_user = :user_uuid
+						AND		v.fk_subject = n.uuid
+				) AS vote,
+				(SELECT			COUNT(*)
+					FROM		{TABLE_HIERARCHY} hi
+					INNER JOIN	{TABLE_NODES} ni
+						ON		hi.fk_child = ni.uuid
+					WHERE		hi.fk_parent = n.uuid
+						AND		ni.fk_nodetype = \'sbJukebox:Track\'
+				) AS numtracks
+	FROM		{TABLE_NODES} n
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	INNER JOIN	{TABLE_NODES} n2
+		ON		n2.uuid = n.fk_createdby
+	WHERE		h.fk_parent = :jukebox_uuid
+		AND		n.fk_nodetype = \'sbJukebox:Playlist\'
+	ORDER BY	n.s_label ASC
 ';
 
 //------------------------------------------------------------------------------
