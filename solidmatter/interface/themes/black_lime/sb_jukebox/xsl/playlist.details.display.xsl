@@ -149,6 +149,7 @@
 				for (var i=0; i&lt;aCurrentState.length; i++) {
 					if (aInitialState[i] != aCurrentState[i]) { // different item in lists
 						if (aCurrentState[i] == aInitialState[i+1] &amp;&amp; aCurrentState[i+1] == aInitialState[i]) { // items switched
+							//alert('switched');
 							sSubject = aCurrentState[i];
 							sNextSibling = aCurrentState[i+1];
 							update(sSubject, sNextSibling);
@@ -156,14 +157,16 @@
 						} else if (aCurrentState[i] == aInitialState[i+1]) { // missing item = moved down
 							for (var j=i; j&lt;aCurrentState.length; j++) { // find missing item
 								if (aCurrentState[j] != aInitialState[j+1]) {
-									if (!aCurrentState[j+1]) {
+									if (!aCurrentState[j+1]) { // item moved to end of list
+										//alert('moved to end of list');
 										sPreviousSibling = aCurrentState[j-1];
 										sSubject = aCurrentState[j];
-										update(sSubject, sPreviousSibling);
+										update(sSubject, sPreviousSibling); // move item just before last item
 										update(sPreviousSibling, sSubject); // flip the two
-									} else {
+									} else { // item moved down
+										//alert('moved down');
 										sSubject = aCurrentState[j];
-										sNextSibling = aCurrentState[j+1];		
+										sNextSibling = aCurrentState[j+1];
 										update(sSubject, sNextSibling);
 									}
 									break;
@@ -171,6 +174,7 @@
 							}
 							break;
 						} else { // item moved up
+							//alert('moved up');
 							sSubject = aCurrentState[i];
 							sNextSibling = aCurrentState[i+1];
 							update(sSubject, sNextSibling);
@@ -194,7 +198,7 @@
 					{
 						method: 'get', 
 						parameters: null,
-						asynchronous: false 
+						asynchronous: true 
 					}
 				);
 				

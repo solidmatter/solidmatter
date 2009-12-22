@@ -42,8 +42,21 @@
 	<xsl:template match="sbnode">
 		<li>
 			<xsl:value-of select="@level"/>.<xsl:value-of select="@order"/>
-			<xsl:value-of select="concat(' ', @name)"/>
-			(<xsl:value-of select="@mpath"/>)
+			<xsl:value-of select="concat(' ', @name)"/> 
+			<xsl:choose>
+				<xsl:when test="@primary = 'TRUE'">
+					<span style="color:green; font-weight:bold;"> P</span>
+				</xsl:when>
+				<xsl:otherwise>
+					<span style="color:blue; font-weight:bold;"> S</span>
+				</xsl:otherwise>
+			</xsl:choose>
+			<span style="color:#888; font-size:0.8em; vertical-align:middle;">
+				 - 
+				<xsl:value-of select="@mpath"/>
+				 - 
+				<xsl:value-of select="@uuid"/>
+			</span>
 			<xsl:if test="sbnode">
 				<ul>
 					<xsl:apply-templates select="sbnode" />

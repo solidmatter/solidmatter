@@ -201,6 +201,7 @@
 			<a href="javascript:showTagForm();" style="line-height:25px;" class="type create"><xsl:value-of select="$locale/sbSystem/actions/new_tag" /></a>
 			<form action="{$form/@action}" name="addTag" id="addTag" method="post" class="addtag" style="display:none;">
 				<xsl:apply-templates select="$form/sbinput[@type='autocomplete']" mode="inputonly" />
+				<xsl:apply-templates select="$form/sbinput[@type='checkbox']" mode="inputonly" />
 				<xsl:value-of select="' '" />
 				<xsl:apply-templates select="$form/submit" mode="inputonly" />
 			</form>

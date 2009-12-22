@@ -115,7 +115,47 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				break;
 				
 			case 'addTag':
+				$formTag = $this->buildTagForm();
+				$formTag->recieveInputs();
+				$aValues = $formTag->getValues();
 				$sTag = $this->requireParam('tag');
+				if ($aValues['spread'] == 'TRUE') {
+					
+					switch ($this->nodeSubject->getPrimaryNodeType()) {
+						
+						case 'sbJukebox:Artist':
+							foreach ($this->nodeSubject->getChildren('albums') as $nodeAlbum) {
+								$nodeAlbum->addTag($sTag);
+								$nodeAlbum->save();
+								foreach ($nodeAlbum->getChildren('tracks') as $nodeTrack) {
+									$nodeTrack->addTag($sTag);
+									$nodeTrack->save();
+								}
+							}
+							break;
+							
+						case 'sbJukebox:Album':
+							foreach ($this->nodeSubject->getChildren('tracks') as $nodeTrack) {
+								$nodeTrack->addTag($sTag);
+								$nodeTrack->save();
+							}
+							$nodeArtist = $this->nodeSubject->getParent();
+							$nodeArtist->addTag($sTag);
+							$nodeArtist->save();
+							break;
+							
+						case 'sbJukebox:Track':
+							$nodeAlbum = $this->nodeSubject->getParent();
+							$nodeAlbum->addTag($sTag);
+							$nodeAlbum->save();
+							$nodeArtist = $nodeAlbum->getParent();
+							$nodeArtist->addTag($sTag);
+							$nodeArtist->save();
+							break;
+					
+					}
+					
+				}
 				$this->nodeSubject->addTag($sTag);
 				$this->nodeSubject->save();
 				$this->logEvent(System::INFO, 'TAG_ADDED', $sTag);

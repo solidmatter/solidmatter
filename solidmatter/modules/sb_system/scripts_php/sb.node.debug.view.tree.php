@@ -62,10 +62,12 @@ class sbView_debug_tree extends sbView {
 			foreach ($aRows as $aRow) {
 				
 				$elemChild = $_RESPONSE->createElement('sbnode');
+				$elemChild->setAttribute('uuid', $aRow['uuid']);
 				$elemChild->setAttribute('level', $aRow['n_level']);
 				$elemChild->setAttribute('order', $aRow['n_order']);
 				$elemChild->setAttribute('name', $aRow['s_name']);
 				$elemChild->setAttribute('type', $aRow['s_type']);
+				$elemChild->setAttribute('primary', $aRow['b_primary']);
 				$elemChild->setAttribute('mpath', $aRow['s_mpath']);
 				$elemParent->appendChild($elemChild);
 				

@@ -281,6 +281,9 @@ class sbJukeboxView extends sbView {
 		
 		$sAutocompleteURL = System::getRequestURL($this->nodeSubject, 'votes', 'getTags');
 		$formTag->addInput('tag;autocomplete;minchars=2;minlength=2;maxlength=50;size=20;required=true;url='.$sAutocompleteURL, '$locale/sbSystem/labels/tag');
+		if ($this->nodeSubject->getPrimaryNodeType() != 'sbJukebox:Playlist') {
+			$formTag->addInput('spread;checkbox;', '$locale/sbJukebox/labels/spread_tag');
+		}
 		$formTag->addSubmit('$locale/sbSystem/actions/save');
 		
 		return ($formTag);

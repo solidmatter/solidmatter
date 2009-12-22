@@ -1000,6 +1000,7 @@ $_QUERIES['sbSystem/debug/gatherTree'] = '
 				h.n_level,
 				h.n_order,
 				h.s_mpath,
+				h.b_primary,
 				nt.s_type,
 				(SELECT COUNT(*)
 					FROM	{TABLE_HIERARCHY}

@@ -184,6 +184,12 @@ class DefaultJukeboxImporter {
 			$dirAlbums = new sbDirectory($this->nodeJukebox->getProperty('config_checkpath'));
 		}
 		
+		// sort by last modified datetime
+		$dirAlbums->readTimes(TRUE);
+		$dirAlbums->sort('mtime', TRUE);
+		$dirAlbums->readDirectorySpecialTimes('sbImportTime.txt', 'itime');
+		$dirAlbums->sort('itime');
+		
 		foreach ($dirAlbums->getDirectories(TRUE) as $dirAlbum) {
 			
 			$sState = 'good';
@@ -222,6 +228,9 @@ class DefaultJukeboxImporter {
 						$aLibraryInfo['album_uuid'] = $nodeAlbum->getProperty('jcr:uuid');
 						$aLibraryInfo['state'] = 'imported';
 						file_put_contents($dirAlbum->getAbsPath().'sbJukebox.txt', serialize($aLibraryInfo));
+						if (!file_exists($dirAlbum->getAbsPath().'sbImportTime.txt')) {
+							file_put_contents($dirAlbum->getAbsPath().'sbImportTime.txt', time());
+						}
 						
 						$this->jbToolkit->storeArtists();
 						

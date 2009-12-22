@@ -610,13 +610,17 @@ class sbCR_Node {
 		// remove this share from shared set
 		// TODO: instead of throwing an exception, a remaining link shoud become primary
 		if (isset($this->aSaveTasks['remove_share'])) {
+			
 			$nodePrimaryParent = $this->getPrimaryParent();
 			$nodeParent = $this->getParent();
 			if ($nodeParent->isSame($nodePrimaryParent)) {
 				throw new RepositoryException(__CLASS__.': currently you can only remove secondary nodes from shared set');	
 			}
+			
 			$this->deleteLink($nodeParent);
+			
 			unset($this->aSaveTasks['remove_share']);
+			
 		}
 		
 		// save primary node properties first
@@ -726,14 +730,16 @@ class sbCR_Node {
 				$aDestinationInfo = $aDestinationInfo[0];
 				
 				// update position info on moved siblings
-				if ($aDestinationInfo['n_order'] < $aSourceInfo['n_order']) {
+				if ($aDestinationInfo['n_order'] < $aSourceInfo['n_order']) { // moved up
 					$iOffset = 1;
 					$iLow = $aDestinationInfo['n_order'];
 					$iHigh = $aSourceInfo['n_order'];
-				} else {
+					$iTargetPosition = $aDestinationInfo['n_order'];
+				} else { // moved down
 					$iOffset = -1;
 					$iLow = $aSourceInfo['n_order'];
-					$iHigh = $aDestinationInfo['n_order'];
+					$iHigh = $aDestinationInfo['n_order']-1;
+					$iTargetPosition = $aDestinationInfo['n_order']-1;
 				}
 				$stmtOrder = $this->crSession->prepareKnown($this->aQueries['reorder']['moveSiblings']);
 				$stmtOrder->bindValue('offset', $iOffset, PDO::PARAM_INT);
@@ -744,7 +750,7 @@ class sbCR_Node {
 				
 				// update position info on moved node
 				$stmtOrder = $this->crSession->prepareKnown($this->aQueries['reorder']['moveNode']);
-				$stmtOrder->bindValue('target_position', $aDestinationInfo['n_order'], PDO::PARAM_INT);
+				$stmtOrder->bindValue('target_position', $iTargetPosition, PDO::PARAM_INT);
 				$stmtOrder->bindValue('parent_uuid', $sUUID, PDO::PARAM_STR);
 				$stmtOrder->bindValue('child_uuid', $aSourceInfo['uuid'], PDO::PARAM_STR);
 				$stmtOrder->execute();
@@ -927,12 +933,14 @@ class sbCR_Node {
 	* @return 
 	*/
 	protected function getHierarchyInfo($nodeParent = NULL) {
+		
 		$sChildUUID = $this->getIdentifier();
 		if ($nodeParent == NULL) {
 			$sParentUUID = (string) $this->elemSubject->getAttribute('parent');
 		} else {
-			$sParentUUID = $this->getPrimaryParent()->getProperty('jcr:uuid');
+			$sParentUUID = $nodeParent->getProperty('jcr:uuid');
 		}
+		
 		$stmtGetInfo = $this->prepareKnown('sbCR/node/hierarchy/getInfo');
 		$stmtGetInfo->bindValue(':parent_uuid', $sParentUUID, PDO::PARAM_STR);
 		$stmtGetInfo->bindValue(':child_uuid', $sChildUUID, PDO::PARAM_STR);
@@ -947,6 +955,7 @@ class sbCR_Node {
 			throw new sbException('unable to get position for child "'.$sChildUUID.'" and parent "'.$sParentUUID.'"');
 		}
 		return ($aInfo);
+		
 	}
 	
 	//--------------------------------------------------------------------------

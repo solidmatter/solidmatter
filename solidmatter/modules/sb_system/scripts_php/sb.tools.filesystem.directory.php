@@ -115,6 +115,54 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
+	public function readTimes($bIncludeDirs = FALSE) {
+		
+		// get file times
+		foreach ($this->aFiles as $iIndex => $aFile) {
+			$this->aFiles[$iIndex]['ctime'] = filectime($this->aInfo['abs_path'].$aFile['name']);
+			$this->aFiles[$iIndex]['mtime'] = filemtime($this->aInfo['abs_path'].$aFile['name']);
+			$this->aFiles[$iIndex]['atime'] = fileatime($this->aInfo['abs_path'].$aFile['name']);
+		}
+		
+		// get optional dir times
+		if ($bIncludeDirs) {
+			foreach ($this->aDirectories as $iIndex => $aDirectory) {
+				$this->aDirectories[$iIndex]['ctime'] = filectime($this->aInfo['abs_path'].$aDirectory['name'].'/');
+				$this->aDirectories[$iIndex]['mtime'] = filemtime($this->aInfo['abs_path'].$aDirectory['name'].'/');
+				$this->aDirectories[$iIndex]['atime'] = fileatime($this->aInfo['abs_path'].$aDirectory['name'].'/');
+			}
+		}
+		
+		$this->bTimesRead = TRUE;
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function readDirectorySpecialTimes($sFilename, $sStorageKey) {
+		
+		// get dir special times
+		foreach ($this->aDirectories as $iIndex => $aDirectory) {
+			$sFullFilename = $this->aInfo['abs_path'].$aDirectory['name'].'/'.$sFilename; 
+			if (file_exists($sFullFilename)) {
+				$this->aDirectories[$iIndex][$sStorageKey] = file_get_contents($sFullFilename);
+			} else {
+				$this->aDirectories[$iIndex][$sStorageKey] = '2000000000';
+			}
+		}
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function getAccumulatedSize() {
 		
 		if (!$this->bSizesRead) {
@@ -261,10 +309,14 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function sort($sSortcriterium = 'name') {
+	public function sort($sSortcriterium = 'name', $bDescending = FALSE) {
 		import('sb.tools.arrays');
 		ivsort($this->aFiles, $sSortcriterium, TRUE);
-		ivsort($this->aFiles, $sSortcriterium, TRUE);
+		ivsort($this->aDirectories, $sSortcriterium, TRUE);
+		if ($bDescending) {
+			array_reverse($this->aFiles);
+			array_reverse($this->aDirectories);
+		}
 	}
 	
 	//--------------------------------------------------------------------------
