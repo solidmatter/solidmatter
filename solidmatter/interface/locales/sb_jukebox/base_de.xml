@@ -130,6 +130,7 @@
 		<series>Serie</series>
 		<most_recently_played>zuletzt gespielt</most_recently_played>
 		<more>mehr...</more>
+		<news>News</news>
 	</labels>
 	
 	<menu>
@@ -159,6 +160,8 @@
 		<remove>entfernen</remove>
 		<wikipedia>in Wikipedia suchen</wikipedia>
 		<edit_lyrics>Songtext bearbeiten</edit_lyrics>
+		<vote_details>Bewertungsdetails zeigen</vote_details>
+		<unset_votes>alle Bewertungen entfernen</unset_votes>
 	</actions>
 	
 	<texts>

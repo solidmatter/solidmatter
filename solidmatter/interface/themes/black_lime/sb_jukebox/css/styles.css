@@ -291,13 +291,23 @@ div.albumcover_wall {
 /* voting / charts -----------------------------------------------------------*/
 
 a.imglink img {
-	vertical-align: baseline;
 	border: 0;
 }
 td.timesplayed {
 	color: #AAA;
 }
 
+span.actions {
+	float: right;
+	top: -2px;
+	margin-bottom: 10px;
+}
+span.stars img {
+	cursor: pointer;
+}
+span.actions span.stars img {
+	padding-bottom: 2px;
+}
 
 /* autocompleter -------------------------------------------------------------*/
 
@@ -332,12 +342,6 @@ div.albumcontainer h2 {
 	padding: 5px;
 	margin: 0 0 10px 0;
 	border-bottom: 1px solid white;
-}
-
-/* stars ---------------------------------------------------------------------*/
-
-span.stars img {
-	cursor: pointer;
 }
 
 /* tags ----------------------------------------------------------------------*/
@@ -470,6 +474,9 @@ div.menufooter_info {
 *.ear {
 	background-image: url(../icons/ear_hover.png);
 }
+*.vote {
+	background-image: url(../icons/type_vote.png);
+}
 
 /* menu (has to be after 'type' definition) */
 
@@ -566,6 +573,12 @@ div.menufooter_info {
 *.expand:hover {
 	background-image: url(../icons/expand_hover.png);
 }
+*.back {
+	background-image: url(../icons/back.png);
+}
+*.back:hover {
+	background-image: url(../icons/back_hover.png);
+}
 *.remove {
 	background-image: url(../icons/remove.png);
 }
@@ -604,6 +617,18 @@ div.menufooter_info {
 }
 *.wikipedia:hover {
 	background-image: url(../icons/wikipedia_hover.png);
+}
+*.unsetVote {
+	background-image: url(../icons/vote_unset.png);
+}
+*.unsetVote:hover {
+	background-image: url(../icons/vote_unset_hover.png);
+}
+*.voteDetails {
+	background-image: url(../icons/vote_details.png);
+}
+*.voteDetails:hover {
+	background-image: url(../icons/vote_details_hover.png);
 }
 
 /*----------------------------------------------------------------------------*/

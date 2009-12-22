@@ -271,7 +271,23 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 		return ($elemContainer);
 	}
 	
-	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function crop($iTotalNodes) {
+		$i = 0;
+		if (count($this->aNodeArray) > $iTotalNodes) {
+			foreach ($this->aNodeArray as $sLabel => $nodeCurrent) {
+				$i++;
+				if ($i > $iTotalNodes) {
+					unset($this->aNodeArray[$sLabel]);	
+				}
+			}
+		}
+	}
 	
 	
 }

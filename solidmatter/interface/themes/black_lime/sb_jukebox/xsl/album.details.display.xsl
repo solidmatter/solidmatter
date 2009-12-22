@@ -33,7 +33,9 @@
 			</xsl:call-template>
 		</div>
 		<div class="nav">
-			<span style="float: right;"><a class="type coverwall" href="/{$master/@uuid}/details/buildQuilt">Quilt</a></span>
+			<span style="float: right;">
+				<a class="type coverwall" href="/{$master/@uuid}/details/buildQuilt">Quilt</a>
+			</span>
 			<xsl:call-template name="render_alphanum">
 				<xsl:with-param name="url" select="'/-/albums/-/?show='"/>
 			</xsl:call-template>
@@ -47,7 +49,7 @@
 	<xsl:template match="sbnode">
 		
 		<div class="th">
-			<span class="albumdetails" style="float:right;">
+			<span class="actions">
 				<xsl:call-template name="addtag">
 					<xsl:with-param name="form" select="$content/sbform[@id='addTag']" />
 				</xsl:call-template>
@@ -55,6 +57,8 @@
 				<xsl:call-template name="render_buttons" />
 				<span style="margin-left: 15px;"></span>
 				<xsl:call-template name="render_stars" />
+				<span style="margin-left: 5px;"></span>
+				<xsl:call-template name="render_votebuttons" />
 			</span>
 			<span class="type album"><xsl:value-of select="@label" /></span>
 		</div>
@@ -175,7 +179,7 @@
 						<tr id="lyrics_{@uuid}" style="display:none;">
 							<xsl:call-template name="colorize" />
 							<td colspan="5">
-								<div style="padding:10px; text-align:center; white-space:pre; color:lightgrey;">
+								<div style="padding:10px; text-align:center; white-space:pre; color:lightgrey; font-size:0.9em;">
 									<xsl:value-of select="@info_lyrics" />
 								</div>
 							</td>

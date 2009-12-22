@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: solidmatter
 Target Host: localhost
 Target Database: solidmatter
-Date: 21.12.2009 04:01:42
+Date: 22.12.2009 00:51:54
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -1090,6 +1090,9 @@ INSERT INTO `rep_nodetypes_modes` VALUES ('comments', 'sbJukebox:Album', 'sbSyst
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbJukebox:Album', 'sbSystem:Comment', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbJukebox:Album', 'sbSystem:Comment', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('comments', 'sbJukebox:Artist', 'sbSystem:Comment', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('comments', 'sbJukebox:Jukebox', 'sbSystem:Comment', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbJukebox:Jukebox', 'sbSystem:Comment', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbJukebox:Jukebox', 'sbSystem:Comment', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('comments', 'sbJukebox:Playlist', 'sbSystem:Comment', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbJukebox:Playlist', 'sbSystem:Comment', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbJukebox:Playlist', 'sbSystem:Comment', 'TRUE', 'TRUE');
@@ -1417,10 +1420,13 @@ INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'getTags', 'FALSE', null, null, 'STREAM', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'getTargets', 'FALSE', null, null, 'STREAM', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'placeVote', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'removeAllVotes', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'removeComment', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'removeRelation', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'removeTag', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'removeVote', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'saveLyrics', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:VotesView', 'votes', 'showDetails', 'FALSE', null, null, 'RENDERED', 'sb_jukebox:various.votes.details.xsl', 'text/html', 'TRUE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbPortal:Page', 'contents', 'display', 'TRUE', null, null, 'RENDERED', 'sb_portal:portal.contents.xsl', 'text/html', 'TRUE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbPortal:Portal', 'contents', 'display', 'TRUE', null, null, 'RENDERED', 'sb_portal:portal.contents.xsl', 'text/html', 'TRUE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbPortal:Portal', 'login', 'display', 'TRUE', null, null, 'RENDERED', 'sb_portal:root.login.xsl', 'text/html', 'TRUE', 'FALSE');

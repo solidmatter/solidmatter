@@ -326,7 +326,7 @@ $_QUERIES['sbCR/node/loadChildren/mode/standard/byNodetype'] = $_QUERIES['sbCR/n
 	ORDER BY	n.fk_nodetype
 ';
 $_QUERIES['sbCR/node/loadChildren/mode/standard/byNodetypeAndLabel'] = $_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
-	ORDER BY	n.fk_nodetype, n.label
+	ORDER BY	n.fk_nodetype, n.s_label
 ';
 $_QUERIES['sbCR/node/loadChildren/mode/standard/byCreationDate/ASC'] = $_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
 	ORDER BY	n.dt_created

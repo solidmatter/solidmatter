@@ -52,6 +52,8 @@
 				<xsl:call-template name="render_buttons" />
 				<span style="margin-left: 15px;"></span>
 				<xsl:call-template name="render_stars" />
+				<span style="margin-left: 5px;"></span>
+				<xsl:call-template name="render_votebuttons" />
 			</span>
 			<span class="type track"><xsl:value-of select="@label" /></span>
 		</div>
@@ -137,7 +139,7 @@
 		</div>
 		<xsl:if test="$form">
 		<div class="odd" style="display:none; text-align:center;" id="editLyrics">
-			<form action="{$form/@action}#lyrics" name="editLyrics" method="post" class="editLyrics" style="padding:10px; vertical-align:top;">
+			<form action="{$form/@action}#lyrics" name="editLyrics" method="post" class="editLyrics" style="padding:10px; vertical-align:top; font-size:0.8em;">
 				<xsl:apply-templates select="$form/sbinput[@type='text']" mode="inputonly" />
 				<br />
 				<xsl:apply-templates select="$form/submit" mode="inputonly" />
@@ -145,7 +147,7 @@
 		</div>
 		</xsl:if>
 		<xsl:if test="string-length(@info_lyrics) &gt; 0">
-			<div class="odd" style="padding:10px; white-space:pre; text-align:center; color:lightgrey;" id="showLyrics">
+			<div class="odd" style="padding:10px; white-space:pre; text-align:center; color:lightgrey; font-size:0.8em;" id="showLyrics">
 				<xsl:value-of select="@info_lyrics" />
 			</div>
 		</xsl:if>

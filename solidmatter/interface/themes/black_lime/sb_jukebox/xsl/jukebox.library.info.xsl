@@ -45,6 +45,7 @@
 			</xsl:if>-->
 			<xsl:apply-templates select="$content/nowPlaying" />
 			<xsl:apply-templates select="$content/recommendations" />
+			<xsl:apply-templates select="$content/news" />
 			<xsl:apply-templates select="$content/latestComments" />
 		</div>
 	</xsl:template>
@@ -171,6 +172,56 @@
 								<a class="type play icononly" href="/{@item_uuid}/-/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 								<a class="type remove icononly" href="/{@uuid}/actions/remove" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 							</td>
+						</tr>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<!--<tr><td colspan="4"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>-->
+				</xsl:otherwise>
+			</xsl:choose>
+			
+			</tbody>
+		</table>
+		
+	</xsl:template>
+	
+	<xsl:template match="news">
+		<table class="default" width="100%" summary="CHANGEME">
+			<thead>
+				<tr>
+					<th colspan="3">
+						<!--<span style="float:right;">
+							<xsl:choose>
+								<xsl:when test="$content/@expand = 'latestComments'">
+									<a class="type collapse" href="/"><xsl:value-of select="$locale/sbJukebox/actions/collapse" /></a>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:if test="1 or count($nodes) > 9">
+										<a class="type expand" href="/-/-/-/?expand=latestComments"><xsl:value-of select="$locale/sbJukebox/actions/expand" /></a>
+									</xsl:if>
+								</xsl:otherwise>
+							</xsl:choose>
+						</span>-->
+						<span class="type menu_overview"><xsl:value-of select="$locale/sbJukebox/labels/news" /></span>
+						<!--<a class="type rss" href="/rss/latestcomments/{$jukebox/usertoken}" target="_blank" style="margin-left: 20px;">RSS</a>-->
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+			<xsl:choose>
+				<xsl:when test="nodes/sbnode">
+					<xsl:for-each select="nodes/sbnode">
+						<tr>
+							<xsl:call-template name="colorize" />
+							<td>
+								<xsl:value-of select="@label" />
+							</td>
+							<td style="white-space:pre;">
+								<xsl:value-of select="@comment" />
+							</td>
+							<!--<td width="25%">
+								<xsl:value-of select="php:functionString('datetime_mysql2local', string(@created), string($locale/sbSystem/formats/datetime_short))" />
+							</td>-->
 						</tr>
 					</xsl:for-each>
 				</xsl:when>

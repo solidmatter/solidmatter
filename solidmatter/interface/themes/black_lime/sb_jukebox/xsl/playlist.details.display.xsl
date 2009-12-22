@@ -33,6 +33,10 @@
 			</xsl:call-template>
 		</div>
 		<div class="nav">
+			<span style="float: right;">
+				<span style="margin-left: 15px;"></span>
+				<xsl:call-template name="render_votebuttons" />
+			</span>
 			<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
 				<a class="type remove" href="/{$master/@uuid}/details/clear"><xsl:value-of select="$locale/sbSystem/actions/remove_all" /></a>
 			</xsl:if>

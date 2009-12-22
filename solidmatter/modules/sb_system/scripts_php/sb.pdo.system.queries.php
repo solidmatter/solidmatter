@@ -247,6 +247,10 @@ $_QUERIES['sbSystem/voting/removeVote'] = '
 	WHERE		fk_subject = :subject_uuid
 		AND		fk_user = :user_uuid
 ';
+$_QUERIES['sbSystem/voting/removeAllVotes'] = '
+	DELETE FROM	{TABLE_VOTES}
+	WHERE		fk_subject = :subject_uuid
+';
 $_QUERIES['sbSystem/voting/getVote/byUser'] = '
 	SELECT		n_vote
 	FROM		{TABLE_VOTES}
@@ -265,6 +269,18 @@ $_QUERIES['sbSystem/voting/getVotes'] = '
 				n_vote
 	FROM		{TABLE_VOTES}
 	WHERE		fk_subject = :subject_uuid
+';
+$_QUERIES['sbSystem/voting/getUserVotes'] = '
+	SELECT		v.fk_user AS user_uuid,
+				n.s_label AS user_label,
+				v.n_vote AS vote
+	FROM		{TABLE_VOTES} v
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		v.fk_user = h.fk_child
+	INNER JOIN	{TABLE_NODES} n
+		ON		h.fk_child = n.uuid
+	WHERE		v.fk_subject = :subject_uuid
+		AND		h.b_primary = \'TRUE\'
 ';
 
 //------------------------------------------------------------------------------
@@ -717,7 +733,8 @@ $_QUERIES['sbSystem/maintenance/view/repair/loadRoot'] = '
 	WHERE		s_uid = \'sbSystem:Root\'
 ';
 $_QUERIES['sbSystem/maintenance/view/repair/loadChildren'] = '
-	SELECT		fk_child as uuid
+	SELECT		fk_child AS uuid,
+				b_primary
 	FROM		{TABLE_HIERARCHY}
 	WHERE		fk_parent = :fk_parent
 		AND		fk_child <> \'00000000000000000000000000000000\'

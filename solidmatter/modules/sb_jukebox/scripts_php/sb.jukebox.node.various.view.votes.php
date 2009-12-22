@@ -15,8 +15,9 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 	
 	protected $aRequiredAuthorisations = array(
 		'placeVote' => array('vote'),
+		//'removeVote' => array('write'), // not hard-coded because users can remove their own votes
 		'addComment' => array('comment'),
-		//'removeComment' => array('write'),
+		//'removeComment' => array('write'), // not hard-coded because users can remove their own comments
 		'addTag' => array('tag'),
 		'removeTag' => array('write'),
 		'addRelation' => array('relate'),
@@ -76,7 +77,7 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				$nodeComment = $this->nodeSubject->getNode($sCommentUUID);
 				if (!User::isAuthorised('write', $this->nodeSubject) && User::getUUID() != $nodeComment->getProperty('jcr:createdBy')) {
 					throw new SecurityException('you are neither the author of the comment nor authorised to edit the comments of this object');	
-				} 
+				}
 				$nodeTrashcan = $this->crSession->getNode('//*[@uid="sbSystem:Trashcan"]');
 				$this->crSession->moveBranchByNodes($nodeComment, $this->nodeSubject, $nodeTrashcan);
 				$this->crSession->save();
@@ -90,6 +91,27 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				$this->nodeSubject->removeVote(User::getUUID());
 				$this->nodeSubject->placeVote(User::getUUID(), $iRealVote);
 				$_RESPONSE->addHeader('X-Vote: '.$this->nodeSubject->getVote());
+				break;
+				
+			case 'removeVote':
+				$sUserUUID = $this->requireParam('user_uuid');
+				if (!User::isAuthorised('write', $this->nodeSubject) && User::getUUID() != $sUserUUID) {
+					throw new SecurityException('this is neither your own vote nor are you authorised write permissions on this object');
+				}
+				$this->nodeSubject->removeVote($sUserUUID);
+				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'votes', 'showDetails');
+				break;
+				
+			case 'removeAllVotes':
+				if (!User::isAuthorised('write', $this->nodeSubject)) {
+					throw new SecurityException('you need write permissions on this object to remove all votes');
+				}
+				$this->nodeSubject->removeAllVotes();
+				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));
+				break;
+				
+			case 'showDetails':
+				$this->nodeSubject->storeUserVotes();
 				break;
 				
 			case 'addTag':

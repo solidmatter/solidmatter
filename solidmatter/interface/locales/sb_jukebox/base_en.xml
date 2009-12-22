@@ -130,6 +130,7 @@
 		<series>Series</series>
 		<most_recently_played>Most recently played</most_recently_played>
 		<more>more...</more>
+		<news>News</news>
 	</labels>
 	
 	<menu>
@@ -159,6 +160,8 @@
 		<remove>remove</remove>
 		<wikipedia>search in Wikipedia</wikipedia>
 		<edit_lyrics>Edit lyrics</edit_lyrics>
+		<vote_details>show vote details</vote_details>
+		<unset_votes>unset all votes</unset_votes>
 	</actions>
 	
 	<texts>

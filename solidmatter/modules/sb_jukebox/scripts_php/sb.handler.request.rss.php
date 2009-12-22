@@ -110,7 +110,7 @@ class JBRSSHandler {
 						'pubDate' => $aRow['created'],
 						//'source' => FALSE
 					);
-					$domFeed->addItem($aItemInfo);	
+					$domFeed->addItem($aItemInfo);
 				}
 				break;
 				
@@ -126,6 +126,7 @@ class JBRSSHandler {
 				$iLimit = 10;
 				$stmtGetLatest = $this->crSession->prepareKnown('sbJukebox/jukebox/comments/getLatest');
 				$stmtGetLatest->bindValue('jukebox_mpath', $nodeJukebox->getMPath(), PDO::PARAM_STR);
+				$stmtGetLatest->bindValue('jukebox_uuid', $nodeJukebox->getProperty('jcr:uuid'), PDO::PARAM_STR);
 				$stmtGetLatest->bindValue('limit', (int) $iLimit, PDO::PARAM_INT);
 				$stmtGetLatest->execute();
 				foreach ($stmtGetLatest as $aRow) {

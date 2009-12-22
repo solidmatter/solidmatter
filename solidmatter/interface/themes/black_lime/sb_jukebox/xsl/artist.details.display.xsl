@@ -33,6 +33,9 @@
 			</xsl:call-template>
 		</div>
 		<div class="nav">
+			<span style="float: right;">
+				
+			</span>
 			<xsl:call-template name="render_alphanum">
 				<xsl:with-param name="url" select="'/-/artists/-/?show='"/>
 			</xsl:call-template>
@@ -55,6 +58,8 @@
 				<xsl:call-template name="render_buttons" />
 				<span style="margin-left: 15px;"></span>
 				<xsl:call-template name="render_stars" />
+				<span style="margin-left: 5px;"></span>
+				<xsl:call-template name="render_votebuttons" />
 			</span>
 			<span class="type artist"><xsl:value-of select="$content/sbnode/@label" /></span>
 		</div>

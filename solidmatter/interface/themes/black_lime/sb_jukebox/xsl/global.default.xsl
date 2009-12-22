@@ -289,6 +289,10 @@
 		</xsl:if>
 	</xsl:template>
 	
+	<xsl:template name="render_votebuttons">
+		<a class="type voteDetails icononly" href="/{$master/@uuid}/votes/showDetails" title="{$locale/sbJukebox/actions/vote_details}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+	</xsl:template>
+	
 	<xsl:template name="render_alphanum">
 		<xsl:param name="url" />
 		<span class="alphalinks">

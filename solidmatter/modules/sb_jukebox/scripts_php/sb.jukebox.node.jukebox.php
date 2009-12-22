@@ -21,7 +21,7 @@ class sbNode_jukebox_jukebox extends sbNode {
 	*/
 	public function __setQueries() {
 		parent::__setQueries();
-		$this->aQueries['loadChildren']['byMode'] = 'sbCR/node/loadChildren/mode/standard/byLabel';
+		$this->aQueries['loadChildren']['byMode'] = 'sbCR/node/loadChildren/mode/standard/byNodetypeAndLabel';
 	}
 	
 	//--------------------------------------------------------------------------

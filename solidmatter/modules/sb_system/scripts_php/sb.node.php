@@ -59,9 +59,11 @@ class sbNode extends sbCR_Node {
 		// voting
 		$this->aQueries['voting/placeVote']							= 'sbSystem/voting/placeVote';
 		$this->aQueries['voting/removeVote']						= 'sbSystem/voting/removeVote';
+		$this->aQueries['voting/removeAllVotes']					= 'sbSystem/voting/removeAllVotes';
 		$this->aQueries['voting/getUserVote']						= 'sbSystem/voting/getVote/byUser';
 		$this->aQueries['voting/getAverageVote']					= 'sbSystem/voting/getVote/average';
 		$this->aQueries['voting/getAllVotes']						= 'sbSystem/voting/getVotes';
+		$this->aQueries['voting/getUserVotes']						= 'sbSystem/voting/getUserVotes';
 		
 		// tagging
 		$this->aQueries['tagging/addTagToNode']						= 'sbSystem/tagging/node/addTag';
@@ -1111,6 +1113,18 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
+	public function removeAllVotes() {
+		$stmtPlaceVote = $this->prepareKnown('voting/removeAllVotes');
+		$stmtPlaceVote->bindValue(':subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+		$stmtPlaceVote->execute();
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function getVote($sUserUUID = NULL) {
 		if ($sUserUUID == NULL) {
 			$nodeAll = $this->crSession->getRootNode();
@@ -1150,18 +1164,64 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
+	public function getUserVotes() {
+		$stmtGetVotes = $this->prepareKnown('voting/getUserVotes');
+		$stmtGetVotes->bindValue(':subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+		$stmtGetVotes->execute();
+		$aVotes = array();
+		foreach ($stmtGetVotes as $aRow) {
+			$aVotes[] = $aRow;
+		}
+		return ($aVotes);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function storeUserVotes() {
+		
+		$aVotes = $this->getUserVotes();
+		$domOwner = $this->elemSubject->ownerDocument;
+		$elemVotes = $domOwner->createElement('votes');
+		
+		foreach ($aVotes as $aVote) {
+			$elemVote = $domOwner->createElement('vote');
+			$elemVote->setAttribute('vote', $aVote['vote']);
+			$elemVote->setAttribute('user_uuid', $aVote['user_uuid']);
+			$elemVote->setAttribute('user_label', $aVote['user_label']);
+			$elemVotes->appendChild($elemVote);
+		}
+		
+		$this->elemSubject->appendChild($elemVotes);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	protected function refreshGlobalVote() {
 		$nodeAll = $this->crSession->getRootNode();
 		$stmtGetVotes = $this->prepareKnown('voting/getAverageVote');
 		$stmtGetVotes->bindValue(':subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
 		$stmtGetVotes->bindValue(':ignore_uuid', $nodeAll->getProperty('jcr:uuid'), PDO::PARAM_STR);
 		$stmtGetVotes->execute();
+		$bVotesPresent = FALSE;
 		foreach ($stmtGetVotes as $aRow) {
 			$stmtPlaceVote = $this->prepareKnown('voting/placeVote');
 			$stmtPlaceVote->bindValue(':subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
 			$stmtPlaceVote->bindValue(':user_uuid', $nodeAll->getProperty('jcr:uuid'), PDO::PARAM_STR);
 			$stmtPlaceVote->bindValue(':vote', round($aRow['n_average']), PDO::PARAM_INT);
 			$stmtPlaceVote->execute();
+			$bVotesPresent = TRUE;
+		}
+		if (!$bVotesPresent) {
+			$this->removeAllVotes();	
 		}
 	}
 	

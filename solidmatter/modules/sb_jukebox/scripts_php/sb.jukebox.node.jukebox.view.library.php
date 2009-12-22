@@ -52,9 +52,19 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 				}
 				$stmtGetLatest = $this->crSession->prepareKnown('sbJukebox/jukebox/comments/getLatest');
 				$stmtGetLatest->bindValue('jukebox_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);
+				$stmtGetLatest->bindValue('jukebox_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
 				$stmtGetLatest->bindValue('limit', (int) $iLimit, PDO::PARAM_INT);
 				$stmtGetLatest->execute();
 				$_RESPONSE->addData($stmtGetLatest->fetchElements(), 'latestComments');
+				
+				// add news
+				$niNews = $this->nodeSubject->getChildren('comments');
+				foreach ($niNews as $nodeNews) {
+					$nodeNews->loadProperties();
+				}
+				$niNews->sortDescending('created');
+				$niNews->crop(3);
+				$_RESPONSE->addData($niNews, 'news');
 				
 				// add recommendations
 				$elemRecommendations = $_RESPONSE->createElement('recommendations');

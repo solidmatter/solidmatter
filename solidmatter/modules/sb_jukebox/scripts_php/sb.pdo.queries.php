@@ -501,6 +501,7 @@ $_QUERIES['sbJukebox/jukebox/comments/getLatest'] = '
 		ON		h.fk_parent = ni.uuid
 	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		nc.fk_nodetype = \'sbSystem:Comment\'
+		AND		h.fk_parent != :jukebox_uuid
 	ORDER BY	nc.dt_created DESC
 	LIMIT		0, :limit
 ';
