@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: solidmatter
 Target Host: localhost
 Target Database: solidmatter
-Date: 22.12.2009 00:51:54
+Date: 23.12.2009 13:35:05
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -2378,6 +2378,7 @@ INSERT INTO `sb_system_registry` VALUES ('sb.files.explorer.image.alwaysfit', 'b
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.adminmode.enabled', 'boolean', null, 'TRUE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.charts.amount.default', 'integer', 'integer;minvalue=1;maxvalue=100', 'TRUE', 'how many entries should be displayed for the various chart lists');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.charts.amount.expanded', 'integer', 'integer;minvalue=10;maxvalue=1000', 'TRUE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.charts.pivot.default', 'string', 'select;options=SELF|AVERAGE', 'TRUE', 'determines if a user sees the own or the average votes after login');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.comments.enabled', 'boolean', null, 'FALSE', 'UNUSED - ');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.comments.perpage', 'integer', null, 'TRUE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.downloads.maxbandwidth', 'integer', 'integer;minvalue=1;maxvalue=10000', 'FALSE', 'KiloBYTE/s');
@@ -2394,7 +2395,6 @@ INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.search.defaultconstraint', 
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.tags.popularity.timeout', 'integer', null, 'FALSE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.tags.weighting.default', 'string', 'select;options=popularity|numfiles', 'TRUE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.validation.missingfiles.indicate', 'boolean', null, 'FALSE', null);
-INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.display.default', 'string', null, 'FALSE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.enabled', 'boolean', null, 'FALSE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.scale.max', 'integer', 'integer;minvalue=1;maxvalue=5', 'TRUE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.voting.scale.min', 'integer', 'integer;minvalue=-5;maxvalue=-1', 'TRUE', null);
@@ -2449,6 +2449,7 @@ INSERT INTO `sb_system_registry_values` VALUES ('sb.files.explorer.image.alwaysf
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.adminmode.enabled', 'SYSTEM', 'FALSE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.charts.amount.default', 'SYSTEM', '5');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.charts.amount.expanded', 'SYSTEM', '100');
+INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.charts.pivot.default', 'SYSTEM', 'AVERAGE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.comments.enabled', 'SYSTEM', 'TRUE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.comments.perpage', 'SYSTEM', '10');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.downloads.maxbandwidth', 'SYSTEM', '500');
@@ -2465,7 +2466,6 @@ INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.search.defaultconstr
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.tags.popularity.timeout', 'SYSTEM', '120');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.tags.weighting.default', 'SYSTEM', 'popularity');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.validation.missingfiles.indicate', 'SYSTEM', 'TRUE');
-INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.display.default', 'SYSTEM', 'average');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.enabled', 'SYSTEM', 'FALSE');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.scale.max', 'SYSTEM', '2');
 INSERT INTO `sb_system_registry_values` VALUES ('sb.jukebox.voting.scale.min', 'SYSTEM', '-2');

@@ -125,6 +125,7 @@
 		<amount_latestcomments_expanded>Anzahl neuester Kommentare (aufgeklappt)</amount_latestcomments_expanded>
 		<amount_charts>Anzahl Charteinträge</amount_charts>
 		<amount_charts_expanded>Anzahl Charteinträge (aufgeklappt)</amount_charts_expanded>
+		<default_pivot>Standard-Blickwinkel</default_pivot>
 		<votingstyle>Bewertungsstil</votingstyle>
 		<minstars>Negativsterne</minstars>
 		<maxstars>Positivsterne</maxstars>

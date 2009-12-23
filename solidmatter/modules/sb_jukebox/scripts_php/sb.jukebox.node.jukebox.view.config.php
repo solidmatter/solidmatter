@@ -67,6 +67,7 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 					Registry::setValue('sb.jukebox.latestcomments.amount.expanded',	$formSettings->getValue('latestcommentsexpanded'),	User::getUUID());
 					Registry::setValue('sb.jukebox.charts.amount.default',			$formSettings->getValue('charts'),					User::getUUID());
 					Registry::setValue('sb.jukebox.charts.amount.expanded',			$formSettings->getValue('chartsexpanded'),			User::getUUID());
+					Registry::setValue('sb.jukebox.charts.pivot.default',			$formSettings->getValue('defaultpivot'),			User::getUUID());
 					Registry::setValue('sb.jukebox.adminmode.enabled',				$formSettings->getValue('adminmode'),				User::getUUID());
 					
 				} else {
@@ -133,6 +134,7 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 		$formConfig->addInput('latestcommentsexpanded;integer;minvalue=10;maxvalue=1000;',	'$locale/sbJukebox/labels/amount_latestcomments_expanded');
 		$formConfig->addInput('charts;integer;minvalue=1;maxvalue=100;',					'$locale/sbJukebox/labels/amount_charts');
 		$formConfig->addInput('chartsexpanded;integer;minvalue=10;maxvalue=1000;',			'$locale/sbJukebox/labels/amount_charts_expanded');
+		$formConfig->addInput('defaultpivot;select;options=SELF|AVERAGE;',					'$locale/sbJukebox/labels/default_pivot');
 		$formConfig->addInput('adminmode;checkbox;',										'$locale/sbJukebox/labels/adminmode');
 		$formConfig->addSubmit('$locale/sbSystem/actions/apply');
 		
@@ -145,6 +147,7 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 		$formConfig->setValue('latestcommentsexpanded',	Registry::getValue('sb.jukebox.latestcomments.amount.expanded'));
 		$formConfig->setValue('charts',					Registry::getValue('sb.jukebox.charts.amount.default'));
 		$formConfig->setValue('chartsexpanded',			Registry::getValue('sb.jukebox.charts.amount.expanded'));
+		$formConfig->setValue('defaultpivot',			Registry::getValue('sb.jukebox.charts.pivot.default'));
 		$sAdminMode = 'FALSE';
 		if (Registry::getValue('sb.jukebox.adminmode.enabled')) {
 			$sAdminMode = 'TRUE';

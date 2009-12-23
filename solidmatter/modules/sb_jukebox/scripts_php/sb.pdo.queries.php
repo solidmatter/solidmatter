@@ -172,7 +172,8 @@ $_QUERIES['sbJukebox/jukebox/getVoters'] = '
 	ORDER BY	label
 ';
 $_QUERIES['sbJukebox/jukebox/various/getTop'] = '
-	SELECT		n.uuid,
+	SELECT DISTINCT
+				n.uuid,
 				n.s_label AS label,
 				n.s_name AS name,
 				v.n_vote AS vote,

@@ -299,8 +299,12 @@ td.timesplayed {
 
 span.actions {
 	float: right;
-	top: -2px;
-	margin-bottom: 10px;
+	position: relative;
+	top: -3px;
+}
+span.stars {
+	position: relative;
+	top: 3px;
 }
 span.stars img {
 	cursor: pointer;

@@ -90,7 +90,12 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				$iRealVote = $iVote;
 				$this->nodeSubject->removeVote(User::getUUID());
 				$this->nodeSubject->placeVote(User::getUUID(), $iRealVote);
-				$_RESPONSE->addHeader('X-Vote: '.$this->nodeSubject->getVote());
+				if ($this->getPivotUUID() != User::getUUID()) {
+					$iVote = $this->nodeSubject->getVote(User::getUUID());
+				} else {
+					$iVote = $this->nodeSubject->getVote();
+				}
+				$_RESPONSE->addHeader('X-Vote: '.$iVote);
 				break;
 				
 			case 'removeVote':

@@ -125,6 +125,7 @@
 		<amount_latestcomments_expanded>Number of latest comments (expanded)</amount_latestcomments_expanded>
 		<amount_charts>Number of chart entries</amount_charts>
 		<amount_charts_expanded>Number of chart entries (expanded)</amount_charts_expanded>
+		<default_pivot>Default pivot</default_pivot>
 		<votingstyle>Voting style</votingstyle>
 		<minstars>Minimum stars</minstars>
 		<maxstars>Maximum stars</maxstars>

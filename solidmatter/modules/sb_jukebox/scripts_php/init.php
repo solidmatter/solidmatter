@@ -159,7 +159,7 @@ class sbJukeboxView extends sbView {
 	public function getPivotUUID() {
 		$sJukeboxUUID = $this->getJukebox()->getProperty('jcr:uuid');
 		if (!isset(sbSession::$aData['sbJukebox'][$sJukeboxUUID]['pivot'])) {
-			if (Registry::getValue('sb.jukebox.voting.display.default') == 'average') {
+			if (Registry::getValue('sb.jukebox.charts.pivot.default') == 'AVERAGE') {
 				$sPivotUUID = $this->crSession->getRootNode()->getProperty('jcr:uuid');
 			} else {
 				$sPivotUUID = User::getUUID();

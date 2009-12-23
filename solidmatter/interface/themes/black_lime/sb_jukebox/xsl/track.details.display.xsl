@@ -44,7 +44,7 @@
 	<xsl:template match="sbnode">
 			
 		<div class="th">
-			<span class="albumdetails" style="float:right;">
+			<span class="actions" style="float:right;">
 				<xsl:call-template name="addtag">
 					<xsl:with-param name="form" select="$content/sbform[@id='addTag']" />
 				</xsl:call-template>

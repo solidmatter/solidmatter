@@ -83,7 +83,7 @@
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>
-					<li><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></li>
+					<!--<li><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></li>-->
 				</xsl:otherwise>
 			</xsl:choose>
 		</ul>
