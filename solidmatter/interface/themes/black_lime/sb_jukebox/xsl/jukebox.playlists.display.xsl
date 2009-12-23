@@ -38,17 +38,18 @@
 	
 	<xsl:template match="playlists">
 		
+		<div class="th">
+			<span class="actions">
+				<xsl:if test="$auth[@name='add_playlists' and @grant_type='ALLOW']">
+				<xsl:call-template name="newPlaylist">
+					<xsl:with-param name="form" select="$content/sbform[@id='newPlaylist']" />
+				</xsl:call-template>
+				</xsl:if>
+			</span>
+			<span class="type playlist"><xsl:value-of select="$locale/sbJukebox/menu/playlists"/></span>
+		</div>
+		
 		<table class="default" width="100%" summary="">
-			<thead>
-				<tr>
-					<th colspan="5">
-						<a style="float:right;" class="type create" href="/-/playlists/create">
-							<xsl:value-of select="$locale/sbJukebox/labels/new_playlist"/>
-						</a>
-						<span class="type playlist"><xsl:value-of select="$locale/sbJukebox/menu/playlists"/></span>
-					</th>
-				</tr>
-			</thead>
 			<tbody>
 			<xsl:choose>
 				<xsl:when test="row">
@@ -81,6 +82,26 @@
 			</tbody>
 		</table>
 		
+	</xsl:template>
+	
+	<xsl:template name="newPlaylist">
+		<xsl:param name="form" />
+		<xsl:if test="$form" >
+			<script type="text/javascript" language="javascript">
+				function showNewPlaylistForm() {
+					document.newPlaylist.style.display='inline';
+					document.newPlaylist.elements[0].focus();
+					document.newPlaylist.previousSibling.style.display='none';
+				}
+			</script>
+			<!--<xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>-->
+			<a href="javascript:showNewPlaylistForm();" style="line-height:25px;" class="type create"><xsl:value-of select="$locale/sbJukebox/labels/new_playlist" /></a>
+			<form action="{$form/@action}" name="newPlaylist" id="newPlaylist" method="post" class="newPlaylist" style="display:none;">
+				<xsl:apply-templates select="$form/sbinput[@type='string']" mode="inputonly" />
+				<xsl:value-of select="' '" />
+				<xsl:apply-templates select="$form/submit" mode="inputonly" />
+			</form>
+		</xsl:if>
 	</xsl:template>
 
 </xsl:stylesheet>

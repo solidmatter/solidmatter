@@ -30,6 +30,9 @@
 					<xsl:when test="$noLabel">
 						
 					</xsl:when>
+					<xsl:when test="@label = ''">
+						
+					</xsl:when>
 					<xsl:otherwise>
 						<tr><th colspan="2"><xsl:value-of select="dyn:evaluate(@label)" /></th></tr>
 					</xsl:otherwise>

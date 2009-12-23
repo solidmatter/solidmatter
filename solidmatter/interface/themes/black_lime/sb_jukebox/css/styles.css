@@ -107,6 +107,9 @@ span.current_playlist span {
 	background: transparent url(../images/playlistcontainer_bg.png) repeat-x bottom left;
 }
 span.current_playlist span a {
+	position: relative;
+	top: -1px;
+	left: -1px;
 	line-height: 20px;
 }
 
@@ -160,12 +163,13 @@ div.menu a.active {
 
 div.toolbar {
 	/*height: 49px;*/
-	min-height: 20px;
+	min-height: 28px;
 	padding: 8px;
 	background: #222 url(../images/helper_bg_top.png) repeat-x top center;
 	margin-left: 199px;
 }
 div.nav {
+	min-height: 16px;
 	background: #141414 url(../images/helper_bg.png) repeat-x top center;
 	margin: 0;
 	padding: 8px;
@@ -303,11 +307,14 @@ span.actions {
 	top: -3px;
 }
 span.stars {
-	position: relative;
-	top: 3px;
+	
 }
 span.stars img {
 	cursor: pointer;
+}
+span.actions span.stars {
+	position: relative;
+	top: 3px;
 }
 span.actions span.stars img {
 	padding-bottom: 2px;

@@ -78,7 +78,7 @@
 			<xsl:choose>
 				<xsl:when test="resultset/row">
 					<tr class="odd">
-						<td style="text-align: center;">
+						<td>
 							<xsl:for-each select="resultset/row">
 								<div class="albumcover">
 									<a class="imglink" href="/{@uuid}" style="position:relative;">

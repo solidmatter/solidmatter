@@ -161,6 +161,16 @@ class sbDOMForm extends sbDOMDocument {
 	* @param 
 	* @return 
 	*/
+	public function getError($sName) {
+		return ($this->aInputs[$sName]->getError());
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function setConfig($sName, $sConfig, $sValue) {
 		$this->aInputs[$sName]->setConfig($sConfig, $sValue);
 	}

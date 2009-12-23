@@ -200,6 +200,16 @@ abstract class sbInput {
 	* @param 
 	* @return 
 	*/
+	public function getError() {
+		return ($this->sErrorLabel);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function hasError() {
 		if ($this->sErrorLabel != '') {
 			return (TRUE);

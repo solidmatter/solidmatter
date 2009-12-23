@@ -242,7 +242,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</a>
-					<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1'">
+					<xsl:if test="$auth[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1'">
 						<xsl:value-of select="' '" />
 						<a class="type remove icononly" href="/{$master/@uuid}/votes/removeTag/?tagid={@id}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 					</xsl:if>
@@ -457,7 +457,7 @@
 								</a>
 							</td>
 							<td width="10">
-							<xsl:if test="($master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1')">
+							<xsl:if test="($auth[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1')">
 								<a class="type remove icononly" href="/{$master/@uuid}/votes/removeRelation/?type_relation={@id}&amp;target_relation={@target_uuid}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 							</xsl:if>
 							</td>

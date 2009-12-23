@@ -26,43 +26,38 @@ class sbView_jukebox_jukebox_playlists extends sbJukeboxView {
 		switch ($sAction) {
 			
 			case 'display':
+				
+				// add existing playlists
 				$stmtGetPlaylists = $this->nodeSubject->getSession()->prepareKnown('sbJukebox/jukebox/playlists/getAll');
 				$stmtGetPlaylists->bindValue('jukebox_uuid', $this->getJukebox()->getProperty('jcr:uuid'), PDO::PARAM_STR);
 				$stmtGetPlaylists->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);
 				$stmtGetPlaylists->execute();
 				$_RESPONSE->addData($stmtGetPlaylists->fetchElements('playlists'));
-				// add existing playlists
-				/*$niPlaylists = $this->nodeSubject->loadChildren('playlists', TRUE, TRUE, TRUE);
-				foreach ($niPlaylists as $nodePlaylist) {
-					$nodePlaylist->getVote($this->getPivotUUID());
-				}
-				$this->nodeSubject->storeChildren();*/
+				
+				// add form for new playlist
+				$formCreate = $this->buildCreateForm();
+				$formCreate->saveDOM();
+				$_RESPONSE->addData($formCreate);
+				
 				break;
 				
 			case 'create':
-				$nodeParent = $this->getJukebox();
-				$_RESPONSE->addData($nodeParent, 'parent');
-				$nodeChild = $nodeParent->addNode('temp', 'sbJukebox:Playlist');
-				$formCreate = $nodeChild->buildForm('create', $_REQUEST->getParam('parentnode'));
-				$formCreate->setAction(System::getRequestURL('-', 'playlists', 'create'));
+				import('sb.tools.strings.conversion');
+				$formCreate = $this->buildCreateForm();
 				$formCreate->recieveInputs();
-				if ($_REQUEST->getParam('submit') != NULL && $formCreate->checkInputs()) {
-					$aValues = $formCreate->getValues();
-					foreach ($aValues as $sName => $mValue) {
-						$nodeChild->setProperty($sName, $mValue);
-					}
-					$nodeParent->save();
-					// TODO: integrate authorisation changes into node's save() method
-					// TODO: since read auth incorporates download auth playlists can be used to bypass download restrictions
-					$nodeChild->setAuthorisation('read');
-					$nodeChild->setAuthorisation('write');
-					$_RESPONSE->redirect('-', 'playlists');
-				} else {
-					$formCreate->saveDOM();
-					$_RESPONSE->addData($formCreate);
+				if (!$formCreate->checkInputs()) {
+					// TODO: getError only returns the locale path, not the actual text
+					throw new sbException($formCreate->getError('playlist'));
 				}
-				
-				
+				$aValues = $formCreate->getValues();
+				$nodePlaylist = $this->nodeSubject->addNode(str2urlsafe($aValues['playlist']), 'sbJukebox:Playlist');
+				$nodePlaylist->setProperty('label', $aValues['playlist']);
+				$this->nodeSubject->save();
+				// TODO: integrate authorisation changes into node's save() method
+				// TODO: since read auth incorporates download auth playlists can be used to bypass download restrictions
+				$nodePlaylist->setAuthorisation('read');
+				$nodePlaylist->setAuthorisation('write');
+				$_RESPONSE->redirect('-', 'playlists');
 				break;
 			
 			default:
@@ -70,7 +65,28 @@ class sbView_jukebox_jukebox_playlists extends sbJukeboxView {
 	
 		}
 		
-				
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function buildCreateForm() {
+		
+		$formCreate = new sbDOMForm(
+			'newPlaylist',
+			NULL,
+			System::getRequestURL($this->nodeSubject, 'playlists', 'create'),
+			$this->crSession
+		);
+		
+		$formCreate->addInput('playlist;string;minlength=3;maxlength=60;required=true;');
+		$formCreate->addSubmit('$locale/sbSystem/actions/save');
+		
+		return ($formCreate);
+		
 	}
 	
 }
