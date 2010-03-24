@@ -72,9 +72,22 @@
 			</xsl:otherwise>
 			</xsl:choose>
 			<span class="type {@s_displaytype}"><xsl:value-of select="@s_type" /></span>
+			<xsl:if test="parent">
+				<span style="color:#666; font-size:smaller; font-style:normal;">
+				( 
+				<xsl:for-each select="parent">
+					<xsl:value-of select="." />
+					<xsl:if test="position() != last()">
+						 | 
+					</xsl:if>
+				</xsl:for-each>
+				 )
+				</span>
+			</xsl:if>
 			<xsl:if test="views/view">
 				<ul id="content:{$path}" style="display:none;">
 				<xsl:for-each select="views/view">
+					<xsl:sort select="@n_priority" order="descending" />
 					<xsl:call-template name="render_view">
 						<xsl:with-param name="path" select="concat($path, ':', @s_view)" />
 					</xsl:call-template>
@@ -97,7 +110,17 @@
 				</a>
 			</xsl:otherwise>
 			</xsl:choose>
-			<span class="type sb_view"><xsl:value-of select="@s_view" /></span>
+			<span class="type sb_view">
+				<xsl:if test="@b_display = 'FALSE'">
+					<xsl:attribute name="style">font-style:italic;</xsl:attribute>
+				</xsl:if>
+				<xsl:value-of select="@s_view" />
+				<span style="color:#666; font-size:smaller; font-style:normal;"> 
+					( <xsl:value-of select="@n_priority" />
+					<!--ORDER:<xsl:value-of select="@n_order" />,-->
+					 | <xsl:value-of select="@s_class" /> in <xsl:value-of select="@s_classfile" /> )
+				</span>
+			</span>
 			<xsl:if test="actions/action">
 				<ul id="content:{$path}" style="display:none;">
 				<xsl:for-each select="actions/action">
@@ -114,7 +137,30 @@
 		<xsl:param name="path" />
 		<li>
 			<img src="/theme/sb_system/icons/tree_nothing.png" alt="" />
-			<span class="type sb_action"><xsl:value-of select="@s_action" /></span>
+			<span class="type sb_action">
+				<xsl:if test="@b_default = 'TRUE'">
+					<xsl:attribute name="style">font-weight:bold;</xsl:attribute>
+				</xsl:if>
+				<xsl:value-of select="@s_action" />
+				<span style="color:#666; font-size:smaller; font-weight:normal;"> 
+					( <xsl:value-of select="@e_outputtype" />
+					<xsl:if test="@s_mimetype != ''">
+						| <xsl:value-of select="@s_mimetype" />
+					</xsl:if>
+					<xsl:if test="@s_stylesheet != ''">
+						| <xsl:value-of select="@s_stylesheet" />
+					</xsl:if>
+					<xsl:if test="@s_class != ''">
+						| <xsl:value-of select="@s_class" /> in <xsl:value-of select="@s_classfile" />
+					</xsl:if>
+					<xsl:if test="@b_uselocale = 'TRUE'">
+						| Localized
+					</xsl:if>
+					<xsl:if test="@b_isrecallable = 'TRUE'">
+						| Recallable
+					</xsl:if> )
+				</span>
+			</span>
 		</li>
 	</xsl:template>
 	

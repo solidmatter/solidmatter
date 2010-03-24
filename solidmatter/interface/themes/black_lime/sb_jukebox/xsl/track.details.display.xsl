@@ -127,15 +127,17 @@
 			<script type="text/javascript" language="javascript">
 				function showLyricsForm() {
 					document.getElementById('editLyrics').style.display='inline';
-					document.getElementById('showLyrics').style.display='none';
 					document.editLyrics.elements[0].focus();
+					if (document.getElementById('showLyrics')) {
+						document.getElementById('showLyrics').style.display='none';
+					}
 				}
 			</script>
 			<span style="float:right;">
 				<a href="javascript:showLyricsForm();" class="type create"><xsl:value-of select="$locale/sbJukebox/actions/edit_lyrics" /></a>
 			</span>
 			</xsl:if>
-			<span class="type lyrics"><xsl:value-of select="$locale/sbJukebox/Track/info_lyrics" /></span>
+			<span class="type lyrics" id=""><xsl:value-of select="$locale/sbJukebox/Track/info_lyrics" /></span>
 		</div>
 		<xsl:if test="$form">
 		<div class="odd" style="display:none; text-align:center;" id="editLyrics">

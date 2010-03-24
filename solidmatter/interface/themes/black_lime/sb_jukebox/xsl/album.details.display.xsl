@@ -154,7 +154,7 @@
 								<xsl:attribute name="style">background-color:#800;</xsl:attribute>
 							</xsl:if>
 							<xsl:call-template name="colorize" />
-							<td width="80">
+							<td width="{$starcolwidth}">
 								<xsl:call-template name="render_stars">
 									<!--<xsl:with-param name="target" select="'parent'" />
 									<xsl:with-param name="voting" select="1" />-->

@@ -194,6 +194,12 @@ class sbCR_Repository {
 			$aRepositoryInfo[$aRow['fk_nodetype']]['views'][$aRow['s_view']]['actions'][$aRow['s_action']]['details'] = $aRow;
 		}
 		
+		// get nodetype hierarchy
+		$aHierarchy = array();
+		$stmtHierarchy = $this->DB->prepareKnown('sbCR/repository/getNodeTypeHierarchy');
+		$stmtHierarchy->execute();
+		$aHierarchy = $stmtHierarchy->fetchAll(PDO::FETCH_ASSOC);
+		
 		//var_dumpp($aRepositoryInfo);
 		
 		// create DOM and store XML 
@@ -208,6 +214,12 @@ class sbCR_Repository {
 			$elemNodetype = $domReposInfo->createElement('nodetype');
 			foreach ($aNodetype['details'] as $sKey => $sValue) {
 				$elemNodetype->setAttribute($sKey, $sValue);
+			}
+			foreach ($aHierarchy as $aEntry) {
+				if ($aEntry['fk_childnodetype'] == $sNodetype) {
+					$elemParent = $domReposInfo->createElement('parent', $aEntry['fk_parentnodetype']);
+					$elemNodetype->appendChild($elemParent);
+				}
 			}
 			$elemViews = $domReposInfo->createElement('views');
 			if (isset($aNodetype['views'])) {

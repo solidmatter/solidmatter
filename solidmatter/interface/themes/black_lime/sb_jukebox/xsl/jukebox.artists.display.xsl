@@ -78,7 +78,7 @@
 					<xsl:for-each select="$data">
 						<tr>
 							<xsl:call-template name="colorize" />
-							<td width="80">
+							<td width="{$starcolwidth}">
 								<xsl:call-template name="render_stars">
 									<xsl:with-param name="vote" select="@vote" />
 								</xsl:call-template>

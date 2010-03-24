@@ -56,7 +56,7 @@
 					<xsl:for-each select="row">
 						<tr>
 							<xsl:call-template name="colorize" />
-							<td width="80">
+							<td width="{$starcolwidth}">
 								<xsl:call-template name="render_stars" />
 							</td>
 							<td>

@@ -24,6 +24,7 @@
 	<xsl:variable name="scripts_js_jb" select="'/theme/sb_jukebox/js'" />
 	<xsl:variable name="currentPlaylist" select="$content/currentPlaylist/sbnode" />
 	<xsl:variable name="jukebox" select="/response/metadata/modules/sb_jukebox" />
+	<xsl:variable name="starcolwidth" select="((0 - $jukebox/minstars) + $jukebox/maxstars + 1) * 16 + 5" />
 	
 	<xsl:template match="/response/metadata" priority="10">
 		<!-- title -->

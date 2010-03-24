@@ -77,7 +77,7 @@
 						<xsl:if test="@user_uuid != '00000000000000000000000000000000'">
 						<tr>
 							<xsl:call-template name="colorize" />
-							<td width="120">
+							<td width="{$starcolwidth}">
 								<span id="stars_{@user_uuid}" class="stars"><script type="text/javascript">render_stars('<xsl:value-of select="@vote" />', '<xsl:value-of select="@user_uuid" />', false)</script></span>
 							</td>
 							<td>

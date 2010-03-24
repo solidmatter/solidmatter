@@ -106,7 +106,7 @@
 					<xsl:for-each select="$nodes">
 						<tr>
 							<xsl:call-template name="colorize" />
-							<td width="80">
+							<td width="{$starcolwidth}">
 								<xsl:choose>
 									<xsl:when test="$expand = 'mostPlayed'">
 										<xsl:attribute name="class">timesplayed</xsl:attribute>
