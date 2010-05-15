@@ -48,7 +48,7 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 				// add latest comments
 				$iLimit = Registry::getValue('sb.jukebox.latestcomments.amount.default');
 				if ($_REQUEST->getParam('expand') == 'latestComments') {
-					$iLimit = Registry::getValue('sb.jukebox.latestcomments.amount.expanded');;
+					$iLimit = Registry::getValue('sb.jukebox.latestcomments.amount.expanded');
 				}
 				$stmtGetLatest = $this->crSession->prepareKnown('sbJukebox/jukebox/comments/getLatest');
 				$stmtGetLatest->bindValue('jukebox_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);

@@ -104,7 +104,7 @@
 			<xsl:choose>
 				<xsl:when test="$nodes">
 					<xsl:for-each select="$nodes">
-						<tr>
+						<tr id="highlight_{@uuid}">
 							<xsl:call-template name="colorize" />
 							<td width="{$starcolwidth}">
 								<xsl:choose>

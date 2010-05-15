@@ -45,7 +45,7 @@ class sbView_portal_portal_contents extends sbView {
 				$elemCurrent->setAttribute('nodetype', $nodeLeaf->getPrimaryNodeType());
 				$elemCurrent->setAttribute('state', 'current');
 				
-				$niChildren = $nodeLeaf->loadChildren('menu', TRUE, TRUE, FALSE, TRUE);
+				$niChildren = $nodeLeaf->loadChildren('menu', TRUE, TRUE, FALSE, array('read'));
 				foreach ($niChildren as $nodeChild) {
 					$elemChild = $_RESPONSE->createElement('node');
 					$elemChild->setAttribute('label', $nodeChild->getProperty('label'));
@@ -66,7 +66,7 @@ class sbView_portal_portal_contents extends sbView {
 					$elemAncestor->setAttribute('uuid', $nodeAncestor->getProperty('jcr:uuid'));
 					$elemAncestor->setAttribute('nodetype', $nodeAncestor->getPrimaryNodeType());
 					$elemAncestor->setAttribute('state', 'ancestor');
-					$niChildren = $nodeAncestor->loadChildren('menu', TRUE, TRUE, FALSE, TRUE);
+					$niChildren = $nodeAncestor->loadChildren('menu', TRUE, TRUE, FALSE, array('read'));
 					foreach ($niChildren as $nodeChild) {
 //						echo $nodeChild->getName().'|';
 						if ($nodeChild->getProperty('jcr:uuid') == $elemCurrent->getAttribute('uuid')) {
@@ -106,7 +106,7 @@ class sbView_portal_portal_contents extends sbView {
 	}
 	
 	protected function expand($nodeCurrent) {
-		$niChildren = $nodeCurrent->loadChildren('menu', FALSE, TRUE, FALSE, TRUE);
+		$niChildren = $nodeCurrent->loadChildren('menu', FALSE, TRUE, FALSE, array('read'));
 		if (count($niChildren) > 0) {
 //			var_dumppp($niChildren);
 			$bFirst = FALSE;
@@ -122,7 +122,7 @@ class sbView_portal_portal_contents extends sbView {
 	
 	protected function getLeaf($nodeCurrent) {
 		if ($nodeCurrent->getNumberOfChildren('menu') > 0) { 
-			$niChildren = $nodeCurrent->loadChildren('menu', FALSE, TRUE, FALSE, TRUE);
+			$niChildren = $nodeCurrent->loadChildren('menu', FALSE, TRUE, FALSE, array('read'));
 			if ($niChildren->getSize() > 0) {
 				foreach ($niChildren as $nodeChild) {
 	//				echo $nodeChild->getName().'|';

@@ -253,6 +253,7 @@ $_RESPONSE->saveOutput();
 	$_RESPONSE = ResponseFactory::getInstance('global');
 	$_RESPONSE->addException($e);
 	$_RESPONSE->finalizeMetadata();
+	$_RESPONSE->addHeader('X-sbException: 1'); // TODO: support sensible error codes
 	// FIXME: this has no effect
 	$sMethod = 'rendered';
 	if (DEBUG) {

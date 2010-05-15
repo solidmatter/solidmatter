@@ -69,7 +69,7 @@
 		<table class="default" width="100%" summary="CHANGEME">
 			<thead>
 				<tr>
-					<th colspan="2">
+					<th colspan="3">
 						<span class="type {$type}">
 							<xsl:value-of select="concat(' ', $label)" />
 						</span>
@@ -80,8 +80,11 @@
 			<xsl:choose>
 				<xsl:when test="$nodes">
 					<xsl:for-each select="$nodes">
-						<tr>
+						<tr id="highlight_{@uuid}">
 							<xsl:call-template name="colorize" />
+							<td width="{$starcolwidth}">
+								<xsl:call-template name="render_stars" />
+							</td>
 							<td>
 								<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
 							</td>
@@ -121,7 +124,7 @@
 			<xsl:choose>
 				<xsl:when test="$nodes">
 					<xsl:for-each select="$nodes">
-						<tr>
+						<tr id="highlight_{@uuid}">
 							<xsl:call-template name="colorize" />
 							<td width="70%">
 								<a href="/{@uuid}"><xsl:value-of select="@label" /></a>

@@ -373,10 +373,10 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function loadChildren($sMode = 'debug', $bStoreAsNodes = TRUE, $bReturnChildren = FALSE, $bLoadProperties = FALSE, $bOnlyReadable = FALSE) {
+	public function loadChildren($sMode = 'debug', $bStoreAsNodes = TRUE, $bReturnChildren = FALSE, $bLoadProperties = FALSE, $aRequiredAuthorisations = array()) {
 		
 		// FIXME: IMPLEMENT DIFFERENT WAY OF CHECKING PRIMARY LINK!!!!!!!
-		$niChildren = $this->getChildren($sMode, $bOnlyReadable);
+		$niChildren = $this->getChildren($sMode, $aRequiredAuthorisations);
 		
 		foreach ($niChildren as $nodeChild) {
 			/*if ($nodeChild->getParent()->isSame($this)) {
@@ -409,8 +409,8 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function getChildren($sMode = 'debug', $bOnlyReadable = FALSE) {
-		return (parent::getChildren($sMode, $bOnlyReadable));
+	public function getChildren($sMode = 'debug', $aRequiredAuthorisations = array()) {
+		return (parent::getChildren($sMode, $aRequiredAuthorisations));
 	}
 	
 	

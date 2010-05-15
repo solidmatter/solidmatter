@@ -68,7 +68,7 @@ class sbView_root_menu extends sbView {
 			$sMode = 'tree';
 		}
 		if ($sQuery == '' || isset(sbSession::$aData['menu']['expanded'][$sQuery])) {
-			$niChildren = $nodeCurrentRoot->loadChildren($sMode, TRUE, TRUE, FALSE, TRUE);
+			$niChildren = $nodeCurrentRoot->loadChildren($sMode, TRUE, TRUE, FALSE, array('read'));
 			foreach($niChildren as $nodeChild) {
 				$this->expand($nodeChild, $sQuery);
 			}
@@ -100,7 +100,7 @@ class sbView_root_menu extends sbView {
 				$sMode = 'tree';
 			}
 			
-			$niChildren = $nodeCurrent->loadChildren($sMode, TRUE, TRUE, FALSE, TRUE);
+			$niChildren = $nodeCurrent->loadChildren($sMode, TRUE, TRUE, FALSE, array('read'));
 			
 			foreach($niChildren as $nodeChild) {
 				$this->expand($nodeChild, $sCurrentPath);

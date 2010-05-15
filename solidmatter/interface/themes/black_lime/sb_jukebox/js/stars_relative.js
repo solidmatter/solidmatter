@@ -281,7 +281,7 @@ function vote(oStarImage) {
 			parameters: null,
 			asynchronous: false,
 			onComplete: function(response) {
-    			update_stars(oStarContainer, response.getHeader('X-Vote'));
+    			update_stars(oStarContainer, response.getHeader('X-sbVote'));
     		} 
 		}
 	);

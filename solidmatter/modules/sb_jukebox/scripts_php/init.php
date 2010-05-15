@@ -121,11 +121,15 @@ class sbJukeboxView extends sbView {
 	* @return 
 	*/
 	protected function storeCurrentPlaylist() {
+		global $_RESPONSE;
 		$sJukeboxUUID = $this->getJukebox()->getIdentifier();
 		if (isset(sbSession::$aData['sbJukebox'][$sJukeboxUUID]['playlist'])) {
 			$nodePlaylist = $this->crSession->getNodeByIdentifier(sbSession::$aData['sbJukebox'][$sJukeboxUUID]['playlist']);
-			global $_RESPONSE;
 			$_RESPONSE->addData($nodePlaylist, 'currentPlaylist');
+		}
+		$niWritablePlaylists = $this->getJukebox()->getChildren('playlists', array('add_titles'));
+		if (!$niWritablePlaylists->isEmpty()) {
+			$_RESPONSE->addData($niWritablePlaylists, 'writablePlaylists');
 		}
 	}
 	

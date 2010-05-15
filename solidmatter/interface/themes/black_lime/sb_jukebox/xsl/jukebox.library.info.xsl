@@ -114,7 +114,7 @@
 			<xsl:choose>
 				<xsl:when test="resultset/row">
 					<xsl:for-each select="resultset/row">
-						<tr>
+						<tr id="highlight_{@uuid}">
 							<xsl:call-template name="colorize" />
 							<!--<td width="80">
 								<xsl:call-template name="render_stars">

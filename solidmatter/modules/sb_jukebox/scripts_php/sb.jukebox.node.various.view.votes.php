@@ -95,7 +95,7 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				} else {
 					$iVote = $this->nodeSubject->getVote();
 				}
-				$_RESPONSE->addHeader('X-Vote: '.$iVote);
+				$_RESPONSE->addHeader('X-sbVote: '.$iVote);
 				break;
 				
 			case 'removeVote':

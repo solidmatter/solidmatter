@@ -59,15 +59,46 @@
 			<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/dynamic.js"></script>
 		</head>
 		<body>
+			<script language="Javascript">
+				var sCurrentPlaylistUUID = '<xsl:value-of select="$content/currentPlaylist/sbnode/@uuid" />'
+			</script>
 			<div class="sidebar">
 				<div class="head">
 					<h1>sbJukebox</h1>
-					<xsl:if test="$content/currentPlaylist/sbnode">
-						<span class="current_playlist"><span>
-							<a class="type jumpToPlaylist" href="/{$content/currentPlaylist/sbnode/@uuid}"><xsl:value-of select="$content/currentPlaylist/sbnode/@label" /></a>
-						</span></span>
-					</xsl:if>
+					<!-- current playlist and iteration over writable playlists -->
+					<div class="current_playlist">
+						<div class="cpl_top">
+							<div style="text-align:right;">
+								<xsl:choose>
+									<xsl:when test="$content/currentPlaylist/sbnode">
+										<a id="current_playlist_link" class="type jumpToPlaylist" href="/{$content/currentPlaylist/sbnode/@uuid}"><xsl:value-of select="$content/currentPlaylist/sbnode/@label" /></a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a id="current_playlist_link" class="type jumpToPlaylist" href="" style="display:none;"><xsl:value-of select="' '" /></a>
+									</xsl:otherwise>
+								</xsl:choose>
+								<a class="type expand icononly" href="javascript:toggle('writablePlaylists');" title=""><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+							</div>
+							<div id="writablePlaylists" style="display:none;">
+								<hr style="border:1px solid #222;" />
+								<ul>
+								<xsl:choose>
+									<xsl:when test="$content/writablePlaylists/nodes/sbnode">
+										<xsl:for-each select="$content/writablePlaylists/nodes/sbnode">
+											<li><a id="select_{@uuid}" class="type jumpToPlaylist" href="javascript:select_playlist('{@uuid}')"><xsl:value-of select="@label" /></a></li>
+										</xsl:for-each>
+									</xsl:when>
+									<xsl:otherwise>
+										<li><xsl:value-of select="$locale/sbJukebox/texts/no_writable_playlists" /></li>
+									</xsl:otherwise>
+								</xsl:choose>
+								</ul>
+							</div>
+						</div>
+						<div class="cpl_bottom"></div>
+					</div>
 				</div>
+				<!-- left sidebar - menu -->
 				<div class="menu">
 					<ul>
 						<li>
@@ -277,10 +308,10 @@
 			<a class="type videos icononly" href="http://www.youtube.com/results?search_query={@label}" title="{$locale/sbJukebox/actions/search_videos}" target="_blank"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
 		<xsl:if test="@nodetype != 'sbJukebox:Playlist' and $with_favorites">
-			<a class="type addToFavorites icononly" href="/-/favorites/addItem/?item={@uuid}" title="{$locale/sbJukebox/actions/add_to_favorites}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+			<a class="type addToFavorites icononly" href="javascript:add_to_favorites('{@uuid}');" title="{$locale/sbJukebox/actions/add_to_favorites}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
 		<xsl:if test="$content/currentPlaylist and (@nodetype='sbJukebox:Album' or @nodetype='sbJukebox:Track')">
-			<a class="type addToPlaylist icononly" href="javascript:add_to_playlist('{@uuid}', '{$content/currentPlaylist/sbnode/@uuid}', this);" title="{$locale/sbJukebox/actions/add_to_playlist}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+			<a class="type addToPlaylist icononly" href="javascript:add_to_playlist('{@uuid}');" title="{$locale/sbJukebox/actions/add_to_playlist}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
 		<xsl:if test="@nodetype='sbJukebox:Album' or @nodetype='sbJukebox:Playlist'">
 		<!--  and $master/user_authorisations/authorisation[@name='download' and @grant_type='ALLOW'] -->
@@ -333,7 +364,7 @@
 		<xsl:choose>
 			<xsl:when test="$albumlist/*">
 				<xsl:for-each select="$albumlist/child::*">
-					<tr>
+					<tr id="highlight_{@uuid}">
 						<xsl:if test="@missing">
 							<xsl:attribute name="style">background-color:#800;</xsl:attribute>
 						</xsl:if>
@@ -397,8 +428,8 @@
 						</td>
 						<td align="right">
 							<xsl:call-template name="render_buttons" />
-							<br /><br />
-							<a href="javascript:toggle_albumdetails('{@uuid}');"><xsl:value-of select="$locale/sbJukebox/labels/more" /></a>
+							<br />
+							<a class="type expand" href="javascript:toggle_albumdetails('{@uuid}');" style="position:relative; top:12px; left:-5px;"><xsl:value-of select="$locale/sbJukebox/labels/more" /></a>
 						</td>
 					</tr>
 					<tr style="display:none;">

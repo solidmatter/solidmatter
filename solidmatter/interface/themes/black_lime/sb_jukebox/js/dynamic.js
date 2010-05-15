@@ -7,6 +7,8 @@
 */
 //------------------------------------------------------------------------------
 
+var sCurrentPlaylistUUID = null;
+
 //------------------------------------------------------------------------------
 /**
 * 
@@ -87,9 +89,13 @@ function toggle_albumdetails(sAlbumUUID) {
 /**
 * 
 */
-function add_to_playlist(sSubjectUUID, sPlaylistUUID, oButton) {
+function select_playlist(sPlaylistUUID) {
 	
-	var sUrl = '/' + sPlaylistUUID + '/details/addItem/?item=' + sSubjectUUID; //{$currentPlaylist/@uuid}/details/addItem/?item={@uuid}
+	sCurrentPlaylistUUID = sPlaylistUUID;
+	var oCurrentPlaylist = $('current_playlist_link');
+	var oSelectedPlaylist = $('select_' + sPlaylistUUID);
+	
+	var sUrl = '/' + sPlaylistUUID + '/details/activate';
 	var myAjaxOpener = new Ajax.Request(
 		sUrl,
 		{
@@ -98,6 +104,76 @@ function add_to_playlist(sSubjectUUID, sPlaylistUUID, oButton) {
 			asynchronous: false
 		}
 	);
-	alert('items have been added to playlist');
+	
+	var sUrl = '/' + sPlaylistUUID;
+	oCurrentPlaylist.firstChild.data = oSelectedPlaylist.firstChild.data;
+	oCurrentPlaylist.href = sUrl;
+	oCurrentPlaylist.style.display = '';
+	toggle('writablePlaylists');
+}
+
+//------------------------------------------------------------------------------
+/**
+* 
+*/
+function add_to_playlist(sSubjectUUID, sPlaylistUUID) {
+	
+	// URL Scheme = "{$currentPlaylist/@uuid}/details/addItem/?item={@uuid}"
+	var sURL = '/' + sCurrentPlaylistUUID + '/details/addItem/?item=' + sSubjectUUID; 
+	request_and_highlight(sURL, sSubjectUUID);
+	
+}
+
+//------------------------------------------------------------------------------
+/**
+* 
+*/
+function add_to_favorites(sSubjectUUID) {
+	
+	// URL Scheme = "/-/favorites/addItem/?item={@uuid}"
+	var sURL = '/-/favorites/addItem/?item=' + sSubjectUUID; 
+	request_and_highlight(sURL, sSubjectUUID);
+	
+}
+
+//------------------------------------------------------------------------------
+/**
+* 
+*/
+function request_and_highlight(sURL, sSubjectUUID) {
+	
+	var myAjaxOpener = new Ajax.Request(
+		sURL,
+		{
+			method: 'get', 
+			parameters: null,
+			asynchronous: false,
+			onComplete: function(response) {
+				highlight(sSubjectUUID, response.getHeader('X-sbException'));
+    		}
+		}
+	);
+	
+}
+
+//------------------------------------------------------------------------------
+/**
+* 
+*/
+function highlight(sSubjectUUID, iCode) {
+	
+	var sStartingColor = '#00FF00'; // start with green for debugging reasons
+	//alert (iCode);
+	if (iCode == null) {
+		iCode = "0";
+	}
+	
+	
+	switch (iCode) {
+		case "0": sStartingColor = '#BBBBBB'; break; // success
+		case "1": sStartingColor = '#FF0000'; break; // failure
+	}
+	
+	new Effect.Highlight($('highlight_' + sSubjectUUID), { startcolor: sStartingColor, restorecolor: true });
 	
 }

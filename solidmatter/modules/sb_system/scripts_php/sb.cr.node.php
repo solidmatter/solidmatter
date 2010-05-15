@@ -290,7 +290,7 @@ class sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	protected function getChildren($sMode = 'debug', $bOnlyReadable = FALSE) {
+	protected function getChildren($sMode = 'debug', $aRequiredAuthorisations = array()) {
 		
 		if (!isset($this->aChildNodes[$sMode])) { // load children
 		
@@ -311,16 +311,23 @@ class sbCR_Node {
 			
 			foreach ($aChildren as $aRow) {
 				$nodeCurrentChild = $this->crSession->getNodeByIdentifier($aRow['uuid'], $this->getIdentifier());
-				if ($bOnlyReadable && !User::isAuthorised('read', $nodeCurrentChild)) {
-					continue;
+				$bCheck = TRUE;
+				if (count($aRequiredAuthorisations) > 0) {
+					foreach ($aRequiredAuthorisations as $sAuthorisation) {
+						if (!User::isAuthorised($sAuthorisation, $nodeCurrentChild)) {
+							$bCheck = FALSE;
+						}
+					}
+				} 
+				if ($bCheck) {
+					$aChildNodes[] = $nodeCurrentChild;
 				}
-				$aChildNodes[] = $nodeCurrentChild;
 			}
 			
 			$niChildNodes = new sbCR_NodeIterator($aChildNodes);
 			
 		} else { // cached
-			
+			throw new sbException('caching of nodes acquired via getChildren should be disabled');
 			$niChildNodes = $this->aChildNodes[$sMode];
 			
 		}
@@ -1660,7 +1667,7 @@ class sbCR_Node {
 			
 			// TODO: convert namepattern to sensible WHERE patterns
 			$aPatterns = array();
-			$niChildNodes = $this->loadChildren('debug', FALSE, TRUE, FALSE, FALSE, $aPatterns);
+			$niChildNodes = $this->loadChildren('debug', FALSE, TRUE, FALSE, NULL, $aPatterns);
 			
 		}
 		

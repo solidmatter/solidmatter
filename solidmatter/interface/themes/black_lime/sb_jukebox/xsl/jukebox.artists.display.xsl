@@ -76,7 +76,7 @@
 			<xsl:choose>
 				<xsl:when test="$data">
 					<xsl:for-each select="$data">
-						<tr>
+						<tr id="highlight_{@uuid}">
 							<xsl:call-template name="colorize" />
 							<td width="{$starcolwidth}">
 								<xsl:call-template name="render_stars">

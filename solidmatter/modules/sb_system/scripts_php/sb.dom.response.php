@@ -614,12 +614,12 @@ class sbDOMResponse extends sbDOMDocument {
 				}
 				Stopwatch::check('transform', 'php');
 				header('Content-Length: '.strlen($sOutput));
-				header('X-Transform-Time: '.Stopwatch::getTaskTimes('transform'));
+				header('X-sbTransformTime: '.Stopwatch::getTaskTimes('transform'));
 				echo ($sOutput);
 				break;
 				
 			case 'xml':
-				header('X-Message-Type: sb_controller_response');
+				header('X-sbMessageType: sbControllerResponse');
 				header('Content-Type: text/xml; charset=utf-8');
 				if (PRETTYPRINT) {
 					$this->formatOutput = TRUE;

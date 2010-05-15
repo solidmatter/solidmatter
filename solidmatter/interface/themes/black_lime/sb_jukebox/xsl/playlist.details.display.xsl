@@ -80,7 +80,10 @@
 							<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
 								<a style="position:absolute;top:3px;right:3px;" class="type remove icononly" href="javascript:remove('{@uuid}')" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 							</xsl:if>
-							<a href="/{@uuid}"><xsl:value-of select="@label" /></a>
+							<span style="width:{$starcolwidth}; vertical-align:middle; padding: 0 5px 0 0;" >
+								<xsl:call-template name="render_stars" />
+							</span>
+							<a href="/{@uuid}" style="position:relative; top:-1px;"><xsl:value-of select="@label" /></a>
 						</li>
 					</xsl:for-each>
 				</xsl:when>

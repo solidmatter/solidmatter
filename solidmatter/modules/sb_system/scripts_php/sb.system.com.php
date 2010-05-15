@@ -65,7 +65,7 @@ function sendMessage($sPayload, $sPath, $sHost, $iPort = 80) {
 	
 	// check if it is a controller response
 	foreach($aMetadata['wrapper_data'] as $sHeader) {
-		if ($sHeader == 'X-Message-Type: sb_controller_response') {
+		if ($sHeader == 'X-sbMessageType: sbControllerResponse') {
 			return(stream_get_contents($hResponse));
 		}
 	}

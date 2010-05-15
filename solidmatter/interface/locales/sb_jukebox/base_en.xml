@@ -168,6 +168,7 @@
 	
 	<texts>
 		<no_albums>No albums available</no_albums>
+		<no_writable_playlists>No writable Playlists available</no_writable_playlists>
 	</texts>
 	
 </sbJukebox>

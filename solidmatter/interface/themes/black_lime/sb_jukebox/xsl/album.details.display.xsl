@@ -149,7 +149,7 @@
 						<xsl:if test="@info_index = 1 and position() != 1">
 							<tr><th colspan="5" style="padding:4px 8px;"><hr style="border:1px solid #222;" /></th></tr>
 						</xsl:if>
-						<tr>
+						<tr id="highlight_{@uuid}">
 							<xsl:if test="@missing">
 								<xsl:attribute name="style">background-color:#800;</xsl:attribute>
 							</xsl:if>
