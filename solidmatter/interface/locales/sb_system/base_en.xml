@@ -29,6 +29,7 @@
 		<cancel>Cancel</cancel>
 		<export>Export</export>
 		<import>Import</import>
+		<move>Move</move>
 		<move_up>move up</move_up>
 		<move_down>move down</move_down>
 		<add>Add</add>
@@ -62,6 +63,7 @@
 	</actions>
 	
 	<labels>
+		<are_you_sure>Are you sure?</are_you_sure>
 		<id>ID</id>
 		<created_at>Created on</created_at>
 		<created_by>Created by</created_by>
@@ -104,6 +106,7 @@
 		<username>Username</username>
 		<group>Group</group>
 		<groups>Groups</groups>
+		<selected_items>Selected items</selected_items>
 		<upload_files>Upload files</upload_files>
 		<file>File</file>
 		<files>Files</files>

@@ -229,6 +229,11 @@ if (TIER2_SEPARATED) {
 	$_RESPONSE = $_REQUEST->send(TIER2_PATH, TIER2_HOST, TIER2_PORT);
 } else {
 	$_REQUEST->includeRequest($_SESSIONID);
+	if (isset($_GET['dumprequest'])) {
+		header('Content-Type: application/xml');
+		echo $_REQUEST->saveXML();
+		exit();
+	}
 	DEBUG('Interface: entering tier2 now (via include())', DEBUG::BASIC);
 	include_once('controller.php');
 }

@@ -32,9 +32,11 @@
 			</xsl:call-template> -->
 		</div>
 		<div class="nav">
+			<span style="float:right;">
+				<a class="type remove" href="javascript:request_confirmation('/-/favorites/removeItem/?item=all');"><xsl:value-of select="$locale/sbSystem/actions/remove_all" /></a>
+			</span>
 			<a class="type play" href="/-/favorites/getM3U/playlist.m3u?sid={$sessionid}"><xsl:value-of select="$locale/sbJukebox/actions/play" /></a>
 			<a class="type play" href="/-/favorites/getM3U/playlist.m3u?random=true&amp;sid={$sessionid}"><xsl:value-of select="$locale/sbJukebox/actions/play_random" /></a>
-			<a class="type remove" href="/-/favorites/removeItem/?item=all"><xsl:value-of select="$locale/sbSystem/actions/remove_all" /></a>
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="/response/errors" />

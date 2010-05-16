@@ -27,6 +27,12 @@
 	</xsl:template>
 	
 	<xsl:template name="content">
+		<script language="Javascript" type="text/javascript">
+			sDisplayedPlaylistUUID = '<xsl:value-of select="$master/@uuid" />';
+			<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
+				bWriteAllowed = true;
+			</xsl:if>
+		</script>
 		<div class="toolbar">
 			<xsl:call-template name="import">
 				<xsl:with-param name="form" select="$content/sbform[@id='importM3U']" />
@@ -34,12 +40,27 @@
 		</div>
 		<div class="nav">
 			<span style="float: right;">
-				<span style="margin-left: 15px;"></span>
-				
+				<span id="playlist_actions" style="display:none;">
+					<xsl:value-of select="$locale/sbSystem/labels/selected_items" />: 
+				</span>
+				<span id="playlist_actions_copy" style="display:none;">
+					<a class="type addToPlaylist" href="javascript:submit_form('copy');"><xsl:value-of select="$locale/sbSystem/actions/copy" /></a>
+				</span>
+				<span id="playlist_actions_move" style="display:none;">
+					<xsl:value-of select="' '" />
+					<a class="type addToPlaylist" href="javascript:submit_form('move');"><xsl:value-of select="$locale/sbSystem/actions/move" /></a>
+				</span>
+				<span id="playlist_actions_remove" style="display:none;">
+					<xsl:value-of select="' '" />
+					<a class="type remove" href="javascript:submit_form('remove');"><xsl:value-of select="$locale/sbSystem/actions/remove" /></a>
+				</span>
+				<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
+					<span style="margin-left: 25px;"></span>
+					<a class="type remove" href="javascript:request_confirmation('/{$master/@uuid}/details/clear');"><xsl:value-of select="$locale/sbSystem/actions/remove_all" /></a>
+				</xsl:if>
 			</span>
-			<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
-				<a class="type remove" href="/{$master/@uuid}/details/clear"><xsl:value-of select="$locale/sbSystem/actions/remove_all" /></a>
-			</xsl:if>
+			<a class="type play" href="/{$master/@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}"><xsl:value-of select="$locale/sbJukebox/actions/play" /></a>
+			<a class="type play" href="/{$master/@uuid}/details/getM3U/playlist.m3u?random=true&amp;sid={$sessionid}"><xsl:value-of select="$locale/sbJukebox/actions/play_random" /></a>
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="response/errors" />
@@ -48,10 +69,14 @@
 	</xsl:template>
 	
 	<xsl:template match="sbnode">
-			
-		<div class="th">
+		
+		<form id="playlist_form" method="post" action="/dummy/action.php">
+		
+		<div class="th" id="highlight_{@uuid}">
 			<div class="albumdetails" style="float:right;">
-				<xsl:if test="@nodetype='sbJukebox:Playlist' and $master/user_authorisations/authorisation[@name='add_titles' and @grant_type='ALLOW']">
+				<!-- bloody form does not submit via submit() alone, so we have to use a crappy workaround -->
+				<input id="playlist_form_submit" type="submit" name="submitbutton" value="submit" style="display:none;" />
+				<!--<xsl:if test="@nodetype='sbJukebox:Playlist' and $master/user_authorisations/authorisation[@name='add_titles' and @grant_type='ALLOW']">
 					<xsl:choose>
 						<xsl:when test="@uuid = $currentPlaylist/@uuid">
 							<a class="type activated icononly" href="/{@uuid}/details/activate" title="{$locale/sbJukebox/actions/activate}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
@@ -61,7 +86,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:if>
-				<span style="margin-left: 15px;"></span>
+				<span style="margin-left: 15px;"></span>-->
 				<xsl:call-template name="render_buttons"/>
 				<span style="margin-left: 15px;"></span>
 				<xsl:call-template name="render_stars" />
@@ -71,14 +96,15 @@
 			<span class="type playlist"><xsl:value-of select="@label" /></span>
 		</div>
 		
-		<ul class="sortable" width="100%" id="playlist">
+		<ul class="sortable" id="playlist">
 			<xsl:choose>
 				<xsl:when test="children[@mode='tracks']/sbnode">
 					<xsl:for-each select="children[@mode='tracks']/sbnode">
 						<li style="position:relative;top:0;left:0;" id="item_{@uuid}">
 							<xsl:call-template name="colorize" />
+							<input class="helper" type="checkbox" id="check_{@uuid}" name="items[]" value="{@uuid}" onclick="toggle_checked('{@uuid}')" style="margin-right: 8px;" />
 							<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
-								<a style="position:absolute;top:3px;right:3px;" class="type remove icononly" href="javascript:remove('{@uuid}')" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+								<a style="position:absolute;top:5px;right:3px;" class="type remove icononly" href="javascript:remove('{@uuid}')" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 							</xsl:if>
 							<span style="width:{$starcolwidth}; vertical-align:middle; padding: 0 5px 0 0;" >
 								<xsl:call-template name="render_stars" />
@@ -93,136 +119,26 @@
 			</xsl:choose>
 		</ul>
 		
-		<script language="Javascript">
+		</form>
+		
+		<script language="Javascript" type="text/javascript">
 			
 			//--------------------------------------------------------------
 			// init
 			//
-			<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
-			var oPlaylist = $('playlist');
-			var aInitialState = getOrder(oPlaylist);
-			Sortable.create('playlist', { onChange: redraw, onUpdate: reorder } );
-			</xsl:if>
-			
-			//--------------------------------------------------------------
-			// remove an entry and fade it out
-			//
-			function remove(sUUID) {
-				
-				var sURL = "/<xsl:value-of select="$master/@uuid" />/details/removeItem/?item=" + sUUID + '&amp;silent';
-				var myAjaxRemover = new Ajax.Request(
-					sURL, 
-					{
-						method: 'get', 
-						parameters: null
+			<xsl:choose>
+				<xsl:when test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
+					var oPlaylist = $('playlist');
+					var aInitialState = getOrder(oPlaylist);
+					Sortable.create('playlist', { onChange: redraw, onUpdate: reorder } );
+				</xsl:when>
+				<xsl:otherwise>
+					var aListElements = $$('ul.sortable li');
+					for (var i=0; i&lt;aListElements.length; i++) {
+						aListElements[i].style.cursor = 'auto';
 					}
-				);
-				$('item_' + sUUID).fade({ afterFinish: redraw });
-				
-			}
-			
-			//--------------------------------------------------------------
-			// redraw resp. recolor all list entries
-			//
-			function redraw() {
-				
-				var sClass = 'odd';
-				var eChildren = $('playlist').childElements();
-				for (var i=0; i&lt;eChildren.length; i++) {
-					if (eChildren[i].style.display == 'none') {
-						continue;
-					}
-					eChildren[i].className = sClass;
-					if (sClass == 'odd') {
-						sClass = 'even';
-					} else {
-						sClass = 'odd';
-					}
-				}
-				
-			}
-			
-			//--------------------------------------------------------------
-			// callback on dragging and dropping an item
-			//
-			function reorder(info) {
-				
-				var aCurrentState = getOrder(oPlaylist);
-				var sSubject = '';
-				var sNextSibling = '';
-				
-				for (var i=0; i&lt;aCurrentState.length; i++) {
-					if (aInitialState[i] != aCurrentState[i]) { // different item in lists
-						if (aCurrentState[i] == aInitialState[i+1] &amp;&amp; aCurrentState[i+1] == aInitialState[i]) { // items switched
-							//alert('switched');
-							sSubject = aCurrentState[i];
-							sNextSibling = aCurrentState[i+1];
-							update(sSubject, sNextSibling);
-							break;
-						} else if (aCurrentState[i] == aInitialState[i+1]) { // missing item = moved down
-							for (var j=i; j&lt;aCurrentState.length; j++) { // find missing item
-								if (aCurrentState[j] != aInitialState[j+1]) {
-									if (!aCurrentState[j+1]) { // item moved to end of list
-										//alert('moved to end of list');
-										sPreviousSibling = aCurrentState[j-1];
-										sSubject = aCurrentState[j];
-										update(sSubject, sPreviousSibling); // move item just before last item
-										update(sPreviousSibling, sSubject); // flip the two
-									} else { // item moved down
-										//alert('moved down');
-										sSubject = aCurrentState[j];
-										sNextSibling = aCurrentState[j+1];
-										update(sSubject, sNextSibling);
-									}
-									break;
-								}
-							}
-							break;
-						} else { // item moved up
-							//alert('moved up');
-							sSubject = aCurrentState[i];
-							sNextSibling = aCurrentState[i+1];
-							update(sSubject, sNextSibling);
-							break;
-						}
-					}
-				}
-				
-				aInitialState = aCurrentState;
-			
-			}
-			
-			//--------------------------------------------------------------
-			// assistant function the saves a change
-			//
-			function update (sSubject, sNextSibling) {
-				
-				sURL = "/<xsl:value-of select="$master/@uuid" />/details/orderBefore/?subject=" + sSubject + "&amp;nextsibling=" + sNextSibling;
-				var myAjaxUpdater = new Ajax.Request(
-					sURL, 
-					{
-						method: 'get', 
-						parameters: null,
-						asynchronous: true 
-					}
-				);
-				
-			}
-			
-			//--------------------------------------------------------------
-			// gets an array with the current ordered uuids
-			//
-			function getOrder() {
-				
-				var aCurrentOrder = new Array();
-				var aOrderedNodes = oPlaylist.getElementsByTagName("li");
-				for (var i=0; i&lt;aOrderedNodes.length; i++) {
-					aCurrentOrder[i] = aOrderedNodes[i].getAttribute('id').substr(5);
-				}
-				
-				return (aCurrentOrder);
-				
-			}
+				</xsl:otherwise>
+			</xsl:choose>
 			
 		</script>
 			

@@ -29,6 +29,7 @@
 		<cancel>Abbrechen</cancel>
 		<export>Exportieren</export>
 		<import>Importieren</import>
+		<move>Verschieben</move>
 		<move_up>nach oben verschieben</move_up>
 		<move_down>nach unten verschieben</move_down>
 		<add>Hinzufügen</add>
@@ -62,6 +63,7 @@
 	</actions>
 	
 	<labels>
+		<are_you_sure>Sind Sie sicher?</are_you_sure>
 		<id>ID</id>
 		<created_at>Erstellt am</created_at>
 		<created_by>Erstellt von</created_by>
@@ -104,6 +106,7 @@
 		<username>Benutzername</username>
 		<group>Gruppe</group>
 		<groups>Gruppen</groups>
+		<selected_items>Markierte</selected_items>
 		<upload_files>Dateien hochladen</upload_files>
 		<file>Datei</file>
 		<files>Dateien</files>

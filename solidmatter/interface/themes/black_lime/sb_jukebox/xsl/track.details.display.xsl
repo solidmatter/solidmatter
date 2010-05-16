@@ -43,7 +43,7 @@
 	
 	<xsl:template match="sbnode">
 			
-		<div class="th">
+		<div class="th" id="highlight_{@uuid}">
 			<span class="actions" style="float:right;">
 				<xsl:call-template name="addtag">
 					<xsl:with-param name="form" select="$content/sbform[@id='addTag']" />

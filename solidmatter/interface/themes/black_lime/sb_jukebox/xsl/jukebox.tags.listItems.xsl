@@ -96,7 +96,7 @@
 			<xsl:choose>
 				<xsl:when test="$nodes">
 					<xsl:for-each select="$nodes">
-						<tr>
+						<tr id="highlight_{@uuid}">
 							<xsl:call-template name="colorize" />
 							<!--<td width="10" style="text-align: right;">
 								<xsl:value-of select="position()" />.

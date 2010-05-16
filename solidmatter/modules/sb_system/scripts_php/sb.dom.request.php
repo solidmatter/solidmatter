@@ -115,8 +115,6 @@ class sbDOMRequest extends sbDOMDocument {
 			}
 			unset($_FILES[$sFieldname]['content']);
 		}
-		//var_dump ($_FILES);
-		
 		
 	}
 	
@@ -234,7 +232,17 @@ class sbDOMRequest extends sbDOMDocument {
 		// TODO: deal with non-string inputs
 		$nlParams = $elemCurrent->getElementsByTagName($sName);
 		foreach ($nlParams as $elemParam) {
-			$mValue = (string) $elemParam->nodeValue;	
+			if ($elemParam->hasChildNodes()) {
+				$mValue = array();
+				foreach ($elemParam->childNodes as $elemValue) {
+					$mValue[] = (string) $elemValue->nodeValue;
+				}
+				if (count($mValue) == 1) {
+					$mValue = $mValue[0];
+				}
+			} else {
+				$mValue = (string) $elemParam->nodeValue;
+			}
 		}
 		
 		return ($mValue);
@@ -292,17 +300,24 @@ class sbDOMRequest extends sbDOMDocument {
 	* @param 
 	* @return 
 	*/
-	public function setParam($sName, $sValue) {
-		// TODO: support multiple values
+	public function setParam($sName, $mValue) {
 		$elemParams = $this->getElementById('PARAMS');
 		$bExists = FALSE;
-		$nlParams = $elemParams->getElementsByTagName($sName);
+		/*$nlParams = $elemParams->getElementsByTagName($sName);
 		foreach ($nlParams as $elemParam) {
 			$bExists = TRUE;
-			$elemParam->nodeValue = $sValue;
-		}
+			$elemParam->nodeValue = $mValue; // TODO: will not yet support multiple values
+		}*/
 		if (!$bExists) {
-			$elemParam = $this->createElement(htmlspecialchars($sName), htmlspecialchars($sValue));
+			if (!is_array($mValue)) {
+				$elemParam = $this->createElement(htmlspecialchars($sName), htmlspecialchars($mValue));
+			} else {
+				$elemParam = $this->createElement(htmlspecialchars($sName));
+				foreach ($mValue as $sValue) {
+					$elemParamValue = $this->createElement('entry', htmlspecialchars($sValue));
+					$elemParam->appendChild($elemParamValue);
+				}
+			}
 			$elemParams->appendChild($elemParam);
 		}
 	}

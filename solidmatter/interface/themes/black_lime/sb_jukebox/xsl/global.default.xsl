@@ -59,9 +59,19 @@
 			<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/dynamic.js"></script>
 		</head>
 		<body>
-			<script language="Javascript">
-				var sCurrentPlaylistUUID = '<xsl:value-of select="$content/currentPlaylist/sbnode/@uuid" />'
+			<xsl:if test="$content/currentPlaylist/sbnode">
+			<script language="Javascript" type="text/javascript">
+				var sActivePlaylistUUID = '<xsl:value-of select="$content/currentPlaylist/sbnode/@uuid" />'
 			</script>
+			</xsl:if>
+			<div id="confirmation" style="display:none;">
+				<div class="frame">
+					<h1><xsl:value-of select="$locale/sbSystem/labels/are_you_sure" /></h1>
+					<a href="javascript:yes();" class="confirm"><xsl:value-of select="$locale/sbSystem/actions/ok" /></a>
+					<a href="javascript:no();" class="cancel"><xsl:value-of select="$locale/sbSystem/actions/cancel" /></a>
+					<br />
+				</div>
+			</div>
 			<div class="sidebar">
 				<div class="head">
 					<h1>sbJukebox</h1>
@@ -77,7 +87,7 @@
 										<a id="current_playlist_link" class="type jumpToPlaylist" href="" style="display:none;"><xsl:value-of select="' '" /></a>
 									</xsl:otherwise>
 								</xsl:choose>
-								<a class="type expand icononly" href="javascript:toggle('writablePlaylists');" title=""><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+								<a class="type expand icononly" href="javascript:toggle('writablePlaylists');" title="" style="margin: 0 3px;"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 							</div>
 							<div id="writablePlaylists" style="display:none;">
 								<hr style="border:1px solid #222;" />

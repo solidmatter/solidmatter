@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: solidmatter
 Target Host: localhost
 Target Database: solidmatter
-Date: 23.12.2009 13:35:05
+Date: 16.05.2010 05:06:31
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -724,8 +724,9 @@ INSERT INTO `rep_nodetypes` VALUES ('sbJukebox:Album', 'sbNode_jukebox_album', '
 INSERT INTO `rep_nodetypes` VALUES ('sbJukebox:Artist', 'sbNode', 'sbSystem:sb.node', 'sb_artist', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbJukebox:CD', 'sbNode', 'sbSystem:sb.node', 'sb_cd', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbJukebox:Jukebox', 'sbNode_jukebox_jukebox', 'sbJukebox:sb.jukebox.node.jukebox', 'sb_jukebox', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbJukebox:MaintenanceView', null, null, 'sb_abstract', 'ABSTRACT');
 INSERT INTO `rep_nodetypes` VALUES ('sbJukebox:MusicDimensions', null, null, null, 'ABSTRACT');
-INSERT INTO `rep_nodetypes` VALUES ('sbJukebox:Playlist', 'sbNode', 'sbSystem:sb.node', 'sb_playlist', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbJukebox:Playlist', 'sbNode_jukebox_playlist', 'sbJukebox:sb.jukebox.node.playlist', 'sb_playlist', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbJukebox:Recommendation', 'sbNode', 'sbSystem:sb.node', 'sb_message', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbJukebox:RecommendView', null, null, 'sb_abstract', 'ABSTRACT');
 INSERT INTO `rep_nodetypes` VALUES ('sbJukebox:TPL_Favorites', 'sbNode', 'sbJukebox:sb.jukebox.node.tpl_favorites', 'sb_tpl_favorites', 'PRIMARY');
@@ -1160,13 +1161,18 @@ INSERT INTO `rep_nodetypes_modes` VALUES ('chooseImagefilterstack', 'sbSystem:Ro
 INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbSystem:Root', 'sbUtilities:Imageprocessing', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbSystem:Root', 'sbUtilities:Imageprocessing', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_ontology` VALUES ('CouldBeFrom', 'sbJukebox:Album', 'sbJukebox:Artist', 'CouldHaveDone');
+INSERT INTO `rep_nodetypes_ontology` VALUES ('HasMixed', 'sbJukebox:Artist', 'sbJukebox:Album', 'MixedBy');
 INSERT INTO `rep_nodetypes_ontology` VALUES ('IsMemberOf', 'sbJukebox:Artist', 'sbJukebox:Artist', 'HasMember');
 INSERT INTO `rep_nodetypes_ontology` VALUES ('IsPseudonymOf', 'sbJukebox:Artist', 'sbJukebox:Artist', 'IsRealNameOf');
 INSERT INTO `rep_nodetypes_ontology` VALUES ('IsRemixOf', 'sbJukebox:Album', 'sbJukebox:Album', 'IsOriginalTo');
 INSERT INTO `rep_nodetypes_ontology` VALUES ('IsRemixOf', 'sbJukebox:Track', 'sbJukebox:Track', 'IsOriginalTo');
 INSERT INTO `rep_nodetypes_ontology` VALUES ('IsSuccessorOf', 'sbJukebox:Artist', 'sbJukebox:Artist', 'IsPredecessorTo');
 INSERT INTO `rep_nodetypes_ontology` VALUES ('IsSynonymOf', 'sbJukebox:Artist', 'sbJukebox:Artist', 'IsSynonymOf');
+INSERT INTO `rep_nodetypes_ontology` VALUES ('SharesMembersWith', 'sbJukebox:Artist', 'sbJukebox:Artist', 'SharesMembersWith');
 INSERT INTO `rep_nodetypes_ontology` VALUES ('SoundsLike', 'sbJukebox:Artist', 'sbJukebox:Artist', 'SoundsLike');
+INSERT INTO `rep_nodetypes_ontology` VALUES ('YouMightAlsoLike', 'sbJukebox:Album', 'sbJukebox:Album', 'YouMightAlsoLike');
+INSERT INTO `rep_nodetypes_ontology` VALUES ('YouMightAlsoLike', 'sbJukebox:Artist', 'sbJukebox:Album', 'YouMightAlsoLike');
+INSERT INTO `rep_nodetypes_ontology` VALUES ('YouMightAlsoLike', 'sbJukebox:Artist', 'sbJukebox:Artist', 'YouMightAlsoLike');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbCMS:CTN_Image', 'content_image', 'WEAKREFERENCE', 'nodeselector;mode=chooseImage', 'TRUE', '', 'EXTERNAL', null, null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbCMS:Layout', 'xsl_backend', 'STRING', 'codeeditor;syntax=xml', 'TRUE', '$locale/sbCMS/Template/xsl_backend/@label', 'EXTERNAL', null, '1', 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbCMS:Layout', 'xsl_frontend', 'STRING', 'codeeditor;syntax=xml', 'TRUE', '$locale/sbCMS/Template/xsl_frontend/@label', 'EXTERNAL', null, '0', 'FALSE', 'FALSE', 'FALSE', null, '');
@@ -1397,16 +1403,20 @@ INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'playlists'
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'tags', 'changeWeighting', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'tags', 'display', 'TRUE', null, null, 'RENDERED', 'sb_jukebox:jukebox.tags.display.xsl', 'text/html', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Jukebox', 'tags', 'listItems', 'FALSE', null, null, 'RENDERED', 'sb_jukebox:jukebox.tags.listItems.xsl', 'text/html', 'TRUE', 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:MaintenanceView', 'maintenance', 'details', 'TRUE', null, null, 'RENDERED', 'sb_jukebox:various.maintenance.details.xsl', 'text.html', 'TRUE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'activate', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'addItem', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'clear', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'copyItems', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'display', 'TRUE', null, null, 'RENDERED', 'sb_jukebox:playlist.details.display.xsl', 'text/html', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'download', 'FALSE', null, null, 'STREAM', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'getM3U', 'FALSE', null, null, 'STREAM', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'importM3U', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'moveItems', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'orderBefore', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'remove', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'removeItem', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Playlist', 'details', 'removeItems', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Recommendation', 'actions', 'remove', 'FALSE', null, null, 'HEADERS', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:RecommendView', 'recommend', 'newRecommendation', 'TRUE', null, null, 'RENDERED', 'sb_jukebox:various.communication.recommend.xsl', 'text/html', 'TRUE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:RecommendView', 'recommend', 'sendRecommendation', 'FALSE', null, null, 'HEADERS', null, null, 'TRUE', 'FALSE');
@@ -1580,6 +1590,7 @@ INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Jukebox', 'library', 'FALSE
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Jukebox', 'login', 'FALSE', null, 'sbSystem:sb.node.root.view.login', 'sbView_root_login', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Jukebox', 'playlists', 'FALSE', null, 'sbJukebox:sb.jukebox.node.jukebox.view.playlists', 'sbView_jukebox_jukebox_playlists', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Jukebox', 'tags', 'FALSE', null, 'sbJukebox:sb.jukebox.node.jukebox.view.tags', 'sbView_jukebox_jukebox_tags', null, '0');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:MaintenanceView', 'maintenance', 'FALSE', null, 'sbJukebox:sb.jukebox.node.various.view.fix', 'sbView_jukebox_various_fix', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Playlist', 'details', 'TRUE', null, 'sbJukebox:sb.jukebox.node.playlist.view.details', 'sbView_jukebox_playlist_details', null, '1000');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Recommendation', 'actions', 'FALSE', null, 'sbSystem:sb.node.message.view.actions', 'sbView_message_actions', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:RecommendView', 'recommend', 'FALSE', null, 'sbJukebox:sb.jukebox.node.various.view.communication', 'sbView_jukebox_various_communication', null, '0');
@@ -2391,6 +2402,8 @@ INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.paths.albums.useabspath', '
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.quilts.coveramount', 'integer', 'integer;minvalue=2;maxvalue=100', 'FALSE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.quilts.coversize', 'integer', 'integer;minvalue=10;maxvalue=100', 'FALSE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.quilts.numsamples', 'integer', 'integer;minvalue=10;maxvalue=2000', 'FALSE', null);
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.randomalbums.amount.default', 'integer', 'integer;minvalue=1;maxvalue=100', 'TRUE', 'unused');
+INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.randomartists.amount.default', 'integer', 'integer;minvalue=1;maxvalue=100', 'TRUE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.search.defaultconstraint', 'string', 'select;options=ARTISTS|ALBUMS|TRACKS', 'FALSE', 'unused');
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.tags.popularity.timeout', 'integer', null, 'FALSE', null);
 INSERT INTO `sb_system_registry` VALUES ('sb.jukebox.tags.weighting.default', 'string', 'select;options=popularity|numfiles', 'TRUE', 'unused');

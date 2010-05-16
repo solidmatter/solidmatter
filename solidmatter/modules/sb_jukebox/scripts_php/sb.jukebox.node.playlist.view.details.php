@@ -19,6 +19,9 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 		'display' => array('read'),
 		'addItem' => array('add_titles'),
 		'removeItem' => array('write'),
+		'copyItems' => array('read'), // has to be checked on target playlist
+		'moveItems' => array('write'), // has to be checked on target playlist, too
+		'removeItems' => array('write'),
 		'clear' => array('write'),
 		'orderBefore' => array('write'),
 		'activate' => array('add_titles'),
@@ -45,8 +48,9 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 				// forms
 				$this->addSearchForm('artists');
 				$this->addCommentForm();
-//				$this->addTagForm();
-//				$this->addRelateForm();
+				// tags and relations deactivated
+				//$this->addTagForm();
+				//$this->addRelateForm();
 				$formImport = $this->buildImportForm();
 				$formImport->saveDOM();
 				$_RESPONSE->addData($formImport);
@@ -70,44 +74,55 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 				break;
 			
 			case 'addItem':
-				
 				$nodeItem = $this->crSession->getNodeByIdentifier($_REQUEST->getParam('item'));
-				
-				$aTracks = array();
-				switch ($nodeItem->getPrimaryNodeType()) {
-					case 'sbJukebox:Track':
-						$aTracks[] = $nodeItem;
-						break;
-					case 'sbJukebox:Album':
-						$niTracks = $nodeItem->getChildren('play');
-						foreach ($niTracks as $nodeTrack) {
-							$aTracks[] = $nodeTrack;
-						}
-						break;
-					default:
-						throw new sbException('You can only add Albums and Tracks right now');
-						break;
-				}
-				
-				foreach ($aTracks as $nodeTrack) {
-					$this->nodeSubject->addExistingNode($nodeTrack);
-				}
-				$this->nodeSubject->save();
-				
-				//$_RESPONSE->redirect($this->nodeSubject->getIdentifier());
-				
+				$this->nodeSubject->addItem($nodeItem);
 				break;
 				
 			case 'removeItem':
 				$nodeItem = $this->crSession->getNodeByIdentifier($_REQUEST->getParam('item'));
-				$this->removeItem($nodeItem);
+				$this->nodeSubject->removeItem($nodeItem);
 				if (!isset($_GET['silent'])) {
 					$_RESPONSE->redirect($this->nodeSubject->getIdentifier());
 				}
 				break;
 				
+			case 'copyItems':
+				$nodeTarget = $this->crSession->getNodeByIdentifier($_REQUEST->getParam('target'));
+				if (!User::isAuthorised('add_titles', $nodeTarget)) {
+					throw new SecurityException('User ist not allowed to write to target playlist');
+				}
+				$aItems = $_REQUEST->getParam('items');
+				foreach ($aItems as $sItemUUID) {
+					$nodeItem = $this->crSession->getNodeByIdentifier($sItemUUID);
+					$nodeTarget->addItem($nodeItem);
+				}
+				$_RESPONSE->redirect($this->nodeSubject->getIdentifier());
+				break;
+				
+			case 'moveItems':
+				$nodeTarget = $this->crSession->getNodeByIdentifier($_REQUEST->getParam('target'));
+				if (!User::isAuthorised('add_titles', $nodeTarget)) {
+					throw new SecurityException('User ist not allowed to write to target playlist');
+				}
+				$aItems = $_REQUEST->getParam('items');
+				foreach ($aItems as $sItemUUID) {
+					$nodeItem = $this->crSession->getNodeByIdentifier($sItemUUID);
+					$this->nodeSubject->moveItem($nodeItem, $nodeTarget);
+				}
+				$_RESPONSE->redirect($this->nodeSubject->getIdentifier());
+				break;
+				
+			case 'removeItems':
+				$aItems = $_REQUEST->getParam('items');
+				foreach ($aItems as $sItemUUID) {
+					$nodeItem = $this->crSession->getNodeByIdentifier($sItemUUID);
+					$this->nodeSubject->removeItem($nodeItem);
+				}
+				$_RESPONSE->redirect($this->nodeSubject->getIdentifier());
+				break;
+								
 			case 'clear':
-				$this->clearPlaylist();
+				$this->nodeSubject->clear();
 				$_RESPONSE->redirect($this->nodeSubject->getIdentifier());
 				break;
 				
@@ -151,12 +166,16 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 				    }
 				}
 				$this->nodeSubject->save();
-				//die('ttttttt');
 				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));
 				break;
 			
 			case 'getM3U':
-				$this->sendPlaylist();
+				$bRandom = FALSE;
+				if ($_REQUEST->getParam('random') != NULL) {
+					$bRandom = TRUE;
+				}
+				$this->sendPlaylist($this->nodeSubject, $bRandom);
+				//$this->sendPlaylist();
 				break;
 			
 			case 'download':
@@ -203,14 +222,14 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 	* @param 
 	* @return 
 	*/
-	protected function clearPlaylist() {
+	/*protected function clearPlaylist() {
 		
 		$niTracks = $this->nodeSubject->getNodes();
 		foreach ($niTracks as $nodeTrack) {
 			$this->removeItem($nodeTrack);	
 		}
 		
-	}
+	}*/
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -218,7 +237,7 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 	* @param 
 	* @return 
 	*/
-	protected function removeItem($nodeItem) {
+	/*protected function addItem($nodeItem) {
 		
 		foreach ($nodeItem->getSharedSet() as $nodeShared) {
 			if ($nodeShared->getParent()->isSame($this->nodeSubject)) {
@@ -229,7 +248,26 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 		}
 		return (FALSE);
 		
-	}
+	}*/
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	/*protected function removeItem($nodeItem) {
+		
+		foreach ($nodeItem->getSharedSet() as $nodeShared) {
+			if ($nodeShared->getParent()->isSame($this->nodeSubject)) {
+				$nodeShared->removeShare();
+				$this->crSession->save();
+				return (TRUE);
+			}
+		}
+		return (FALSE);
+		
+	}*/
 	
 }
 
