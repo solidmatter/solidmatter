@@ -5,9 +5,8 @@
 	exclude-result-prefixes="html" 
 	xmlns:html="http://www.w3.org/1999/xhtml">
 
-	<xsl:import href="global.views.xsl" />
 	<xsl:import href="global.default.xsl" />
-	<xsl:import href="../../../_global/xsl/sbform.xsl" />
+	<xsl:import href="global.sbform.xsl" />
 	
 	<xsl:output 
 		method="html"
@@ -92,9 +91,9 @@
 								<a href="/{@uuid}"><span class="type "></span></a>
 							</td>-->
 							<td>
-								<a href="/{@fk_subject}" class="type {@s_subjectdisplaytype}"></a>
+								<a href="/{@fk_subject}" class="type {@s_subjectdisplaytype}" title="{@subjectlabel}"></a>
 								<xsl:if test="@fk_user!=''">
-									<a href="/{@fk_user}" class="type sb_user"></a>
+									<a href="/{@fk_user}" class="type sb_user" title="{@username}"></a>
 								</xsl:if>
 							</td>
 							<td>

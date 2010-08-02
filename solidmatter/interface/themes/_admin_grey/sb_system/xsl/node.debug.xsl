@@ -5,7 +5,6 @@
 	exclude-result-prefixes="html" 
 	xmlns:html="http://www.w3.org/1999/xhtml">
 
-	<xsl:import href="global.views.xsl" />
 	<xsl:import href="global.default.xsl" />
 	
 	<xsl:output 

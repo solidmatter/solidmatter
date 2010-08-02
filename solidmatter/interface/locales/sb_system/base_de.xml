@@ -32,12 +32,15 @@
 		<move>Verschieben</move>
 		<move_up>nach oben verschieben</move_up>
 		<move_down>nach unten verschieben</move_down>
+		<back>Zurück</back>
+		<forward>Vor</forward>
 		<add>Hinzufügen</add>
 		<remove>Entfernen</remove>
 		<remove_all>Alle entfernen</remove_all>
 		<set_default>als Standard festlegen</set_default>
 		<set_favorite>als Favorit festlegen</set_favorite>
 		<empty>Leeren</empty>
+		<execute>Ausführen</execute>
 		<view>Ansehen</view>
 		<clone>Klonen</clone>
 		<copy>Kopieren</copy>
@@ -114,6 +117,7 @@
 		<height>Höhe</height>
 		<width>Breite</width>
 		<url>URL</url>
+		<preview>Vorschau</preview>
 		<search>
 			<title>Suche</title>
 			<search_for>Suchen nach</search_for>

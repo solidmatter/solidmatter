@@ -6,7 +6,6 @@
 	xmlns:html="http://www.w3.org/1999/xhtml"
 >
 
-	<xsl:import href="global.views.xsl" />
 	<xsl:import href="global.default.xsl" />
 	
 	<xsl:output 
@@ -53,7 +52,7 @@
 							<xsl:attribute name="class">even</xsl:attribute>
 						</xsl:otherwise>
 					</xsl:choose>
-					<td><span class="type {@s_displaytype}"><xsl:value-of select="$locale//nodetypes/type[@id=$nodetype]" /></span></td>
+					<td><span class="type {@s_displaytype}"><xsl:call-template name="localize"><xsl:with-param name="label">$locale//nodetypes/type[@id='<xsl:value-of select="$nodetype" />']</xsl:with-param></xsl:call-template></span></td>
 					<td><xsl:value-of select="@s_type" /></td>
 					<td><xsl:value-of select="@num_nodes" /></td>
 				</tr>

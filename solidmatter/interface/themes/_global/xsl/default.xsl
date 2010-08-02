@@ -3,7 +3,8 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	version="1.0" 
 	exclude-result-prefixes="html" 
-	xmlns:html="http://www.w3.org/1999/xhtml">
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:dyn="http://exslt.org/dynamic" extension-element-prefixes="dyn">
 
 	<xsl:output 
 		method="html"
@@ -79,6 +80,9 @@
 		</style>
 		<table class="exception">
 			<tr>
+				<th colspan="4" class="message" style="text-align:center; text-decoration:blink;">[ <span>GURU MEDITATION</span> ]</th>
+			</tr>
+			<tr>	
 				<th colspan="4" class="message">
 					<xsl:value-of select="@type" />: <xsl:value-of select="@message" /> (<xsl:value-of select="@code" />)
 				</th>
@@ -166,6 +170,21 @@
 				<xsl:value-of select="$text"/>
 			</xsl:if>
 		</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template name="localize">
+		<xsl:param name="label" />
+		<xsl:choose>
+			<xsl:when test="substring($label, 1, 1) = '$'">
+				<xsl:if test="not(dyn:evaluate($label))">
+					[Unlocalized] <xsl:value-of select="$label" />
+				</xsl:if>
+				<xsl:value-of select="dyn:evaluate($label)" />
+			</xsl:when>
+			<xsl:otherwise>
+				[Unlocalized] <xsl:value-of select="$label" />
+			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 	

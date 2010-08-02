@@ -6,7 +6,6 @@
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:dyn="http://exslt.org/dynamic" extension-element-prefixes="dyn">
 
-	<xsl:import href="global.views.xsl" />
 	<xsl:import href="global.default.xsl" />
 
 	<xsl:output 
@@ -33,9 +32,9 @@
 	
 	<xsl:template match="response/content">
 		
-		<a class="type sb_logs" href="/{sbnode/@uuid}/system/show_log/log=access" target="details">Access log</a><br/>
-		<a class="type sb_logs" href="/{sbnode/@uuid}/system/show_log/log=exceptions" target="details">Exception log</a><br/>
-		<a class="type sb_logs" href="/{sbnode/@uuid}/system/show_log/log=database" target="details">Database log</a><br/><br/>
+		<a class="type sb_logs" href="/{sbnode/@uuid}/system/show_log/?log=access" target="details">Access log</a><br/>
+		<a class="type sb_logs" href="/{sbnode/@uuid}/system/show_log/?log=exceptions" target="details">Exception log</a><br/>
+		<a class="type sb_logs" href="/{sbnode/@uuid}/system/show_log/?log=database" target="details">Database log</a><br/><br/>
 		
 		<iframe name="details" src="" width="100%" height="80%" />
 		

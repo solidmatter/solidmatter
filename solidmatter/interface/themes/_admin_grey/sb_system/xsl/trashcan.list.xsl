@@ -5,7 +5,6 @@
 	exclude-result-prefixes="html" 
 	xmlns:html="http://www.w3.org/1999/xhtml">
 
-	<xsl:import href="global.views.xsl" />
 	<xsl:import href="global.default.xsl" />
 
 	<xsl:output 
@@ -42,18 +41,18 @@
 		<xsl:call-template name="views" />
 		<div class="workbench">
 			<xsl:apply-templates select="response/errors" />
-			<xsl:apply-templates select="$content/sbnode[@master]" />
+			<xsl:call-template name="renderTrash" />
 		</div>
 	</body>
 	</html>
 	</xsl:template>
 		
-	<xsl:template match="sbnode">
+	<xsl:template name="renderTrash">
 		<form name="massaction" action="/sdsdds">
 		<table class="default" width="100%" id="list">
 			<thead>
 				<tr>
-					<th></th>
+					<!--<th></th>-->
 					<th><xsl:value-of select="$locale/sbSystem/labels/name" /></th>
 					<th><xsl:value-of select="$locale/sbSystem/labels/type" /></th>
 					<th><xsl:value-of select="$locale/sbSystem/labels/created_at" /></th>
@@ -63,11 +62,11 @@
 			</thead>
 			<tbody>
 			<xsl:choose>
-				<xsl:when test="children[@mode='debug']/sbnode">
-					<xsl:for-each select="children[@mode='debug']/sbnode">
+				<xsl:when test="$content/trash/nodes/sbnode">
+					<xsl:for-each select="$content/trash/nodes/sbnode">
 						<tr>
 							<xsl:call-template name="colorize" />
-							<td width="1"><input type="checkbox" name="marker" id="marker_{@uuid}" /></td>
+							<!--<td width="1"><input type="checkbox" name="marker" id="marker_{@uuid}" /></td>-->
 							<td>
 								<a href="/{@uuid}"><span class="type {@displaytype}"><xsl:value-of select="@label" /></span></a>
 							</td>
@@ -82,21 +81,17 @@
 								<xsl:value-of select="@modified" />
 							</td>
 							<td>
-								<xsl:if test="position() != 1">
-									<a href="/-/structure/orderBefore/subject={$subjectid}&amp;source={@name}&amp;destination={preceding-sibling::*[1]/@name}" class="option"><img src="/theme/sb_system/icons/move_up.gif" /></a>
-								</xsl:if>
-								<xsl:if test="position() != last()">
-									<a href="/-/structure/orderBefore/subject={$subjectid}&amp;source={following-sibling::*[1]/@name}&amp;destination={@name}" class="option"><img src="/theme/sb_system/icons/move_down.gif" /></a>
-								</xsl:if>
+								<a href="/{$master/@uuid}/content/remove/?subject_uuid={@uuid}" class="option"><img src="/theme/sb_system/icons/doc_delete.gif" /></a>
+								<a href="/{$master/@uuid}/content/recover/?subject_uuid={@uuid}&amp;parent_uuid={@parent}" class="option"><img src="/theme/sb_system/icons/move_up.gif" /></a>
 							</td>
 						</tr>
 					</xsl:for-each>
-					<tr class="lastline"><td colspan="6">
+					<!--<tr class="lastline"><td colspan="6">
 						<input type="checkbox" id="toggle" onchange="javascript:toggleAll();" /> alle markieren | markierte
 						<input type="button" value="ausschneiden" onclick="cutMultiple()" />
 						<input type="button" value="löschen" onclick="deleteMultiple()" />
 						<input type="button" value="zu Favoriten" onclick="addToFavoritesMultiple()" />
-					</td></tr>
+					</td></tr>-->
 				</xsl:when>
 				<xsl:otherwise>
 					<tr><td colspan="6"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>

@@ -8,7 +8,6 @@
 	xmlns:php="http://php.net/xsl">
 
 	<xsl:import href="global.default.xsl" />
-	<xsl:import href="global.views.xsl" />
 	
 	<xsl:output 
 		method="html"

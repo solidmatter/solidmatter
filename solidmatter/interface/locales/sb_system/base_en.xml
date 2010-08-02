@@ -32,12 +32,15 @@
 		<move>Move</move>
 		<move_up>move up</move_up>
 		<move_down>move down</move_down>
+		<back>Back</back>
+		<forward>Forward</forward>
 		<add>Add</add>
 		<remove>Remove</remove>
 		<remove_all>Remove all</remove_all>
 		<set_default>set as default</set_default>
 		<set_favorite>set as favorite</set_favorite>
 		<empty>Empty</empty>
+		<execute>Execute</execute>
 		<view>View</view>
 		<clone>Clone</clone>
 		<copy>Copy</copy>
@@ -114,6 +117,7 @@
 		<height>Height</height>
 		<width>Width</width>
 		<url>URL</url>
+		<preview>Preview</preview>
 		<search>
 			<title>Search</title>
 			<search_for>Search for</search_for>
@@ -140,7 +144,7 @@
 	</labels>
 	
 	<texts>
-		<no_subobjects>This object has no vsisible subobjects</no_subobjects>
+		<no_subobjects>This object has no visible subobjects</no_subobjects>
 		<no_comments>No comments available</no_comments>
 		<no_relations>No relations available</no_relations>
 		<inbox_empty>Your inbox is empty</inbox_empty>

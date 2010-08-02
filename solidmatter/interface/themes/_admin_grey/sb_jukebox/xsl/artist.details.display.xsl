@@ -9,8 +9,7 @@
 	xmlns:dyn="http://exslt.org/dynamic" 
 	extension-element-prefixes="dyn">
 
-	<xsl:import href="../../sb_system/xsl/global.views.xsl" />
-	<xsl:import href="../../sb_system/xsl/global.default.xsl" />
+	<xsl:import href="global.default.xsl" />
 
 	<xsl:output 
 		method="html"

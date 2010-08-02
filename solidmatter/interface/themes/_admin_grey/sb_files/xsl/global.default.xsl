@@ -5,8 +5,7 @@
 	exclude-result-prefixes="html" 
 	xmlns:html="http://www.w3.org/1999/xhtml">
 
-	<xsl:import href="global.views.xsl" />
-	<xsl:import href="../../../_global/xsl/default.xsl" />
+	<xsl:import href="../../sb_system/xsl/global.default.xsl" />
 	
 	<xsl:output 
 		method="html"

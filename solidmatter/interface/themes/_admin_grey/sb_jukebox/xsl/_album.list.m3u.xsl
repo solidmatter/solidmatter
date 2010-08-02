@@ -3,8 +3,7 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	version="1.0">
 
-	<!--<xsl:import href="../../../../sb_system/themes/_admin/xsl/global.views.xsl" />-->
-	<xsl:import href="../../sb_system/xsl/global.default.xsl" />
+	<xsl:import href="global.default.xsl" />
 
 	<xsl:output 
 		method="text"
