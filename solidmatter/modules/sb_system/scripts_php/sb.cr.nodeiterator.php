@@ -38,7 +38,11 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 		if (!is_array($aArrayOfNodes)) {
 			throw new RepositoryException('no array of nodes');
 		} else {
-			$this->aNodeArray = $aArrayOfNodes;
+			// it might be that an associative array was given, this class needs a continuitive indexed array
+			foreach ($aArrayOfNodes as $nodeCurrent) {
+				$this->aNodeArray[] = $nodeCurrent;
+			}
+			reset($this->aNodeArray);
 		}
 	}
 	

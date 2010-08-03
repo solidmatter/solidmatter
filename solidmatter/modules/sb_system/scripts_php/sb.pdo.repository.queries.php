@@ -196,7 +196,7 @@ $_QUERIES['sbCR/getNode/byUUID'] = '
 	LEFT JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child
 	WHERE		n.uuid = :id
-		AND		h.b_primary = \'TRUE\'
+	ORDER BY	h.b_primary DESC
 ';
 $_QUERIES['sbCR/getNode/byUID'] = '
 	SELECT		n.uuid,
@@ -524,7 +524,7 @@ $_QUERIES['sbCR/node/addLink/getBasicInfo'] = '
 	SELECT		n_level,
 				(SELECT	COUNT(*)
 					FROM	{TABLE_HIERARCHY}
-					WHERE	fk_parent = :parent_uuid
+					WHERE	fk_parent = :current_uuid
 				) AS n_position,
 				(SELECT COUNT(*)
 					FROM	{TABLE_HIERARCHY}
@@ -535,11 +535,11 @@ $_QUERIES['sbCR/node/addLink/getBasicInfo'] = '
 					INNER JOIN	{TABLE_NODES} n
 						ON		h.fk_child = n.uuid
 					WHERE		n.s_name = :child_name
-						AND		h.fk_parent = :parent_uuid
+						AND		h.fk_parent = :current_uuid
 				) AS n_numsamenamesiblings
 	FROM		{TABLE_HIERARCHY}
-	WHERE		fk_child = :parent_uuid
-		AND		b_primary = \'TRUE\'
+	WHERE		fk_child = :current_uuid
+		AND		fk_parent = :parent_uuid
 ';
 $_QUERIES['sbCR/node/addLink/insertNode'] = '
 	INSERT INTO	{TABLE_HIERARCHY}
@@ -555,7 +555,7 @@ $_QUERIES['sbCR/node/addLink/insertNode'] = '
 					:parent_uuid,
 					:is_primary,
 					:order,
-					:level+1,
+					:level,
 					:mpath
 				)
 ';

@@ -21,9 +21,15 @@ class sbNode extends sbCR_Node {
 	protected $aViews				= NULL;
 	protected $elemViews			= NULL;
 	
+	// array of sbCR_NodeIterators - child nodes that are stored after acquireing them via getNodes resp. getChildren
 	public $aChildNodes				= array();
 	public $niAncestors				= NULL;
 	public $niParents				= NULL;
+	
+	// array of sbCR_NodeIterators - nodes that are stored as relevant "content" of this node
+	public $aRelatedNodes			= array();
+	// array of sbCR_NodeIterators - nodes that are stored as relevant "content" of this node (not necessarily children)
+	public $aContentNodes			= array();
 	
 	protected $aSupportedAuthorisations = NULL;
 	protected $aInheritedAuthorisations = NULL;
@@ -271,6 +277,7 @@ class sbNode extends sbCR_Node {
 			$elemSubject->appendChild($elemCurrent);
 		}
 		
+		// first create and store all children as elements
 		foreach ($this->aChildNodes as $sMode => $niCurrentChildren) {
 			//var_dumpp($sMode);
 			if (!$niCurrentChildren->isEmpty() && $bDeep) {
@@ -283,6 +290,25 @@ class sbNode extends sbCR_Node {
 					$elemContainer = $elemSubject;
 				}
 				$elemContainer = $this->elemSubject->ownerDocument->createElement('children');
+				$elemContainer->setAttribute('mode', $sMode);
+				$elemSubject->appendChild($elemContainer);
+				foreach ($niCurrentChildren as $nodeChild) {
+					$elemContainer->appendChild($nodeChild->getElement($bDeep, $bUseContainer, $sMode));
+				}
+			}
+		}
+		
+		// then treat content nodes in a similar way
+		foreach ($this->aContentNodes as $sMode => $niCurrentChildren) {
+			if (!$niCurrentChildren->isEmpty() && $bDeep) {
+				if ($bUseContainer) {
+					$elemContainer = $this->elemSubject->ownerDocument->createElement('content');
+					$elemContainer->setAttribute('mode', $sMode);
+					$elemSubject->appendChild($elemContainer);
+				} else {
+					$elemContainer = $elemSubject;
+				}
+				$elemContainer = $this->elemSubject->ownerDocument->createElement('content');
 				$elemContainer->setAttribute('mode', $sMode);
 				$elemSubject->appendChild($elemContainer);
 				foreach ($niCurrentChildren as $nodeChild) {
@@ -350,6 +376,18 @@ class sbNode extends sbCR_Node {
 	public function appendElement($elemData) {
 		$elemImported = $this->elemSubject->ownerDocument->importNode($elemData, TRUE);
 		$this->aAppendedElements[] = $elemImported;
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* CUSTOM: 
+	* @param 
+	* @return 
+	*/
+	public function storeContent($bUseContainer = TRUE) {
+		foreach ($this->aContentNodes as $sMode => $niChildren) {
+			$this->storeNodeList($niChildren, $bUseContainer, 'content', $sMode);
+		}
 	}
 	
 	//--------------------------------------------------------------------------
@@ -428,7 +466,11 @@ class sbNode extends sbCR_Node {
 	//--------------------------------------------------------------------------
 	/**
 	* CUSTOM: 
-	* @param 
+	* @param string mode used to load children as defined in repository
+	* @param boolean stores the retrieved nodes in this node for output
+	* @param boolean returns the retrieved nodes in a sbCR_NodeIterator
+	* @param boolean flag to indicate if all properties should be loaded initially (see XXX for list of essential properties)
+	* @param array an array of strings of authorisations that have to be checked for the current user, effectively filtering the retrieved nodes 
 	* @return 
 	*/
 	public function loadChildren($sMode = 'debug', $bStoreAsNodes = TRUE, $bReturnChildren = FALSE, $bLoadProperties = FALSE, $aRequiredAuthorisations = array()) {
@@ -562,11 +604,6 @@ class sbNode extends sbCR_Node {
 	public function isAncestorOf($nodeSubject) {
 		return (parent::isAncestorOf($nodeSubject));
 	}
-	
-	
-	
-	
-	
 	
 	
 	
@@ -1111,6 +1148,17 @@ class sbNode extends sbCR_Node {
 	*/
 	public function recoverFromTrash() {
 		$this->addSaveTask('recover_from_trash');
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* TODO: this is only a TEMPORARY solution until the trashcan is handled otherwise
+	* TODO: this can remove primary links before all secondary links are removed!!!
+	* @param 
+	* @return 
+	*/
+	public function unlink() {
+		$this->deleteLink($this->getParent());
 	}
 	
 	//--------------------------------------------------------------------------

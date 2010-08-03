@@ -109,6 +109,8 @@
 		<username>Username</username>
 		<group>Group</group>
 		<groups>Groups</groups>
+		<constraints>Constraints</constraints>
+		<implementation>Implementation</implementation>
 		<selected_items>Selected items</selected_items>
 		<upload_files>Upload files</upload_files>
 		<file>File</file>
@@ -258,6 +260,7 @@
 		<view id="groups">Groups</view>
 		<view id="maintenance">Maintenance</view>
 		<view id="registry">Registry</view>
+		<view id="details">Details</view>
 	</views>
 	
 	<!-- <config>

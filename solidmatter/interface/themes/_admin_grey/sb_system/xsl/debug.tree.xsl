@@ -41,7 +41,7 @@
 	<xsl:template match="sbnode">
 		<li>
 			<xsl:value-of select="@level"/>.<xsl:value-of select="@order"/>
-			<xsl:value-of select="concat(' ', @name)"/> 
+			<span title="{@nodetype}"><xsl:value-of select="concat(' ', @name)"/></span>
 			<xsl:choose>
 				<xsl:when test="@primary = 'TRUE'">
 					<span style="color:green; font-weight:bold;"> P</span>

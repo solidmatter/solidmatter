@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbIdM>
+	
+	<labels>
+		<data>Data</data>
+		<mainrole>Main role</mainrole>
+	</labels>
+	
+	<nodetypes>
+		<type id="sbIdM:Manager">IdM-Manager</type>
+		<type id="sbIdM:OrgRole">OrgRole</type>
+		<type id="sbIdM:TechRole">TechRole</type>
+		<type id="sbIdM:Person">Person</type>
+		<type id="sbIdM:TechRoleGroup">TechRoleGroup</type>
+	</nodetypes>
+	
+	<views>
+		<view id="xxxxx">xxxxx</view>
+	</views>
+	
+</sbIdM>

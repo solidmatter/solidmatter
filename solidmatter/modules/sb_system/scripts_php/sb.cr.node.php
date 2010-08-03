@@ -650,7 +650,8 @@ class sbCR_Node {
 			
 			foreach ($this->aSaveTasks['add_child'] as $iTaskNumber => $aOptions) {
 				
-				$sParentUUID = $this->getIdentifier();
+				$sParentUUID = $this->elemSubject->getAttribute('parent');
+				$sCurrentUUID = $this->getIdentifier();
 				$nodeChild = $this->aModifiedChildren[$aOptions['uuid']];				
 				$nodeChild->saveNode();
 				$sChildUUID = $nodeChild->getIdentifier();
@@ -658,6 +659,7 @@ class sbCR_Node {
 				// get basic info
 				$stmtInfo = $this->crSession->prepareKnown($this->aQueries['addLink']['getBasicInfo']);
 				$stmtInfo->bindValue('parent_uuid', $sParentUUID, PDO::PARAM_STR);
+				$stmtInfo->bindValue('current_uuid', $sCurrentUUID, PDO::PARAM_STR);
 				$stmtInfo->bindValue('child_uuid', $sChildUUID, PDO::PARAM_STR);
 				$stmtInfo->bindValue('child_name', $nodeChild->getProperty('name'), PDO::PARAM_STR);
 				$stmtInfo->execute();
@@ -687,10 +689,10 @@ class sbCR_Node {
 				// insert new link for node
 				$stmtChild = $this->crSession->prepareKnown($this->aQueries['addLink']['insertNode']);
 				$stmtChild->bindValue('child_uuid', $sChildUUID, PDO::PARAM_STR);
-				$stmtChild->bindValue('parent_uuid', $sParentUUID, PDO::PARAM_STR);
+				$stmtChild->bindValue('parent_uuid', $sCurrentUUID, PDO::PARAM_STR);
 				$stmtChild->bindValue('is_primary', $sIsPrimary, PDO::PARAM_STR);
 				$stmtChild->bindValue('order', $iPosition, PDO::PARAM_INT);
-				$stmtChild->bindValue('level', $iLevel, PDO::PARAM_INT);
+				$stmtChild->bindValue('level', $iLevel+1, PDO::PARAM_INT);
 				$stmtChild->bindValue('mpath', $this->getMPath(), PDO::PARAM_INT);
 				$stmtChild->execute();
 				
@@ -919,7 +921,7 @@ class sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* CAUTION: will not update the nested sets
+	* 
 	* @param 
 	* @return 
 	*/
@@ -974,7 +976,7 @@ class sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	protected function deleteLink($nodeParent = NULL) {
+	protected function deleteLink($nodeParent) {
 		
 		// get info
 		$aInfo = $this->getHierarchyInfo($nodeParent);
@@ -993,6 +995,18 @@ class sbCR_Node {
 		// FIXME: don't use static value!
 		$stmtShift->bindValue('high_position', 1000000, PDO::PARAM_INT);
 		$stmtShift->execute();
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function setPrimaryLink($nodeParent) {
+		
+		
 		
 	}
 	

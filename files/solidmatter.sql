@@ -639,6 +639,16 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `nodes_not_linked_in_hierarchy` AS select `n`.`uuid` AS `uuid`,`n`.`s_uid` AS `s_uid`,`n`.`fk_nodetype` AS `fk_nodetype`,`n`.`s_label` AS `s_label`,`n`.`s_name` AS `s_name`,`n`.`s_customdisplaytype` AS `s_customdisplaytype`,`n`.`b_inheritrights` AS `b_inheritrights`,`n`.`b_bequeathlocalrights` AS `b_bequeathlocalrights`,`n`.`b_bequeathrights` AS `b_bequeathrights`,`n`.`fk_createdby` AS `fk_createdby`,`n`.`fk_modifiedby` AS `fk_modifiedby`,`n`.`dt_created` AS `dt_created`,`n`.`dt_modified` AS `dt_modified`,`n`.`s_currentlifecyclestate` AS `s_currentlifecyclestate` from `sb_system_nodes` `n` where ((select count(0) AS `count(*)` from `sb_system_nodes_parents` `np` where (`np`.`fk_child` = `n`.`uuid`)) = 0) order by `n`.`s_label`;
 
 -- ----------------------------
+-- View structure for nodes_with_multiple_parents
+-- ----------------------------
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `nodes_with_multiple_parents` AS select `np`.`fk_child` AS `fk_child`,`np`.`fk_parent` AS `fk_parent`,`np`.`b_primary` AS `b_primary`,(select count(0) AS `count(*)` from `sb_system_nodes_parents` where (`sb_system_nodes_parents`.`fk_child` = `np`.`fk_child`)) AS `(select count(*) from sb_system_nodes_parents where fk_child = np.fk_child)` from `sb_system_nodes_parents` `np` where ((select count(0) AS `count(*)` from `sb_system_nodes_parents` where (`sb_system_nodes_parents`.`fk_child` = `np`.`fk_child`)) > 1);
+
+-- ----------------------------
+-- View structure for parents_children
+-- ----------------------------
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `parents_children` AS select `parents`.`fk_nodetype` AS `parent_nt`,`parents`.`s_name` AS `parent_name`,`parents`.`s_label` AS `parent_label`,`sb_system_nodes_parents`.`fk_parent` AS `fk_parent`,`sb_system_nodes_parents`.`fk_child` AS `fk_child`,`children`.`s_label` AS `child_label`,`children`.`s_name` AS `child_name`,`children`.`fk_nodetype` AS `child_nt`,`sb_system_nodes_parents`.`b_primary` AS `b_primary`,`sb_system_nodes_parents`.`n_order` AS `n_order`,`sb_system_nodes_parents`.`n_level` AS `n_level` from ((`sb_system_nodes` `children` join `sb_system_nodes_parents` on((`children`.`uuid` = `sb_system_nodes_parents`.`fk_child`))) join `sb_system_nodes` `parents` on((`parents`.`uuid` = `sb_system_nodes_parents`.`fk_parent`)));
+
+-- ----------------------------
 -- Records 
 -- ----------------------------
 INSERT INTO `rep_modules` VALUES ('0403708141058bcbd4f286eb45c70555', 'sbCMS', '0', '0', '0', 'alpha', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'FALSE', 'TRUE');
@@ -694,6 +704,13 @@ INSERT INTO `rep_nodetypes` VALUES ('sbForum:Thread', 'sbNode', 'sbSystem:sb.nod
 INSERT INTO `rep_nodetypes` VALUES ('sbGuestbook:Entry', 'sbNode', 'sbSystem:sb.node', null, 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbGuestbook:Guestbook', 'sbNode', 'sbSystem:sb.node', 'sb_guestbook', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbGuestbook:TPL_Entries', 'sbNode', 'sbSystem:sb.node', 'sb_tpl_comments', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbIdM:Identity', 'sbNode', 'sbSystem:sb.node', 'sb_user', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbIdM:Manager', 'sbNode', 'sbSystem:sb.node', 'sb_admins', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbIdM:OrgRole', 'sbNode', 'sbSystem:sb.node', 'sb_usergroup', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbIdM:Person', 'sbNode', 'sbSystem:sb.node', 'sb_user', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbIdM:System', 'sbNode', 'sbSystem:sb.node', 'sb_preferences', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbIdM:TechRole', 'sbNode_idm_techrole', 'sbIdM:sb.idm.node.techrole', 'sb_guests', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbIdM:TechRoleGroup', 'sbNode', 'sbSystem:sb.node', 'sb_folder', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbJukebox:Album', 'sbNode_jukebox_album', 'sbJukebox:sb.jukebox.node.album', 'sb_album', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbJukebox:Artist', 'sbNode_jukebox_artist', 'sbJukebox:sb.jukebox.node.artist', 'sb_artist', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbJukebox:CD', 'sbNode', 'sbSystem:sb.node', 'sb_cd', 'PRIMARY');
@@ -846,6 +863,16 @@ INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:Taggable', 'sbFiles:Fo
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbFiles:Image');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:Taggable', 'sbFiles:Image');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbJukebox:FixView', 'sbJukebox:Album');
+INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:ListView', 'sbIdM:Manager');
+INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:ListView', 'sbIdM:OrgRole');
+INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbIdM:OrgRole');
+INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbIdM:Person');
+INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:ListView', 'sbIdM:System');
+INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:ListView', 'sbIdM:TechRole');
+INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbIdM:TechRole');
+INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:Taggable', 'sbIdM:TechRole');
+INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:ListView', 'sbIdM:TechRoleGroup');
+INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbIdM:TechRoleGroup');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbJukebox:RecommendView', 'sbJukebox:Album');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbJukebox:VotesView', 'sbJukebox:Album');
 INSERT INTO `rep_nodetypes_inheritance` VALUES ('sbSystem:PropertiesView', 'sbJukebox:Album');
@@ -1017,6 +1044,40 @@ INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbCMS:Site', 'sbGuestbook:G
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbCMS:Site', 'sbGuestbook:Guestbook', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbCMS:Layout', 'sbGuestbook:TPL_Entries', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbCMS:Layout', 'sbGuestbook:TPL_Entries', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbSystem:Root', 'sbIdM:Manager', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbSystem:Root', 'sbIdM:Manager', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbSystem:Root', 'sbIdM:Manager', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbIdM:Manager', 'sbIdM:OrgRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbIdM:Manager', 'sbIdM:OrgRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbIdM:Manager', 'sbIdM:OrgRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbIdM:OrgRole', 'sbIdM:OrgRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbIdM:OrgRole', 'sbIdM:OrgRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbIdM:OrgRole', 'sbIdM:OrgRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbIdM:OrgRole', 'sbIdM:Person', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbIdM:OrgRole', 'sbIdM:Person', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbIdM:OrgRole', 'sbIdM:Person', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbIdM:Manager', 'sbIdM:System', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbIdM:Manager', 'sbIdM:System', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbIdM:Manager', 'sbIdM:System', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbIdM:OrgRole', 'sbIdM:TechRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('gatherTechRoles', 'sbIdM:OrgRole', 'sbIdM:TechRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbIdM:OrgRole', 'sbIdM:TechRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbIdM:OrgRole', 'sbIdM:TechRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbIdM:System', 'sbIdM:TechRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbIdM:System', 'sbIdM:TechRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbIdM:System', 'sbIdM:TechRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbIdM:TechRole', 'sbIdM:TechRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbIdM:TechRole', 'sbIdM:TechRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbIdM:TechRole', 'sbIdM:TechRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbIdM:TechRoleGroup', 'sbIdM:TechRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbIdM:TechRoleGroup', 'sbIdM:TechRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbIdM:TechRoleGroup', 'sbIdM:TechRole', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbIdM:System', 'sbIdM:TechRoleGroup', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbIdM:System', 'sbIdM:TechRoleGroup', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbIdM:System', 'sbIdM:TechRoleGroup', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbIdM:TechRoleGroup', 'sbIdM:TechRoleGroup', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbIdM:TechRoleGroup', 'sbIdM:TechRoleGroup', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbIdM:TechRoleGroup', 'sbIdM:TechRoleGroup', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('albums', 'sbJukebox:Artist', 'sbJukebox:Album', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('playlist', 'sbJukebox:Artist', 'sbJukebox:Album', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('storeUGC', 'sbJukebox:Artist', 'sbJukebox:Album', 'TRUE', 'TRUE');
@@ -1218,6 +1279,14 @@ INSERT INTO `rep_nodetypes_properties` VALUES ('sbForum:Forum', 'threads_sortcri
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbForum:Forum', 'threads_sortdirection', 'STRING', 'string', 'TRUE', '$locale/sbForum/Forum/threads_sortdirection', 'EXTERNAL', null, '14', 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbGuestbook:Guestbook', 'config_maxlength', 'LONG', 'integer;minvalue=100;maxvalue=20000;default=2000', 'TRUE', '$locale/sbGuestbook/Guestbook/config_maxlength', 'EXTERNAL', null, '0', 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbGuestbook:Guestbook', 'display_layout', 'REFERENCE', 'nodeselector;mode=chooseLayout;nodetype=sbCMS:Layout', 'TRUE', '', 'EXTERNAL', null, null, 'FALSE', 'FALSE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbIdM:OrgRole', 'constraints', 'STRING', 'text', 'TRUE', '$locale/sbSystem/labels/constraints', 'EXTERNAL', null, '1', 'FALSE', 'FALSE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbIdM:OrgRole', 'description', 'STRING', 'text', 'TRUE', '$locale/sbSystem/labels/description', 'EXTERNAL', null, '0', 'FALSE', 'FALSE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbIdM:TechRole', 'constraints', 'STRING', 'text', 'TRUE', '$locale/sbSystem/labels/constraints', 'EXTERNAL', null, '2', 'FALSE', 'FALSE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbIdM:TechRole', 'data', 'STRING', 'text', 'TRUE', '$locale/sbIdM/labels/data', 'EXTERNAL', null, '4', 'FALSE', 'FALSE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbIdM:TechRole', 'description', 'STRING', 'text', 'TRUE', '$locale/sbSystem/labels/description', 'EXTERNAL', null, '0', 'FALSE', 'FALSE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbIdM:TechRole', 'implementation', 'STRING', 'text', 'TRUE', '$locale/sbSystem/labels/implementation', 'EXTERNAL', null, '3', 'FALSE', 'FALSE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbIdM:TechRole', 'mainrole', 'BOOLEAN', 'checkbox', 'TRUE', '$locale/sbIdM/labels/mainrole', 'EXTERNAL', null, '1', 'FALSE', 'FALSE', 'FALSE', null, '');
+INSERT INTO `rep_nodetypes_properties` VALUES ('sbIdM:TechRoleGroup', 'description', 'STRING', 'text', 'TRUE', '$locale/sbSystem/labels/description', 'EXTERNAL', null, null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbJukebox:Album', 'ext_coverentropy', 'LONG', 'integer', 'FALSE', '$locale/sbJukebox/Album/ext_coverentropy', 'AUXILIARY', 'n_coverentropy', null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbJukebox:Album', 'ext_coverhue', 'LONG', 'integer', 'FALSE', '$locale/sbJukebox/Album/ext_coverhue', 'AUXILIARY', 'n_coverhue', null, 'FALSE', 'FALSE', 'FALSE', null, '');
 INSERT INTO `rep_nodetypes_properties` VALUES ('sbJukebox:Album', 'ext_coverlightness', 'LONG', 'integer', 'FALSE', '$locale/sbJukebox/Album/ext_coverlightness', 'AUXILIARY', 'n_coverlightness', null, 'FALSE', 'FALSE', 'FALSE', null, '');
@@ -1343,6 +1412,10 @@ INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbGuestbook:Guestbook', 'proper
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbGuestbook:Guestbook', 'properties', 'save', 'FALSE', null, null, 'RENDERED', 'sb_system:node.properties.xsl', 'text/html', 'TRUE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbGuestbook:TPL_Entries', 'properties', 'edit', 'TRUE', null, null, 'RENDERED', 'sb_system:node.properties.xsl', 'text/html', 'TRUE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbGuestbook:TPL_Entries', 'properties', 'save', 'FALSE', null, null, 'RENDERED', 'sb_system:node.properties.xsl', 'text/html', 'TRUE', 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbIdM:Manager', 'details', 'display', 'TRUE', null, null, 'RENDERED', 'sb_idm:manager.details.xsl', 'text/html', 'TRUE', 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbIdM:OrgRole', 'details', 'display', 'TRUE', null, null, 'RENDERED', 'sb_idm:orgrole.details.xsl', 'text/html', 'TRUE', 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbIdM:Person', 'details', 'display', 'TRUE', null, null, 'RENDERED', 'sb_idm:person.details.xsl', 'text/html', 'TRUE', 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbIdM:System', 'details', 'display', 'TRUE', null, null, 'RENDERED', 'sb_idm:system.details.xsl', 'text/html', 'TRUE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Album', 'details', 'buildQuilt', 'FALSE', null, null, 'RENDERED', 'sb_jukebox:album.details.quilt.xsl', 'text/html', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Album', 'details', 'display', 'TRUE', null, null, 'RENDERED', 'sb_jukebox:album.details.display.xsl', 'text/html', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbJukebox:Album', 'details', 'displayInline', 'FALSE', null, null, 'RENDERED', 'sb_jukebox:album.details.display_inline.xsl', 'text/html', 'TRUE', 'FALSE');
@@ -1562,6 +1635,10 @@ INSERT INTO `rep_nodetypes_views` VALUES ('sbGuestbook:Guestbook', 'entries', 'F
 INSERT INTO `rep_nodetypes_views` VALUES ('sbGuestbook:Guestbook', 'preview', 'TRUE', null, '', '', '0', '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbGuestbook:Guestbook', 'properties', 'TRUE', null, 'sbSystem:sb.node.view.properties', 'sbView_properties', '1', '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbGuestbook:TPL_Entries', 'properties', 'FALSE', null, 'sbSystem:sb.node.view.properties', 'sbView_properties', '1', '0');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbIdM:Manager', 'details', 'TRUE', null, 'sbIdM:sb.idm.manager.details', 'sbView_idm_manager_details', null, '1000');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbIdM:OrgRole', 'details', 'TRUE', null, 'sbIdM:sb.idm.orgrole.details', 'sbView_idm_orgrole_details', null, '1000');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbIdM:Person', 'details', 'TRUE', null, 'sbIdM:sb.idm.person.details', 'sbView_idm_person_details', null, '1000');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbIdM:System', 'details', 'TRUE', null, 'sbIdM:sb.idm.system.details', 'sbView_idm_system_details', null, '1000');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Album', 'details', 'TRUE', null, 'sbJukebox:sb.jukebox.node.album.view.details', 'sbView_jukebox_album_details', null, '1000');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:Artist', 'details', 'TRUE', null, 'sbJukebox:sb.jukebox.node.artist.view.details', 'sbView_jukebox_artist_details', '0', '1000');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbJukebox:FixView', 'fix', 'FALSE', null, 'sbJukebox:sb.jukebox.node.various.view.fix', 'sbView_jukebox_various_fix', null, '0');
@@ -1612,7 +1689,7 @@ INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Root', 'structure', 'FALSE',
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Root', 'utilities', 'FALSE', null, 'sbSystem:sb.node.root.view.utilities', 'sbView_root_utilities', null, '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Root', 'welcome', 'TRUE', null, 'sbSystem:sb.node.root.view.welcome', 'sbView_root_welcome', '0', '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Tags', 'manage', 'TRUE', null, 'sbSystem:sb.node.tags.view.manage', 'sbView_tags_manage', null, '1000');
-INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Trashcan', 'content', 'TRUE', null, 'sbSystem:sb.node.trashcan.view.content', 'sbView_trashcan_content', '0', '1000');
+INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:Trashcan', 'content', 'TRUE', null, 'sbSystem:sb.node.trashcan.view.content', 'sbView_trashcan_content', '0', '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:User', 'authorisations', 'TRUE', null, 'sbSystem:sb.node.userentity.view.authorisations', 'sbView_userentity_authorisations', '2', '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:User', 'groups', 'TRUE', null, 'sbSystem:sb.node.user.view.groups', 'sbView_user_groups', '1', '0');
 INSERT INTO `rep_nodetypes_views` VALUES ('sbSystem:User', 'registry', 'TRUE', null, 'sbSystem:sb.node.registry.view.edit', 'sbView_registry_edit', '3', '0');

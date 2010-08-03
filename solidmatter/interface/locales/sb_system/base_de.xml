@@ -109,6 +109,8 @@
 		<username>Benutzername</username>
 		<group>Gruppe</group>
 		<groups>Gruppen</groups>
+		<constraints>Einschränkungen</constraints>
+		<implementation>Implementierung</implementation>
 		<selected_items>Markierte</selected_items>
 		<upload_files>Dateien hochladen</upload_files>
 		<file>Datei</file>
@@ -258,6 +260,7 @@
 		<view id="groups">Gruppen</view>
 		<view id="maintenance">Wartung</view>
 		<view id="registry">Registry</view>
+		<view id="details">Details</view>
 	</views>
 	
 	<config>

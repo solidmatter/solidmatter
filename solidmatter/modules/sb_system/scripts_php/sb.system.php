@@ -202,6 +202,7 @@ class System {
 			'sbGuestbook' => 'sb_guestbook',
 			'sbJukebox' => 'sb_jukebox',
 			'sbPortal' => 'sb_portal',
+			'sbIdM' => 'sb_idm',
 		);
 		if (isset($aModules[$sModule])) {
 			return ($aModules[$sModule]);
