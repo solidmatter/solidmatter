@@ -91,7 +91,7 @@ class sbView_registry_edit extends sbView {
 				}
 				
 			default:
-				throw new sbException(__CLASS__.': action not recognized ('.$sAction.')');
+				throw new sbException('action not recognized: '.$sAction);
 			
 		}
 		
@@ -153,7 +153,7 @@ class sbView_registry_edit extends sbView {
 						$sConfig = 'string;maxlength=250';
 						break;
 					default:
-						throw new sbException('unrecognized type: '.$aRow['e_type']);
+						throw new sbException('type not recognized: '.$aRow['e_type']);
 						break;
 				}
 			}

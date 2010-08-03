@@ -113,8 +113,8 @@ class sbCR_Utilities {
 		
 		foreach ($nodeCurrent->getVotes() as $aVote) {
 			$xwOutput->startElement('vote');
-			$xwOutput->writeAttribute('voter', $aVote['fk_user']);
-			$xwOutput->text($aVote['n_vote']);
+			$xwOutput->writeAttribute('voter', $aVote['user_uuid']);
+			$xwOutput->text($aVote['vote']);
 			$xwOutput->endElement();
 		}
 		

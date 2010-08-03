@@ -211,8 +211,8 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 				continue;
 			}
 			$elemVote = $domUGC->createElement('vote');
-			$elemVote->setAttribute('voter', $aVote['fk_user']);
-			$elemVote->setAttribute('vote', $aVote['n_vote']);
+			$elemVote->setAttribute('voter', $aVote['user_uuid']);
+			$elemVote->setAttribute('vote', $aVote['vote']);
 			$elemCurrent->appendChild($elemVote);
 		}
 		

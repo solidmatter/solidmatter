@@ -28,6 +28,7 @@ class sbView_logs_events extends sbView {
 				$stmtGetEvents = $this->crSession->prepareKnown('sbSystem/eventLog/getEntries/filtered');
 				$stmtGetEvents->bindValue('module', '%', PDO::PARAM_STR);
 				$stmtGetEvents->bindValue('type', '%', PDO::PARAM_STR);
+				$stmtGetEvents->bindValue('loguid', '%', PDO::PARAM_STR);
 				$stmtGetEvents->execute();
 				$_RESPONSE->addData($stmtGetEvents->fetchElements('events'));
 				
@@ -42,6 +43,7 @@ class sbView_logs_events extends sbView {
 				$stmtGetEvents = $this->crSession->prepareKnown('sbSystem/eventLog/getEntries/filtered');
 				$stmtGetEvents->bindValue('module', '%'.$aInputs['module'].'%', PDO::PARAM_STR);
 				$stmtGetEvents->bindValue('type', '%'.$aInputs['type'].'%', PDO::PARAM_STR);
+				$stmtGetEvents->bindValue('loguid', '%'.$aInputs['loguid'].'%', PDO::PARAM_STR);
 				$stmtGetEvents->execute();
 				$_RESPONSE->addData($stmtGetEvents->fetchElements('events'));
 				
@@ -67,6 +69,7 @@ class sbView_logs_events extends sbView {
 		
 		$formFilter->addInput('type;select;', '$locale/sbSystem/labels/type');
 		$formFilter->addInput('module;select;', '$locale/sbSystem/labels/module');
+		$formFilter->addInput('loguid;string;minlength=2;maxlength=50', '$locale/sbSystem/labels/filter');
 		$formFilter->addSubmit('$locale/sbSystem/actions/filter');
 		
 		$aOptions = array(

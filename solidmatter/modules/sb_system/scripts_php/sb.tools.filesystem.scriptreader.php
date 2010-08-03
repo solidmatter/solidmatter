@@ -55,7 +55,7 @@ class ScriptReader extends sbDirectory {
 			$bVersionFound = FALSE;
 			$hFile = fopen($this->aInfo['abs_path'].$aFile['name'], 'r');
 			if (!$hFile) {
-				throw new FileNotFoundException(__CLASS__.': cannot open file '.$aFile['name']);	
+				throw new FileNotFoundException('cannot open file '.$aFile['name']);	
 			}
 			while (!feof($hFile)) {
 			    $sLine = fgets($hFile, 4096);

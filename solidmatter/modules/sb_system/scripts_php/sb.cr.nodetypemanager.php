@@ -49,7 +49,7 @@ class sbCR_NodeTypeManager {
 	*/
 	public function getNodeType($sNodeTypeName) {
 		if (!$this->hasNodeType($sNodeTypeName)) {
-			throw new NoSuchNodeTypeException(__CLASS__.': '.$sNodeTypeName);
+			throw new NoSuchNodeTypeException($sNodeTypeName);
 		}
 		if (!isset($this->aNodeTypes[$sNodeTypeName])) {
 			$this->aNodeTypes[$sNodeTypeName] = $this->crRepositoryStructure->getNodeType($sNodeTypeName);

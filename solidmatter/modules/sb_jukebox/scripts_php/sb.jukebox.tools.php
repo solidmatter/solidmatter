@@ -391,6 +391,48 @@ class JukeboxTools {
 		return ($sToken);
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public static function getAllArtists($nodeJukebox) {
+		
+		$stmtGetAllArtists = $nodeJukebox->getSession()->prepareKnown('sbJukebox/jukebox/artists/getAll');
+		$stmtGetAllArtists->bindValue('jukebox_uuid', $nodeJukebox->getProperty('jcr:uuid'), PDO::PARAM_STR);
+		$stmtGetAllArtists->execute();
+		$aArtists = array();
+		foreach ($stmtGetAllArtists as $aRow) {
+			$aArtists[$aRow['uuid']] = $aRow['label'];
+		}
+		$stmtGetAllArtists->closeCursor();
+		
+		return ($aArtists);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public static function getAllAlbums($nodeJukebox) {
+		
+		$stmtGetAllAlbums = $nodeJukebox->getSession()->prepareKnown('sbJukebox/jukebox/albums/getAll');
+		$stmtGetAllAlbums->bindValue('jukebox_mpath', $nodeJukebox->getMPath(), PDO::PARAM_STR);
+		$stmtGetAllAlbums->execute();
+		$aAlbums = array();
+		foreach ($stmtGetAllAlbums as $aRow) {
+			$aAlbums[$aRow['uuid']] = $aRow['label'];
+		}
+		$stmtGetAllAlbums->closeCursor();
+		
+		return ($aAlbums);
+		
+	}
+	
 }
 
 ?>

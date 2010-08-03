@@ -215,11 +215,25 @@ class sbDOMForm extends sbDOMDocument {
 	* @param 
 	* @return 
 	*/
-	public function hasError($sName) {
-		if (!isset($this->aInputs[$sName])) {
-			throw new InputNotFoundException($sName);	
+	public function hasError($sName = NULL) {
+
+		if ($sName != NULL) { // check only the given input
+			if (!isset($this->aInputs[$sName])) {
+				throw new InputNotFoundException($sName);	
+			}
+			return ($this->aInputs[$sName]->hasError());
+		} else { // check all inputs and form itself
+			foreach ($this->aInputs as $ifInput) {
+				if ($ifInput->hasError()) {
+					return (TRUE);
+				}
+			}
+			if ($this->sErrorLabel != '') {
+				return (TRUE);
+			}
+			return (FALSE);
 		}
-		return ($this->aInputs[$sName]->hasError());
+		
 	}
 	
 	//--------------------------------------------------------------------------

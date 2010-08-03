@@ -21,8 +21,20 @@ class sbView_trashcan_content extends sbView {
 			
 			case 'list':
 				// TODO: implement user-specific listing of contents (serves privacy/security)
-				$this->nodeSubject->loadChildren('debug', TRUE, FALSE, TRUE);
-				$this->nodeSubject->storeChildren();
+				$niTrash = $this->nodeSubject->getTrash();
+				foreach ($niTrash as $nodeCurrent) {
+					$nodeCurrent->loadProperties();
+				}
+				$_RESPONSE->addData($niTrash, 'trash');
+				return;
+				
+			case 'recover':
+				$sSubjectUUID = $_REQUEST->getParam('subject_uuid');
+				$sParentUUID = $_REQUEST->getParam('parent_uuid');
+				$nodeTrash = $this->crSession->getNodeByIdentifier($sSubjectUUID, $sParentUUID);
+				$nodeTrash->recoverFromTrash();
+				$nodeTrash->save();
+				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'content');
 				return;
 				
 			case 'purge':

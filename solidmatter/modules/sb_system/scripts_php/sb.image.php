@@ -81,10 +81,10 @@ class Image {
 			
 			case Image::BLANK:
 				if ($mVar1 <= 0 || $mVar2 <= 0) {
-					throw new ImageProcessingException(__CLASS__.': height and width have to be greater than 0');
+					throw new ImageProcessingException('height and width have to be greater than 0');
 				}
 				if (!$this->resData = imagecreatetruecolor($mVar1, $mVar2)) {
-					throw new ImageProcessingException(__CLASS__.': imagecreatetruecolor() failed');
+					throw new ImageProcessingException('imagecreatetruecolor() failed');
 				}
 				break;
 				
@@ -95,7 +95,7 @@ class Image {
 				
 			case Image::FROMSTRING:
 				if (!$this->resData = imagecreatefromstring($mVar1)) {
-					throw new ImageProcessingException(__CLASS__.': imagecreatetruecolor() failed');
+					throw new ImageProcessingException('imagecreatetruecolor() failed');
 				}
 				break;
 				
@@ -131,7 +131,7 @@ class Image {
 		switch ($sMemberName) {
 			case 'iQuality':
 			case 'resData':
-				throw new ImageProcessingException(__CLASS__.': unable to access member '.$sMemberName);
+				throw new ImageProcessingException('unable to access member '.$sMemberName);
 			case 'iWidth':
 				return (imagesx($this->resData));
 			case 'iHeight':
@@ -147,7 +147,7 @@ class Image {
 	*/
 	/*public function __set($sMemberName, $mValue) {
 		if ($sMemberName != 'iQuality') {
-			throw new sbException(__CLASS__.': '.$sMemberName.' is readonly');	
+			throw new sbException($sMemberName.' is readonly');	
 		}
 		$this->iQuality = $mValue;
 	}*/
@@ -206,8 +206,6 @@ class Image {
 		
 		import('sb.tools.mime');
 		
-		//echo get_mimetype($sFilename);
-		
 		switch (get_mimetype($sFilename)) {
 			case 'image/gif':
 				$this->resData = imagecreatefromgif($sFilename);
@@ -219,7 +217,7 @@ class Image {
 				$this->resData = imagecreatefrompng($sFilename);
 				break;
 			default:
-				throw new ImageProcessingException('Image::Load - invalid mimetype ('.mime_content_type($sFilename).')');
+				throw new ImageProcessingException('invalid mimetype ('.mime_content_type($sFilename).')');
 		}
 		
 		$this->iWidth = imagesx($this->resData);
@@ -378,7 +376,7 @@ class Image {
 		}
 		
 		if (!$bSuccess) {
-			throw new sbException(__CLASS__.': filter was not applied ('.$eFilterType.'|'.$mArg1.'|'.$mArg2.'|'.$mArg3.')');	
+			throw new ImageProcessingException('filter was not applied ('.$eFilterType.'|'.$mArg1.'|'.$mArg2.'|'.$mArg3.')');	
 		}
 		
 	}

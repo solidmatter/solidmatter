@@ -50,10 +50,10 @@ class sbDirectory extends sbFilesystemObject {
 		
 		// checks
 		if ($this->aInfo['abs_path'] == NULL) {
-			throw new sbException(__CLASS__.': directory not set');
+			throw new sbException('directory is not yet specified');
 		}
 		if (!file_exists($this->aInfo['abs_path']) || !is_dir($this->aInfo['abs_path'])) {
-			throw new sbException(__CLASS__.': directory "'.$this->aInfo['abs_path'].'" does not exist');
+			throw new sbException('directory "'.$this->aInfo['abs_path'].'" does not exist');
 		}
 		
 		// clear in case read() is called multiple times
@@ -229,7 +229,9 @@ class sbDirectory extends sbFilesystemObject {
 		
 		foreach ($this->aFiles as $aFile) {
 			if ($bAsFiles) {
-				$aFiles[] = $this->getFile($aFile['name']);
+				if ($fileCurrent = $this->getFile($aFile['name'])) {
+					$aFiles[] = $fileCurrent;
+				}
 			} else {
 				$aFiles[] = $aFile['name'];
 			}

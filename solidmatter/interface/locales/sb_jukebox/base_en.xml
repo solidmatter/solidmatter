@@ -14,6 +14,7 @@
 		<type id="sbJukebox:TPL_NowPlaying">Jukebox: On Air</type>
 		<type id="sbJukebox:VotesView">Votes (Abstract)</type>
 		<type id="sbJukebox:RecommendView">Recommend (Abstract)</type>
+		<type id="sbJukebox:FixView">Fix (Abstract)</type>
 	</nodetypes>
 	
 	<views>
@@ -25,6 +26,7 @@
 		<view id="favorites">Favorites</view>
 		<view id="playlists">Playlists</view>
 		<view id="details">Details</view>
+		<view id="fix">Fix</view>
 	</views>
 	
 	<Jukebox>
@@ -121,6 +123,8 @@
 		<adminmode>Adminmode</adminmode>
 		<amount_latestalbums>Number of latest albums</amount_latestalbums>
 		<amount_latestalbums_expanded>Number of latest albums (expanded)</amount_latestalbums_expanded>
+		<amount_randomalbums>Number of random albums</amount_randomalbums>
+		<amount_randomartists>Number of random artists</amount_randomartists>
 		<amount_latestcomments>Number of latest comments</amount_latestcomments>
 		<amount_latestcomments_expanded>Number of latest comments (expanded)</amount_latestcomments_expanded>
 		<amount_charts>Number of chart entries</amount_charts>
@@ -170,5 +174,13 @@
 		<no_albums>No albums available</no_albums>
 		<no_writable_playlists>No writable Playlists available</no_writable_playlists>
 	</texts>
+	
+	<fix>
+		<correct_artist>Artist has a typo</correct_artist>
+		<switch_artist>Artist is wrong, real one exists</switch_artist>
+		<remove_tracks>Remove doubled or otherwise unwanted tracks</remove_tracks>
+		<remove_doublet_album>Album is or has doublet</remove_doublet_album>
+		<reorder_tracks>Tracks are not in correct order</reorder_tracks>
+	</fix>
 	
 </sbJukebox>

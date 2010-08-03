@@ -214,12 +214,19 @@ $_QUERIES['sbSystem/eventLog/getEntries/filtered'] = '
 										WHERE	uuid = el.fk_subject
 					)
 				) AS s_subjectdisplaytype,
-				fk_user,
-				e_type,
-				dt_created
+				el.fk_user,
+				el.e_type,
+				el.dt_created,
+				nu.s_label AS username,
+				ns.s_label AS subjectlabel
 	FROM		{TABLE_EVENTLOG} el
+	LEFT JOIN	{TABLE_NODES} nu
+		ON		el.fk_user = nu.uuid
+	LEFT JOIN	{TABLE_NODES} ns
+		ON		el.fk_subject = ns.uuid
 	WHERE		el.fk_module LIKE :module
 		AND		el.e_type LIKE :type
+		AND		el.s_loguid LIKE :loguid
 	ORDER BY	el.dt_created DESC
 	LIMIT		0, 1000
 ';
@@ -265,8 +272,8 @@ $_QUERIES['sbSystem/voting/getVote/average'] = '
 	GROUP BY	fk_subject
 ';
 $_QUERIES['sbSystem/voting/getVotes'] = '
-	SELECT		fk_user,
-				n_vote
+	SELECT		fk_user AS user_uuid,
+				n_vote AS vote
 	FROM		{TABLE_VOTES}
 	WHERE		fk_subject = :subject_uuid
 ';
@@ -567,6 +574,39 @@ $_QUERIES['sbSystem/node/removeAuthorisation'] = '
 ';
 
 //------------------------------------------------------------------------------
+// special actions
+//------------------------------------------------------------------------------
+
+$_QUERIES['sbSystem/node/moveToTrash/updateNode'] = '
+	UPDATE		{TABLE_HIERARCHY} h
+	SET			h.fk_deletedby = :user_uuid,
+				h.dt_deleted = NOW(),
+				h.s_mpath = CONCAT(\'DELETED_\', h.s_mpath)
+	WHERE		h.fk_parent = :parent_uuid
+		AND		h.fk_child = :subject_uuid
+';
+$_QUERIES['sbSystem/node/moveToTrash/updateChildren'] = '
+	UPDATE		{TABLE_HIERARCHY} h
+	SET			h.s_mpath = CONCAT(\'DELETED_\', h.s_mpath)
+	WHERE		h.s_mpath LIKE CONCAT(:mpath, \'%\')
+';
+$_QUERIES['sbSystem/node/recoverFromTrash/getInfo'] = '
+	SELECT		h.s_mpath AS mpath
+	FROM		{TABLE_HIERARCHY} h
+	WHERE		h.fk_parent = :parent_uuid
+		AND		h.fk_child = :subject_uuid
+';
+$_QUERIES['sbSystem/node/recoverFromTrash'] = '
+	UPDATE		{TABLE_HIERARCHY} h
+	SET			fk_deletedby = NULL,
+				dt_deleted = NULL,
+				h.s_mpath = REPLACE(h.s_mpath, \'DELETED_\', \'\') 
+	WHERE		h.s_mpath LIKE CONCAT(:mpath, \'%\')
+		OR		(h.fk_parent = :parent_uuid
+			AND		h.fk_child = :subject_uuid)
+';
+
+//------------------------------------------------------------------------------
 // node:module
 //------------------------------------------------------------------------------
 
@@ -738,6 +778,7 @@ $_QUERIES['sbSystem/maintenance/view/repair/loadChildren'] = '
 	FROM		{TABLE_HIERARCHY}
 	WHERE		fk_parent = :fk_parent
 		AND		fk_child <> \'00000000000000000000000000000000\'
+		AND		fk_deletedby IS NULL
 	ORDER BY	n_order
 ';
 $_QUERIES['sbSystem/maintenance/view/repair/setCoordinates/nestedSets'] = '
@@ -880,6 +921,20 @@ $_QUERIES['sbSystem/node/trashcan/getAbandonedNodes'] = '
 				) = 0
 	AND			n.fk_nodetype != \'sbSystem:Root\'
 ';
+// TODO: get and display more info on the nodes
+$_QUERIES['sbSystem/node/trashcan/getTrash/all'] = '
+	SELECT		h.fk_parent AS parent_uuid,
+				h.fk_child AS child_uuid
+	FROM		{TABLE_HIERARCHY} h
+	WHERE		h.fk_deletedby IS NOT NULL
+';
+// TODO: first check for nodes that have to be removed because they are last in a shared set
+$_QUERIES['sbSystem/node/trashcan/purge'] = '
+	DELETE FROM	{TABLE_HIERARCHY}
+	WHERE		fk_deletedby IS NOT NULL
+		OR		SUBSTRING(s_mpath, 1, 8) = \'DELETED_\'
+';
+
 
 //------------------------------------------------------------------------------
 // node:registry

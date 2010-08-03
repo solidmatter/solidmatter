@@ -192,7 +192,7 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				$aTargets = $this->nodeSubject->getPossibleTargets($_REQUEST->getParam('type_relation'), $_REQUEST->getParam('target_relation'));
 				echo '<ul>';
 				foreach ($aTargets as $sUUID => $aDetails) {
-					echo '<li><span style="display:none;">'.$sUUID.'|</span>'.'<span class="type '.$aDetails['displaytype'].'">'.$aDetails['label'].'</span></li>';
+					echo '<li><span style="display:none;">'.$sUUID.'</span>'.'<span class="type '.$aDetails['displaytype'].'">'.$aDetails['label'].'</span></li>';
 				}
 				echo '</ul>';
 				exit();
@@ -200,8 +200,8 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 				
 			case 'addRelation':
 				$sRelation = $_REQUEST->getParam('type_relation');
-				$sTarget = substr($_REQUEST->getParam('target_relation'), 0, strpos($_REQUEST->getParam('target_relation'), '|'));
-				$nodeTarget = $this->crSession->getNodeByIdentifier($sTarget);
+				$sTargetUUID = $_REQUEST->getParam('target_uuid_relation');
+				$nodeTarget = $this->crSession->getNodeByIdentifier($sTargetUUID);
 				$this->nodeSubject->addRelation($sRelation, $nodeTarget);
 				$this->logEvent(System::INFO, 'RELATION_ADDED', $sRelation.' to '.$nodeTarget->getName().' ('.$nodeTarget->getIdentifier().')');
 				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'));

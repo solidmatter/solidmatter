@@ -63,6 +63,8 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 					Registry::setValue('sb.jukebox.voting.scale.max',				$formSettings->getValue('maxstars'),				User::getUUID());
 					Registry::setValue('sb.jukebox.latestalbums.amount.default',	$formSettings->getValue('latestalbums'),			User::getUUID());
 					Registry::setValue('sb.jukebox.latestalbums.amount.expanded',	$formSettings->getValue('latestalbumsexpanded'),	User::getUUID());
+					Registry::setValue('sb.jukebox.randomalbums.amount.default',	$formSettings->getValue('randomalbums'),			User::getUUID());
+					Registry::setValue('sb.jukebox.randomartists.amount.default',	$formSettings->getValue('randomartists'),			User::getUUID());
 					Registry::setValue('sb.jukebox.latestcomments.amount.default',	$formSettings->getValue('latestcomments'),			User::getUUID());
 					Registry::setValue('sb.jukebox.latestcomments.amount.expanded',	$formSettings->getValue('latestcommentsexpanded'),	User::getUUID());
 					Registry::setValue('sb.jukebox.charts.amount.default',			$formSettings->getValue('charts'),					User::getUUID());
@@ -130,6 +132,8 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 		$formConfig->addInput('maxstars;select;options=1|2|3|4|5;',							'$locale/sbJukebox/labels/maxstars');
 		$formConfig->addInput('latestalbums;integer;minvalue=1;maxvalue=100',				'$locale/sbJukebox/labels/amount_latestalbums');
 		$formConfig->addInput('latestalbumsexpanded;integer;minvalue=10;maxvalue=1000;',	'$locale/sbJukebox/labels/amount_latestalbums_expanded');
+		$formConfig->addInput('randomalbums;integer;minvalue=1;maxvalue=100',				'$locale/sbJukebox/labels/amount_randomalbums');
+		$formConfig->addInput('randomartists;integer;minvalue=1;maxvalue=100',				'$locale/sbJukebox/labels/amount_randomartists');
 		$formConfig->addInput('latestcomments;integer;minvalue=1;maxvalue=100;',			'$locale/sbJukebox/labels/amount_latestcomments');
 		$formConfig->addInput('latestcommentsexpanded;integer;minvalue=10;maxvalue=1000;',	'$locale/sbJukebox/labels/amount_latestcomments_expanded');
 		$formConfig->addInput('charts;integer;minvalue=1;maxvalue=100;',					'$locale/sbJukebox/labels/amount_charts');
@@ -143,6 +147,8 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 		$formConfig->setValue('maxstars',				Registry::getValue('sb.jukebox.voting.scale.max'));
 		$formConfig->setValue('latestalbums',			Registry::getValue('sb.jukebox.latestalbums.amount.default'));
 		$formConfig->setValue('latestalbumsexpanded',	Registry::getValue('sb.jukebox.latestalbums.amount.expanded'));
+		$formConfig->setValue('randomalbums',			Registry::getValue('sb.jukebox.randomalbums.amount.default'));
+		$formConfig->setValue('randomartists',			Registry::getValue('sb.jukebox.randomartists.amount.default'));
 		$formConfig->setValue('latestcomments',			Registry::getValue('sb.jukebox.latestcomments.amount.default'));
 		$formConfig->setValue('latestcommentsexpanded',	Registry::getValue('sb.jukebox.latestcomments.amount.expanded'));
 		$formConfig->setValue('charts',					Registry::getValue('sb.jukebox.charts.amount.default'));

@@ -46,7 +46,7 @@ class sbView_jukebox_jukebox_albums extends sbJukeboxView {
 					}
 				} else {
 					$stmtGetAlbums = $this->crSession->prepareKnown('sbJukebox/jukebox/albums/getRandom');
-					$stmtGetAlbums->bindValue('limit', 10, PDO::PARAM_INT);
+					$stmtGetAlbums->bindValue('limit', Registry::getValue('sb.jukebox.randomalbums.amount.default'), PDO::PARAM_INT);
 				}
 				$stmtGetAlbums->bindValue('jukebox_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);
 				$stmtGetAlbums->bindValue('user_uuid', $this->getPivotUUID(), PDO::PARAM_STR);

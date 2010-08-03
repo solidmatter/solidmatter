@@ -14,6 +14,7 @@
 		<type id="sbJukebox:TPL_NowPlaying">Jukebox: On Air</type>
 		<type id="sbJukebox:VotesView">Bewerten (Abstract)</type>
 		<type id="sbJukebox:RecommendView">Empfehlen (Abstract)</type>
+		<type id="sbJukebox:FixView">Reparieren (Abstract)</type>
 	</nodetypes>
 	
 	<views>
@@ -25,6 +26,7 @@
 		<view id="favorites">Favoriten</view>
 		<view id="playlists">Playlisten</view>
 		<view id="details">Details</view>
+		<view id="fix">Reparieren</view>
 	</views>
 	
 	<Jukebox>
@@ -121,6 +123,8 @@
 		<adminmode>Adminmodus</adminmode>
 		<amount_latestalbums>Anzahl neuester Alben</amount_latestalbums>
 		<amount_latestalbums_expanded>Anzahl neuester Alben (aufgeklappt)</amount_latestalbums_expanded>
+		<amount_randomalbums>Anzahl zufälliger Alben</amount_randomalbums>
+		<amount_randomartists>Anzahl zufälliger Künstler</amount_randomartists>
 		<amount_latestcomments>Anzahl neuester Kommentare</amount_latestcomments>
 		<amount_latestcomments_expanded>Anzahl neuester Kommentare (aufgeklappt)</amount_latestcomments_expanded>
 		<amount_charts>Anzahl Charteinträge</amount_charts>
@@ -170,5 +174,13 @@
 		<no_albums>Keine Alben vorhanden</no_albums>
 		<no_writable_playlists>Keine beschreibbaren Playlisten verfügbar</no_writable_playlists>
 	</texts>
+	
+	<fix>
+		<correct_artist>Künstler ist falsch geschrieben</correct_artist>
+		<switch_artist>falscher Künstler, der echte existiert</switch_artist>
+		<remove_tracks>doppelte oder anderweitig unerwünschte Titel entfernen</remove_tracks>
+		<remove_doublet_album>Album ist doppelt</remove_doublet_album>
+		<reorder_tracks>Tracks sind in falscher Reihenfolge</reorder_tracks>
+	</fix>
 	
 </sbJukebox>

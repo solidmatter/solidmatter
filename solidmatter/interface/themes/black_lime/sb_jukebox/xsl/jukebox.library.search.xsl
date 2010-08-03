@@ -75,7 +75,7 @@
 				<xsl:choose>
 					<xsl:when test="$nodes">
 						<xsl:for-each select="$nodes">
-							<tr>
+							<tr class="highlight_{@uuid}">
 								<xsl:call-template name="colorize" />
 								<td>
 									<a href="/{@uuid}"><xsl:value-of select="@label" /></a>

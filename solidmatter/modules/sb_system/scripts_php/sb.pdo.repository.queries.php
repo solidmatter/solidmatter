@@ -315,6 +315,7 @@ $_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'] = '
 						AND		fk_parentnodetype = n2.fk_nodetype
 				)
 		AND		h.fk_child != :parent_uuid /* prevent root finding itself */
+		AND		h.fk_deletedby IS NULL /* prevent nodes in trash from showing up */
 ';
 $_QUERIES['sbCR/node/loadChildren/mode/standard/byOrder'] = $_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'].'
 	ORDER BY	h.n_order
@@ -348,13 +349,15 @@ $_QUERIES['sbCR/node/loadChildren/debug'] = '
 	LEFT JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child
 	WHERE		h.fk_parent = :parent_uuid
-	AND			h.fk_child != :parent_uuid /* prevent root finding itself */
+		AND		h.fk_child != :parent_uuid /* prevent root finding itself */
+		AND		h.fk_deletedby IS NULL /* prevent nodes in trash from showing up */
 	ORDER BY	h.n_order
 ';
 $_QUERIES['sbCR/node/countChildren/debug'] = '
 	SELECT		COUNT(*) as num_children
 	FROM		{TABLE_HIERARCHY} h
 	WHERE		h.fk_parent = :parent_uuid
+		AND		h.fk_deletedby IS NULL /* prevent nodes in trash from showing up */
 ';
 $_QUERIES['sbCR/node/countChildren/mode'] = '
 	SELECT		COUNT(*) as num_children
@@ -373,6 +376,7 @@ $_QUERIES['sbCR/node/countChildren/mode'] = '
 						AND		fk_parentnodetype = n2.fk_nodetype
 				)
 		AND		h.fk_child != :parent_uuid /* prevent root finding itself */
+		AND		h.fk_deletedby IS NULL /* prevent nodes in trash from showing up */
 ';
 
 $_QUERIES['sbCR/node/countChildrenByName/debug'] = '
@@ -395,6 +399,7 @@ $_QUERIES['sbCR/node/getChild/byName'] = '
 		ON		n.uuid = h.fk_child 
 	WHERE		n.s_name = :name
 		AND		h.fk_parent = :parent_uuid
+		AND		h.fk_deletedby IS NULL /* prevent nodes in trash from showing up */
 ';
 // TODO: move this query from file
 $_QUERIES['sbSystem/node/getAllowedSubtypes'] = '
@@ -482,10 +487,8 @@ $_QUERIES['sbCR/node/save'] = '
 					b_bequeathlocalrights,
 					fk_createdby,
 					fk_modifiedby,
-					fk_deletedby,
 					dt_created,
-					dt_modified,
-					dt_deleted
+					dt_modified
 				) VALUES (
 					:uuid,
 					:uid,
@@ -497,10 +500,8 @@ $_QUERIES['sbCR/node/save'] = '
 					:bequeathlocalrights,
 					:user_id,
 					:user_id,
-					NULL,
 					NOW(),
-					NOW(),
-					NULL
+					NOW()
 				)
 	ON DUPLICATE KEY UPDATE
 				s_uid = :uid,
@@ -511,13 +512,6 @@ $_QUERIES['sbCR/node/save'] = '
 				b_bequeathlocalrights = :bequeathlocalrights,
 				fk_modifiedby = :user_id,
 				dt_modified = NOW()
-';
-$_QUERIES['sbCR/node/delete/forTrash'] = '
-	UPDATE		{TABLE_NODES}
-	SET			fk_deletedby = :user_id,
-				dt_deleted = NOW(),
-				fk_deletedfrom = :parent_uuid
-	WHERE		uuid = :uuid
 ';
 $_QUERIES['sbCR/node/delete/forGood'] = '
 	DELETE FROM	{TABLE_NODES}
@@ -568,7 +562,9 @@ $_QUERIES['sbCR/node/addLink/insertNode'] = '
 $_QUERIES['sbCR/node/hierarchy/getInfo'] = '
 	SELECT		n_level,
 				n_order,
-				b_primary
+				b_primary,
+				fk_deletedby,
+				dt_deleted
 	FROM		{TABLE_HIERARCHY}
 	WHERE		fk_parent = :parent_uuid
 		AND		fk_child = :child_uuid
@@ -728,10 +724,8 @@ $_QUERIES['sbCR/node/loadProperties/extended'] = '
 				n.b_bequeathlocalrights,
 				n.fk_createdby,
 				n.fk_modifiedby,
-				n.fk_deletedby,
 				n.dt_created,
-				n.dt_modified,
-				n.dt_deleted
+				n.dt_modified
 	FROM		{TABLE_NODES} n
 	WHERE		n.uuid = :node_id
 ';

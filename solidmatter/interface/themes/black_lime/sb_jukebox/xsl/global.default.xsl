@@ -261,6 +261,20 @@
 		</xsl:choose>
 	</xsl:template>
 	
+	<xsl:template name="iconize">
+		<xsl:choose>
+			<xsl:when test="@nodetype = 'sbJukebox:Artist'">
+				<xsl:attribute name="class">type artist</xsl:attribute>
+			</xsl:when>
+			<xsl:when test="@nodetype = 'sbJukebox:Album'">
+				<xsl:attribute name="class">type album</xsl:attribute>
+			</xsl:when>
+			<xsl:when test="@nodetype = 'sbJukebox:Track'">
+				<xsl:attribute name="class">type track</xsl:attribute>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
 	<xsl:template name="render_tags">
 		<xsl:if test="tags/tag">
 			<div class="tags">
@@ -320,7 +334,7 @@
 		<xsl:if test="@nodetype != 'sbJukebox:Playlist' and $with_favorites">
 			<a class="type addToFavorites icononly" href="javascript:add_to_favorites('{@uuid}');" title="{$locale/sbJukebox/actions/add_to_favorites}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
-		<xsl:if test="$content/currentPlaylist and (@nodetype='sbJukebox:Album' or @nodetype='sbJukebox:Track')">
+		<xsl:if test="@nodetype='sbJukebox:Album' or @nodetype='sbJukebox:Track'">
 			<a class="type addToPlaylist icononly" href="javascript:add_to_playlist('{@uuid}');" title="{$locale/sbJukebox/actions/add_to_playlist}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
 		<xsl:if test="@nodetype='sbJukebox:Album' or @nodetype='sbJukebox:Playlist'">

@@ -8,7 +8,7 @@
 */
 //------------------------------------------------------------------------------
 
-import('sbJukebox:sb.pdo.queries');
+import('sbJukebox:sb.jukebox.tools');
 
 //------------------------------------------------------------------------------
 /**
@@ -23,15 +23,7 @@ class sbJukeboxNode extends sbNode {
 	*/
 	protected function fillArtists($formCurrent, $nodeJukebox) {
 		
-		$stmtGetAllArtists = $this->crSession->prepareKnown('sbJukebox/jukebox/artists/getAll');
-		$stmtGetAllArtists->bindValue('jukebox_uuid', $nodeJukebox->getProperty('jcr:uuid'), PDO::PARAM_STR);
-		$stmtGetAllArtists->execute();
-		$aArtists = array();
-		foreach ($stmtGetAllArtists as $aRow) {
-			$aArtists[$aRow['uuid']] = $aRow['label'];
-		}
-		$stmtGetAllArtists->closeCursor();
-		
+		$aArtists = JukeboxTools::getAllArtists($nodeJukebox);
 		$formCurrent->setOptions('info_artist', $aArtists);
 		
 	}

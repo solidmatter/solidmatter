@@ -70,10 +70,10 @@ class sbCR_Session {
 	public function setNamespacePrefix($sNewPrefix, $sExistingURI) {
 		$aTemp = array_flip($this->aNamespaceMapping);
 		if (!isset($aTemp[$sExistingURI])) {
-			throw new NamespaceExeption(__CLASS__.': namespace "'.$sExistingURI.'" does not exist');
+			throw new NamespaceExeption('namespace "'.$sExistingURI.'" does not exist');
 		}
 		if (isset($this->aNamespaceMapping[$sNewPrefix])) {
-			throw new NamespaceExeption(__CLASS__.': namespaceprefix "'.$sExistingURI.'" already exists');
+			throw new NamespaceExeption('namespaceprefix "'.$sExistingURI.'" already exists');
 		}
 		unset($this->aNamespaceMapping[$aTemp[$sExistingURI]]);
 		$this->aNamespaceMapping[$sNewPrefix] = $sExistingURI;
@@ -98,7 +98,7 @@ class sbCR_Session {
 	*/
 	public function getNamespaceURI($sPrefix) {
 		if (!isset($this->aNamespaceMapping[$sPrefix])) {
-			throw new NamespaceException(__CLASS__.': namespace "'.$sPrefix.'" does not exist');	
+			throw new NamespaceException('namespace "'.$sPrefix.'" does not exist');	
 		}
 		return ($this->aNamespaceMapping[$sPrefix]);
 	}
@@ -112,7 +112,7 @@ class sbCR_Session {
 	public function getNamespacePrefix($sExistingURI) {
 		$aTemp = array_flip($this->aNamespaceMapping);
 		if (!isset($aTemp[$sExistingURI])) {
-			throw new NamespaceExeption(__CLASS__.': namespace "'.$sExistingURI.'" does not exist');
+			throw new NamespaceExeption('namespace "'.$sExistingURI.'" does not exist');
 		}
 		return ($aTemp[$sExistingURI]);
 	}
@@ -522,7 +522,7 @@ class sbCR_Session {
 						$stmtGetData->execute();
 						$aSourceInfo = $stmtGetData->fetchAll(PDO::FETCH_ASSOC);
 						if (count($aSourceInfo) == 0) {
-							throw new ItemNotFoundException(__CLASS__.': source node does not exist ('.$aOptions['SourceNode'].')');
+							throw new ItemNotFoundException('source node does not exist ('.$aOptions['SourceNode'].')');
 						}
 						$aSourceInfo = $aSourceInfo[0];
 						
@@ -531,7 +531,7 @@ class sbCR_Session {
 						$stmtGetData->execute();
 						$aDestinationInfo = $stmtGetData->fetchAll(PDO::FETCH_ASSOC);
 						if (count($aDestinationInfo) == 0) {
-							throw new ItemNotFoundException(__CLASS__.': destination node does not exist ('.$aOptions['DestinationNode'].')');
+							throw new ItemNotFoundException('destination node does not exist ('.$aOptions['DestinationNode'].')');
 						}
 						$aDestinationInfo = $aDestinationInfo[0];
 						
@@ -574,7 +574,7 @@ class sbCR_Session {
 					break;
 					
 				default:
-					throw new RepositoryException(__CLASS__.': invalid SaveTask "'.$aTask['task_type'].'"');
+					throw new RepositoryException('invalid SaveTask "'.$aTask['task_type'].'"');
 					break;
 				
 			}

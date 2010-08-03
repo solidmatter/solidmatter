@@ -72,7 +72,6 @@ class sbCR_RepositoryStructure {
 		'mix:title' => array(),
 		'mix:lifecycle' => array(),
 		//'mix:versionable' => array(),
-		'sbCR:Deleted' => array(),
 		'sbCR:Node' => array(
 			'nt:base',
 			'mix:created',
@@ -81,7 +80,6 @@ class sbCR_RepositoryStructure {
 			'mix:lockable',
 			'mix:shareable',
 			'mix:lifecycle',
-			'sbCR:Deleted',
 		),
 	);
 	
@@ -366,47 +364,6 @@ class sbCR_RepositoryStructure {
 				PROP_PROTECTEDONCREATION => FALSE
 			),
 		),
-		'sbCR:Deleted' => array(		
-			'deletedby' => array(
-				PROP_TYPE => 'WEAKREFERENCE',
-				PROP_MANDATORY => FALSE,
-				PROP_PROTECTED => TRUE,
-				PROP_MULTIPLE => FALSE,
-				PROP_INTERNALTYPE => 'string',
-				PROP_SHOWINPROPERTIES => FALSE,
-				PROP_LABELPATH => '$locale/system/general/labels/',
-				PROP_DESCRIPTIONPATH => NULL,
-				PROP_STORAGETYPE => 'EXTENDED',
-				PROP_AUXNAME => 'fk_deletedby',
-				PROP_PROTECTEDONCREATION => TRUE
-			),
-			'deleted' => array(
-				PROP_TYPE => 'DATE',
-				PROP_MANDATORY => FALSE,
-				PROP_PROTECTED => TRUE,
-				PROP_MULTIPLE => FALSE,
-				PROP_INTERNALTYPE => 'urlsafe',
-				PROP_SHOWINPROPERTIES => FALSE,
-				PROP_LABELPATH => '$locale/system/general/labels/',
-				PROP_DESCRIPTIONPATH => NULL,
-				PROP_STORAGETYPE => 'EXTENDED',
-				PROP_AUXNAME => 'dt_deleted',
-				PROP_PROTECTEDONCREATION => TRUE
-			),
-			'deletedfrom' => array(
-				PROP_TYPE => 'WEAKREFERENCE',
-				PROP_MANDATORY => FALSE,
-				PROP_PROTECTED => TRUE,
-				PROP_MULTIPLE => FALSE,
-				PROP_INTERNALTYPE => 'urlsafe',
-				PROP_SHOWINPROPERTIES => FALSE,
-				PROP_LABELPATH => '$locale/system/general/labels/',
-				PROP_DESCRIPTIONPATH => NULL,
-				PROP_STORAGETYPE => 'EXTENDED',
-				PROP_AUXNAME => 'dt_deletedfrom',
-				PROP_PROTECTEDONCREATION => TRUE
-			),
-		),
 	);
 	
 	private $aNodeTypeAuthorisations = array(
@@ -642,7 +599,7 @@ class sbCR_RepositoryStructure {
 		// gather view information
 		$aSupportedViews = $this->getSupportedViews($sNodeTypeName);
 		if (!isset($aSupportedViews[$sView])) {
-			throw new RepositoryException(__CLASS__.': view "'.$sView.'" is not defined for nodetype "'.$sNodeTypeName.'"');	
+			throw new RepositoryException('view "'.$sView.'" is not defined for nodetype "'.$sNodeTypeName.'"');	
 		}
 		
 		//var_dumpp($this->aViewData[$sNodeTypeName][$sView]);
@@ -936,18 +893,6 @@ class sbCR_RepositoryStructure {
 				'b_protected' => 'TRUE',
 				'b_protectedoncreation' => 'TRUE'
 			),
-			'deletedby' => array(
-				'e_type' => 'WEAKREFERENCE',
-				's_internaltype' => 'string',
-				'b_showinproperties' => 'FALSE',
-				's_labelpath' => '$locale/sbSystem/general/labels/',
-				's_descriptionpath' => NULL,
-				'b_multiple' => 'FALSE',
-				'e_storagetype' => 'EXTENDED',
-				's_auxname' => 'fk_deletedby',
-				'b_protected' => 'TRUE',
-				'b_protectedoncreation' => 'TRUE'
-			),
 			'created' => array(
 				'e_type' => 'DATE',
 				's_internaltype' => 'urlsafe',
@@ -969,18 +914,6 @@ class sbCR_RepositoryStructure {
 				'b_multiple' => 'FALSE',
 				'e_storagetype' => 'EXTENDED',
 				's_auxname' => 'dt_modified',
-				'b_protected' => 'TRUE',
-				'b_protectedoncreation' => 'TRUE'
-			),
-			'deleted' => array(
-				'e_type' => 'DATE',
-				's_internaltype' => 'urlsafe',
-				'b_showinproperties' => 'FALSE',
-				's_labelpath' => '$locale/sbSystem/general/labels/',
-				's_descriptionpath' => NULL,
-				'b_multiple' => 'FALSE',
-				'e_storagetype' => 'EXTENDED',
-				's_auxname' => 'dt_deleted',
 				'b_protected' => 'TRUE',
 				'b_protectedoncreation' => 'TRUE'
 			),

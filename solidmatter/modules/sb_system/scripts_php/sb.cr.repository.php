@@ -67,7 +67,7 @@ class sbCR_Repository {
 			}
 		}
 		if ($this->elemRepositoryDefinition == NULL) {
-			throw new RepositoryException(__CLASS__.': no such repository "'.$this->sRepositoryID.'"');
+			throw new RepositoryException('no such repository "'.$this->sRepositoryID.'"');
 		}
 		
 	}
@@ -106,7 +106,7 @@ class sbCR_Repository {
 		
 		// credentials and workspace are mandatory
 		if ($crCredentials == NULL || $sWorkspaceName == NULL) {
-			throw new RepositoryException(__CLASS__.': credentials or workspace missing');	
+			throw new RepositoryException('credentials or workspace missing');	
 		}
 		
 		// check if workspace exists
@@ -118,14 +118,14 @@ class sbCR_Repository {
 			}
 		}
 		if ($elemWorkspace == NULL) {
-			throw new NoSuchWorkspaceException(__CLASS__.': workspace "'.$sWorkspaceName.'" not in repository "'.$this->elemRepositoryDefinition['id'].'"');
+			throw new NoSuchWorkspaceException('workspace "'.$sWorkspaceName.'" not in repository "'.$this->elemRepositoryDefinition['id'].'"');
 		}
 		
 		// check authorisation
 		foreach ($elemWorkspace->user as $elemUser) {
 			// TODO: really check permissions, not only user existence!
 			if ($elemUser['name'] != $crCredentials->getUserID() || $elemUser['pass'] != $crCredentials->getPassword()) {
-				throw new AccessDeniedException(__CLASS__.': provided user is not authorised to access workspace "'.$sWorkspaceName.'" in repository "'.$this->elemRepositoryDefinition['id'].'"');
+				throw new AccessDeniedException('provided user is not authorised to access workspace "'.$sWorkspaceName.'" in repository "'.$this->elemRepositoryDefinition['id'].'"');
 			}
 		}
 		

@@ -145,7 +145,6 @@ class sbSession {
 	*/
 	public static function isZombie() {
 		if (self::$iLifetime > self::$iLifespan) {
-			//throw new SessionTimeoutException(__CLASS__.': session '.self::$sSessionID.' has expired (lifetime='.$aRow['lifetime'].'|lifespan='.$aRow['lifespan'].')');
 			return (TRUE);
 		}
 		return (FALSE);
@@ -178,7 +177,7 @@ class sbSession {
 	*/
 	private static function storeSession() {
 		if (self::$bClosed) {
-			throw new sbException(__CLASS__.': session is closed and cannot be stored');
+			throw new sbException('session is closed and cannot be stored');
 		}
 		$stmtStoreSession = System::getDatabase()->prepareKnown('sbSystem/session/store');
 		$stmtStoreSession->bindParam('session_id', self::$sSessionID, PDO::PARAM_STR);

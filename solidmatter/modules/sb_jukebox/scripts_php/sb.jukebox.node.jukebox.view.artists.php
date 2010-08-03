@@ -46,7 +46,7 @@ class sbView_jukebox_jukebox_artists extends sbJukeboxView {
 					}
 				} else {
 					$stmtGetArtists = $this->crSession->prepareKnown('sbJukebox/jukebox/artists/getRandom');
-					$stmtGetArtists->bindValue('limit', 25, PDO::PARAM_INT);
+					$stmtGetArtists->bindValue('limit', Registry::getValue('sb.jukebox.randomartists.amount.default'), PDO::PARAM_INT);
 				}
 				$stmtGetArtists->bindValue('nodetype', 'sbJukebox:Artist', PDO::PARAM_STR);
 				$stmtGetArtists->bindValue('jukebox_mpath', $this->nodeSubject->getMPath(), PDO::PARAM_STR);

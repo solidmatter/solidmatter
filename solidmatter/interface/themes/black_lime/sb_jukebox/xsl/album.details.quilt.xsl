@@ -33,7 +33,7 @@
 			</xsl:call-template>
 		</div>
 		<div class="nav">
-			<a class="type back" href="/{$master/@uuid}">back</a>
+			<a class="type back" href="/{$master/@uuid}"><xsl:value-of select="$locale/sbSystem/actions/back" /></a>
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="response/errors" />

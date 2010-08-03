@@ -88,7 +88,7 @@ class sbView_root_login extends sbView {
 						}*/
 						
 						$sZombieRequest = sbSession::getData('last_recallable_action');
-						if ($sZombieRequest != NULL) {
+						if ($sZombieRequest != NULL && $_REQUEST->getHandler() != 'backend') {
 							sbSession::removeData('last_recallable_action');
 							$_RESPONSE->redirectFixed($sZombieRequest);
 						} else {

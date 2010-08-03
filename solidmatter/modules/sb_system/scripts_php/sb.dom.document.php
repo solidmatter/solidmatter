@@ -43,7 +43,7 @@ class sbDOMDocument extends DOMDocument {
 	* @param array the array to convert
 	* @return DOMElement root of the resulting tree
 	*/
-	public function convertArrayToElement($sName, $aSubject) {
+	public function convertArrayToElement($sName, $aSubject, $bFlatConvert = FALSE) {
 		
 		if (!is_array($aSubject)) {
 			throw new Exception('no array: '.var_export($aSubject));
@@ -52,24 +52,43 @@ class sbDOMDocument extends DOMDocument {
 			throw new Exception('no string: '.var_export($sName));
 		}
 		
-		//var_dumpp($sName);
 		$elemArray = $this->createElement($sName);
 		
-		foreach($aSubject as $sNodeName => $mValue) {
-			if (is_numeric($sNodeName) || is_numeric($sNodeName[0])) {
-				$sNodeName = 'entry';
+		if ($bFlatConvert) {
+			foreach($aSubject as $sNodeName => $mValue) {
+				if (is_numeric($sNodeName) || is_numeric($sNodeName[0])) {
+					$sNodeName = 'entry';
+				}
+				if (is_array($mValue)) {
+					$elemChildren = $this->convertArrayToElement($sNodeName, $mValue, $bFlatConvert);
+					$elemArray->appendChild($elemChildren);
+				} elseif (is_scalar($mValue)) {
+					$elemArray->setAttribute($sNodeName, htmlspecialchars($mValue));
+				} elseif (is_null($mValue)) {
+					$elemArray->setAttribute($sNodeName);
+				} else {
+					// TODO: REMOVE!!!!!
+					$elemCurrent = $this->createElement('ERROR', 'inner array element is wrong type: '.gettype($mValue));
+				}
+				
 			}
-			if (is_array($mValue)) {
-				$elemCurrent = $this->convertArrayToElement($sNodeName, $mValue);
-			} elseif (is_scalar($mValue)) {
-				$elemCurrent = $this->createElement($sNodeName, htmlspecialchars($mValue));
-			} elseif (is_null($mValue)) {
-				$elemCurrent = $this->createElement($sNodeName);
-			} else {
-				// TODO: REMOVE!!!!!
-				$elemCurrent = $this->createElement('ERROR', __CLASS__.': inner array element is wrong type: '.gettype($mValue));
+		} else {
+			foreach($aSubject as $sNodeName => $mValue) {
+				if (is_numeric($sNodeName) || is_numeric($sNodeName[0])) {
+					$sNodeName = 'entry';
+				}
+				if (is_array($mValue)) {
+					$elemCurrent = $this->convertArrayToElement($sNodeName, $mValue);
+				} elseif (is_scalar($mValue)) {
+					$elemCurrent = $this->createElement($sNodeName, htmlspecialchars($mValue));
+				} elseif (is_null($mValue)) {
+					$elemCurrent = $this->createElement($sNodeName);
+				} else {
+					// TODO: REMOVE!!!!!
+					$elemCurrent = $this->createElement('ERROR', 'inner array element is wrong type: '.gettype($mValue));
+				}
+				$elemArray->appendChild($elemCurrent);
 			}
-			$elemArray->appendChild($elemCurrent);
 		}
 		
 		return($elemArray);
@@ -117,7 +136,6 @@ class sbDOMDocument extends DOMDocument {
 		return($elemArray);
 		
 	}
-	
 	
 }
 

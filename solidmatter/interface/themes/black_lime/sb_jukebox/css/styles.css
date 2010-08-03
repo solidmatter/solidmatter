@@ -330,6 +330,15 @@ ul.sortable li {
 	cursor: n-resize;
 }
 
+ul.default {
+	padding: 3px 0 3px 10px;
+	margin: 10px;
+}
+ul.default li {
+	padding: 2px 0 2px 10px;
+	margin: 0;
+}
+
 table.hidden tr td {
 	padding: 0;
 }
@@ -538,6 +547,9 @@ div.menufooter_info {
 *.lyrics {
 	background-image: url(../icons/type_lyrics.png);
 }
+*.info {
+	background-image: url(../icons/menu_overview.png);
+}
 
 *.sb_track {
 	background-image: url(../icons/type_track.png);
@@ -676,6 +688,12 @@ div.menufooter_info {
 }
 *.download:hover {
 	background-image: url(../icons/download_hover.png);
+}
+*.maintenance {
+	background-image: url(../icons/maintenance.png);
+}
+*.maintenance:hover {
+	background-image: url(../icons/maintenance_hover.png);
 }
 *.activate {
 	background-image: url(../icons/activate.png);

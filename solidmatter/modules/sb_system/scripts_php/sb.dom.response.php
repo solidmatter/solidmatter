@@ -324,7 +324,7 @@ class sbDOMResponse extends sbDOMDocument {
 						$bSuccess = @$domLocale->load('interface/locales/'.$sModule.'/'.$sLocale.'_en.xml');
 					}
 					if (!$bSuccess) {
-						throw new LocaleNotFoundException(__CLASS__.': locale for module "'.$sModule.'" in language "'.$sLanguage.'" not found');	
+						throw new LocaleNotFoundException('locale for module "'.$sModule.'" in language "'.$sLanguage.'" not found');	
 					}
 					$elemLanguage->appendChild($this->importNode($domLocale->firstChild, TRUE));
 				}
@@ -403,10 +403,16 @@ class sbDOMResponse extends sbDOMDocument {
 	* @return 
 	*/
 	public function addData($mData, $sNodeName = NULL) {
-		if ($mData instanceof DOMDocument) {
+		if ($mData instanceof sbDOMForm) {
+			$mData->saveDOM();
 			$elemData = $mData->firstChild;
 			if (!$elemData instanceof DOMElement) {
-				throw new sbException(__CLASS__.': addData with DOMDocument did not give a DOMElement as firstChild');
+				throw new sbException('addData with DOMDocument did not give a DOMElement as firstChild');
+			}
+		} elseif ($mData instanceof DOMDocument) {
+			$elemData = $mData->firstChild;
+			if (!$elemData instanceof DOMElement) {
+				throw new sbException('addData with DOMDocument did not give a DOMElement as firstChild');
 			}
 		} elseif($mData instanceof DOMElement) {
 			$elemData = $mData;

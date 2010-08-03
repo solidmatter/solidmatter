@@ -142,6 +142,7 @@ abstract class sbInput {
 	* @return 
 	*/
 	public function setValue($mValue) {
+		//var_dumpp($mValue);
 		$this->mValue = $mValue;
 	}
 	

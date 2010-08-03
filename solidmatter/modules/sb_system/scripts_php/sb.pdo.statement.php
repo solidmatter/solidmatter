@@ -112,9 +112,12 @@ class sbPDOStatement extends PDOStatement {
 	* @param 
 	* @return 
 	*/
-	public function debug($e) {
-		var_dumpp($this->aDebug);
-		//var_dumpp($e);
+	public function debug($bSaveToLog = FALSE) {
+		if ($bSaveToLog) {
+			DEBUG(var_export($this->aDebug, TRUE));
+		} else {
+			var_dumpp($this->aDebug);
+		}
 	}
 	
 	//--------------------------------------------------------------------------

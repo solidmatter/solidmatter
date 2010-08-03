@@ -113,9 +113,6 @@ class sbCR_Node {
 		'sbcr:inheritRights'		=> 'inheritrights',
 		'sbcr:bequeathRights'		=> 'bequeathrights',
 		'sbcr:bequeathLocalRights'	=> 'bequeathlocalrights',
-		'sbcr:deleted'				=> 'deleted',
-		'sbcr:deletedBy'			=> 'deletedby',
-		'sbcr:deletedFrom'			=> 'deletedfrom',
 	);
 	
 	//--------------------------------------------------------------------------
@@ -307,31 +304,37 @@ class sbCR_Node {
 			$stmtChildren->execute();
 			$aChildren = $stmtChildren->fetchAll(PDO::FETCH_ASSOC);
 			
+			// build new NodeIterator
 			$aChildNodes = array();
-			
 			foreach ($aChildren as $aRow) {
 				$nodeCurrentChild = $this->crSession->getNodeByIdentifier($aRow['uuid'], $this->getIdentifier());
-				$bCheck = TRUE;
-				if (count($aRequiredAuthorisations) > 0) {
-					foreach ($aRequiredAuthorisations as $sAuthorisation) {
-						if (!User::isAuthorised($sAuthorisation, $nodeCurrentChild)) {
-							$bCheck = FALSE;
-						}
-					}
-				} 
-				if ($bCheck) {
-					$aChildNodes[] = $nodeCurrentChild;
-				}
+				$aChildNodes[] = $nodeCurrentChild;
 			}
-			
 			$niChildNodes = new sbCR_NodeIterator($aChildNodes);
 			
 		} else { // cached
-			throw new sbException('caching of nodes acquired via getChildren should be disabled');
+			
 			$niChildNodes = $this->aChildNodes[$sMode];
 			
 		}
-			
+		
+		// filter nodes after retrieval if necessary
+		if (count($aRequiredAuthorisations) > 0) {
+			$aFilteredChildNodes = array();
+			foreach ($niChildNodes as $nodeCurrentChild) {
+				$bCheck = TRUE;
+				foreach ($aRequiredAuthorisations as $sAuthorisation) {
+					if (!User::isAuthorised($sAuthorisation, $nodeCurrentChild)) {
+						$bCheck = FALSE;
+					}
+				}
+				if ($bCheck) {
+					$aFilteredChildNodes[] = $nodeCurrentChild;
+				}
+			}
+			$niChildNodes = new sbCR_NodeIterator($aFilteredChildNodes);
+		}
+		
 		return ($niChildNodes);
 		
 	}
@@ -457,13 +460,13 @@ class sbCR_Node {
 	* sbCR_Repository class file.
 	* @return string the full materialized path
 	*/
-	public function getMPath() {
+	public function getMPath($bJustThisNode = FALSE) {
 		if ($this->sMPath != '') {
 			return ($this->sMPath);
 		}
 		// use last 5 chars
 		$sMPath = substr(sha1($this->getIdentifier()), -REPOSITORY_MPHASH_SIZE);
-		if ($this->isNodeType('sbSystem:Root')) {
+		if ($this->isNodeType('sbSystem:Root') || $bJustThisNode) {
 			return ($sMPath);
 		} else {
 			return ($this->getParent()->getMPath().$sMPath);
@@ -621,7 +624,7 @@ class sbCR_Node {
 			$nodePrimaryParent = $this->getPrimaryParent();
 			$nodeParent = $this->getParent();
 			if ($nodeParent->isSame($nodePrimaryParent)) {
-				throw new RepositoryException(__CLASS__.': currently you can only remove secondary nodes from shared set');	
+				throw new RepositoryException('currently you can only remove non-primary nodes from shared set');	
 			}
 			
 			$this->deleteLink($nodeParent);
@@ -670,10 +673,10 @@ class sbCR_Node {
 				$stmtInfo->closeCursor();
 				
 				if (!$bFound) {
-					throw new RepositoryException(__CLASS__.': no info found on node '.$this->getProperty('label').' ('.$this->getIdentifier().')');
+					throw new RepositoryException('no info found on node '.$this->getProperty('label').' ('.$this->getIdentifier().')');
 				}
 				if ($iNumSameNameSiblings != 0) {
-					throw new ItemExistsException(__CLASS__.': a node with the name "'.$nodeChild->getProperty('name').'" already exists under '.$this->getProperty('label').' ('.$this->getProperty('jcr:uuid').')');	
+					throw new ItemExistsException('a node with the name "'.$nodeChild->getProperty('name').'" already exists under '.$this->getProperty('label').' ('.$this->getProperty('jcr:uuid').')');	
 				}
 				
 				$sIsPrimary = 'FALSE';
@@ -723,7 +726,7 @@ class sbCR_Node {
 				$stmtGetInfo->execute();
 				$aSourceInfo = $stmtGetInfo->fetchAll(PDO::FETCH_ASSOC);
 				if (count($aSourceInfo) == 0) {
-					throw new ItemNotFoundException(__CLASS__.': source node does not exist ('.$aOptions['SourceNode'].')');
+					throw new ItemNotFoundException('source node does not exist ('.$aOptions['SourceNode'].')');
 				}
 				$aSourceInfo = $aSourceInfo[0];
 				
@@ -732,7 +735,7 @@ class sbCR_Node {
 				$stmtGetInfo->execute();
 				$aDestinationInfo = $stmtGetInfo->fetchAll(PDO::FETCH_ASSOC);
 				if (count($aDestinationInfo) == 0) {
-					throw new ItemNotFoundException(__CLASS__.': destination node does not exist ('.$aOptions['DestinationNode'].')');
+					throw new ItemNotFoundException('destination node does not exist ('.$aOptions['DestinationNode'].')');
 				}
 				$aDestinationInfo = $aDestinationInfo[0];
 				
@@ -1662,7 +1665,7 @@ class sbCR_Node {
 		} else { // get all child nodes that match the pattern
 			
 			if (substr_count($sNamePattern, '/') != 0) {
-				throw new sbException(__CLASS__.': paths not supported by now');
+				throw new sbException('paths not supported by now');
 			}
 			
 			// TODO: convert namepattern to sensible WHERE patterns
@@ -2276,10 +2279,10 @@ class sbCR_Node {
 		
 		$this->initPropertyDefinitions();
 		if (!$this->crPropertyDefinitionCache->hasProperty($sName)) {
-			throw new RepositoryException(__CLASS__.': the property "'.$sName.'" does not exist in node type "'.$this->getPrimaryNodeType().'"');
+			throw new RepositoryException('the property "'.$sName.'" does not exist in node type "'.$this->getPrimaryNodeType().'"');
 		}
 		if ($this->crPropertyDefinitionCache->isProtected($sName, $this->isNew())) {
-			throw new ConstraintViolationException(__CLASS__.': the property "'.$sName.'" is protected in current node state ('.$this->isNew().')');
+			throw new ConstraintViolationException('the property "'.$sName.'" is protected in current node state ('.$this->isNew().')');
 		}
 		if (!is_scalar($mValue) && !is_null($mValue)) {
 			throw new RepositoryException('property "'.$sName.'" can only accept scalar types');
@@ -2585,7 +2588,7 @@ class sbCR_Node {
 	*/
 	public function getLock() {
 		if (!$this->isLocked()) {
-			throw new LockException(__CLASS__.':'.__METHOD__.': node is not locked');
+			throw new LockException('node is not locked');
 		}
 		
 		// TODO: query for lock
@@ -2718,10 +2721,10 @@ class sbCR_Node {
 	*/
 	public function unlock() {
 		if ($this->isModified()) {
-			throw new InvalidItemStateException(__CLASS__.': node has pending unsaved changes');
+			throw new InvalidItemStateException('node has pending unsaved changes');
 		}
 		if (!$this->holdsLock()) {
-			throw new LockException(__CLASS__.': node is not locked');
+			throw new LockException('node is not locked');
 		}
 		$stmtPlaceLock = $this->prepareKnown('sb_system/node/locking/removeLock/byNode');
 		$stmtPlaceLock->bindParam('node_uuid', $this->getIdentifier(), PDO::PARAM_STR);
@@ -2798,10 +2801,10 @@ class sbCR_Node {
 	*/
 	public function followLifecycleTransition($sTransition) {
 		/*if (!in_array('mix:lifecycle', $this->crSession->getWorkspace()->getNodeTypeManager()->getMixinNodeTypes())) {
-			throw new UnsupportedRepositoryOperationException(__CLASS__.': node '.$this->getIdentifier().' does not have the mix:lifecycle mixin type');	
+			throw new UnsupportedRepositoryOperationException('node '.$this->getIdentifier().' does not have the mix:lifecycle mixin type');	
 		}*/
 		if (!in_array($sTransition, $this->getAllowedLifecycleTransitions())) {
-			throw new InvalidLifecycleTransitionException(__CLASS__.': node '.$this->getIdentifier().' does not support the lifecycle transition from "'.$this->getProperty('jcr:currentLifecycleState').'" to "'.$sTransition.'"');
+			throw new InvalidLifecycleTransitionException('node '.$this->getIdentifier().' does not support the lifecycle transition from "'.$this->getProperty('jcr:currentLifecycleState').'" to "'.$sTransition.'"');
 		}
 		$stmtSetTransition = $this->crSession->prepareKnown($this->aQueries['lifecycle/followTransition']);
 		$stmtSetTransition->bindValue('node_uuid', $this->getIdentifier(), PDO::PARAM_STR);
@@ -2817,7 +2820,7 @@ class sbCR_Node {
 	*/
 	public function getAllowedLifecycleTransitions() {
 		/*if (!in_array('mix:lifecycle', $this->crSession->getWorkspace()->getNodeTypeManager()->getMixinNodeTypes())) {
-			throw new UnsupportedRepositoryOperationException(__CLASS__.': node '.$this->getIdentifier().' does not have the mix:lifecycle mixin type');	
+			throw new UnsupportedRepositoryOperationException('node '.$this->getIdentifier().' does not have the mix:lifecycle mixin type');	
 		}*/
 		$sCurrentState = $this->getProperty('jcr:currentLifecycleState');
 		if ($sCurrentState == NULL) {

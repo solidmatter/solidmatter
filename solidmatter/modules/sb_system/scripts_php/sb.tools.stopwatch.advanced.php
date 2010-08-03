@@ -85,7 +85,7 @@ class Stopwatch {
 		self::$mtStoptime = microtime(TRUE);
 		$mtTotalTime = self::$mtStoptime - self::$mtStarttime;
 		if (isset(self::$aTaskTimes[$sTask])) {
-			throw new Exception(__CLASS__.': stop time has to be stored seperately, "'.$sTask.'" already exists');
+			throw new Exception('stop time has to be stored seperately, "'.$sTask.'" already exists');
 		}
 		self::$aTaskTimes[$sTask] = $mtTotalTime;
 		return ($mtTotalTime);

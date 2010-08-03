@@ -144,7 +144,7 @@ class sbCR_ViewDefinition {
 		}
 		
 		if ($aActionDetails == NULL) {
-			throw new ActionUndefinedException(__CLASS__.': action "'.$sActionName.'" is not defined in view "'.$this->getName().'" of nodetype "'.$this->getNodeTypeName().'"');	
+			throw new ActionUndefinedException('action "'.$sActionName.'" is not defined in view "'.$this->getName().'" of nodetype "'.$this->getNodeTypeName().'"');	
 		}
 		
 		// transform default flag to priority

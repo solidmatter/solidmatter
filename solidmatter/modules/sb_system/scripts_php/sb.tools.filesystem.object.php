@@ -64,7 +64,12 @@ class sbFilesystemObject {
 		
 		$this->aInfo['rel_path'] = $sRelPath;
 		
+		if (!file_exists($sRelPath)) {
+			throw new Exception('filesystem object "'.$sRelPath.'" does not exist');
+		}
+		
 		$sAbsPath = $this->normalize($sRelPath);
+		
 		$this->aInfo['abs_path'] = $sAbsPath;
 		$aPath = explode('/', $sAbsPath);
 		$this->aInfo['object_name'] = $aPath[count($aPath)-2];
@@ -124,7 +129,7 @@ class sbFilesystemObject {
 		if ($sRelativeToPath !== NULL) {
 			$sRelativeToPath = $this->normalize($sRelativeToPath);
 			if (mb_strpos($this->aInfo['abs_path'], $sRelativeToPath) != 0 ) {
-				throw new sbException(__CLASS__.': filesystem object path ('.$this->aInfo['abs_path'].') is not within root path ('.$sRelativeToPath.')');	
+				throw new sbException('filesystem object path ('.$this->aInfo['abs_path'].') is not within root path ('.$sRelativeToPath.')');	
 			}
 			return (mb_substr($this->aInfo['abs_path'], mb_strlen($sRelativeToPath)));
 		} else {
@@ -142,6 +147,42 @@ class sbFilesystemObject {
 	*/
 	public function normalize($sDirectory) {
 		return (normalize_path($sDirectory));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getParentDir() {
+		if (is_file($this->getAbsPath())) {
+			$aPathInfo = pathinfo($this->getAbsPath());
+			return (normalize_path($aPathInfo['dirname']));
+		} elseif (is_dir($this->getAbsPath())) {
+			return (normalize_path($this->getAbsPath().'..'));
+		} else {
+			die('what kind of object is this if it\'s not a directory nor a file?');
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function rename($sNewName) {
+		if (is_file($this->getAbsPath()) || is_dir($this->getAbsPath())) {
+			if (rename($this->getAbsPath(), $this->getParentDir().$sNewName)) {
+				$this->aInfo['object_name'] = $sNewName;
+				return (TRUE);
+			} else {
+				die ('could not rename '.$this->getAbsPath());
+			}
+		} else {
+			die('what kind of object is this if it\'s not a directory nor a file?');
+		}
 	}
 	
 }

@@ -89,6 +89,12 @@ class sbNode extends sbCR_Node {
 		$this->aQueries['loadLocalEntityAuthorisations']			= 'sbSystem/node/loadAuthorisations/local/byEntity';
 		//$this->aQueries['setAuthorisation']							= 'sbSystem/node/setAuthorisation';
 		
+		// special actions
+		$this->aQueries['trash/updateNode']							= 'sbSystem/node/moveToTrash/updateNode';
+		$this->aQueries['trash/updateChildren']						= 'sbSystem/node/moveToTrash/updateChildren';
+		$this->aQueries['trash/recoverInfo']						= 'sbSystem/node/recoverFromTrash/getInfo';
+		$this->aQueries['trash/recover']							= 'sbSystem/node/recoverFromTrash';
+		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -114,6 +120,12 @@ class sbNode extends sbCR_Node {
 			case 'add_tag':
 			case 'remove_tag':
 				$this->aSaveTasks[$sTaskType][] = $aOptions;
+				break;
+			case 'move_to_trash':
+				$this->aSaveTasks[$sTaskType] = TRUE;
+				break;
+			case 'recover_from_trash':
+				$this->aSaveTasks[$sTaskType] = TRUE;
 				break;
 			default:
 				parent::addSaveTask($sTaskType, $aOptions);
@@ -190,6 +202,49 @@ class sbNode extends sbCR_Node {
 					}
 					
 					unset($this->aSaveTasks['add_tag']);
+					
+					break;
+					
+				case 'move_to_trash':
+					
+					$sParentUUID = $this->elemSubject->getAttribute('parent');
+					$stmtTrash = $this->prepareKnown('trash/updateNode');
+					$stmtTrash->bindValue('user_uuid', User::getUUID(), PDO::PARAM_STR);
+					$stmtTrash->bindValue('parent_uuid', $sParentUUID, PDO::PARAM_STR);
+					$stmtTrash->bindValue('subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+//					$stmtTrash->debug(TRUE);
+					$stmtTrash->execute();
+					
+					$sMPath = $this->getMPath();
+					$stmtTrash = $this->prepareKnown('trash/updateChildren');
+					$stmtTrash->bindValue('mpath', $sMPath, PDO::PARAM_STR);
+					$stmtTrash->execute();
+					
+					unset($this->aSaveTasks['move_to_trash']);
+					
+					break;
+					
+				case 'recover_from_trash':
+					
+					// TODO: find a way to recover nodes without affecting seperately deleted children (the mpaths overlap)
+					
+					$sParentUUID = $this->elemSubject->getAttribute('parent');
+					$stmtTrash = $this->prepareKnown('trash/recoverInfo');
+					$stmtTrash->bindValue('parent_uuid', $sParentUUID, PDO::PARAM_STR);
+					$stmtTrash->bindValue('subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+					$stmtTrash->execute();
+					foreach ($stmtTrash as $aRow) {
+						$sMPath = $aRow['mpath'];
+					}
+					
+					$sMPath = $aRow['mpath'].$this->getMPath(TRUE);
+					$stmtTrash = $this->prepareKnown('trash/recover');
+					$stmtTrash->bindValue('parent_uuid', $sParentUUID, PDO::PARAM_STR);
+					$stmtTrash->bindValue('subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+					$stmtTrash->bindValue('mpath', $sMPath, PDO::PARAM_STR);
+					$stmtTrash->execute();
+					
+					unset($this->aSaveTasks['recover_from_trash']);
 					
 					break;
 					
@@ -300,6 +355,9 @@ class sbNode extends sbCR_Node {
 	//--------------------------------------------------------------------------
 	/**
 	* CUSTOM:
+	* NOTE: if iterating the node tree recursively, this method should be called
+	* at the end of the recursive function, otherwise lower level childen will
+	* not be included in the resulting DOM.
 	* @param 
 	* @return 
 	*/
@@ -627,7 +685,7 @@ class sbNode extends sbCR_Node {
 		// import class file and create instance
 		import($sLibrary);
 		if (!class_exists($sClass)) {
-			throw new sbException(__CLASS__.': view class "'.$sClass.'" does not exist in library "'.$sLibrary.'"');
+			throw new sbException('view class "'.$sClass.'" does not exist in library "'.$sLibrary.'"');
 		}
 		$viewCurrent = new $sClass($this);
 		
@@ -1037,6 +1095,26 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function moveToTrash() {
+		$this->addSaveTask('move_to_trash');
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function recoverFromTrash() {
+		$this->addSaveTask('recover_from_trash');
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* TODO: remove this? may only be needed for content of sbCMS, but may also
 	* be used for applications (whether or not incorporated in a sbCMS website)
 	* @param 
@@ -1192,6 +1270,30 @@ class sbNode extends sbCR_Node {
 			$elemVote->setAttribute('vote', $aVote['vote']);
 			$elemVote->setAttribute('user_uuid', $aVote['user_uuid']);
 			$elemVote->setAttribute('user_label', $aVote['user_label']);
+			$elemVotes->appendChild($elemVote);
+		}
+		
+		$this->elemSubject->appendChild($elemVotes);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function storeAllVotes() {
+		
+		$aVotes = $this->getVotes();
+		$domOwner = $this->elemSubject->ownerDocument;
+		$elemVotes = $domOwner->createElement('all_votes');
+		
+		foreach ($aVotes as $aVote) {
+			$elemVote = $domOwner->createElement('vote');
+			$elemVote->setAttribute('vote', $aVote['vote']);
+			$elemVote->setAttribute('user_uuid', $aVote['user_uuid']);
+			//$elemVote->setAttribute('user_label', $aVote['user_label']);
 			$elemVotes->appendChild($elemVote);
 		}
 		
