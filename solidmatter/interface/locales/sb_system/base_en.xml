@@ -55,6 +55,7 @@
 		<search>Search</search>
 		<find>Find</find>
 		<filter>Filter</filter>
+		<relate>Relate</relate>
 		<login>Login</login>
 		<logout>Logout</logout>
 		<refresh>Refresh</refresh>
@@ -111,11 +112,13 @@
 		<groups>Groups</groups>
 		<constraints>Constraints</constraints>
 		<implementation>Implementation</implementation>
+		<questions>Questions</questions>
 		<selected_items>Selected items</selected_items>
 		<upload_files>Upload files</upload_files>
 		<file>File</file>
 		<files>Files</files>
 		<tags>Tags</tags>
+		<relation>Relation</relation>
 		<height>Height</height>
 		<width>Width</width>
 		<url>URL</url>
@@ -168,6 +171,23 @@
 		</pagination>
 	</general>
 	
+	<nodes>
+		<trashcan>Recycler</trashcan>
+		<preferences>Control Panel</preferences>
+		<reports>Reports</reports>
+		<reports_database>Database</reports_database>
+		<reports_structure>Repository Structure</reports_structure>
+		<users_groups>Users &amp; Groups</users_groups>
+		<guests>Guests</guests>
+		<admins>Administrators</admins>
+		<modules>Modules</modules>
+		<maintenance>Maintenance</maintenance>
+		<debug>Debug</debug>
+		<logs>Logs</logs>
+		<registry>Registry</registry>
+		<tags>Tags</tags>
+	</nodes>
+	
 	<tags>
 		<edit_tag>Edit tag</edit_tag>
 		<tag>Tag</tag>
@@ -177,6 +197,7 @@
 	</tags>
 	
 	<nodetypes>
+		<type id="sbCR:Node">Node (sbCR Basic Nodetype)</type>
 		<type id="sbSystem:Root">Root</type>
 		<type id="sbSystem:Comment">Comment</type>
 		<type id="sbSystem:Preferences">Preferences</type>
@@ -198,8 +219,14 @@
 		<type id="sbSystem:Trashcan">Trashcan</type>
 		<type id="sbSystem:TestNode">Test Node</type>
 		<type id="sbSystem:PropertiesView">Properties (Abstract)</type>
+		<type id="sbSystem:StructureView">Structure (Abstract)</type>
+		<type id="sbSystem:RelationsView">Relations (Abstract)</type>
 		<type id="sbSystem:ListView">List (Abstract)</type>
 		<type id="sbSystem:Taggable">Taggable (Abstract)</type>
+		<type id="sbSystem:Voteable">Voteable (Abstract)</type>
+		<type id="sbSystem:Favorites">Favorites</type>
+		<type id="sbSystem:FavoriteFolder">Favorites Folder</type>
+		<type id="sbSystem:Favorite">Favorite</type>
 	</nodetypes>
 	
 	<User>
@@ -232,6 +259,7 @@
 		<view id="edit">Edit</view>
 		<view id="preview">Preview</view>
 		<view id="properties">Properties</view>
+		<view id="relations">Relations</view>
 		<view id="list">List</view>
 		<view id="security">Security</view>
 		<view id="information">Information</view>
@@ -312,6 +340,7 @@
 		<comment>Comment</comment>
 		<tag>Tag</tag>
 		<download>Download</download>
+		<play>Play</play>
 	</authorisations>
 	
 	<registry>

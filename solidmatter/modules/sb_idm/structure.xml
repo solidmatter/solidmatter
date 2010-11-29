@@ -1,0 +1,100 @@
+<?xml version="1.0" ?>
+<setup>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<nodetypes>
+		<nodetype id="sbIdM:" />
+		
+	</nodetypes>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<nodetypehierarchy>
+		
+		
+	</nodetypehierarchy>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<properties>
+		
+		
+	</properties>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<lifecycles>
+	
+	</lifecycles>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<views>
+		<view view=""
+		
+	</views>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<actions>
+		<action view="" action="" 
+	
+	</actions>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<viewauthorisations>
+		<action view="" action="" 
+	
+	</viewauthorisations>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<modes>
+	
+		<mode type="create" parent="sbSystem:Root" child="sbIdM:Manager" />
+		<mode type="create" parent="sbIdM:Manager" child="sbIdM:OrgRole" />
+		<mode type="create" parent="sbIdM:OrgRole" child="sbIdM:OrgRole" />
+		<mode type="create" parent="sbIdM:OrgRole" child="sbIdM:Person" />
+		<mode type="create" parent="sbIdM:OrgRole" child="sbIdM:TechRole" /><!-- remove after implementing paste mode -->
+		<mode type="create" parent="sbIdM:Manager" child="sbIdM:System" />
+		<mode type="create" parent="sbIdM:System" child="sbIdM:TechRole" />
+		<mode type="create" parent="sbIdM:System" child="sbIdM:TechRoleGroup" />
+		<mode type="create" parent="sbIdM:TechRole" child="sbIdM:TechRole" />
+		<mode type="create" parent="sbIdM:TechRoleGroup" child="sbIdM:TechRoleGroup" />
+		<mode type="create" parent="sbIdM:TechRoleGroup" child="sbIdM:TechRole" />
+		
+		<mode type="list" parent="sbSystem:Root" child="sbIdM:Manager" />
+		<mode type="list" parent="sbIdM:Manager" child="sbIdM:OrgRole" />
+		<mode type="list" parent="sbIdM:OrgRole" child="sbIdM:OrgRole" />
+		<mode type="list" parent="sbIdM:OrgRole" child="sbIdM:Person" />
+		<mode type="list" parent="sbIdM:OrgRole" child="sbIdM:TechRole" />
+		<mode type="list" parent="sbIdM:Manager" child="sbIdM:System" />
+		<mode type="list" parent="sbIdM:System" child="sbIdM:TechRole" />
+		<mode type="list" parent="sbIdM:System" child="sbIdM:TechRoleGroup" />
+		<mode type="list" parent="sbIdM:TechRole" child="sbIdM:TechRole" />
+		<mode type="list" parent="sbIdM:TechRoleGroup" child="sbIdM:TechRoleGroup" />
+		<mode type="list" parent="sbIdM:TechRoleGroup" child="sbIdM:TechRole" />
+		
+		<mode type="tree" parent="sbSystem:Root" child="sbIdM:Manager" />
+		<mode type="tree" parent="sbIdM:Manager" child="sbIdM:OrgRole" />
+		<mode type="tree" parent="sbIdM:OrgRole" child="sbIdM:OrgRole" />
+		<mode type="tree" parent="sbIdM:OrgRole" child="sbIdM:Person" />
+		<mode type="tree" parent="sbIdM:OrgRole" child="sbIdM:TechRole" />
+		<mode type="tree" parent="sbIdM:Manager" child="sbIdM:System" />
+		<mode type="tree" parent="sbIdM:System" child="sbIdM:TechRole" />
+		<mode type="tree" parent="sbIdM:System" child="sbIdM:TechRoleGroup" />
+		<mode type="tree" parent="sbIdM:TechRole" child="sbIdM:TechRole" />
+		<mode type="tree" parent="sbIdM:TechRoleGroup" child="sbIdM:TechRoleGroup" />
+		<mode type="tree" parent="sbIdM:TechRoleGroup" child="sbIdM:TechRole" />
+		
+	</modes>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<ontology>
+		<relation source="" forward="" backward="" destination="" />
+	</ontology>
+	
+</setup>

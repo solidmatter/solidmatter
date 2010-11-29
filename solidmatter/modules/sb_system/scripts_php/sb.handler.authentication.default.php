@@ -126,6 +126,7 @@ class DefaultAuthenticationHandler extends AuthenticationHandler {
 		if ($aResult['failure_reason'] == 'none') {
 			$aResult['login_successful'] = TRUE;
 			$aResult['user_uuid'] = $aInfo['uuid'];
+			$this->storeSuccessfulLogin();
 		}
 		
 		return ($aResult);

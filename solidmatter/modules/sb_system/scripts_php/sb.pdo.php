@@ -11,6 +11,8 @@
 
 import('sb.pdo.statement');
 
+define('LOG_DB_FILE', '_logs/log_database.txt');
+
 //------------------------------------------------------------------------------
 /**
 */

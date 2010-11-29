@@ -38,8 +38,7 @@ class ApplicationRequestHandler extends RequestHandler {
 		
 		$nodeCurrent->callView($aURI['view'], $aURI['action']);
 		$nodeCurrent->loadAncestors();
-		$nodeCurrent->storeAncestors(TRUE, TRUE);
-		$nodeCurrent->storeUserAuthorisations();
+		$nodeCurrent->aGetElementFlags['ancestors'] = TRUE;
 		$nodeCurrent->setAttribute('master', 'true');
 		
 		if ($_REQUEST->getParam('sbCommand') != NULL) {

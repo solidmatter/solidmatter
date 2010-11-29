@@ -23,6 +23,8 @@
 	
 	<xsl:template match="response/content/contextmenu">
 		<ul>
+			
+			<!-- create new nodes -->
 			<xsl:if test="new">
 				<li>
 					<span class="type new"><xsl:value-of select="$locale/sbSystem/actions/new" />:</span>
@@ -35,7 +37,16 @@
 				</li>
 			</xsl:if>
 			
-			<xsl:if test="@clipboard='TRUE' and new">
+			<!-- refresh -->
+			<xsl:if test="@refresh='TRUE' and new">
+				<hr />
+			</xsl:if>
+			<xsl:if test="@refresh='TRUE'">
+				<li><a href="javascript:sbMenu.reloadMenuEntry('{@path}')"><span class="type refresh"><xsl:value-of select="$locale/sbSystem/actions/refresh" /></span></a></li>
+			</xsl:if>
+			
+			<!-- paste/link -->
+			<xsl:if test="@clipboard='TRUE'">
 				<hr />
 			</xsl:if>
 			<xsl:if test="@clipboard='TRUE'">
@@ -46,7 +57,9 @@
 				<li><a href="javascript:sbMenu.createLink('{@uuid}');" title="{@clipboard_subject}"><span class="type paste"><xsl:value-of select="$locale/sbSystem/actions/create_hardlink" /></span></a></li>
 				<!--<li><a href="javascript:sbUtilities.popupModal('/-/structure/createLink/parentnode={@uuid}', 500, 500);" title="{@clipboard_subject}"><span class="type paste"><xsl:value-of select="$locale/system/general/actions/create_hardlink" /></span></a></li>-->
 			</xsl:if>
-			<xsl:if test="@delete='TRUE' and (@clipboard='TRUE' or new)">
+			
+			<!-- cut/copy -->
+			<xsl:if test="@delete='TRUE'">
 				<hr />
 			</xsl:if>
 			<xsl:if test="@delete='TRUE'">
@@ -55,25 +68,31 @@
 			<xsl:if test="@delete='TRUE'">
 				<li><a href="javascript:top.sbUtilities.execute('/-/structure/copy/?parentnode={@parent}&amp;childnode={@uuid}');"><span class="type copy"><xsl:value-of select="$locale/sbSystem/actions/copy" /></span></a></li>
 			</xsl:if>
-			<xsl:if test="@refresh='TRUE'">
+			
+			<!-- import/export -->
+			<xsl:if test="@import = 'TRUE' or @export = 'TRUE'">
 				<hr />
-				<li><a href="javascript:sbMenu.reloadMenuEntry('{@path}')"><span class="type refresh"><xsl:value-of select="$locale/sbSystem/actions/refresh" /></span></a></li>
 			</xsl:if>
-			<!-- TODO: check if user is admin or something like that -->
-			<xsl:if test="boolean('true')">
-				<hr />
+			<xsl:if test="@export = 'TRUE'">
 				<li><a href="/-/utilities/export_branch/?subject_uuid={@uuid}" target="_blank"><span class="type export"><xsl:value-of select="$locale/sbSystem/actions/export" /></span></a></li>
+			</xsl:if>
+			<xsl:if test="@import = 'TRUE'">
 				<li><a href="#"><span class="type import"><xsl:value-of select="$locale/sbSystem/actions/import" /></span></a></li>
 			</xsl:if>
+			
+			<!-- delete -->
 			<xsl:if test="@delete='TRUE'">
 				<hr />
 				<li><a href="javascript:sbMenu.deleteItem('{@parent}', '{@uuid}');"><span class="type delete"><xsl:value-of select="$locale/sbSystem/actions/delete" /></span></a></li>
 			</xsl:if>
+			
+			<!-- trashcan -->
 			<xsl:if test="@purge='TRUE'">
 				<hr />
 				<!--<li><a href="javascript:sbMenu.purgeTrash('{@uuid}');"><span class="type delete"><xsl:value-of select="$locale/sbSystem/actions/purge" /></span></a></li>-->
 				<li><a href="javascript:sbMenu.purge('{@uuid}');"><span class="type delete"><xsl:value-of select="$locale/sbSystem/actions/purge" /></span></a></li>
 			</xsl:if>
+			
 		</ul>
 	</xsl:template>
 	

@@ -413,6 +413,7 @@
 		<!-- TODO: on change of relation type clear traget data -->
 		<select size="1" name="type_{@name}" id="type_{@name}">
 			<xsl:for-each select="option">
+				<xsl:sort select="@text" />
 				<option value="{@value}">
 					<xsl:if test="@value = $value">
 						<xsl:attribute name="selected">selected</xsl:attribute>

@@ -36,15 +36,23 @@ class sbView_root_backend extends sbView {
 	*/
 	public function execute($sAction) {
 		
-		//global $_RESPONSE;
+		global $_RESPONSE;
 		
-		/*if ($sAction == 'show_outer') {
-			$_RESPONSE->addSystemMeta('backendview', 'outer');
-		} else {
-			$_RESPONSE->addSystemMeta('backendview', 'inner');
-		}*/
-		
-		//$_RESPONSE->setStylesheet('root.backend.xsl');
+		switch ($sAction) {
+			
+			// just display the login screen
+			case 'display':
+				// jump back to previous node/view/action if possible
+				$sZombieRequest = sbSession::getData('last_recallable_action');
+				if ($sZombieRequest != NULL) {
+					$_RESPONSE->addData($sZombieRequest, 'lastRecallableAction');
+				}
+				break;
+				
+			default:
+				throw new sbException(__CLASS__.': action not recognized ('.$sAction.')');
+			
+		}
 		
 		return (NULL);
 		

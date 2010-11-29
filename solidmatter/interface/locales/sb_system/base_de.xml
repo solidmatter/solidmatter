@@ -55,6 +55,7 @@
 		<search>Suchen</search>
 		<find>Finden</find>
 		<filter>Filtern</filter>
+		<relate>Verknüpfen</relate>
 		<login>Einloggen</login>
 		<logout>Ausloggen</logout>
 		<refresh>Aktualisieren</refresh>
@@ -111,11 +112,13 @@
 		<groups>Gruppen</groups>
 		<constraints>Einschränkungen</constraints>
 		<implementation>Implementierung</implementation>
+		<questions>Fragen</questions>
 		<selected_items>Markierte</selected_items>
 		<upload_files>Dateien hochladen</upload_files>
 		<file>Datei</file>
 		<files>Dateien</files>
 		<tags>Tags</tags>
+		<relation>Verknüpfung</relation>
 		<height>Höhe</height>
 		<width>Breite</width>
 		<url>URL</url>
@@ -168,6 +171,23 @@
 		</pagination>
 	</general>
 	
+	<nodes>
+		<trashcan>Papierkorb</trashcan>
+		<preferences>Systemsteuerung</preferences>
+		<reports>Auswertungen</reports>
+		<reports_database>Datenbank</reports_database>
+		<reports_structure>Repository-Struktur</reports_structure>
+		<users_groups>Benutzer &amp; Gruppen</users_groups>
+		<guests>Gäste</guests>
+		<admins>Administratoren</admins>
+		<modules>Module</modules>
+		<maintenance>Wartung</maintenance>
+		<debug>Debug</debug>
+		<logs>Logs</logs>
+		<registry>Registrierung</registry>
+		<tags>Tags</tags>
+	</nodes>
+	
 	<tags>
 		<edit_tag>Tag bearbeiten</edit_tag>
 		<tag>Tag</tag>
@@ -177,6 +197,7 @@
 	</tags>
 	
 	<nodetypes>
+		<type id="sbCR:Node">Knoten (sbCR Basis-Knotentyp)</type>
 		<type id="sbSystem:Root">Wurzel</type>
 		<type id="sbSystem:Comment">Kommentar</type>
 		<type id="sbSystem:Preferences">Systemsteuerung</type>
@@ -198,8 +219,14 @@
 		<type id="sbSystem:Trashcan">Mülleimer</type>
 		<type id="sbSystem:TestNode">Testknoten</type>
 		<type id="sbSystem:PropertiesView">Eigenschaften (Abstrakt)</type>
+		<type id="sbSystem:StructureView">Struktur (Abstrakt)</type>
+		<type id="sbSystem:RelationsView">Verknüpfungen (Abstract)</type>
 		<type id="sbSystem:ListView">Liste (Abstrakt)</type>
 		<type id="sbSystem:Taggable">Tagbar (Abstrakt)</type>
+		<type id="sbSystem:Voteable">Bewertbar (Abstrakt)</type>
+		<type id="sbSystem:Favorites">Favoriten</type>
+		<type id="sbSystem:FavoriteFolder">Favoritenordner</type>
+		<type id="sbSystem:Favorite">Favorit</type>
 	</nodetypes>
 	
 	<User>
@@ -232,6 +259,7 @@
 		<view id="edit">Bearbeiten</view>
 		<view id="preview">Vorschau</view>
 		<view id="properties">Eigenschaften</view>
+		<view id="relations">Verknüpfungen</view>
 		<view id="list">Liste</view>
 		<view id="security">Sicherheit</view>
 		<view id="information">Informationen</view>
@@ -312,6 +340,7 @@
 		<comment>Kommentieren</comment>
 		<tag>Taggen</tag>
 		<download>Runterladen</download>
+		<play>Abspielen</play>
 	</authorisations>
 	
 	<registry>

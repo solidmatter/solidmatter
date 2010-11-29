@@ -62,7 +62,6 @@ class PortalHandler {
 		
 		$nodeCurrent->callView($sView, $sAction);
 		$nodeCurrent->loadAncestors();
-		$nodeCurrent->storeAncestors(TRUE, TRUE);
 		$nodeCurrent->storeSupportedAuthorisations();
 		$nodeCurrent->storeUserAuthorisations();
 		$nodeCurrent->setAttribute('master', 'true');

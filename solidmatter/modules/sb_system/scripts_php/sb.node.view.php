@@ -53,7 +53,9 @@ abstract class sbView {
 	* Executes an action of this view on the subject node. 
 	* @param string the action id
 	*/
-	public abstract function execute($sAction);
+	public function execute($sAction) {
+		throw new sbException('action "'.$sAction.'" not supported');
+	}
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -126,7 +128,7 @@ abstract class sbView {
 	* @param 
 	* @return 
 	*/
-	protected function checkRequirements($sAction) {
+	public function checkRequirements($sAction) {
 		
 		if (!isset($this->aRequiredAuthorisations[$sAction])) {
 			return;

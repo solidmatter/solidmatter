@@ -14,7 +14,7 @@ import('sb.cache');
 //------------------------------------------------------------------------------
 /**
 */
-class CacheFactory {
+/*class CacheFactory {
 	
 	private static $cacheSystem = NULL;
 	private static $cachePaths = NULL;
@@ -30,7 +30,7 @@ class CacheFactory {
 	* @param 
 	* @return 
 	*/
-	public static function getInstance($sType) {
+	/*public static function getInstance($sType) {
 		
 		switch ($sType) {
 			
@@ -96,6 +96,126 @@ class CacheFactory {
 			
 			
 		}	
+		
+	}
+	
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+class CacheFactory {
+	
+	private static $crSession = NULL;
+	
+	private static $aCacheTypes = array(
+		
+		// type => 				array(main class,	class, 				scope, 			prefix)
+		
+		// special caches
+		'images' => 			array('special',	'ImageCache',			'workspace',	''),
+		'authorisations' => 	array('special',	'AuthorisationCache',	'workspace',	''),
+		
+		// multipurpose caches
+		'paths' =>				array('generic',	'MemoryCache',			'workspace',	'PATHS:'),
+		'system' =>				array('generic',	'MemoryCache', 			'global',		'SYSTEM:'),
+		'registry' =>			array('generic',	'SessionCache',			'session',		'REGISTRY:'),
+		'repository' => 		array('generic',	'MemoryCache',			'repository',	'REPOSITORY:'),
+		'misc' => 				array('generic',	'DatabaseCache',		'global',		'MISC:'),
+		
+	);
+	
+	private static $aCacheClasses = array(
+		'ImageCache'			=> 'sb.cache.images',
+		'AuthorisationCache'	=> 'sb.cache.authorisations',
+		'DatabaseCache'			=> 'sb.cache.database',
+		'MemoryCache'			=> 'sb.cache.memory',
+		'SessionCache'			=> 'sb.cache.session',
+		'APCCache'				=> 'sb.cache.apc',
+	);
+	
+	private static $aCaches = array();
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public static function setSession($crSession) {
+		self::$crSession = $crSession;
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* TODO: implement clean cache scope usage
+	* @param 
+	* @return 
+	*/
+	public static function getInstance($sType) {
+		
+		if (!isset(self::$aCacheTypes[$sType])) {
+			throw new sbException('type not recognized: '.$sType);
+		}
+		
+		if (!isset(self::$aCaches[$sType])) {
+			
+			$sPrefix = $aCacheTypes[$sType][3];
+			
+			// determine class
+			$sClass = self::$aCacheTypes[$sType][1];
+			if ($sClass == 'MemoryCache') {
+				if (function_exists('apc_store')) { // use apc if possible
+					$sClass = 'APCCache';
+				} else {
+					$sClass = 'DatabaseCache';
+				}
+			}	
+			$sLibrary = self::$aCacheClasses[$sClass];
+			import($sLibrary);
+			
+			// treat special and generic caches differently
+			if ($aCacheTypes[$sType][0] == 'special') {
+				
+				self::$aCaches[$sType] = new $sClass();
+				
+			} else { // generic
+				
+				$sScope = self::$aCacheTypes[$sType][2];
+				
+				// prepare cache depending on scope
+				switch ($sScope) {
+					case 'global':
+						$sPrefix .= 'G:';
+						break;
+					case 'repository':
+						$sPrefix .= 'R['.self::$crSession->getRepository()->getID().']:';
+						break;
+					case 'workspace': // TODO: implement real 
+						$sPrefix .= 'W['.self::$crSession->getRepository()->getID().':'.self::$crSession->getWorkspace()->getName().']:';
+						break;
+					case 'session':
+						if ($sClass != 'SessionCache') { // TODO: for now, no prefis is needed with SessionCache
+							$sPrefix .= 'S['.sbSession::getID().']:';
+						}
+						break;
+					default:
+						throw new CacheException('cache scope "'.$sScope.'" is unknown');
+				}
+				
+				self::$aCaches[$sType] = new $sClass($sPrefix);
+				
+				// TODO: use repository-local db, then remove the repository-local db-connection again :(
+				if ($sClass == 'DatabaseCache') {
+					self::$aCaches[$sType]->setDatabase(System::getDatabase());
+				}
+				
+				
+			}
+			
+		}
+		
+		return (self::$aCaches[$sType]);
 		
 	}
 	

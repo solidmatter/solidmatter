@@ -31,7 +31,7 @@ class sbView_root_welcome extends sbView {
 		
 		$nodeInbox = User::getNode()->getNode('inbox');
 		$niInboxItems = $nodeInbox->getNodes();
-		//$nodeInbox->storeChildren();
+		$nodeInbox->storeChildren();
 		$_RESPONSE->addData($niInboxItems, 'inbox');
 		
 		//$_RESPONSE->setStylesheet('root.welcome.xsl');

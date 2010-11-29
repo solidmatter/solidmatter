@@ -51,7 +51,7 @@
 							<xsl:attribute name="class">even</xsl:attribute>
 						</xsl:otherwise>
 					</xsl:choose>
-					<td><a href="/{@uuid}/security" class="type {@displaytype}"><xsl:value-of select="@label" /></a></td>
+					<td><a href="/{@uuid}/security" class="type {@displaytype}"><xsl:call-template name="localize"><xsl:with-param name="label" select="@label" /></xsl:call-template></a></td>
 					<td>
 						<xsl:choose>
 							<xsl:when test="@member = 'TRUE'">

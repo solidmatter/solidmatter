@@ -647,7 +647,7 @@ class JukeboxToolkit {
 		$oGetID3 = new getid3(); // instatiate twice because of strange heplerapps bug in getid3!
 		error_reporting(0);
 		$aInfo = $oGetID3->analyze($dirAlbum->getAbsPath().$sRelPath);
-		error_reporting(E_STRICT | E_ALL);
+		error_reporting(E_ALL);
 		
 		// check premises
 		if (!isset($aInfo['tags']['id3v2'])) {

@@ -2,16 +2,16 @@
 
 global $_QUERIES;
 
-$_QUERIES['MAPPING']['{TABLE_NODETYPES}']		= '{PREFIX_FRAMEWORK}_nodetypes';
-$_QUERIES['MAPPING']['{TABLE_NAMESPACES}']		= '{PREFIX_FRAMEWORK}_namespaces';
-$_QUERIES['MAPPING']['{TABLE_NTHIERARCHY}']		= '{PREFIX_FRAMEWORK}_nodetypes_inheritance';
-$_QUERIES['MAPPING']['{TABLE_LIFECYCLE}']		= '{PREFIX_FRAMEWORK}_nodetypes_lifecycles';
-$_QUERIES['MAPPING']['{TABLE_VIEWS}']			= '{PREFIX_FRAMEWORK}_nodetypes_views';
-$_QUERIES['MAPPING']['{TABLE_ACTIONS}']			= '{PREFIX_FRAMEWORK}_nodetypes_viewactions';
-$_QUERIES['MAPPING']['{TABLE_MODES}']			= '{PREFIX_FRAMEWORK}_nodetypes_modes';
-$_QUERIES['MAPPING']['{TABLE_AUTHDEF}']			= '{PREFIX_FRAMEWORK}_nodetypes_authorisations';
-$_QUERIES['MAPPING']['{TABLE_VIEWAUTH}']		= '{PREFIX_FRAMEWORK}_nodetypes_viewauthorisations';
-$_QUERIES['MAPPING']['{TABLE_PROPERTYDEFS}']	= '{PREFIX_FRAMEWORK}_nodetypes_properties';
+$_QUERIES['MAPPING']['{TABLE_NODETYPES}']		= '{PREFIX_REPOSITORY}_nodetypes';
+$_QUERIES['MAPPING']['{TABLE_NAMESPACES}']		= '{PREFIX_REPOSITORY}_namespaces';
+$_QUERIES['MAPPING']['{TABLE_NTHIERARCHY}']		= '{PREFIX_REPOSITORY}_nodetypes_inheritance';
+$_QUERIES['MAPPING']['{TABLE_LIFECYCLE}']		= '{PREFIX_REPOSITORY}_nodetypes_lifecycles';
+$_QUERIES['MAPPING']['{TABLE_VIEWS}']			= '{PREFIX_REPOSITORY}_nodetypes_views';
+$_QUERIES['MAPPING']['{TABLE_ACTIONS}']			= '{PREFIX_REPOSITORY}_nodetypes_viewactions';
+$_QUERIES['MAPPING']['{TABLE_MODES}']			= '{PREFIX_REPOSITORY}_nodetypes_modes';
+$_QUERIES['MAPPING']['{TABLE_AUTHDEF}']			= '{PREFIX_REPOSITORY}_nodetypes_authorisations';
+$_QUERIES['MAPPING']['{TABLE_VIEWAUTH}']		= '{PREFIX_REPOSITORY}_nodetypes_viewauthorisations';
+$_QUERIES['MAPPING']['{TABLE_PROPERTYDEFS}']	= '{PREFIX_REPOSITORY}_nodetypes_properties';
 
 $_QUERIES['MAPPING']['{TABLE_AUTHCACHE}']		= '{PREFIX_WORKSPACE}_system_cache_authorisations';
 $_QUERIES['MAPPING']['{TABLE_PATHCACHE}']		= '{PREFIX_WORKSPACE}_system_cache_paths';
@@ -39,7 +39,8 @@ $_QUERIES['sbCR/repository/loadViews/supported'] = '
 				v.s_classfile AS classfile,
 				v.s_class AS class,
 				v.b_display AS visible,
-				v.n_priority AS priority
+				v.n_priority AS priority,
+				v.n_order AS `order`
 	FROM		{TABLE_VIEWS} v
 	WHERE		v.fk_nodetype = :nodetype
 	ORDER BY	v.n_order
@@ -49,35 +50,6 @@ $_QUERIES['sbCR/repository/loadViewAuthorisations'] = '
 				fk_authorisation
 	FROM		{TABLE_VIEWAUTH}
 	WHERE		fk_nodetype = :nodetype
-';
-
-//------------------------------------------------------------------------------
-// PathCache
-//------------------------------------------------------------------------------
-
-$_QUERIES['sb_system/cache/paths/store'] = '
-	INSERT INTO	{TABLE_PATHCACHE}
-				(
-					s_path,
-					fk_node
-				) VALUES (
-					:path,
-					:node_id
-				)
-	ON DUPLICATE KEY UPDATE
-				fk_node = :node_id
-';
-$_QUERIES['sb_system/cache/paths/load'] = '
-	SELECT		fk_node
-	FROM		{TABLE_PATHCACHE}
-	WHERE		s_path = :path
-';
-$_QUERIES['sb_system/cache/paths/clear'] = '
-	DELETE FROM	{TABLE_PATHCACHE}
-	WHERE		s_path LIKE :path
-';
-$_QUERIES['sb_system/cache/paths/empty'] = '
-	DELETE FROM {TABLE_PATHCACHE}
 ';
 
 //------------------------------------------------------------------------------
@@ -161,14 +133,12 @@ $_QUERIES['sbCR/getNode/root'] = '
 				n.fk_nodetype,
 				n.s_name,
 				n.s_label,
-				n.s_customdisplaytype,
 				n.b_inheritrights,
 				n.b_bequeathrights,
 				n.b_bequeathlocalrights,
 				n.s_currentlifecyclestate,
 				nt.s_classfile,
 				nt.s_class,
-				nt.s_displaytype,
 				NULL AS fk_parent
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
@@ -181,14 +151,12 @@ $_QUERIES['sbCR/getNode/byUUID'] = '
 				n.fk_nodetype,
 				n.s_name,
 				n.s_label,
-				n.s_customdisplaytype,
 				n.b_inheritrights,
 				n.b_bequeathrights,
 				n.b_bequeathlocalrights,
 				n.s_currentlifecyclestate,
 				nt.s_classfile,
 				nt.s_class,
-				nt.s_displaytype,
 				h.fk_parent
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
@@ -204,14 +172,12 @@ $_QUERIES['sbCR/getNode/byUID'] = '
 				n.fk_nodetype,
 				n.s_name,
 				n.s_label,
-				n.s_customdisplaytype,
 				n.b_inheritrights,
 				n.b_bequeathrights,
 				n.b_bequeathlocalrights,
 				n.s_currentlifecyclestate,
 				nt.s_classfile,
 				nt.s_class,
-				nt.s_displaytype,
 				h.fk_parent
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
@@ -219,7 +185,7 @@ $_QUERIES['sbCR/getNode/byUID'] = '
 	INNER JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child
 	WHERE		n.s_uid = :uid
-		AND		h.b_primary = \'TRUE\'
+	ORDER BY	h.b_primary DESC
 ';
 
 // maintenance -----------------------------------------------------------------
@@ -340,12 +306,8 @@ $_QUERIES['sbCR/node/loadChildren/debug'] = '
 				n.fk_nodetype,
 				n.s_name,
 				n.s_label,
-				n.s_customdisplaytype,
-				nt.s_displaytype,
 				h.b_primary
 	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_NODETYPES} nt
-		ON		n.fk_nodetype = nt.s_type
 	LEFT JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child
 	WHERE		h.fk_parent = :parent_uuid
@@ -362,8 +324,6 @@ $_QUERIES['sbCR/node/countChildren/debug'] = '
 $_QUERIES['sbCR/node/countChildren/mode'] = '
 	SELECT		COUNT(*) as num_children
 	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_NODETYPES} nt
-		ON		n.fk_nodetype = nt.s_type
 	INNER JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child
 	INNER JOIN	{TABLE_NODES} n2
@@ -390,11 +350,8 @@ $_QUERIES['sbCR/node/countChildrenByName/debug'] = '
 $_QUERIES['sbCR/node/getChild/byName'] = '
 	SELECT		n.uuid,
 				n.fk_nodetype,
-				n.s_name,
-				nt.s_displaytype
+				n.s_name
 	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_NODETYPES} nt
-		ON		n.fk_nodetype = nt.s_type
 	LEFT JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child 
 	WHERE		n.s_name = :name
@@ -405,10 +362,8 @@ $_QUERIES['sbCR/node/getChild/byName'] = '
 $_QUERIES['sbSystem/node/getAllowedSubtypes'] = '
 	SELECT		m.fk_parentnodetype,
 				m.fk_nodetype,
-				nt.s_displaytype
+				REPLACE(fk_nodetype, \':\', \'_\') AS displaytype
 	FROM		{TABLE_MODES} m
-	INNER JOIN	{TABLE_NODETYPES} nt
-		ON		m.fk_nodetype = nt.s_type
 	WHERE		m.s_mode = :mode
 		AND		m.fk_parentnodetype = (
 					SELECT	fk_nodetype
@@ -718,7 +673,6 @@ $_QUERIES['sbCR/node/loadProperties/extended'] = '
 	SELECT		n.s_name,
 				n.s_uid,
 				n.s_label,
-				n.s_customdisplaytype,
 				n.b_inheritrights,
 				n.b_bequeathrights,
 				n.b_bequeathlocalrights,

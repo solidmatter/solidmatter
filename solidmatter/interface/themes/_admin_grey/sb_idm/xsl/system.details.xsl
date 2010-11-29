@@ -36,11 +36,17 @@
 		
 		<table class="default" width="100%" id="list">
 			<thead>
-				<tr><th colspan="6" >MainRoles</th></tr>
+				<tr>
+					<th colspan="3">MainRoles</th>
+					<th colspan="3" style="text-align:right;">
+						<a href="/{@uuid}/details/print" target="_blank">Print Version</a>
+					</th>
+				</tr>
 				<tr class="th2">
 					<th width="15%"><xsl:value-of select="$locale/sbSystem/labels/name" /></th>
-					<th width="5%">NAME</th>
+					<th width="5%">TechName</th>
 					<th width="20%"><xsl:value-of select="$locale/sbSystem/labels/description" /></th>
+					<!-- <th width="10%">Tags</th> -->
 					<th width="33%">TechRoles</th>
 					<th width="33%">Persons</th>
 				</tr>
@@ -48,7 +54,7 @@
 			<tbody>
 			<xsl:choose>
 				<xsl:when test="$content/main_roles/nodes/sbnode">
-					<xsl:for-each select="$content/main_roles/nodes/sbnode">
+					<xsl:for-each select="$content/main_roles/nodes/sbnode[children[@mode='debug']/sbnode[@nodetype='sbIdM:TechRole']]">
 						<tr>
 							<xsl:call-template name="colorize" />
 							<td>
@@ -60,6 +66,12 @@
 							<td>
 								<xsl:value-of select="@description" />
 							</td>
+							<!-- <td>
+								<xsl:for-each select="tags/tag">
+									<xsl:value-of select="." />
+									<xsl:if test="position() != last()"> - </xsl:if>
+								</xsl:for-each>
+							</td> -->
 							<td>
 								<xsl:call-template name="render_techroles" />
 							</td>
@@ -82,7 +94,10 @@
 		<xsl:if test="children[@mode='debug']/sbnode">
 		<ul>
 			<xsl:for-each select="children[@mode='debug']/sbnode">
-				<li><a href="/{@uuid}"><span class="type {@displaytype}"><xsl:value-of select="@label" /> [<xsl:value-of select="@name" />]</span></a></li>
+				<li>
+					<a href="/{@uuid}"><span class="type {@displaytype}"><xsl:value-of select="@label" /> [<xsl:value-of select="@name" />]</span></a>
+					<!--<xsl:call-template name="render_techroles" />-->
+				</li>
 			</xsl:for-each>
 		</ul>
 		</xsl:if>

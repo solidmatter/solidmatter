@@ -53,9 +53,6 @@ $_AUTOLOAD = array(
 	
 	// caching
 	'CacheFactory'			=> 'sb.factory.cache',
-	'sbCache'				=> 'sb.cache',
-	'PathCache'				=> 'sb.cache.paths',
-	'SessionCache'			=> 'sb.cache.session',
 	
 	// forms
 	'sbDOMForm'				=> 'sb.form',
@@ -76,7 +73,7 @@ $_AUTOLOAD = array(
 */
 abstract class DEBUG {
 	
-	const ENABLED		= FALSE;
+	const ENABLED		= TRUE;
 	
 	const BASIC			= TRUE;
 	const CLIENT		= FALSE;
@@ -195,7 +192,7 @@ function import($sLibrary, $bRequired = TRUE) {
 		DEBUG('Import: loading library '.$sLibrary, DEBUG::IMPORT);
 	} else {
 		if ($bRequired) {
-			throw new LibraryNotFoundException('Library not found: '.$sLibrary);
+			throw new LibraryNotFoundException('lib "'.$sLibrary.'" is unknown');
 		} else {
 			$aAlreadyLoaded[$sLibrary] = FALSE;
 			$bSuccess = FALSE;

@@ -29,6 +29,10 @@ class sbView_idm_orgrole_details extends sbView {
 			
 			case 'display':
 				
+				//$crQuery = $this->crSession->getWorkspace()->getQueryManager()->createQuery("test:test[@assasa='sdsdds' and @sweew='sdsdds']/ancestor-or-self::sdsdsd[sdsd=sdsd]/following-siblings::element(*, 'ws:sdsdsd')[@foobar='ss' and @bar='ererer']//*[@nodetype='sdsdd']", 'XPATH');
+				/*$crQuery = $this->crSession->getWorkspace()->getQueryManager()->createQuery("//element(*, 'sbIdM:TechRole')[@mainrole='TRUE']", 'XPATH');
+				$crQuery->execute();*/
+				
 				$this->nodeSubject->loadChildren('gatherTechRoles');
 				//$this->nodeSubject->storeChildren('gatherTechRoles');
 				
@@ -56,7 +60,7 @@ class sbView_idm_orgrole_details extends sbView {
 				break;
 			
 			default:
-				throw new sbException(__CLASS__.': action not recognized ('.$sAction.')');
+				parent::execute($sAction);
 				
 		}
 		

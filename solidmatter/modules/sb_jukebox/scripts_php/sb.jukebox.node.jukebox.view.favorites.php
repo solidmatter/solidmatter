@@ -69,7 +69,7 @@ class sbView_jukebox_jukebox_favorites extends sbJukeboxView {
 				$nodeCurrent->getVote($this->getPivotUUID());
 			}
 			$niFavorites->sortAscending('label');
-			$nodeFavorites->storeChildren('debug');
+			$nodeFavorites->storeChildren();
 			$_RESPONSE->addData($niFavorites->getElement('favorites'));
 		}
 		

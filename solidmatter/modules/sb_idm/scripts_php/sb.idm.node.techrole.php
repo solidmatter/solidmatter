@@ -16,6 +16,15 @@ class sbNode_idm_techrole extends sbNode {
 	protected $aOrgRoles = array();
 	protected $aPersons = array();
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function getDefaultViewName() {
+		return ('properties');	
+	}
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -23,7 +32,7 @@ class sbNode_idm_techrole extends sbNode {
 	* @param 
 	* @return 
 	*/
-	public function storeRelevantData() {
+	public function storeRelevantData($bIncludeSubRoles = FALSE) {
 		
 		
 		// raw data
@@ -34,14 +43,19 @@ class sbNode_idm_techrole extends sbNode {
 			}
 		}
 		
-		$this->aContentNodes['OrgRoles'] = new sbCR_NodeIterator($this->aOrgRoles);
-		$this->aContentNodes['Persons'] = new sbCR_NodeIterator($this->aPersons);
+		$this->addContent('OrgRoles', new sbCR_NodeIterator($this->aOrgRoles));
+		$this->addContent('Persons', new sbCR_NodeIterator($this->aPersons));
 		
-		$this->storeContent();
+		//$this->initTags();
+		
+		$this->aGetElementFlags['tags'] = TRUE;
+		$this->aGetElementFlags['children'] = TRUE;
+		$this->aGetElementFlags['content'] = TRUE;
 		
 		// subrole data
-		$this->gatherSubRoles($this);
-		
+		if ($bIncludeSubRoles) {
+			$this->gatherSubRoles($this);
+		}
 		
 	}
 	
@@ -75,10 +89,14 @@ class sbNode_idm_techrole extends sbNode {
 		$niChildren = $nodeCurrent->loadChildren('debug', TRUE, TRUE);
 		
 		foreach ($niChildren as $nodeChild) {
+			//$nodeChild->initTags();
+			$nodeChild->aGetElementFlags['tags'] = TRUE;
+			$nodeChild->aGetElementFlags['children'] = TRUE;
+			$nodeChild->aGetElementFlags['content'] = TRUE;
 			$this->gatherSubRoles($nodeChild);
 		}
 		
-		$nodeCurrent->storeChildren();
+		//$nodeCurrent->storeChildren();
 		
 	}
 	

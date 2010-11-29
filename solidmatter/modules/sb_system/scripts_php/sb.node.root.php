@@ -39,6 +39,16 @@ class sbNode_root extends sbNode {
 	* @param 
 	* @return 
 	*/
+	public function getParents() {
+		throw new ItemNotFoundException();
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function getPaths() {
 		return (array('/'));
 	}

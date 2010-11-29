@@ -75,10 +75,10 @@ class sbNode_jukebox_track extends sbJukeboxNode {
 	* @param 
 	* @return 
 	*/
-	public function getTag($sFrameName) {
+	public function getID3Tag($sFrameName) {
 		
 		if ($this->aGetID3Info == NULL) {
-		
+			
 			import('sbSystem:external:getid3/getid3');
 			
 			$sFilename = JukeboxTools::getFSPath($this);
@@ -86,10 +86,10 @@ class sbNode_jukebox_track extends sbJukeboxNode {
 			
 			// get track info through getid3
 			$oGetID3 = new getid3();
-			$oGetID3 = new getid3(); // instatiate twice because of strange heplerapps bug in getid3!
-			error_reporting(0);
+			$oGetID3 = new getid3(); // instatiate twice because of strange helperapps bug in getid3!
+			error_reporting(0); // TODO: in PHP 5.3.1 you can't disable deprecated warnings somehow - changed in response error handler
 			$this->aGetID3Info = $oGetID3->analyze($sFilename);
-			error_reporting(E_STRICT | E_ALL);
+			error_reporting(E_ALL);
 			
 		}
 		//var_dumpp($aInfo);exit();
@@ -104,7 +104,7 @@ class sbNode_jukebox_track extends sbJukeboxNode {
 	* @param 
 	* @return 
 	*/
-	public function setTag($sTagName) {
+	public function setID3Tag($sTagName) {
 		
 		/*import('sbSystem:external:getid3/getid3');
 		

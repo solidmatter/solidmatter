@@ -16,8 +16,8 @@ $_QUERIES['MAPPING']['{TABLE_FLATCACHE}']	= '{PREFIX_SYSTEM}_system_cache_flat';
 $_QUERIES['MAPPING']['{TABLE_IMAGECACHE}']	= '{PREFIX_WORKSPACE}_system_cache_images';
 $_QUERIES['MAPPING']['{TABLE_PROGRESS}']	= '{PREFIX_WORKSPACE}_system_progress';
 $_QUERIES['MAPPING']['{TABLE_EVENTLOG}']	= '{PREFIX_WORKSPACE}_system_eventlog';
-$_QUERIES['MAPPING']['{TABLE_MIMETYPES}']	= '{PREFIX_FRAMEWORK}_nodetypes_mimetypemapping';
-$_QUERIES['MAPPING']['{TABLE_MODULES}']		= '{PREFIX_FRAMEWORK}_modules';
+$_QUERIES['MAPPING']['{TABLE_MIMETYPES}']	= '{PREFIX_REPOSITORY}_nodetypes_mimetypemapping';
+$_QUERIES['MAPPING']['{TABLE_MODULES}']		= '{PREFIX_REPOSITORY}_modules';
 
 $_QUERIES['MAPPING']['{TABLE_USERS}']		= '{PREFIX_WORKSPACE}_system_useraccounts';
 $_QUERIES['MAPPING']['{TABLE_REGISTRY}']	= '{PREFIX_WORKSPACE}_system_registry';
@@ -27,7 +27,7 @@ $_QUERIES['MAPPING']['{TABLE_VOTES}']		= '{PREFIX_WORKSPACE}_system_nodes_votes'
 $_QUERIES['MAPPING']['{TABLE_NODETAGS}']	= '{PREFIX_WORKSPACE}_system_nodes_tags';
 $_QUERIES['MAPPING']['{TABLE_TAGS}']		= '{PREFIX_WORKSPACE}_system_tags';
 
-$_QUERIES['MAPPING']['{TABLE_ONTOLOGY}']	= '{PREFIX_FRAMEWORK}_nodetypes_ontology';
+$_QUERIES['MAPPING']['{TABLE_ONTOLOGY}']	= '{PREFIX_REPOSITORY}_nodetypes_ontology';
 $_QUERIES['MAPPING']['{TABLE_RELATIONS}']	= '{PREFIX_WORKSPACE}_system_nodes_relations';
 
 //------------------------------------------------------------------------------
@@ -207,13 +207,7 @@ $_QUERIES['sbSystem/eventLog/getEntries/filtered'] = '
 				el.s_loguid,
 				el.t_log,
 				el.fk_subject,
-				(SELECT 	s_displaytype
-					FROM	{TABLE_NODETYPES}
-					WHERE	s_type = (SELECT	fk_nodetype
-										FROM	{TABLE_NODES}
-										WHERE	uuid = el.fk_subject
-					)
-				) AS s_subjectdisplaytype,
+				REPLACE(ns.fk_nodetype, \':\', \'_\') AS s_subjectdisplaytype,
 				el.fk_user,
 				el.e_type,
 				el.dt_created,
@@ -408,7 +402,8 @@ $_QUERIES['sbSystem/tagging/tags/getTagData'] = $_QUERIES['sbSystem/tagging/tags
 $_QUERIES['sbSystem/tagging/getItems/byTagID'] = '
 	SELECT		n.uuid,
 				n.s_label AS label,
-				n.fk_nodetype AS nodetype
+				n.fk_nodetype AS nodetype,
+				h.fk_parent AS parent_uuid
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETAGS} nt
 		ON		n.uuid = nt.fk_subject
@@ -470,11 +465,8 @@ $_QUERIES['sbSystem/relations/getSupportedRelations'] = '
 $_QUERIES['sbSystem/relations/getPossibleTargets'] = '
 	SELECT		n.s_label AS label,
 				n.uuid,
-				n.fk_nodetype AS nodetype,
-				nt.s_displaytype AS displaytype
+				n.fk_nodetype AS nodetype
 	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_NODETYPES} nt
-		ON		n.fk_nodetype = nt.s_type
 	WHERE		s_label LIKE :substring
 		AND		n.fk_nodetype IN
 				(
@@ -488,7 +480,7 @@ $_QUERIES['sbSystem/relations/getPossibleTargets'] = '
 					WHERE		fk_targetnodetype = :sourcenodetype
 						AND		s_reverserelation = :relation
 				)
-	ORDER BY	CHAR_LENGTH(s_label)
+	ORDER BY	CHAR_LENGTH(s_label), n.s_label
 	LIMIT		0, 10
 ';
 $_QUERIES['sbSystem/relations/addRelation'] = '
@@ -611,8 +603,7 @@ $_QUERIES['sbSystem/node/recoverFromTrash'] = '
 //------------------------------------------------------------------------------
 
 $_QUERIES['sbSystem/module/loadProperties/auxiliary'] = '
-	SELECT		s_name,
-				n_mainversion,
+	SELECT		n_mainversion,
 				n_subversion,
 				n_bugfixversion,
 				s_versioninfo,
@@ -627,7 +618,6 @@ $_QUERIES['sbSystem/module/loadProperties/auxiliary'] = '
 $_QUERIES['sbSystem/module/saveProperties/auxiliary'] = '
 	INSERT INTO	{TABLE_MODULES}
 				(
-					s_name,
 					n_mainversion,
 					n_subversion,
 					n_bugfixversion,
@@ -638,7 +628,6 @@ $_QUERIES['sbSystem/module/saveProperties/auxiliary'] = '
 					b_active,
 					uuid
 				) VALUES (
-					:info_name,
 					:version_main,
 					:version_sub,
 					:version_bugfix,
@@ -650,7 +639,6 @@ $_QUERIES['sbSystem/module/saveProperties/auxiliary'] = '
 					:node_id
 				)
 	ON DUPLICATE KEY UPDATE
-				s_name = :info_name,
 				n_mainversion = :version_main,
 				n_subversion = :version_sub,
 				n_bugfixversion = :version_bugfix,
@@ -863,7 +851,7 @@ $_QUERIES['sbSystem/modules/getInfo'] = '
 // view:nodetypes --------------------------------------------------------------
 $_QUERIES['sbSystem/reports_structure/nodetypes/overview'] = '
 	SELECT		nt.s_type,
-				nt.s_displaytype,
+				REPLACE(nt.s_type, \':\', \'_\') AS s_displaytype,
 				(SELECT
 					COUNT(*) 
 					FROM	{TABLE_NODES}
@@ -909,11 +897,8 @@ $_QUERIES['sbSystem/node/trashcan/getAbandonedNodes'] = '
 	SELECT		n.uuid,
 				n.fk_nodetype,
 				n.s_name,
-				n.s_label,
-				nt.s_displaytype
+				n.s_label
 	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_NODETYPES} nt
-		ON		n.fk_nodetype = nt.s_type
 	WHERE		(
 					SELECT 	COUNT(*)
 					FROM	{TABLE_HIERARCHY} h
@@ -921,12 +906,23 @@ $_QUERIES['sbSystem/node/trashcan/getAbandonedNodes'] = '
 				) = 0
 	AND			n.fk_nodetype != \'sbSystem:Root\'
 ';
-// TODO: get and display more info on the nodes
-$_QUERIES['sbSystem/node/trashcan/getTrash/all'] = '
+$_QUERIES['sbSystem/node/trashcan/getTrash'] = '
 	SELECT		h.fk_parent AS parent_uuid,
-				h.fk_child AS child_uuid
+				h.fk_child AS child_uuid,
+				u.s_label AS user_label,
+				n.s_label AS parent_label,
+				n.fk_nodetype AS parent_nodetype
 	FROM		{TABLE_HIERARCHY} h
+	LEFT JOIN	{TABLE_NODES} n
+		ON		h.fk_parent = n.uuid
+	LEFT JOIN	{TABLE_NODES} u
+		ON		h.fk_deletedby = u.uuid
+';
+$_QUERIES['sbSystem/node/trashcan/getTrash/all'] = $_QUERIES['sbSystem/node/trashcan/getTrash'].'
 	WHERE		h.fk_deletedby IS NOT NULL
+';
+$_QUERIES['sbSystem/node/trashcan/getTrash/userspecific'] = $_QUERIES['sbSystem/node/trashcan/getTrash'].'
+	WHERE		h.fk_deletedby = :user_uuid
 ';
 // TODO: first check for nodes that have to be removed because they are last in a shared set
 $_QUERIES['sbSystem/node/trashcan/purge'] = '

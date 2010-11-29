@@ -1,0 +1,54 @@
+
+/*************************** print styles ************************************/
+
+@page {
+	margin: 0.7cm 0.5cm 1cm 0.5cm;
+}
+
+html {
+	font-family: Arial, Helvetica, Sans-Serif;
+	font-size: 10pt;
+	padding: 0.1cm 0.1cm 2cm 0.1cm;
+}
+
+table {
+	font-size: 10pt;
+}
+
+table.default {
+	border-collapse: collapse;
+	padding: 0;
+	margin: 10px;
+	border: 1px solid black;
+}
+table.default td {
+	border: 1px solid black;
+	padding: 0.5em;
+	vertical-align: top;
+}
+
+table.invisible {
+	border-collapse: collapse;
+	padding: 5px;
+	margin: 5px;
+	border: 0;
+}
+table.invisible td {
+	border: 0;
+	padding: 0.5em;
+	vertical-align: top;
+}
+
+table.inner {
+	border-collapse: collapse;
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+table.inner td {
+	border: 0;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	padding: 0.5em;
+	vertical-align: top;
+}

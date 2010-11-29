@@ -31,15 +31,16 @@
 			
 		</div>
 		<div class="nav">
-			<span style="float: right;">
-				<a class="type remove" href="/{$master/@uuid}/fix/remove"><xsl:value-of select="$locale/sbSystem/actions/delete" /></a>
-			</span>
+			<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
+				<span style="float: right;">
+					<a class="type remove" href="javascript:request_confirmation('/{$master/@uuid}/fix/delete');"><xsl:value-of select="$locale/sbSystem/actions/delete" /></a>
+				</span>
+			</xsl:if>
 			<a class="type back" href="/{$master/@uuid}"><xsl:value-of select="$locale/sbSystem/actions/back" /></a>
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="response/errors" />
 			<xsl:apply-templates select="$content/sbnode[@master]" />
-			
 		</div>
 	</xsl:template>
 	
@@ -160,6 +161,10 @@
 								<xsl:when test="@type = 'retag_mp3'">
 									"<xsl:value-of select="@old_tag" disable-output-escaping="yes" />" [<xsl:value-of select="@tag" />] -&gt; <br/>
 									"<xsl:value-of select="@new_tag" disable-output-escaping="yes" />"
+								</xsl:when>
+								<xsl:when test="@type = 'relocate'">
+									"<xsl:value-of select="@old_parent" disable-output-escaping="yes" />" -&gt; <br/>
+									"<xsl:value-of select="@new_parent" disable-output-escaping="yes" />"
 								</xsl:when>
 							</xsl:choose>
 						</td>

@@ -70,7 +70,7 @@
 				</a>
 			</xsl:otherwise>
 			</xsl:choose>
-			<span class="type {@s_displaytype}"><xsl:value-of select="@s_type" /></span>
+			<span class="type {translate(@s_type, ':', '_')}"><xsl:value-of select="@s_type" /></span>
 			<xsl:if test="parent">
 				<span style="color:#666; font-size:smaller; font-style:normal;">
 				( 
@@ -109,7 +109,7 @@
 				</a>
 			</xsl:otherwise>
 			</xsl:choose>
-			<span class="type sb_view">
+			<span class="type sbSystem_View">
 				<xsl:if test="@b_display = 'FALSE'">
 					<xsl:attribute name="style">font-style:italic;</xsl:attribute>
 				</xsl:if>
@@ -136,7 +136,7 @@
 		<xsl:param name="path" />
 		<li>
 			<img src="/theme/sb_system/icons/tree_nothing.png" alt="" />
-			<span class="type sb_action">
+			<span class="type sbSystem_Action">
 				<xsl:if test="@b_default = 'TRUE'">
 					<xsl:attribute name="style">font-weight:bold;</xsl:attribute>
 				</xsl:if>

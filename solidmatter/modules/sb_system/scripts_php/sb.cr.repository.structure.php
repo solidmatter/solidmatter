@@ -576,6 +576,7 @@ class sbCR_RepositoryStructure {
 		foreach ($this->aViewData[$sNodeTypeName] as $aView) {
 			$aSupportedViews[$aView['name']] = array(
 				'name' => $aView['name'],
+				'order' => $aView['order'],
 				'priority' => $aView['priority'],
 				'visible' => constant($aView['visible']),
 			);

@@ -41,8 +41,11 @@ class BackendRequestHandler extends RequestHandler {
 		$nodeCurrent = $crSession->getNode($aURI['node_uuid']);
 		$nodeCurrent->callView($aURI['view'], $aURI['action']);
 		$nodeCurrent->loadAncestors();
-		$nodeCurrent->storeAncestors(TRUE, TRUE);
 		$nodeCurrent->setAttribute('master', 'true');
+		
+		$nodeCurrent->aGetElementFlags['views'] = TRUE;
+		$nodeCurrent->aGetElementFlags['ancestors'] = TRUE;
+		$nodeCurrent->aGetElementFlags['auth_user'] = TRUE;
 		
 		if ($_REQUEST->getParam('sbCommand') != NULL) {
 			$_RESPONSE->addCommand($_REQUEST->getParam('sbCommand'));

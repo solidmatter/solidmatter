@@ -54,14 +54,12 @@ class sbView_security extends sbView {
 				$aResult = $this->nodeSubject->loadSecurityAuthorisations();
 				$_RESPONSE->addData($aResult['groups']);
 				$_RESPONSE->addData($aResult['users']);
-				//$_RESPONSE->addData($this->nodeSubject);
 				break;
 				
 			case 'addUser':
 				$sEntityUUID = $_REQUEST->getParam('entity_uuid');
 				$aDefaultAuthorisations = array(
 					'read',
-					'write',
 				);
 				$stmtDefault = $this->nodeSubject->getSession()->prepareKnown('sb_system/node/view/security/addAuthorisation');
 				foreach ($aDefaultAuthorisations as $sAuthorisation) {
@@ -77,7 +75,6 @@ class sbView_security extends sbView {
 				
 				$this->logEvent(System::SECURITY, 'USERENTITY_ADDED', $sEntityUUID);
 				
-				//$this->nodeSubject->callView('security');
 				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'security');
 				break;
 			
@@ -93,7 +90,6 @@ class sbView_security extends sbView {
 				
 				$this->logEvent(System::SECURITY, 'USERENTITY_REMOVED', $sEntityUUID);
 				
-				//$this->nodeSubject->callView('security');
 				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'security');
 				break;
 			
@@ -114,8 +110,6 @@ class sbView_security extends sbView {
 				
 				$this->logEvent(System::SECURITY, 'INHERITANCE_CHANGED', 'I: '.$aInputs['inheritrights'].' B: '.$aInputs['bequeathrights'].' BL: '.$aInputs['bequeathlocalrights']);
 				
-				// deactivated, does not represent current state, reload instead
-				//$this->nodeSubject->callView('security', 'display');
 				$_RESPONSE->redirect($this->nodeSubject->getProperty('jcr:uuid'), 'security');
 				break;
 				
@@ -127,7 +121,6 @@ class sbView_security extends sbView {
 				break;
 				
 			case 'saveAuthorisations':
-				//var_dumpp($this->nodeSubject->loadSupportedAuthorisations());
 				$stmtSaveAuth = $this->nodeSubject->getSession()->prepareKnown('sbSystem/node/setAuthorisation');
 				$stmtSaveAuth->bindValue('entity_uuid', $_REQUEST->getParam('userentity'), PDO::PARAM_STR);
 				$stmtSaveAuth->bindValue('subject_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
@@ -136,7 +129,7 @@ class sbView_security extends sbView {
 				$stmtRemoveAuth->bindValue('subject_uuid', $this->nodeSubject->getProperty('jcr:uuid'), PDO::PARAM_STR);
 				// TODO: save on node::save()?
 				$sMessage = $_REQUEST->getParam('userentity').' ';
-				foreach ($this->nodeSubject->loadSupportedAuthorisations() as $sAuth => $sParentAuth) {
+				foreach ($this->nodeSubject->getSupportedAuthorisations() as $sAuth => $sParentAuth) {
 					if ($_REQUEST->getParam($sAuth.'_allow') == 'on') {
 						$stmtSaveAuth->bindValue('authorisation', $sAuth, PDO::PARAM_STR);
 						$stmtSaveAuth->bindValue('granttype', 'ALLOW', PDO::PARAM_STR);
@@ -158,6 +151,9 @@ class sbView_security extends sbView {
 				$this->nodeSubject->loadSecurityAuthorisations();
 				$this->nodeSubject->setAttribute('subjectid', $_REQUEST->getParam('userentity'));
 				
+				$nodeUserEntity = $this->crSession->getNodeByIdentifier($_REQUEST->getParam('userentity'));
+				$_RESPONSE->addData($nodeUserEntity, 'userentity');
+				
 				$this->logEvent(System::SECURITY, 'AUTHORISATIONS_CHANGED', $sMessage);
 				
 				break;
@@ -166,9 +162,6 @@ class sbView_security extends sbView {
 				throw new sbException(__CLASS__.': action not recognized ('.$sAction.')');
 			
 		}
-		
-		//return ($this->nodeSubject);
-		
 		
 	}
 	

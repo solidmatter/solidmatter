@@ -26,6 +26,18 @@ class SessionCache implements sbCache {
 	
 	//--------------------------------------------------------------------------
 	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function __construct($sPrefix = NULL) {
+		if ($sPrefix != NULL) {
+			$this->sPrefix = $sPrefix;
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* Stores data under a specific key.
 	* @param string the (unique) key under which the data should be stored
 	* @param multiple the data to be stored
@@ -86,6 +98,16 @@ class SessionCache implements sbCache {
 			}
 		}
 		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getInfo() {
+		return (array('info' => 'not yet implemented'));	
 	}
 	
 }

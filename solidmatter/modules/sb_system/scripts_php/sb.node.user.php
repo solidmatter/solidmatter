@@ -32,6 +32,4 @@ class sbNode_user extends sbNode {
 	
 }
 
-	
-
 ?>

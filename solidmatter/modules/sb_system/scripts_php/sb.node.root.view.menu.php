@@ -72,11 +72,10 @@ class sbView_root_menu extends sbView {
 			foreach($niChildren as $nodeChild) {
 				$this->expand($nodeChild, $sQuery);
 			}
+			$nodeCurrentRoot->addContent('menu', $niChildren);
 		}
 		
-		$elemTree = $nodeCurrentRoot->getElement(TRUE);
-		
-		$_RESPONSE->addData($elemTree, 'menu');
+		$_RESPONSE->addData($nodeCurrentRoot->getElement(array('content' => TRUE)), 'menu');
 		
 		return (NULL);
 		
@@ -101,10 +100,11 @@ class sbView_root_menu extends sbView {
 			}
 			
 			$niChildren = $nodeCurrent->loadChildren($sMode, TRUE, TRUE, FALSE, array('read'));
-			
 			foreach($niChildren as $nodeChild) {
 				$this->expand($nodeChild, $sCurrentPath);
 			}
+			$nodeCurrent->addContent('menu', $niChildren);
+			
 		}
 		
 	}	

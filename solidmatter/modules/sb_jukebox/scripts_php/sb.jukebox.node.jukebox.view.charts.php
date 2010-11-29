@@ -114,8 +114,14 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 						sbSession::$aData['sbJukebox'][$sJukeboxUUID]['pivot'] = $sTargetUUID;
 					}
 					
-					$_RESPONSE->redirect('-', 'charts');
-						
+					// prepare additional parameters
+					$aParameters = NULL;
+					if ($_REQUEST->getParam('expand') != NULL) {
+						$aParameters['expand'] = $_REQUEST->getParam('expand');
+					}
+					
+					$_RESPONSE->redirect('-', 'charts', '-', $aParameters);
+					
 				} else {
 					
 					throw new sbException('form entries are invalid');
@@ -134,10 +140,16 @@ class sbView_jukebox_jukebox_charts extends sbJukeboxView {
 	
 	protected function buildForm() {
 		
+		// prepare additional parameters
+		$aParameters = NULL;
+		if ($_REQUEST->getParam('expand') != NULL) {
+			$aParameters['expand'] = $_REQUEST->getParam('expand');
+		}
+		
 		$formPivot = new sbDOMForm(
 			'changePivot',
 			'',
-			System::getRequestURL('-', 'charts', 'changePivot'),
+			System::getRequestURL('-', 'charts', 'changePivot', $aParameters),
 			$this->crSession
 		);
 		

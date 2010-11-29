@@ -2,18 +2,18 @@
 
 //------------------------------------------------------------------------------
 /**
-* @package	solidMatter[sbJukebox]
+* @package	solidMatter[sbIdM]
 * @author	()((() [Oliver Müller]
 * @version	1.00.00
 */
 //------------------------------------------------------------------------------
 
-import('sbJukebox:sb.jukebox.node');
-
 //------------------------------------------------------------------------------
 /**
 */
-class sbNode_jukebox_album extends sbJukeboxNode {
+class sbNode_idm_orgrole extends sbNode {
+	
+	protected $aPersons = array();
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -21,33 +21,24 @@ class sbNode_jukebox_album extends sbJukeboxNode {
 	* @param 
 	* @return 
 	*/
-	protected function __setQueries() {
-		parent::__setQueries();
-		$this->aQueries['loadProperties']['auxiliary'] = 'sbJukebox/album/properties/load/auxiliary';
-		$this->aQueries['saveProperties']['auxiliary'] = 'sbJukebox/album/properties/save/auxiliary';
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	protected function modifyForm($formCurrent, $sMode) {
-		$nodeJukebox = $this->getParent()->getParent();
-		$this->fillArtists($formCurrent, $nodeJukebox);
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	public function checkFileExistance() {
-		$sFilename = JukeboxTools::getFSPath($this);
-		$sFilename = iconv('UTF-8', System::getFilesystemEncoding(), $sFilename);
-		return (file_exists($sFilename));
+	public function gatherPersons() {
+		
+		$niPersons = new sbCR_NodeIterator();
+		
+		foreach ($this->getChildren() as $nodeChild) {
+			if ($nodeChild->getPrimaryNodeType() == 'sbIdM:Person') {
+				$this->aPersons[$nodeChild->getProperty('jcr:uuid')] = $nodeChild;
+			} else {
+				$niPersons->append($nodeChild->gatherPersons());
+			}
+			
+		}
+		
+		$niPersons->append(new sbCR_NodeIterator($this->aPersons));
+		$niPersons->makeUnique();
+		
+		return ($niPersons);
+		
 	}
 	
 }

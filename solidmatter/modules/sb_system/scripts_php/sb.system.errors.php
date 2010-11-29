@@ -41,6 +41,7 @@ class InvalidFormDataException extends sbException { }
 class ViewUndefinedException extends sbException { }
 class ActionUndefinedException extends sbException { }
 class SessionTimeoutException extends sbException { }
+class CacheException extends sbException { }
 
 class ImportException extends sbException { }
 class ExportException extends sbException { }

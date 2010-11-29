@@ -124,6 +124,8 @@ class sbView_root_login extends sbView {
 						// add info to form object
 						switch ($aResult['failure_reason']) {
 							case 'inexistent_user':
+								$formLogin->setFormError('$locale//formerrors/wrong_logindata');
+								break;
 							case 'wrong_password':
 								$formLogin->setFormError('$locale//formerrors/wrong_logindata');
 								break;

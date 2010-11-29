@@ -3,31 +3,31 @@
 /* types / icons
 /*----------------------------------------------------------------------------*/
 
-*.sb_imageprocessing {
+*.sbUtilities_Imageprocessing {
 	background-image: url(../icons/type_imageprocessing.png);
 }
-*.sb_imagefilterstack {
+*.sbUtilities_Imagefilterstack {
 	background-image: url(../icons/type_imagefilterstack.png);
 }
-*.sb_imagefilter_resize {
+*.sbUtilities_Imagefilter_Resize {
 	background-image: url(../icons/type_imagefilter_resize.png);
 }
-*.sb_imagefilter_colorize {
+*.sbUtilities_Imagefilter_Colorize {
 	background-image: url(../icons/type_imagefilter_colorize.png);
 }
-*.sb_imagefilter_negative {
+*.sbUtilities_Imagefilter_Negative {
 	background-image: url(../icons/type_imagefilter_negative.png);
 }
-*.sb_imagefilter_lightness {
+*.sbUtilities_Imagefilter_Lightness {
 	background-image: url(../icons/type_imagefilter_lightness.png);
 }
-*.sb_imagefilter_crop {
+*.sbUtilities_Imagefilter_Crop {
 	background-image: url(../icons/type_imagefilter_crop.png);
 }
-*.sb_imagefilter_greyscale {
+*.sbUtilities_Imagefilter_Greyscale {
 	background-image: url(../icons/type_imagefilter_greyscale.png);
 }
-*.sb_imagefilter_roundededges {
+*.sbUtilities_Imagefilter_RoundedEdges {
 	background-image: url(../icons/type_imagefilter_roundededges.png);
 }
 

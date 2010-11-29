@@ -4,14 +4,20 @@
 	<labels>
 		<data>Data</data>
 		<mainrole>Main role</mainrole>
+		<damagepotential>Damage Potential</damagepotential>
+		<userassignable>User-assignable</userassignable>
 	</labels>
 	
 	<nodetypes>
 		<type id="sbIdM:Manager">IdM-Manager</type>
-		<type id="sbIdM:OrgRole">OrgRole</type>
-		<type id="sbIdM:TechRole">TechRole</type>
+		<type id="sbIdM:System">System</type>
+		<type id="sbIdM:OrgRole">Organizational Role</type>
+		<type id="sbIdM:TechRole">Technical Role</type>
 		<type id="sbIdM:Person">Person</type>
 		<type id="sbIdM:TechRoleGroup">TechRoleGroup</type>
+		<type id="sbIdM:DataManagement">Data Management</type>
+		<type id="sbIdM:DataCategory">Data Category</type>
+		<type id="sbIdM:Data">Data</type>
 	</nodetypes>
 	
 	<views>

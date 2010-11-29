@@ -37,9 +37,12 @@ class sbView_logs_system extends sbView {
 						$sFilename = Registry::getValue('sb.system.log.access.file');
 						break;
 						
-						
 					case 'exceptions':
 						$sFilename = Registry::getValue('sb.system.log.exceptions.file');
+						break;
+						
+					case 'debug':
+						$sFilename = '_logs/debug.txt';
 						break;
 					
 					default:

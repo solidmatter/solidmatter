@@ -43,7 +43,7 @@
 					<xsl:value-of select="dyn:evaluate(@label)" />: 
 					<span class="type {$system/displaytype}"><xsl:value-of select="$locale//nodetypes/type[@id=$content/@nodetype]" /></span>
 					in
-					<span class="type {$content/parent/sbnode/@displaytype}"><xsl:value-of select="$content/parent/sbnode/@label" /></span>
+					<span class="type {$content/parent/sbnode/@displaytype}"><xsl:call-template name="localize"><xsl:with-param name="label" select="$content/parent/sbnode/@label" /></xsl:call-template></span>
 				</th></tr>
 				<xsl:if test="@errorlabel"><br/><xsl:value-of select="dyn:evaluate(@errorlabel)" /></xsl:if>
 				<xsl:apply-templates select="*" mode="complete" />

@@ -3,23 +3,23 @@
 /* types / icons
 /*----------------------------------------------------------------------------*/
 
-*.sb_multimediamanager {
+*.sbFiles_Filemanager {
 	background-image: url(../icons/type_multimediamanager.png);
 }
-*.sb_folder {
+*.sbFiles_Folder {
 	background-image: url(../icons/type_folder.png);
 }
-*.sb_autofolder {
+*.sbFiles_AutoFolder {
 	background-image: url(../icons/type_autofolder.png);
 }
-*.sb_image {
+*.sbFiles_Image {
 	background-image: url(../icons/type_image.png);
 }
 
-*.sb_ctn_image {
+*.sbFiles_CTN_Image {
 	background-image: url(../icons/type_ctn_image.png);
 }
-*.sb_tpl_image {
+*.sbFiles_TPL_Image {
 	background-image: url(../icons/type_tpl_image.png);
 }
 

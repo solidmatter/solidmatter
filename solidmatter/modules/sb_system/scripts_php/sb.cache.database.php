@@ -11,9 +11,32 @@
 //------------------------------------------------------------------------------
 /** TODO: use other db than system, or move cache table to global scope!
 */
-class DatabaseCache {
+class DatabaseCache implements sbCache {
 	
-	protected $sPrefix = 'DEFAULT:';
+	protected $sPrefix = '';
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function __construct($sPrefix = NULL) {
+		if ($sPrefix != NULL) {
+			$this->sPrefix = $sPrefix;
+		}
+		$this->DB = System::getDatabase();
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function setDatabase($DB) {
+		$this->DB = $DB;
+	}
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -22,7 +45,7 @@ class DatabaseCache {
 	* @return 
 	*/
 	public function storeData($sKey, $mData) {
-		$stmtStore = System::getDatabase()->prepareKnown('sbSystem/cache/flat/store');
+		$stmtStore = $this->DB->prepareKnown('sbSystem/cache/flat/store');
 		$stmtStore->bindValue('key', $this->sPrefix.$sKey, PDO::PARAM_STR);
 		$stmtStore->bindValue('data', serialize($mData), PDO::PARAM_STR);
 		$stmtStore->execute();
@@ -37,7 +60,7 @@ class DatabaseCache {
 	* @return 
 	*/
 	public function loadData($sKey) {
-		$stmtLoad = System::getDatabase()->prepareKnown('sbSystem/cache/flat/load');
+		$stmtLoad = $this->DB->prepareKnown('sbSystem/cache/flat/load');
 		$stmtLoad->bindValue('key', $this->sPrefix.$sKey, PDO::PARAM_STR);
 		$stmtLoad->execute();
 		$mData = FALSE;
@@ -55,7 +78,7 @@ class DatabaseCache {
 	* @return 
 	*/
 	public function exists($sKey) {
-		$stmtExists = System::getDatabase()->prepareKnown('sbSystem/cache/flat/check');
+		$stmtExists = $this->DB->prepareKnown('sbSystem/cache/flat/check');
 		$stmtExists->bindValue('key', $this->sPrefix.$sKey, PDO::PARAM_STR);
 		$stmtExists->execute();
 		foreach ($stmtExists as $aRow) {
@@ -74,10 +97,20 @@ class DatabaseCache {
 	*/
 	public function clear($sKey = '') {
 		$sKey = $sKey.'%';
-		$stmtClear = System::getDatabase()->prepareKnown('sbSystem/cache/flat/clear');
+		$stmtClear = $this->DB->prepareKnown('sbSystem/cache/flat/clear');
 		$stmtClear->bindValue('key', $this->sPrefix.$sKey, PDO::PARAM_STR);
 		$stmtClear->execute();
 		$stmtClear->closeCursor();
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getInfo() {
+		return (array('info' => 'not yet implemented'));	
 	}
 	
 }

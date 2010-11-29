@@ -93,7 +93,7 @@
 							<td>
 								<a href="/{@fk_subject}" class="type {@s_subjectdisplaytype}" title="{@subjectlabel}"></a>
 								<xsl:if test="@fk_user!=''">
-									<a href="/{@fk_user}" class="type sb_user" title="{@username}"></a>
+									<a href="/{@fk_user}" class="type sbSystem_User" title="{@username}"></a>
 								</xsl:if>
 							</td>
 							<td>

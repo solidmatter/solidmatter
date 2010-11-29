@@ -11,7 +11,7 @@
 //------------------------------------------------------------------------------
 /**
 */
-class sbView_idm_orgrole_details extends sbView {
+class sbView_idm_manager_details extends sbView {
 	
 	protected $aOrgRoles = array();
 	protected $aInheritedOrgRoles = array();
@@ -29,29 +29,29 @@ class sbView_idm_orgrole_details extends sbView {
 			
 			case 'display':
 				
-				$this->nodeSubject->loadChildren('gatherTechRoles');
-				//$this->nodeSubject->storeChildren('gatherTechRoles');
+				$this->nodeSubject->getBranchTags();
 				
-				$this->gatherParentRoles();
-				
-				$niOrgRoles = new sbCR_NodeIterator($this->aOrgRoles);
-				$niInheritedOrgRoles = new sbCR_NodeIterator($this->aInheritedOrgRoles);
-				
-				foreach ($niOrgRoles as $nodeOrgRole) {
-					$nodeOrgRole->loadChildren('gatherTechRoles');
-					$nodeOrgRole->storeChildren('gatherTechRoles');
-				}
-				foreach ($niInheritedOrgRoles as $nodeOrgRole) {
-					$nodeOrgRole->loadChildren('gatherTechRoles');
-					$nodeOrgRole->storeChildren('gatherTechRoles');
+				$iTagID = $_REQUEST->getParam('tagid');
+				if ($iTagID != NULL) {
+					$iTagID = (int) $iTagID;
+					$niTaggedItems = $this->nodeSubject->getBranchNodesByTag($iTagID);
+					foreach ($niTaggedItems as $nodeTagged) {
+						$nodeTagged->loadProperties();
+						
+					}
+					$this->nodeSubject->addContent('tagged', $niTaggedItems);
+					$this->nodeSubject->aGetElementFlags['content'] = TRUE;
 				}
 				
-				$_RESPONSE->addData($niOrgRoles, 'OrgRoles');
-				$_RESPONSE->addData($niInheritedOrgRoles, 'InheritedOrgRoles');
+				/*$niPersons = new sbCR_NodeIterator();
+				foreach ($niTaggedItems as $nodeCurrent) {
+					if ($nodeCurrent->getPrimaryNodeType() == 'sbIdM:TechRole') {
+						$niPersons->append($nodeCurrent->gatherPersons());
+					}
+				}
+				$niPersons->makeUnique();
 				
-				$this->gatherChildren($this->nodeSubject);
-				
-				
+				$_RESPONSE->addData($niPersons, 'persons');*/
 				
 				break;
 			
@@ -61,40 +61,6 @@ class sbView_idm_orgrole_details extends sbView {
 		}
 		
 	}
-
-	protected function gatherParentRoles($nodeCurrent = NULL) {
-		
-		if ($nodeCurrent == NULL) {
-			
-			$nodeCurrent = $this->nodeSubject;
-			foreach ($nodeCurrent->getParents() as $nodeParent) {
-				$this->aOrgRoles[$nodeParent->getProperty('jcr:uuid')] = $nodeParent;
-				$this->gatherParentRoles($nodeParent);
-			}
-		
-		} else {
-			
-			foreach ($nodeCurrent->getParents() as $nodeParent) {
-				if (!isset($this->aInheritedOrgRoles[$nodeParent->getProperty('jcr:uuid')]) && $nodeParent->isNodeType('sbIdM:OrgRole')) {
-					$this->aInheritedOrgRoles[$nodeParent->getProperty('jcr:uuid')] = $nodeParent;
-					$this->gatherParentRoles($nodeParent);
-				}
-			}
-			
-		}
-		
-	}
-	
-	protected function gatherChildren($nodeCurrent) {
-		
-		$niChildren = $nodeCurrent->loadChildren('debug', TRUE, TRUE);
-		foreach ($niChildren as $nodeChild) {
-			$this->gatherChildren($nodeChild);
-		}
-		$nodeCurrent->storeChildren();
-		
-	}
-	
 	
 }
 

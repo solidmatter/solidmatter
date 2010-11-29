@@ -14,7 +14,7 @@
 class sbView_jukebox_various_votes extends sbJukeboxView {
 	
 	protected $aRequiredAuthorisations = array(
-		'placeVote' => array('vote'),
+		'placeVote' => array('rate'),
 		//'removeVote' => array('write'), // not hard-coded because users can remove their own votes
 		'addComment' => array('comment'),
 		//'removeComment' => array('write'), // not hard-coded because users can remove their own comments

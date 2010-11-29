@@ -34,12 +34,13 @@
 		
 		<table class="default">
 			<tr>
-				<th colspan="3">Knotentypen</th>
+				<th colspan="4">Knotentypen</th>
 			</tr>
 			<tr class="th2">
 				<th>Knotentyp</th>
 				<th>interner Knotentyp</th>
 				<th>Anzahl</th>
+				<th>Unverlinkt</th>
 			</tr>
 			<xsl:for-each select="nodetypes/row">
 				<xsl:variable name="nodetype" select="@s_type" />
@@ -55,6 +56,7 @@
 					<td><span class="type {@s_displaytype}"><xsl:call-template name="localize"><xsl:with-param name="label">$locale//nodetypes/type[@id='<xsl:value-of select="$nodetype" />']</xsl:with-param></xsl:call-template></span></td>
 					<td><xsl:value-of select="@s_type" /></td>
 					<td><xsl:value-of select="@num_nodes" /></td>
+					<td><xsl:value-of select="@num_lostnodes" /></td>
 				</tr>
 			</xsl:for-each>
 		</table>

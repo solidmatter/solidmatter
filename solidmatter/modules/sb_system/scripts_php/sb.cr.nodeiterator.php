@@ -152,6 +152,34 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	
 	//--------------------------------------------------------------------------
 	/**
+	* TODO: find more stable way to determine the lasting nodes, not just the last one
+	* @param 
+	* @return 
+	*/
+	public function makeUnique() {
+		$aTemp = array();
+		foreach ($this->aNodeArray as $nodeCurrent) {
+			$aTemp[$nodeCurrent->getProperty('jcr:uuid')] = $nodeCurrent;
+		}
+		$this->fill($aTemp); 
+		$this->rewind();
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function append($niSecond) {
+		foreach ($niSecond as $nodeCurrent) {
+			$this->aNodeArray[] = $nodeCurrent;
+		}
+		$this->rewind();
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* 
 	* @param 
 	* @return 

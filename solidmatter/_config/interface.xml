@@ -46,23 +46,27 @@
 		<site location="test.backend/theme" type="theme" handler="backend" theme="_admin_grey" />
 		<site location="test.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
 	</site>
+	
+	<!-- separate repository for sbPortal tests -->
 	<site location="test.portal/" type="controller" handler="portal" subject="demoportal">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="test.portal/stuff" type="rewrite" destination="X:/DigitalerCampus/!NeueDokumente/Mockups" />
-		<site location="test.portal/theme" type="theme" handler="backend" theme="_default" />
-		<site location="test.portal/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
-	</site>
-	<site location="portal.sm.gotdns.org/" type="controller" handler="portal" subject="demoportal">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<storage repository="portal" workspace="test" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
 		<site location="portal.sm.gotdns.org/stuff" type="rewrite" destination="X:/DigitalerCampus/!NeueDokumente/Mockups" />
 		<site location="portal.sm.gotdns.org/theme" type="theme" handler="backend" theme="_default" />
 		<site location="portal.sm.gotdns.org/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
 	</site>
 	
+	<!-- separate repository for sbIdM tests -->
+	<site location="test.idm/" type="controller" handler="backend">
+		<storage repository="idm" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="test.idm/theme" type="theme" handler="backend" theme="_admin_grey" />
+		<site location="test.idm/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
+	</site>
+	
 	<!-- utilities -->
 	<site location="backend.localhost/phpinfo" type="script" handler="phpinfo.php" />
+	<site location="backend.localhost/apcinfo" type="script" handler="apcinfo.php" />
 	<site location="backend.localhost/test" type="script" handler="test.php" />
 	<site location="frontend.localhost/google" type="redirect" destination="http://www.google.com" />
 	
@@ -75,21 +79,5 @@
 			<tier1 host="tier2.localhost" port="80" path="" />
 		</tiers>
 	</site>-->
-	
-	<site location="jukebox.sm.gotdns.org/" type="controller" handler="application" subject="demojukebox" theme="black_lime">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="jukebox.sm.gotdns.org/theme" type="theme" handler="backend" theme="black_lime" theme_override="black_ice" />
-		<site location="jukebox.sm.gotdns.org/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
-		<site location="jukebox.sm.gotdns.org/play" type="controller" handler="jbaudiostream" />
-		<site location="jukebox.sm.gotdns.org/rss" type="controller" handler="jbrss" />
-	</site>
-	<site location="admin.sm.gotdns.org/" type="controller" handler="backend">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="admin.sm.gotdns.org/templates" type="controller" handler="xsl" subject="demotemplates" />
-		<site location="admin.sm.gotdns.org/theme" type="theme" handler="backend" theme="_admin_grey" />
-		<site location="admin.sm.gotdns.org/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
-	</site>
 	
 </config>

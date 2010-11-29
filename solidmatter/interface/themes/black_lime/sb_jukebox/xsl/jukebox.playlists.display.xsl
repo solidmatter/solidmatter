@@ -40,11 +40,9 @@
 		
 		<div class="th">
 			<span class="actions">
-				<xsl:if test="$auth[@name='add_playlists' and @grant_type='ALLOW']">
 				<xsl:call-template name="newPlaylist">
 					<xsl:with-param name="form" select="$content/sbform[@id='newPlaylist']" />
 				</xsl:call-template>
-				</xsl:if>
 			</span>
 			<span class="type playlist"><xsl:value-of select="$locale/sbJukebox/menu/playlists"/></span>
 		</div>

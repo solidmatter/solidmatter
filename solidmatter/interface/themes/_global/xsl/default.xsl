@@ -18,10 +18,13 @@
 	<xsl:variable name="locale" select="/response/locales/locale[@lang=$lang]" />
 	<xsl:variable name="commands" select="/response/metadata/commands" />
 	<xsl:variable name="system" select="/response/metadata/system" />
+	<xsl:variable name="modules" select="/response/metadata/modules" />
+	<xsl:variable name="parameters" select="/response/metadata/parameters" />
 	<xsl:variable name="content" select="/response/content" />
 	<xsl:variable name="errors" select="/response/errors" />
 	<xsl:variable name="stylesheets_css" select="'/theme/sb_system/css'" />
 	<xsl:variable name="scripts_js" select="'/theme/sb_system/js'" />
+	<xsl:variable name="global_js" select="'/theme/global/js'" />
 	<xsl:variable name="images" select="'/theme/sb_system/images'" />
 	<xsl:variable name="master" select="$content/sbnode[@master]" />
 	<xsl:variable name="sessionid" select="/response/metadata/system/sessionid" />
@@ -32,7 +35,7 @@
 	
 	<xsl:template match="/response/metadata">
 		<!-- title -->
-		<title><xsl:value-of select="/response/content/sbnode/@label" /> : <xsl:value-of select="$locale/*/views/view[@id=/response/content/@view]" /></title>
+		<title><xsl:call-template name="localize"><xsl:with-param name="label" select="$master/@label" /></xsl:call-template> : <xsl:value-of select="$locale/*/views/view[@id=/response/content/@view]" /></title>
 		<!-- styles -->
 		<xsl:for-each select="modules/*">
 			<link rel="stylesheet" href="/theme/{name()}/css/styles.css" type="text/css" media="all" />
@@ -41,6 +44,10 @@
 		<!-- additional scripts -->
 		<xsl:if test="//sbinput[@type='codeeditor']">
 			<script language="Javascript" type="text/javascript" src="{$scripts_js}/edit_area/edit_area_full.js"></script>
+		</xsl:if>
+		<xsl:if test="//sbinput[@type='relation']">
+			<script language="Javascript" type="text/javascript" src="{$global_js}/prototype.js"></script>
+			<script language="Javascript" type="text/javascript" src="{$global_js}/scriptaculous.js"></script>
 		</xsl:if>
 		<xsl:if test="commands/command">
 			<script language="Javascript" type="text/javascript" src="{$scripts_js}/commands.js"></script>
@@ -129,6 +136,7 @@
 							<xsl:when test="@errno='8'">E_NOTICE</xsl:when>
 							<xsl:when test="@errno='2048'">E_STRICT</xsl:when>
 							<xsl:when test="@errno='4096'">E_RECOVERABLE_ERROR</xsl:when>
+							<xsl:when test="@errno='8192'">E_DEPRECATED</xsl:when>
 							<xsl:otherwise><xsl:value-of select="@errno" /></xsl:otherwise>
 						</xsl:choose>
 					</td>
@@ -176,14 +184,14 @@
 	<xsl:template name="localize">
 		<xsl:param name="label" />
 		<xsl:choose>
-			<xsl:when test="substring($label, 1, 1) = '$'">
+			<xsl:when test="substring($label, 1, 8) = '$locale/'">
 				<xsl:if test="not(dyn:evaluate($label))">
 					[Unlocalized] <xsl:value-of select="$label" />
 				</xsl:if>
 				<xsl:value-of select="dyn:evaluate($label)" />
 			</xsl:when>
 			<xsl:otherwise>
-				[Unlocalized] <xsl:value-of select="$label" />
+				<xsl:value-of select="$label" />
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

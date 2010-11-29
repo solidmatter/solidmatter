@@ -23,11 +23,15 @@ class sbCR_Node {
 	*/ 
 	protected $crSession			= NULL;
 	/**
-	* 
+	* @var
 	*/
 	protected $crPropertyDefinitionCache = NULL;
 	/**
-	* 
+	* @var 
+	*/
+	protected $crNodetype 			= NULL;
+	/**
+	* @var
 	*/
 	protected $crLock				= NULL;
 	
@@ -113,6 +117,7 @@ class sbCR_Node {
 		'sbcr:inheritRights'		=> 'inheritrights',
 		'sbcr:bequeathRights'		=> 'bequeathrights',
 		'sbcr:bequeathLocalRights'	=> 'bequeathlocalrights',
+		'sbcr:uid'					=> 'uid',
 	);
 	
 	//--------------------------------------------------------------------------
@@ -440,13 +445,18 @@ class sbCR_Node {
 	protected function isAncestorOf($nodeSubject) {
 		
 		try {
-			$nodeParent = $nodeSubject->getParent();
-			if ($nodeParent->isSame($this)) {
-				return (FALSE);
-			} else {
-				return ($this->isAncestorOf($nodeParent));
+			$bIsAncestor = FALSE;
+			$niParents = $nodeSubject->getParents(); // consider shared sets, getParent() is not enough
+			foreach ($niParents as $nodeParent) {
+				if ($nodeParent->isSame($this)) {
+					return (TRUE);
+				} else {
+					$bIsAncestor |= $this->isAncestorOf($nodeParent);
+				}
 			}
+			return $bIsAncestor;
 		} catch (ItemNotFoundException $e) {
+			// ItemNotFoundException means the top of the tree (the root node) has been reached
 			return (FALSE);
 		}
 		
@@ -1186,7 +1196,7 @@ class sbCR_Node {
 			$nodeParent = $this->crSession->getNode($sParentUUID);
 			return ($nodeParent);
 		} else {
-			throw new ItemNotFoundException();
+			throw new ItemNotFoundException('the node "'.$this->getProperty('label').'" has no parent, which should never be the case!');
 		}
 		
 	}
@@ -2105,6 +2115,24 @@ class sbCR_Node {
 		return (FALSE);
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function isDeletable() {
+		
+		// for now, every node except the root node is deletable
+		if ($this->getProperty('jcr:primaryType') == 'sbSystem:Root') {
+			return (FALSE);
+		}
+		
+		// nothing restricts this node from being deleted
+		return (TRUE);
+		
+	}
+	
 	
 	
 	
@@ -2183,40 +2211,17 @@ class sbCR_Node {
 			return ($this->crLock->isDeep());*/
 
 		} elseif ($sRelativePath == 'sbcr:isDeletable') {
-			// TODO: remove this almost dirty hack, implement special attributes instead
-			$aKnownMandatoryNodes = array(
-				'sbSystem:Root',
-				'sbSystem:Preferences',
-				'sbSystem:Reports',
-				'sbSystem:Maintenance',
-				'sbSystem:Modules',
-				'sbSystem:Reports_DB',
-				'sbSystem:Reports_Structure',
-				'sbSystem:Trashcan',
-				'sbSystem:Useraccounts',
-				'sbSystem:Registry',
-				'sbSystem:Module',
-				'sbSystem:Debug',
-				'sbSystem:Logs',
-				'sbSystem:Tags',
-			);
-			if (in_array($this->getProperty('jcr:primaryType'), $aKnownMandatoryNodes, TRUE)) {
-				return (FALSE);
-			}
-			return (TRUE);
+			return ($this->isDeletable());
 		} elseif (isset($this->aModifiedProperties[$sRelativePath])) {
 			return ($this->aModifiedProperties[$sRelativePath]);
 		} elseif ($this->elemSubject->hasAttribute($sRelativePath)) {
-//			var_dumpp('attribute|'.$sRelativePath.'|'.(string) $this->elemSubject->getAttribute($sRelativePath));
 			return ((string) $this->elemSubject->getAttribute($sRelativePath));
 		} elseif ($this->crPropertyDefinitionCache->hasProperty($sRelativePath)) {
 			$this->loadProperties($this->crPropertyDefinitionCache->getStorageType($sRelativePath));
 			return ($this->elemSubject->getAttribute($sRelativePath));
 		} else {
-//		if (!$this->elemSubject->hasAttribute($sRelativePath)) {
 			throw new PathNotFoundException('in Node \''.$this->getIdentifier().'\' for path \''.$sRelativePath.'\'');
 		}
-//		return ($this->elemSubject->getAttribute($sRelativePath));
 	}
 	
 	//--------------------------------------------------------------------------

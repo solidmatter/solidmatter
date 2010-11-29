@@ -16,35 +16,111 @@ import('sb.pdo.system.queries');
 */
 class sbNode extends sbCR_Node {
 	
-	protected $crNodetype = NULL;
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @var 
+	*/
+	public $aGetElementFlags		= array(
+		'deep' => FALSE,
+		'parents' => FALSE,
+		'children' => FALSE,
+		'ancestors' => FALSE,
+		'views' => FALSE,
+		'content' => FALSE,
+		'tags' => TRUE,
+		'branchtags' => TRUE,
+		'votes' => TRUE,
+		'auth_supported' => FALSE,
+		'auth_user' => FALSE,
+		'auth_local' => FALSE,
+		'auth_inherited' => FALSE,
+	);
 	
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @var 
+	*/
 	protected $aViews				= NULL;
-	protected $elemViews			= NULL;
 	
-	// array of sbCR_NodeIterators - child nodes that are stored after acquireing them via getNodes resp. getChildren
-	public $aChildNodes				= array();
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @var 
+	*/
 	public $niAncestors				= NULL;
+	/**
+	* 
+	* @var 
+	*/ 
 	public $niParents				= NULL;
-	
-	// array of sbCR_NodeIterators - nodes that are stored as relevant "content" of this node
-	public $aRelatedNodes			= array();
-	// array of sbCR_NodeIterators - nodes that are stored as relevant "content" of this node (not necessarily children)
+	/**
+	* child nodes that are stored after acquireing them via getNodes resp. getChildren
+	* @var array of sbCR_NodeIterators
+	*/ 
+	public $aChildNodes				= array();
+	/**
+	* nodes that are stored as relevant "content" of this node (not necessarily children)
+	* @var 
+	*/// @var array of sbCR_NodeIterators
 	public $aContentNodes			= array();
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @var 
+	*/
 	protected $aSupportedAuthorisations = NULL;
+	/**
+	* 
+	* @var 
+	*/
 	protected $aInheritedAuthorisations = NULL;
+	/**
+	* 
+	* @var 
+	*/
 	protected $aLocalAuthorisations		= NULL;
+	/**
+	* 
+	* @var 
+	*/
 	protected $aMergedAuthorisations	= NULL;
+	/**
+	* 
+	* @var 
+	*/
 	protected $aUserAuthorisations		= NULL; // caution, contains only current user auth!!!
 	
-	//protected $elemLocalAuthorisations = NULL;
-	//protected $elemInheritedAuthorisations = NULL;
-	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @var 
+	*/
 	protected $aVotes 				= NULL;
+	/**
+	* 
+	* @var 
+	*/
 	protected $aVoteChanges			= array();
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @var 
+	*/
 	protected $aTags 				= NULL;
+	/**
+	* 
+	* @var 
+	*/
 	protected $aNewTags				= array();
+	/**
+	* 
+	* @var 
+	*/
 	protected $aBranchTags			= NULL;
 	
 	//--------------------------------------------------------------------------
@@ -77,6 +153,7 @@ class sbNode extends sbCR_Node {
 		$this->aQueries['tagging/removeTagsFromNode']				= 'sbSystem/tagging/node/removeTags';
 		$this->aQueries['tagging/getAllNodeTags']					= 'sbSystem/tagging/node/getTags';
 		$this->aQueries['tagging/getAllBranchTags']					= 'sbSystem/tagging/node/getBranchTags';
+		$this->aQueries['tagging/getBranchNodes']					= 'sbSystem/tagging/getItems/byTagID';
 		$this->aQueries['tagging/getTagID']							= 'sbSystem/tagging/tags/getID';
 		$this->aQueries['tagging/getTag']							= 'sbSystem/tagging/tags/getTag';
 		$this->aQueries['tagging/createNewTag']						= 'sbSystem/tagging/tags/addTag';
@@ -266,81 +343,126 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* CUSTOM:
-	* @param 
+	* Returns a DOM element representation of this node and associated information.
+	* @param boolean set to true if getElement should traverse child and content nodes
+	* @param boolean 
 	* @return 
 	*/
-	public function getElement($bDeep = FALSE, $bUseContainer = FALSE) {
+	public function getElement($aCustomFlags = NULL) {
 		
+		// use a copy of the element (might be used multiple times)
 		$elemSubject = $this->elemSubject->cloneNode(TRUE);
+		
+		// apply last minute changes on copy
+		$this->getElementModifications($elemSubject);
+		
+		// determine which content should be included
+		foreach ($this->aGetElementFlags as $sKey => $mValue) {
+			$aFlag[$sKey] = $mValue;
+			if (isset($aCustomFlags[$sKey])) {
+				$aFlag[$sKey] = $aCustomFlags[$sKey];
+			}
+		}
+		
 		foreach ($this->aAppendedElements as $elemCurrent) {
-			$elemSubject->appendChild($elemCurrent);
+			$elemSubject->appendChild($elemCurrent->cloneNode(TRUE));
 		}
 		
 		// first create and store all children as elements
-		foreach ($this->aChildNodes as $sMode => $niCurrentChildren) {
-			//var_dumpp($sMode);
-			if (!$niCurrentChildren->isEmpty() && $bDeep) {
-				//var_dumpp($sMode);
-				if ($bUseContainer) {
-					$elemContainer = $this->elemSubject->ownerDocument->createElement('children');
-					$elemContainer->setAttribute('mode', $sMode);
-					$elemSubject->appendChild($elemContainer);
-				} else {
-					$elemContainer = $elemSubject;
-				}
-				$elemContainer = $this->elemSubject->ownerDocument->createElement('children');
-				$elemContainer->setAttribute('mode', $sMode);
-				$elemSubject->appendChild($elemContainer);
-				foreach ($niCurrentChildren as $nodeChild) {
-					$elemContainer->appendChild($nodeChild->getElement($bDeep, $bUseContainer, $sMode));
-				}
+		if ($aFlag['children']) {
+			foreach ($this->aChildNodes as $sMode => $niCurrentChildren) {
+				$this->storeNodeList($elemSubject, $niCurrentChildren, TRUE, 'children', $sMode, FALSE, $aCustomFlags);
 			}
 		}
 		
 		// then treat content nodes in a similar way
-		foreach ($this->aContentNodes as $sMode => $niCurrentChildren) {
-			if (!$niCurrentChildren->isEmpty() && $bDeep) {
-				if ($bUseContainer) {
-					$elemContainer = $this->elemSubject->ownerDocument->createElement('content');
-					$elemContainer->setAttribute('mode', $sMode);
-					$elemSubject->appendChild($elemContainer);
-				} else {
-					$elemContainer = $elemSubject;
-				}
-				$elemContainer = $this->elemSubject->ownerDocument->createElement('content');
-				$elemContainer->setAttribute('mode', $sMode);
-				$elemSubject->appendChild($elemContainer);
-				foreach ($niCurrentChildren as $nodeChild) {
-					$elemContainer->appendChild($nodeChild->getElement($bDeep, $bUseContainer, $sMode));
-				}
+		if ($aFlag['content']) {
+			foreach ($this->aContentNodes as $sMode => $niCurrentChildren) {
+				$this->storeNodeList($elemSubject, $niCurrentChildren, TRUE, 'content', $sMode, FALSE, $aCustomFlags);
 			}
 		}
 		
-		if (is_array($this->aTags) && count($this->aTags) > 0) {
-			$elemTags = $this->elemSubject->ownerDocument->createElement('tags');
-			foreach ($this->aTags as $sTag => $iTagID) {
-				$elemTag = $this->elemSubject->ownerDocument->createElement('tag', htmlspecialchars($sTag));
-				$elemTag->setAttribute('id', $iTagID);
-				$elemTags->appendChild($elemTag);
-			}
-			$elemSubject->appendChild($elemTags);
+		// first create and store all children as elements
+		if ($aFlag['parents'] && $this->niParents != NULL) {
+			$this->storeNodeList($elemSubject, $this->niParents, TRUE, 'parents', NULL);
 		}
 		
-		if (is_array($this->aBranchTags) && count($this->aBranchTags) > 0) {
-			$elemTags = $this->elemSubject->ownerDocument->createElement('branchtags');
-			foreach ($this->aBranchTags as $iTagID => $aDetails) {
-				$elemTag = $this->elemSubject->ownerDocument->createElement('tag', htmlspecialchars($aDetails['tag']));
-				$elemTag->setAttribute('id', $iTagID);
-				$elemTag->setAttribute('popularity', $aDetails['popularity']);
-				$elemTag->setAttribute('numitems', $aDetails['numitems']);
-				$elemTag->setAttribute('customweight', $aDetails['customweight']);
-				$elemTags->appendChild($elemTag);
+		// first create and store all children as elements
+		if ($aFlag['ancestors'] && $this->niAncestors != NULL) {
+			$this->storeNodeList($elemSubject, $this->niAncestors, TRUE, 'ancestors', NULL, TRUE);
+		}
+		
+		// store views
+		if ($aFlag['views']) {
+			$elemViews = $elemSubject->ownerDocument->createElement('views');
+			foreach ($this->aViews as $aView) {
+				$elemView = $this->elemSubject->ownerDocument->createElement('view');
+				// TODO: find cleaner way to distinct non-display views
+				if ($aView['visible']) {
+					$elemView->setAttribute('name', $aView['name']);
+					$elemView->setAttribute('order', $aView['order']);
+					$elemView->setAttribute('priority', $aView['priority']);
+					$elemViews->appendChild($elemView);
+				}
 			}
-			$elemSubject->appendChild($elemTags);
+			$elemSubject->appendChild($elemViews);
+		}
+		
+		// store this node's tags
+		if ($aFlag['tags']) {
+			if (is_array($this->aTags) && count($this->aTags) > 0) {
+				$elemTags = $this->elemSubject->ownerDocument->createElement('tags');
+				foreach ($this->aTags as $sTag => $iTagID) {
+					$elemTag = $this->elemSubject->ownerDocument->createElement('tag', htmlspecialchars($sTag));
+					$elemTag->setAttribute('id', $iTagID);
+					$elemTags->appendChild($elemTag);
+				}
+				$elemSubject->appendChild($elemTags);
+			}
+		}
+		
+		// store tags of this node's descendents
+		if ($aFlag['branchtags']) {
+			if (is_array($this->aBranchTags) && count($this->aBranchTags) > 0) {
+				$elemTags = $this->elemSubject->ownerDocument->createElement('branchtags');
+				foreach ($this->aBranchTags as $iTagID => $aDetails) {
+					$elemTag = $this->elemSubject->ownerDocument->createElement('tag', htmlspecialchars($aDetails['tag']));
+					$elemTag->setAttribute('id', $iTagID);
+					$elemTag->setAttribute('popularity', $aDetails['popularity']);
+					$elemTag->setAttribute('numitems', $aDetails['numitems']);
+					$elemTag->setAttribute('customweight', $aDetails['customweight']);
+					$elemTags->appendChild($elemTag);
+				}
+				$elemSubject->appendChild($elemTags);
+			}
+		}
+		
+		// store authorisation-related information
+		if ($aFlag['auth_supported'] && $this->aSupportedAuthorisations != NULL) {
+			$this->storeSupportedAuthorisations($elemSubject);
+		}
+		if ($aFlag['auth_user'] && $this->aUserAuthorisations != NULL) {
+			$this->storeUserAuthorisations($elemSubject);
+		}
+		if ($aFlag['auth_local'] && $this->aLocalAuthorisations != NULL) {
+			$this->storeLocalAuthorisations($elemSubject);
+		}
+		if ($aFlag['auth_inherited'] && $this->aInheritedAuthorisations != NULL) {
+			$this->storeInheritedAuthorisations($elemSubject);
 		}
 		
 		return ($elemSubject);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* Dummy method to enable last-minute modifications on the DOM elements 
+	* passed by getElement in derived classes
+	* @return string the module
+	*/
+	protected function getElementModifications($elemSubject) {
+		// do nothing for now, can be overloaded by derived classes
 	}
 	
 	//--------------------------------------------------------------------------
@@ -358,7 +480,7 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function gatherContent($bPreview = TRUE) {
+	/*public function gatherContent($bPreview = TRUE) {
 		$this->loadChildren('gatherContent', TRUE, TRUE, TRUE);
 		//$this->storeChildren();
 		//$this->setDeepMode(TRUE);
@@ -378,16 +500,15 @@ class sbNode extends sbCR_Node {
 		$this->aAppendedElements[] = $elemImported;
 	}
 	
+	
 	//--------------------------------------------------------------------------
 	/**
 	* CUSTOM: 
 	* @param 
 	* @return 
 	*/
-	public function storeContent($bUseContainer = TRUE) {
-		foreach ($this->aContentNodes as $sMode => $niChildren) {
-			$this->storeNodeList($niChildren, $bUseContainer, 'content', $sMode);
-		}
+	public function addContent($sMode, $niContent) {
+		$this->aContentNodes[$sMode] = $niContent;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -400,9 +521,7 @@ class sbNode extends sbCR_Node {
 	* @return 
 	*/
 	public function storeChildren($bUseContainer = TRUE) {
-		foreach ($this->aChildNodes as $sMode => $niChildren) {
-			$this->storeNodeList($niChildren, $bUseContainer, 'children', $sMode);
-		}
+		$this->aGetElementFlags['children'] = TRUE;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -411,8 +530,8 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function storeAncestors($bUseContainer = TRUE, $bReverse = FALSE) {
-		$this->storeNodeList($this->niAncestors, $bUseContainer, 'ancestors', NULL, $bReverse);
+	public function storeAncestors() {
+		$this->aGetElementFlags['ancestors'] = TRUE;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -421,8 +540,18 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function storeParents($bUseContainer = TRUE) {
-		$this->storeNodeList($this->niParents, $bUseContainer, 'parents');
+	public function storeParents() {
+		$this->aGetElementFlags['parents'] = TRUE;
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* CUSTOM:
+	* @param 
+	* @return 
+	*/
+	public function storeViews() {
+		$this->aGetElementFlags['views'] = TRUE;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -431,36 +560,44 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	protected function storeNodeList($niList, $bUseContainer = FALSE, $sContainerName = 'nodelist', $sMode = NULL, $bReverse = FALSE) {
+	protected function storeNodeList($elemSubject, $niList, $bUseContainer = FALSE, $sContainerName = 'nodelist', $sMode = NULL, $bReverse = FALSE, $aCustomFlags = NULL) {
 		
 		if ($sMode !== NULL) {
 			$bUseContainer = TRUE;
 		}
 		
-		if ($niList != NULL) {
+		if ($niList instanceof sbCR_NodeIterator) {
 			
-			if ($bUseContainer) {
-				$elemParent = $this->elemSubject->ownerDocument->createElement($sContainerName);
-				if ($sMode !== NULL) {
-					$elemParent->setAttribute('mode', $sMode);
+			if ($niList->getSize() > 0) {
+				
+				if ($bUseContainer) {
+					$elemParent = $elemSubject->ownerDocument->createElement($sContainerName);
+					if ($sMode !== NULL) {
+						$elemParent->setAttribute('mode', $sMode);
+					}
+					$elemSubject->appendChild($elemParent);
+				} else {
+					$elemParent = $elemSubject;
 				}
-				$this->elemSubject->appendChild($elemParent);
-			} else {
-				$elemParent = $this->elemSubject;
+				
+				if ($bReverse) {
+					$niList->reverse();
+				}
+				foreach ($niList as $nodeCurrent) {
+					$elemParent->appendChild($nodeCurrent->getElement($aCustomFlags));
+				}
+				if ($bReverse) {
+					$niList->reverse();
+				}
+			
 			}
 			
-			if ($bReverse) {
-				$niList->reverse();
-			}
-			foreach ($niList as $nodeCurrent) {
-				$elemParent->appendChild($nodeCurrent->getElement());
-			}
-			if ($bReverse) {
-				$niList->reverse();
-			}
+		} else {
+			
+			throw new sbException('given list is of type "'.get_class($niList).'" instead of "sbCR_NodeIterator"');	
 			
 		}
-		
+				
 	}
 	
 	//--------------------------------------------------------------------------
@@ -563,8 +700,9 @@ class sbNode extends sbCR_Node {
 	*/
 	public function loadAncestors() {
 		
-		$niAncestors = $this->getAncestors();
-		$this->niAncestors = $niAncestors;
+		if ($this->niAncestors == NULL) {
+			$this->niAncestors = $this->getAncestors();
+		}
 		
 	}
 	
@@ -576,8 +714,9 @@ class sbNode extends sbCR_Node {
 	*/
 	public function loadParents() {
 		try {
-			$niParents = $this->getParents();
-			$this->niParents = $niParents;
+			if ($this->niParents == NULL) {
+				$this->niParents = $this->getParents();
+			}
 		} catch (ItemNotFoundException $e) {
 			return (FALSE);
 		}
@@ -605,6 +744,81 @@ class sbNode extends sbCR_Node {
 		return (parent::isAncestorOf($nodeSubject));
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function isDeletable() {
+		
+		// check special nodetypes
+		$aKnownMandatoryNodeTypes = array(
+			'sbSystem:Root',
+			'sbSystem:Preferences',
+			'sbSystem:Reports',
+			'sbSystem:Maintenance',
+			'sbSystem:Reports_DB',
+			'sbSystem:Reports_Structure',
+			'sbSystem:Trashcan',
+			'sbSystem:Useraccounts',
+			'sbSystem:Registry',
+			'sbSystem:Modules',
+			'sbSystem:Module',
+			'sbSystem:Debug',
+			'sbSystem:Logs',
+			'sbSystem:Tags',
+		);
+		if (in_array($this->getProperty('jcr:primaryType'), $aKnownMandatoryNodeTypes, TRUE)) {
+			return (FALSE);
+		}
+		
+		// check special nodes (identified via uid)
+		$aKnownMandatoryNodes = array(
+			'sbSystem:Guests',
+			'sbSystem:Admins',
+		);
+		if (in_array($this->getProperty('sbcr:uid'), $aKnownMandatoryNodes, TRUE)) {
+			return (FALSE);
+		}
+		
+		// check user authorisations
+		if (!User::isAuthorised('write', $this)) {
+			return (FALSE);
+		}
+		
+		// nothing restricts this node from being deleted
+		return (TRUE);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function getAllowedSubtypes($sMode) {
+		
+		$aAllowedSubtypes = array();
+		$stmtGetAllowedSubtypes = $this->crSession->prepareKnown('sbSystem/node/getAllowedSubtypes');
+		$stmtGetAllowedSubtypes->bindValue('parent_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+		$stmtGetAllowedSubtypes->bindValue('mode', $sMode, PDO::PARAM_STR);
+		$stmtGetAllowedSubtypes->execute();
+		foreach ($stmtGetAllowedSubtypes as $aRow) {
+			// store types for usage in paste/link section
+			$aAllowedSubtypes[$aRow['fk_nodetype']] = $aRow;
+		}
+		$stmtGetAllowedSubtypes->closeCursor();
+		
+		return ($aAllowedSubtypes);
+		
+	}
+	
+	
+	
+	
+	
 	
 	
 	
@@ -621,7 +835,7 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function loadViews($bReturnViews = TRUE) {
+	public function loadViews() {
 		
 		static $bViewsStored = FALSE;
 		
@@ -634,6 +848,7 @@ class sbNode extends sbCR_Node {
 		if (User::isAuthorised('grant', $this)) {
 			$this->aViews['security'] = array(
 				'name' => 'security',
+				'order' => '10001',
 				'priority' => '1',
 				'visible' => TRUE
 			);
@@ -642,30 +857,14 @@ class sbNode extends sbCR_Node {
 		if (Registry::getValue('sb.system.debug.tab.enabled') && User::isAdmin()) {
 			$this->aViews['debug'] = array(
 				'name' => 'debug',
+				'order' => '10002',
 				'priority' => '2',
 				'visible' => TRUE
 			);
 		}
 		
-		$elemViews = $this->elemSubject->ownerDocument->createElement('views');
-		foreach ($this->aViews as $aView) {
-			$elemView = $this->elemSubject->ownerDocument->createElement('view');
-			// TODO: find cleaner way to distinct non-display views
-			if ($aView['visible']) {
-				$elemView->setAttribute('name', $aView['name']);
-				$elemView->setAttribute('priority', $aView['priority']);
-				$elemViews->appendChild($elemView);
-			}
-		}
-		
 		if (!$bViewsStored) {
 			$bViewsStored = TRUE;
-			$this->elemViews = $elemViews;
-			$this->elemSubject->appendChild($elemViews);
-		}
-		
-		if ($bReturnViews) {
-			return($elemViews);
 		}
 		
 	}
@@ -737,6 +936,7 @@ class sbNode extends sbCR_Node {
 		if ($viewCurrent->requiresLogin() && (!User::isLoggedIn() || sbSession::isZombie())) {
 			throw new SessionTimeoutException();
 		}
+		$viewCurrent->checkRequirements($sAction);
 		
 		if (!$_RESPONSE->hasRequestData()) {
 			$_RESPONSE->addRequestData($this->getProperty('jcr:uuid'), $sView, $sAction);
@@ -755,16 +955,6 @@ class sbNode extends sbCR_Node {
 		
 		return ($elemView);
 		
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	public function getViews() {
-		return ($this->elemViews);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -892,53 +1082,68 @@ class sbNode extends sbCR_Node {
 		$elemContextMenu->setAttribute('parent', $sParentUUID);
 		$elemContextMenu->setAttribute('refresh', 'TRUE');
 		
-		// trash
-		if ($this->getPrimaryNodeType() == 'sbSystem:Trashcan') {
-			$elemContextMenu->setAttribute('purge', 'TRUE');	
+		// store allowed subtypes
+		// TODO: use a special 'paste'-mode instead of 'create'
+		$aAllowedSubtypes = $this->getAllowedSubtypes('create');
+		
+		// create new nodes
+		if (User::isAuthorised('write', $this)) {
+			foreach ($aAllowedSubtypes as $sNodetype => $aRow) {
+				$elemNew = ResponseFactory::createElement('new');
+				$elemNew->setAttribute('nodetype', $aRow['fk_nodetype']);
+				$elemNew->setAttribute('displaytype', $aRow['displaytype']);
+				$elemContextMenu->appendChild($elemNew);
+				$sModule = substr($aRow['fk_nodetype'], 0, strpos($aRow['fk_nodetype'], ':'));
+				global $_RESPONSE;
+				$_RESPONSE->addLocale($sModule);
+			}
 		}
 		
 		// clipboard data
 		if (isset(sbSession::$aData['clipboard'])) {
-			// TODO: remove this hack, it might be that the node in clipboard is already deleted
-			// the clipboard should instead be cleaned on deletion...
+			// TODO: it might be that the node in clipboard is already deleted
+			// the clipboard should instead be cleaned on deletion... (but consider other user's clipboards!)
+			// TODO: implement clipboard for multiple nodes
+			// TODO: check in subtree, too. cyclic recursions are still possible
 			try {
+				
 				$nodeSubject = $this->crSession->getNodeByIdentifier(sbSession::$aData['clipboard']['childnode']);
-				// only include the clipboard options if no cyclic recursions would be created
-				// TODO: check in subtree, too. cyclic recursions are still possible
-				if (!$nodeSubject->isAncestorOf($this) && !$nodeSubject->isSame($this)) {
+				
+				if (!User::isAuthorised('write', $this)) { // check for permissions
+					// do nothing
+				} elseif (!isset($aAllowedSubtypes[$nodeSubject->getPrimaryNodeType()])) { // check for allowed subnodes
+					// do nothing
+				} elseif ($nodeSubject->isAncestorOf($this) || $nodeSubject->isSame($this)) { // check cyclic recursions
+					// do nothing
+				} else {
 					$elemContextMenu->setAttribute('clipboard', 'TRUE');
 					$elemContextMenu->setAttribute('clipboard_type', sbSession::$aData['clipboard']['type']);
 					$elemContextMenu->setAttribute('clipboard_subject', $nodeSubject->getProperty('label'));
 				}
+				
 			} catch (NodeNotFoundException $e) {
 				// ignore
 			}
 		}
 		
-		// TODO: find another, more versatile solution for this
+		// export/import
+		if (User::isAdmin()) {
+			$elemContextMenu->setAttribute('export', 'TRUE');
+			// TODO: implement import functionality
+			$elemContextMenu->setAttribute('import', 'FALSE');
+		}
+		
+		// trash
+		if ($this->getPrimaryNodeType() == 'sbSystem:Trashcan') {
+			$elemContextMenu->setAttribute('purge', 'TRUE');
+		}
+		
+		// delete
 		$sDeletable = 'FALSE';
-		if ($this->getProperty('sbcr:isDeletable')) {
+		if ($this->isDeletable()) {
 			$sDeletable = 'TRUE';
 		}
 		$elemContextMenu->setAttribute('delete', $sDeletable);
-		
-		$sMode = 'create';
-		$stmtGetAllowedSubtypes = $this->crSession->prepareKnown('sbSystem/node/getAllowedSubtypes');
-		$stmtGetAllowedSubtypes->bindValue('parent_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
-		$stmtGetAllowedSubtypes->bindValue('mode', $sMode, PDO::PARAM_STR);
-		$stmtGetAllowedSubtypes->execute();
-		
-		foreach ($stmtGetAllowedSubtypes as $aRow) {
-			$elemNew = ResponseFactory::createElement('new');
-			$elemNew->setAttribute('nodetype', $aRow['fk_nodetype']);
-			$elemNew->setAttribute('displaytype', $aRow['s_displaytype']);
-			$elemContextMenu->appendChild($elemNew);
-			$sModule = substr($aRow['fk_nodetype'], 0, strpos($aRow['fk_nodetype'], ':'));
-			global $_RESPONSE;
-			$_RESPONSE->addLocale($sModule);
-		}
-		
-		$stmtGetAllowedSubtypes->closeCursor();
 		
 		return ($elemContextMenu);
 		
@@ -1206,7 +1411,7 @@ class sbNode extends sbCR_Node {
 	*/
 	public function placeVote($sUserUUID = NULL, $iVote) {
 		if ($sUserUUID == NULL) {
-			throw new sbException('voting needs user uuid');	
+			throw new sbException('voting needs user uuid');
 		}
 		$stmtPlaceVote = $this->prepareKnown('voting/placeVote');
 		$stmtPlaceVote->bindValue(':subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
@@ -1224,7 +1429,7 @@ class sbNode extends sbCR_Node {
 	*/
 	public function removeVote($sUserUUID = NULL) {
 		if ($sUserUUID == NULL) {
-			throw new sbException('voting needs user uuid');	
+			throw new sbException('voting needs user uuid');
 		}
 		$stmtPlaceVote = $this->prepareKnown('voting/removeVote');
 		$stmtPlaceVote->bindValue(':subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
@@ -1341,7 +1546,6 @@ class sbNode extends sbCR_Node {
 			$elemVote = $domOwner->createElement('vote');
 			$elemVote->setAttribute('vote', $aVote['vote']);
 			$elemVote->setAttribute('user_uuid', $aVote['user_uuid']);
-			//$elemVote->setAttribute('user_label', $aVote['user_label']);
 			$elemVotes->appendChild($elemVote);
 		}
 		
@@ -1356,11 +1560,13 @@ class sbNode extends sbCR_Node {
 	* @return 
 	*/
 	protected function refreshGlobalVote() {
+		
 		$nodeAll = $this->crSession->getRootNode();
 		$stmtGetVotes = $this->prepareKnown('voting/getAverageVote');
 		$stmtGetVotes->bindValue(':subject_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
 		$stmtGetVotes->bindValue(':ignore_uuid', $nodeAll->getProperty('jcr:uuid'), PDO::PARAM_STR);
 		$stmtGetVotes->execute();
+		
 		$bVotesPresent = FALSE;
 		foreach ($stmtGetVotes as $aRow) {
 			$stmtPlaceVote = $this->prepareKnown('voting/placeVote');
@@ -1370,9 +1576,11 @@ class sbNode extends sbCR_Node {
 			$stmtPlaceVote->execute();
 			$bVotesPresent = TRUE;
 		}
+		
 		if (!$bVotesPresent) {
-			$this->removeAllVotes();	
+			$this->removeAllVotes();
 		}
+		
 	}
 	
 	
@@ -1538,6 +1746,31 @@ class sbNode extends sbCR_Node {
 			);
 		}
 		return ($this->aBranchTags);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getBranchNodesByTag($iTagID, $bUnique = TRUE) {
+		$aTaggedNodes = array();
+		$stmtGetNodes = $this->prepareKnown('tagging/getBranchNodes');
+		$stmtGetNodes->bindValue('tag_id', $iTagID, PDO::PARAM_INT);
+		$stmtGetNodes->bindValue('root_mpath', $this->getMpath().'%', PDO::PARAM_STR);
+		$stmtGetNodes->execute();
+		foreach ($stmtGetNodes as $aRow) {
+			if ($bUnique) {
+				if (!isset($aTaggedNodes[$aRow['uuid']])) {
+					$aTaggedNodes[$aRow['uuid']] = $this->crSession->getNodeByIdentifier($aRow['uuid']);
+				}
+			} else {
+				$aTaggedNodes[] = $this->crSession->getNodeByIdentifier($aRow['uuid'], $aRow['parent_uuid']);
+			}
+		}
+		
+		return (new sbCR_NodeIterator($aTaggedNodes));
 	}
 	
 	//--------------------------------------------------------------------------
@@ -1718,6 +1951,7 @@ class sbNode extends sbCR_Node {
 			$elemRelation->setAttribute('id', $aRelation['relation']);
 			$elemRelation->setAttribute('target_uuid', $aRelation['target_uuid']);
 			$elemRelation->setAttribute('target_label', $aRelation['target_label']);
+			$elemRelation->setAttribute('target_nodetype', $aRelation['target_nodetype']);
 			$elemRelations->appendChild($elemRelation);
 		}
 		
@@ -1746,6 +1980,7 @@ class sbNode extends sbCR_Node {
 			$aTargets[$aRow['uuid']] = array(
 				'label' => $aRow['label'],
 				'nodetype' => $aRow['nodetype'],
+				// TODO: this attribute is obsolete, remove here and in query
 				'displaytype' => $aRow['displaytype'],
 			);
 		}
@@ -1834,19 +2069,12 @@ class sbNode extends sbCR_Node {
 	*/
 	public function isAuthorised($sAuthorisation, $sEntityID = NULL) {
 		
-		// admin is allowed everything
-		if (User::isAdmin()) {
-			return (TRUE);
-		}
-		
 		// load full user authorisations
 		$this->loadUserAuthorisations();
 		
 		// check authorisation
 		if (isset($this->aUserAuthorisations[$sAuthorisation])) {
-			if ($this->aUserAuthorisations[$sAuthorisation] == 'ALLOW') {
-				return (TRUE);
-			}
+			return (TRUE);
 		}
 		return (FALSE);
 	}
@@ -1857,7 +2085,20 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function loadUserAuthorisations() {
+	public function getUserAuthorisations() {
+		if ($this->aUserAuthorisations == NULL) {
+			$this->loadUserAuthorisations();	
+		}
+		return ($this->aUserAuthorisations);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function loadUserAuthorisations($bForced = FALSE) {
 		
 		if (User::isLoggedIn()) {
 			$sUserUUID = User::getUUID();
@@ -1867,9 +2108,7 @@ class sbNode extends sbCR_Node {
 		}
 		
 		// compute authorisations if necessary
-		if ($this->aUserAuthorisations == NULL) {
-			
-			$this->loadSupportedAuthorisations();
+		if ($this->aUserAuthorisations == NULL || $bForced) {
 			
 //			// check cache
 //			if (Registry::getValue('sb.system.cache.authorisations.enabled')) {
@@ -1885,7 +2124,7 @@ class sbNode extends sbCR_Node {
 				
 				if (User::isAdmin()) {
 					
-					$this->aUserAuthorisations = $this->loadSupportedAuthorisations();
+					$this->aUserAuthorisations = $this->getSupportedAuthorisations();
 					foreach($this->aUserAuthorisations as $sAuthorisation => $unused) {
 						$this->aUserAuthorisations[$sAuthorisation] = 'ALLOW';
 					}
@@ -1913,8 +2152,32 @@ class sbNode extends sbCR_Node {
 					$aUserAuth = $this->mergeAuthUserGroup($aUserAuth, $aGroupAuth);
 					$aUserAuth = $this->mergeAuthHierarchy($aUserAuth);
 					
-					// store in member for further use
-					$this->aUserAuthorisations = $aUserAuth;
+//					var_dumpp($this->getIdentifier());
+//					var_dumpp('userauth');
+//					var_dumpp($aUserAuth);
+					
+					foreach ($this->getSupportedAuthorisations() as $sAuthorisation => $sParentAuthorisation) {
+						if (isset($aUserAuth[$sAuthorisation])) {
+							if ($aUserAuth[$sAuthorisation] == 'ALLOW') {
+								$this->aUserAuthorisations[$sAuthorisation] = 'ALLOW';
+							}
+						} elseif (isset($aUserAuth[$sParentAuthorisation])) {
+							if ($aUserAuth[$sParentAuthorisation] == 'ALLOW') {
+								$this->aUserAuthorisations[$sAuthorisation] = 'ALLOW';
+							}
+						} elseif (isset($aUserAuth['full']) && $aUserAuth['full'] == 'ALLOW') {
+							if (isset($aUserAuth[$sParentAuthorisation])) {
+								if ($aUserAuth[$sParentAuthorisation] != 'DENY') {
+									$this->aUserAuthorisations[$sAuthorisation] = 'ALLOW';
+								}
+							}
+						}
+						
+					}
+					
+//					var_dumpp('userauth - processed');
+//					var_dumpp($this->aUserAuthorisations);
+					
 					
 //					// store in cache
 //					if (Registry::getValue('sb.system.cache.authorisations.enabled')) {
@@ -1928,7 +2191,6 @@ class sbNode extends sbCR_Node {
 			
 		}
 		
-		return ($this->aUserAuthorisations);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -1937,26 +2199,16 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function storeUserAuthorisations() {
+	protected function storeUserAuthorisations($elemSubject) {
 		
-		static $bAlreadyStored = FALSE;
-		
-		if (!$bAlreadyStored) {
-			
-			if ($this->aUserAuthorisations == NULL) {
-				$this->loadUserAuthorisations();	
-			}
-			
-			$elemContainer = ResponseFactory::createElement('user_authorisations');
-			foreach ($this->aUserAuthorisations as $sAuthorisation => $sGrantType) {
-				$elemAuthorisation = $this->elemSubject->ownerDocument->createElement('authorisation');
-				$elemAuthorisation->setAttribute('name', $sAuthorisation);
-				$elemAuthorisation->setAttribute('grant_type', $sGrantType);
-				$elemContainer->appendChild($elemAuthorisation);
-			}
-			$this->elemSubject->appendChild($elemContainer);
-			$bAlreadyStored = TRUE;
+		$elemContainer = $elemSubject->ownerDocument->createElement('user_authorisations');
+		foreach ($this->aUserAuthorisations as $sAuthorisation => $unused) {
+			$elemAuthorisation = $elemSubject->ownerDocument->createElement('authorisation');
+			$elemAuthorisation->setAttribute('name', $sAuthorisation);
+			//$elemContainer->setAttribute($sAuthorisation, '');
+			$elemContainer->appendChild($elemAuthorisation);
 		}
+		$elemSubject->appendChild($elemContainer);
 		
 	}
 	
@@ -1968,14 +2220,17 @@ class sbNode extends sbCR_Node {
 	*/
 	public function loadSecurityAuthorisations() {
 		
-		global $_RESPONSE;
-		
-		$this->storeSupportedAuthorisations();
+		// load authorisations and prepare to store on getElement()
+		$this->loadSupportedAuthorisations();
 		$this->loadInheritedAuthorisations();
 		$this->loadLocalAuthorisations();
+		$this->aGetElementFlags['auth_supported'] = TRUE;
+		$this->aGetElementFlags['auth_local'] = TRUE;
+		$this->aGetElementFlags['auth_inherited'] = TRUE;
 		
+		// store information about users and groups
 		$nodeUseraccounts = $this->crSession->getNode('//*[@uid="sbSystem:Useraccounts"]');
-		// FIXME: loading these destroys response!!?!?
+		global $_RESPONSE;
 		$aResultNodes['users'] = $nodeUseraccounts->callView('gatherdata', 'users', NULL, $_RESPONSE);
 		$aResultNodes['groups'] = $nodeUseraccounts->callView('gatherdata', 'groups', NULL, $_RESPONSE);
 		
@@ -1989,57 +2244,50 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	protected function loadInheritedAuthorisations($bSaveToElement = TRUE) {
-		
-		static $bAlreadyStored = FALSE;
-		
-		if ($this->aInheritedAuthorisations != null && !$bSaveToElement) {
-			return ($this->aInheritedAuthorisations);
+	public function getInheritedAuthorisations() {
+		if ($this->aInheritedAuthorisations == NULL) {
+			$this->loadInheritedAuthorisations();	
 		}
-				
-		$aMerged = array();
+		return ($this->aInheritedAuthorisations);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function loadInheritedAuthorisations($bForced = FALSE) {
 		
-		if ($this->getProperty('sbcr:inheritRights') == 'TRUE') {
-			$_CACHE = CacheFactory::getInstance('system');
-			if ($_CACHE->exists('authorisations:array/'.$this->getProperty('jcr:uuid'))) {
-				$aMerged = $_CACHE->loadData('authorisations:array/'.$this->getProperty('jcr:uuid'));
-			} else {
-				try {
-					$nodeParent = $this->getParent();
-					$aLocal = array();
-					if ($nodeParent->getProperty('sbcr:bequeathLocalRights') == 'TRUE') {
-						$aLocal = $nodeParent->loadLocalAuthorisations(FALSE);
+		if ($this->aInheritedAuthorisations == NULL || $bForced) {
+			
+			$aMerged = array();
+			
+			if ($this->getProperty('sbcr:inheritRights') == 'TRUE') {
+				$_CACHE = CacheFactory::getInstance('system');
+				if ($_CACHE->exists('authorisations:array/'.$this->getProperty('jcr:uuid'))) {
+					$aMerged = $_CACHE->loadData('authorisations:array/'.$this->getProperty('jcr:uuid'));
+				} else {
+					try {
+						$nodeParent = $this->getParent();
+						$aLocal = array();
+						if ($nodeParent->getProperty('sbcr:bequeathLocalRights') == 'TRUE') {
+							$aLocal = $nodeParent->getLocalAuthorisations();
+						}
+						if ($nodeParent->getProperty('sbcr:bequeathRights') == 'TRUE') {
+							$aInherited = $nodeParent->getInheritedAuthorisations();
+							$aMerged = $this->mergeAuthInherited($aLocal, $aInherited);
+							//$_CACHE->storeData('authorisations:array/'.$this->elemSubject->getAttribute('uuid'), $aMerged);
+						}
+					} catch (ItemNotFoundException $e) {
+						// ignore and and proceed, root is reached
 					}
-					if ($nodeParent->getProperty('sbcr:bequeathRights') == 'TRUE') {
-						$aInherited = $nodeParent->loadInheritedAuthorisations(FALSE);
-						$aMerged = $this->mergeAuthInherited($aLocal, $aInherited);
-						//$_CACHE->storeData('authorisations:array/'.$this->elemSubject->getAttribute('uuid'), $aMerged);
-					}
-				} catch (ItemNotFoundException $e) {
-					// ignore and and proceed, root is reached
 				}
 			}
+			
+			$this->aInheritedAuthorisations = $aMerged;
+		
 		}
-		
-		if ($bSaveToElement && !$bAlreadyStored) {
-			$elemContainer = ResponseFactory::createElement('inherited_authorisations');
-			foreach ($aMerged as $sEntityUUID => $aAuthorisations) {
-				foreach ($aAuthorisations as $sAuthorisation => $sGrantType) {
-					$elemAuthorisation = $this->elemSubject->ownerDocument->createElement('authorisation');
-					//$elemAuthorisation->setAttribute('nodetype', $aRow['fk_userentitytype']);
-					$elemAuthorisation->setAttribute('uuid', $sEntityUUID);
-					$elemAuthorisation->setAttribute('name', $sAuthorisation);
-					$elemAuthorisation->setAttribute('grant_type', $sGrantType);
-					$elemContainer->appendChild($elemAuthorisation);
-				}
-			}
-			$this->elemSubject->appendChild($elemContainer);
-			$bAlreadyStored = TRUE;
-		}
-		
-		$this->aInheritedAuthorisations = $aMerged;
-		
-		return ($aMerged);
 	
 	}
 	
@@ -2049,11 +2297,43 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	protected function loadLocalAuthorisations($bSaveToElement = TRUE) {
+	protected function storeInheritedAuthorisations($elemSubject) {
+		$elemContainer = $elemSubject->ownerDocument->createElement('inherited_authorisations');
+		foreach ($this->aInheritedAuthorisations as $sEntityUUID => $aAuthorisations) {
+			foreach ($aAuthorisations as $sAuthorisation => $sGrantType) {
+				$elemAuthorisation = $elemSubject->ownerDocument->createElement('authorisation');
+				$elemAuthorisation->setAttribute('uuid', $sEntityUUID);
+				$elemAuthorisation->setAttribute('name', $sAuthorisation);
+				$elemAuthorisation->setAttribute('grant_type', $sGrantType);
+				$elemContainer->appendChild($elemAuthorisation);
+			}
+		}
+		$elemSubject->appendChild($elemContainer);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getLocalAuthorisations() {
+		if ($this->aLocalAuthorisations == NULL) {
+			$this->loadLocalAuthorisations();	
+		}
+		return ($this->aLocalAuthorisations);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function loadLocalAuthorisations($bForced) {
 		
-		static $bAlreadyStored = FALSE;
-		
-		if ($this->aLocalAuthorisations == null) {
+		if ($this->aLocalAuthorisations == NULL || $bForced) {
+				
 			$stmtAuthorisations = $this->prepareKnown($this->aQueries['loadLocalAuthorisations']);
 			$stmtAuthorisations->bindValue(':uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_INT);
 			$stmtAuthorisations->execute();
@@ -2066,26 +2346,8 @@ class sbNode extends sbCR_Node {
 			
 			$this->aLocalAuthorisations = $aAuthorisations;
 			
-		} 
-		
-		if ($bSaveToElement && !$bAlreadyStored) {
-			$elemContainer = $this->elemSubject->ownerDocument->createElement('local_authorisations');
-			foreach ($this->aLocalAuthorisations as $sEntityUUID => $aEntity) {
-				foreach ($aEntity as $sAuthorisation => $sGrantType) {
-					$elemAuthorisation = $this->elemSubject->ownerDocument->createElement('authorisation');
-					//$elemAuthorisation->setAttribute('nodetype', $aRow['fk_userentitytype']);
-					$elemAuthorisation->setAttribute('uuid', $sEntityUUID);
-					$elemAuthorisation->setAttribute('name', $sAuthorisation);
-					$elemAuthorisation->setAttribute('grant_type', $sGrantType);
-					$elemContainer->appendChild($elemAuthorisation);
-				}
-			}
-			$this->elemSubject->appendChild($elemContainer);
-			$bAlreadyStored = TRUE;
 		}
-		
-		return ($this->aLocalAuthorisations);
-		
+
 	}
 	
 	//--------------------------------------------------------------------------
@@ -2094,16 +2356,45 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function loadSupportedAuthorisations() {
-		
+	protected function storeLocalAuthorisations($elemSubject) {
+		$elemContainer = $elemSubject->ownerDocument->createElement('local_authorisations');
+		foreach ($this->aLocalAuthorisations as $sEntityUUID => $aEntity) {
+			foreach ($aEntity as $sAuthorisation => $sGrantType) {
+				$elemAuthorisation = $elemSubject->ownerDocument->createElement('authorisation');
+				$elemAuthorisation->setAttribute('uuid', $sEntityUUID);
+				$elemAuthorisation->setAttribute('name', $sAuthorisation);
+				$elemAuthorisation->setAttribute('grant_type', $sGrantType);
+				$elemContainer->appendChild($elemAuthorisation);
+			}
+		}
+		$elemSubject->appendChild($elemContainer);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getSupportedAuthorisations() {
 		if ($this->aSupportedAuthorisations == NULL) {
+			$this->loadSupportedAuthorisations();	
+		}
+		return ($this->aSupportedAuthorisations);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function loadSupportedAuthorisations($bForced = FALSE) {
+		if ($this->aSupportedAuthorisations == NULL || $bForced) {
 			$crNodeTypeManager = $this->crSession->getWorkspace()->getNodeTypeManager();
 			$aAuthorisations = $crNodeTypeManager->getNodeType($this->getPrimaryNodeType())->getSupportedAuthorisations();
 			$this->aSupportedAuthorisations = $aAuthorisations;
 		}
-		
-		return ($this->aSupportedAuthorisations);
-		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -2112,24 +2403,19 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function storeSupportedAuthorisations() {
-		static $bAlreadyStored = FALSE;
-		if (!$bAlreadyStored) {
-			$this->loadSupportedAuthorisations();
-			$elemContainer = $this->elemSubject->ownerDocument->createElement('supported_authorisations');
-			foreach ($this->aSupportedAuthorisations as $sAuthorisation => $sParentAuthorisation) {
-				$elemAuthorisation = $this->elemSubject->ownerDocument->createElement('authorisation');
-				$elemAuthorisation->setAttribute('name', $sAuthorisation);
-				if ($sParentAuthorisation != NULL) {
-					$elemAuthorisation->setAttribute('parent', $sParentAuthorisation);
-				} else {
-					$elemAuthorisation->setAttribute('parent', '');
-				}
-				$elemContainer->appendChild($elemAuthorisation);
+	protected function storeSupportedAuthorisations($elemSubject) {
+		$elemContainer = $elemSubject->ownerDocument->createElement('supported_authorisations');
+		foreach ($this->aSupportedAuthorisations as $sAuthorisation => $sParentAuthorisation) {
+			$elemAuthorisation = $elemSubject->ownerDocument->createElement('authorisation');
+			$elemAuthorisation->setAttribute('name', $sAuthorisation);
+			if ($sParentAuthorisation != NULL) {
+				$elemAuthorisation->setAttribute('parent', $sParentAuthorisation);
+			} else {
+				$elemAuthorisation->setAttribute('parent', '');
 			}
-			$this->elemSubject->appendChild($elemContainer);
-			$bAlreadyStored = TRUE;
+			$elemContainer->appendChild($elemAuthorisation);
 		}
+		$elemSubject->appendChild($elemContainer);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -2206,8 +2492,7 @@ class sbNode extends sbCR_Node {
 	* @return array 
 	*/
 	protected function mergeAuthHierarchy($aUserAuth) {
-		$this->loadSupportedAuthorisations();
-		foreach ($this->aSupportedAuthorisations as $sAuth => $sParentAuth) {
+		foreach ($this->getSupportedAuthorisations as $sAuth => $sParentAuth) {
 			if ($sParentAuth != NULL && isset($aUserAuth[$sParentAuth]) && $aUserAuth[$sParentAuth] == 'ALLOW' && (!isset($aUserAuth[$sAuth]) || $aUserAuth[$sAuth] != 'DENY')) {
 				$aUserAuth[$sAuth] = 'ALLOW';
 			}

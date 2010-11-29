@@ -21,6 +21,8 @@ if (!defined('REPOSITORY_MPHASH_SIZE')) {		define('REPOSITORY_MPHASH_SIZE', 5); 
 */
 class sbCR_Repository {
 	
+	private $sID = NULL;
+	
 	private $aDescriptors = array(
 		'SPEC_VERSION_DESC' => '1.0',
 		'SPEC_NAME_DESC' => 'solidbytes Content Repository for PHP Technology API',
@@ -57,6 +59,9 @@ class sbCR_Repository {
 	*/
 	public function __construct($sRepositoryID) {
 		
+		// store ID for later use
+		$this->sID = $sRepositoryID;
+		
 		// load definitions
 		$this->sxmlRepositoryDefinitions = simplexml_load_file(REPOSITORY_DEFINITION_FILE);
 		
@@ -70,6 +75,16 @@ class sbCR_Repository {
 			throw new RepositoryException('no such repository "'.$this->sRepositoryID.'"');
 		}
 		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getID() {
+		return ($this->sID);
 	}
 	
 	//--------------------------------------------------------------------------

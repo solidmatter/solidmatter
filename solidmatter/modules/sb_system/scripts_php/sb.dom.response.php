@@ -50,6 +50,7 @@ class sbDOMResponse extends sbDOMDocument {
 		$elemMetadata = $this->createSection('metadata', 'metadata');
 		$elemModules = $this->createSection('md_modules', 'modules', $elemMetadata);
 		$this->createSection('md_system', 'system', $elemMetadata);
+		$this->createSection('md_parameters', 'parameters', $elemMetadata);
 		$this->createSection('md_commands', 'commands', $elemMetadata);
 		$this->createSection('md_headers', 'headers', $elemMetadata);
 		$this->createSection('md_stopwatch', 'stopwatch', $elemMetadata);
@@ -68,7 +69,7 @@ class sbDOMResponse extends sbDOMDocument {
 		// default status is success
 		$this->setStatus(200);
 		
-		set_error_handler(array($this, 'addError'), E_ALL|E_STRICT);
+		set_error_handler(array($this, 'addError'), E_ALL);
 		
 		//$this->firstChild->setAttribute('xmlns:sbform', 'http://www.solidbytes.net/sbform');
 		
@@ -204,6 +205,17 @@ class sbDOMResponse extends sbDOMDocument {
 	* @return 
 	*/
 	public function addMeta($sID, $elemMeta) {
+		$elemSubject = $this->getSectionElement($sID);
+		$elemSubject->appendChild($elemMeta);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* TODO: implement cookie functionality, primary focus for silent logins
+	* @param 
+	* @return 
+	*/
+	/*public function setCookie($sID, $sData, $iTTL) {
 		$elemSubject = $this->getSectionElement($sID);
 		$elemSubject->appendChild($elemMeta);
 	}
@@ -347,8 +359,21 @@ class sbDOMResponse extends sbDOMDocument {
 		$elemContent->setAttribute('uuid', $sUUID);
 		$elemContent->setAttribute('view', $sView);
 		$elemContent->setAttribute('action', $sAction);
+		
 		foreach ($_REQUEST->getParams('ALL') as $sParam => $sValue) {
 			$elemContent->setAttribute($sParam, $sValue);
+		}
+		
+		// store all parameters from request
+		$elemParams = $this->getSectionElement('md_parameters');
+		$aSources = array('GET', 'POST', 'COOKIE');
+		foreach ($aSources as $sSource) {
+			foreach ($_REQUEST->getParams($sSource) as $sParam => $sValue) {
+				$elemParam = $this->createElement('param', $sValue);
+				$elemParam->setAttribute('source', $sSource);
+				$elemParam->setAttribute('id', $sParam);
+				$elemParams->appendChild($elemParam);
+			}
 		}
 		
 		// TODO: move to another place?
@@ -417,7 +442,7 @@ class sbDOMResponse extends sbDOMDocument {
 		} elseif($mData instanceof DOMElement) {
 			$elemData = $mData;
 		} elseif ($mData instanceof sbNode) {
-			$elemData = $mData->getElement();
+			$elemData = $mData->getElement(TRUE);
 		} elseif ($mData instanceof sbCR_NodeIterator) {
 			if ($sNodeName == NULL) {
 				throw new sbException('adding a nodeiterator requires an node name');	
@@ -734,7 +759,8 @@ class sbDOMResponse extends sbDOMDocument {
 	*/
 	public function addError($iErrNo, $sErrStr, $sErrFile, $iErrLine) {
 		
-		if (error_reporting() == 0) {
+		// TODO: remove the cheesy E_DEPRECATED workaround
+		if (error_reporting() == 0 || error_reporting() == 30719) {
 			return;
 		}
 		

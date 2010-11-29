@@ -152,7 +152,7 @@
 						<ul>
 						<xsl:for-each select="user_authorisations/authorisation">
 							<li>
-								<xsl:value-of select="@name" /> (<xsl:value-of select="@grant_type" />)<br/>
+								<xsl:value-of select="@name" /><br/>
 							</li>
 						</xsl:for-each>
 						</ul>
@@ -162,15 +162,14 @@
 						<ul>
 						<xsl:for-each select="local_authorisations/*">
 							<li>
-								<xsl:value-of select="@name" /> (<xsl:value-of select="@grant_type" /> | 
 								<xsl:choose>
 								<xsl:when test="name()='user'">
-									<span class="type sb_user"><xsl:value-of select="@uuid" /></span>
+									<span class="type sbSystem_User"><xsl:value-of select="@uuid" /></span>
 								</xsl:when>
 								<xsl:otherwise>
-									<span class="type sb_usergroup"><xsl:value-of select="@uuid" /></span>
+									<span class="type sbSystem_Usergroup"><xsl:value-of select="@uuid" /></span>
 								</xsl:otherwise>
-								</xsl:choose> )
+								</xsl:choose> (<xsl:value-of select="@grant_type" />: <xsl:value-of select="@name" />)
 							</li>
 						</xsl:for-each>
 						</ul>
@@ -180,15 +179,14 @@
 						<ul>
 						<xsl:for-each select="inherited_authorisations/*">
 							<li>
-								<xsl:value-of select="@name" /> (<xsl:value-of select="@grant_type" /> | 
 								<xsl:choose>
 								<xsl:when test="name()='user'">
-									<span class="type sb_user"><xsl:value-of select="@uuid" /></span>
+									<span class="type sbSystem_User"><xsl:value-of select="@uuid" /></span>
 								</xsl:when>
 								<xsl:otherwise>
-									<span class="type sb_usergroup"><xsl:value-of select="@uuid" /></span>
+									<span class="type sbSystem_Usergroup"><xsl:value-of select="@uuid" /></span>
 								</xsl:otherwise>
-								</xsl:choose> )
+								</xsl:choose> (<xsl:value-of select="@grant_type" />: <xsl:value-of select="@name" />)
 							</li>
 						</xsl:for-each>
 						</ul>

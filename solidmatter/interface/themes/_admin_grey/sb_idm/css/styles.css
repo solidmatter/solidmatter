@@ -1,0 +1,29 @@
+
+/*----------------------------------------------------------------------------*/
+/* types / icons
+/*----------------------------------------------------------------------------*/
+
+*.sbIdM_Manager {
+	background-image: url(../../sb_system/icons/type_admins.png);
+}
+*.sbIdM_OrgRole {
+	background-image: url(../../sb_system/icons/type_group.png);
+}
+*.sbIdM_Person {
+	background-image: url(../../sb_system/icons/type_user.png);
+}
+*.sbIdM_System {
+	background-image: url(../../sb_system/icons/type_preferences.png);
+}
+*.sbIdM_TechRoleGroup {
+	background-image: url(../../sb_files/icons/type_folder.png);
+}
+*.sbIdM_TechRole {
+	background-image: url(../../sb_system/icons/type_guests.png);
+}
+*.sbIdM_DataManagement,
+*.sbIdM_DataCategory,
+*.sbIdM_Data {
+	background-image: url(../../sb_system/icons/type_modules.png);
+}
+

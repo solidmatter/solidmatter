@@ -97,11 +97,22 @@ class JBRSSHandler {
 				$stmtGetLatest->bindValue('nodetype', 'sbJukebox:Album', PDO::PARAM_STR);
 				$stmtGetLatest->bindValue('user_uuid', $this->crSession->getRootNode()->getProperty('jcr:uuid'), PDO::PARAM_STR);
 				$stmtGetLatest->execute();
+				
 				foreach ($stmtGetLatest as $aRow) {
+					
+					$nodeAlbum = $this->crSession->getNodeByIdentifier($aRow['uuid']);
+					$niChildren = $nodeAlbum->getNodes();
+					$sDescription = '';
+					foreach ($niChildren as $nodeChild) {
+						if ($nodeChild->getPrimaryNodeType() == 'sbJukebox:Track') {
+							$sDescription .= $nodeChild->getProperty('label')."<br />";	
+						}
+					}
+					
 					$aItemInfo = array(
 						'title' => $aRow['label'],
 						'link' => 'http://'.$_REQUEST->getDomain().'/'.$aRow['uuid'],
-						//'description' => 'dummy',
+						'description' => $sDescription,
 						//'author' => 'sbJukebox',
 						//'category' => FALSE,
 						//'comments' => FALSE,
@@ -129,11 +140,15 @@ class JBRSSHandler {
 				$stmtGetLatest->bindValue('jukebox_uuid', $nodeJukebox->getProperty('jcr:uuid'), PDO::PARAM_STR);
 				$stmtGetLatest->bindValue('limit', (int) $iLimit, PDO::PARAM_INT);
 				$stmtGetLatest->execute();
+				
 				foreach ($stmtGetLatest as $aRow) {
+					
+					$nodeComment = $this->crSession->getNodeByIdentifier($aRow['uuid']);
+					
 					$aItemInfo = array(
 						'title' => $aRow['username'].': '.$aRow['item_label'],
 						'link' => 'http://'.$_REQUEST->getDomain().'/'.$aRow['item_uuid'],
-						//'description' => 'dummy',
+						'description' => $nodeComment->getProperty('comment'),
 						'author' => $aRow['username'],
 						//'category' => FALSE,
 						//'comments' => FALSE,

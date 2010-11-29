@@ -1,9 +1,21 @@
 <?php
+//------------------------------------------------------------------------------
+/**
+* @package	solidMatter:sb_system
+* @author	()((() [Oliver Müller]
+* @version	1.00.00
+*/
+//------------------------------------------------------------------------------
+
+import('sb.handler.request');
 
 if (!defined('BACKEND')) define('BACKEND', '1001');
 if (!defined('FRONTEND')) define('FRONTEND', '1002');
 if (!defined('INTERNAL')) define('INTERNAL', '1003');
 
+//------------------------------------------------------------------------------
+/**
+*/
 class ActionQueue {
 	
 	private $elemSubject = NULL;

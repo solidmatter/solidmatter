@@ -25,7 +25,14 @@
 		</head>
 		<frameset cols="280, *" border="2" bordercolor="#8888AA">
 			<frame src="/-/menu" name="navigation" />
-			<frame src="/-/welcome" name="main" />
+			<xsl:choose>
+				<xsl:when test="$content/lastRecallableAction/lastRecallableAction">
+					<frame src="{$content/lastRecallableAction/lastRecallableAction}" name="main" />
+				</xsl:when>
+				<xsl:otherwise>
+					<frame src="/-/welcome" name="main" />
+				</xsl:otherwise>
+			</xsl:choose>
 		</frameset>
 		</html>
 	</xsl:template>

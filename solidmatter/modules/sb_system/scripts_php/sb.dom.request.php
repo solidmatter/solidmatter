@@ -285,7 +285,9 @@ class sbDOMRequest extends sbDOMDocument {
 			}
 			
 			foreach ($elemCurrent->childNodes as $elemChild) {
-				$aParams[$elemChild->nodeName] = (string) $elemChild->nodeValue; 
+				if ($elemChild->nodeType != XML_ATTRIBUTE_NODE) {
+					$aParams[$elemChild->nodeName] = (string) $elemChild->nodeValue;
+				}
 			}
 			
 		}

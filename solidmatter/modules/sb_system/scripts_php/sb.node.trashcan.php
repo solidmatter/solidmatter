@@ -23,6 +23,7 @@ class sbNode_trashcan extends sbNode {
 		parent::__setQueries();
 		$this->aQueries['getAbandonedNodes']		= 'sbSystem/node/trashcan/getAbandonedNodes';
 		$this->aQueries['getTrash/all']				= 'sbSystem/node/trashcan/getTrash/all';
+		$this->aQueries['getTrash/userspecific']	= 'sbSystem/node/trashcan/getTrash/userspecific';
 		$this->aQueries['purge']					= 'sbSystem/node/trashcan/purge';
 	}
 	
@@ -61,18 +62,27 @@ class sbNode_trashcan extends sbNode {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* TODO: implement user-specific listing
+	* TODO: get more info on nodes and display in trash list view
 	* @param 
 	* @return 
 	*/
 	public function getTrash($sUserID = NULL) {
 		
-		$stmtGetNodes = $this->crSession->prepareKnown($this->aQueries['getTrash/all']);
+		if (User::isAdmin()) {
+			$stmtGetNodes = $this->crSession->prepareKnown($this->aQueries['getTrash/all']);
+		} else {
+			$stmtGetNodes = $this->crSession->prepareKnown($this->aQueries['getTrash/userspecific']);
+			$stmtGetNodes->bindValue('user_uuid', User::getUUID(), PDO::PARAM_STR);
+		}
 		$stmtGetNodes->execute();
 		
 		$aTrash = array();
 		foreach ($stmtGetNodes as $aRow) {
-			$aTrash[] = $this->crSession->getNodeByIdentifier($aRow['child_uuid'], $aRow['parent_uuid']);
+			$nodeTrashItem = $this->crSession->getNodeByIdentifier($aRow['child_uuid'], $aRow['parent_uuid']);
+			$nodeTrashItem->setAttribute('user_label', $aRow['user_label']);
+			$nodeTrashItem->setAttribute('parent_label', $aRow['parent_label']);
+			$nodeTrashItem->setAttribute('parent_nodetype', $aRow['parent_nodetype']);
+			$aTrash[] = $nodeTrashItem;
 		}
 		return (new sbCR_NodeIterator($aTrash));
 		

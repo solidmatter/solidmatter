@@ -3,13 +3,13 @@
 /* types / icons
 /*----------------------------------------------------------------------------*/
 
-*.sb_portal {
+*.sbPortal_Portal {
 	background-image: url(../icons/type_portal.png);
 }
-*.sb_portalpage {
+*.sbPortal_Page {
 	background-image: url(../icons/type_portalpage.png);
 }
-*.sb_portalcontent {
+*.sbPortal_Content {
 	background-image: url(../icons/type_portalcontent.png);
 }
 

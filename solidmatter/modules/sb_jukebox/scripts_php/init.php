@@ -129,6 +129,9 @@ class sbJukeboxView extends sbView {
 		}
 		$niWritablePlaylists = $this->getJukebox()->getChildren('playlists', array('add_titles'));
 		if (!$niWritablePlaylists->isEmpty()) {
+			foreach ($niWritablePlaylists as $nodePlaylist) {
+				$nodePlaylist->aGetElementFlags['auth_user'] = FALSE;
+			}
 			$_RESPONSE->addData($niWritablePlaylists, 'writablePlaylists');
 		}
 	}

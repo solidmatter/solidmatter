@@ -60,7 +60,7 @@ $_CONTROLLERCONFIG		= simplexml_load_file('_config/controller.xml');
 $_RESPONSE				= ResponseFactory::getInstance('global');
 
 // configure
-ERROR_REPORTING ? error_reporting(E_ALL|E_STRICT) : error_reporting(0);
+ERROR_REPORTING ? error_reporting(E_ALL) : error_reporting(0);
 ERROR_REPORTING ? $iDebuglevel = E_ALL : $iDebuglevel = 0;
 mb_internal_encoding('UTF-8');
 System::init();
@@ -91,7 +91,9 @@ $crSession = $crRepository->login($crCredentials, $aRepository['workspace']);
 System::setSession($crSession);
 Registry::setSession($crSession);
 User::setSession($crSession);
-sbSession::start($_REQUEST->getSessionID(), Registry::getValue('sb.system.session.timeout'));
+CacheFactory::setSession($crSession);
+sbSession::start($_REQUEST->getSessionID());
+sbSession::setTimeout(Registry::getValue('sb.system.session.timeout'));
 
 //------------------------------------------------------------------------------
 // check if registry cache is current state

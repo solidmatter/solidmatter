@@ -288,6 +288,11 @@ form.default textarea.formerror {
 	padding: 1px 3px;
 }*/
 
+textarea {
+	font-size: 1em;
+	font-family: Arial, Helvetica, Sans-Serif;
+}
+
 
 ul.itemlist {
 	list-style-type: none;
@@ -306,6 +311,29 @@ ul.itemlist li {
 	background-color: #FF7;
 	cursor: move;
 }*/
+
+
+
+div.ac_suggestions {
+	background-color: #E0E8E0;
+	border: 1px solid #808880;
+	z-index: 2000;
+}
+div.ac_suggestions ul {
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+div.ac_suggestions ul li {
+	cursor: pointer;
+	margin: 2px 0;
+	padding: 2px 4px;
+}
+div.ac_suggestions ul li.selected {
+	background-color: #EEE650;
+	background: url(../images/highlight.png) top left repeat-x;
+}
+
 
 
 .droptarget {
@@ -378,72 +406,78 @@ a.explorercard img {
 	background-image: url(../icons/type_abstract.png);
 }
 
-*.sb_view {
+*.sbSystem_View {
 	background-image: url(../icons/type_view.png);
 }
-*.sb_action {
+*.sbSystem_Action {
 	background-image: url(../icons/type_action.png);
 }
-*.sb_root {
-	/*margin: 2px 0 0 2px;
-	background-image: url(../icons/type_core.png);*/
+*.sbSystem_Root {
 	background-image: url(../icons/type_solidmatter.png);
 }
-*.sb_preferences {
+*.sbSystem_Favorites {
+	background-image: url(../icons/type_favorites.png);
+}
+*.sbSystem_FavoriteFolder {
+	background-image: url(../icons/type_favoritefolder.png);
+}
+*.sbSystem_Preferences {
 	background-image: url(../icons/type_preferences.png);
 }
-*.sb_usergroup {
+*.sbSystem_Useraccounts,
+*.sbSystem_Usergroup {
 	background-image: url(../icons/type_group.png);
 }
-*.sb_user {
+*.sbSystem_User {
 	background-image: url(../icons/type_user.png);
 }
-*.sb_modules {
+*.sbSystem_Modules,
+*.sbSystem_Module {
 	background-image: url(../icons/type_modules.png);
 }
-*.sb_reports {
+*.sbSystem_Reports {
 	background-image: url(../icons/type_reports.png);
 }
-*.sb_maintenance {
-	background-image: url(../icons/type_maintenance.png);
-}
-*.sb_admins {
-	background-image: url(../icons/type_admins.png);
-}
-*.sb_guests {
-	background-image: url(../icons/type_guests.png);
-}
-*.sb_trashcan {
-	background-image: url(../icons/type_trashcan.png);
-}
-*.sb_comment {
-	background-image: url(../icons/type_comment.png);
-}
-*.sb_database {
+*.sbSystem_Reports_DB {
 	background-image: url(../icons/type_database.png);
 }
-*.sb_registry {
-	background-image: url(../icons/type_registry.png);
-}
-*.sb_structure {
+*.sbSystem_Reports_Structure {
 	background-image: url(../icons/type_structure.png);
 }
-*.sb_debug {
+*.sbSystem_Maintenance {
+	background-image: url(../icons/type_maintenance.png);
+}
+*.sbSystem_Usergroup_Admins {
+	background-image: url(../icons/type_admins.png);
+}
+*.sbSystem_Usergroup_Guests {
+	background-image: url(../icons/type_guests.png);
+}
+*.sbSystem_Trashcan {
+	background-image: url(../icons/type_trashcan.png);
+}
+*.sbSystem_Comment {
+	background-image: url(../icons/type_comment.png);
+}
+*.sbSystem_Registry {
+	background-image: url(../icons/type_registry.png);
+}
+*.sbSystem_Debug {
 	background-image: url(../icons/type_debug.png);
 }
-*.sb_logs {
+*.sbSystem_Logs {
 	background-image: url(../icons/type_logs.png);
 }
-*.sb_tags {
+*.sbSystem_Tags {
 	background-image: url(../icons/type_tags.png);
 }
-*.sb_inbox {
+*.sbSystem_Inbox {
 	background-image: url(../icons/type_inbox.png);
 }
-*.sb_message {
+*.sbSystem_Message {
 	background-image: url(../icons/type_message.png);
 }
-*.sb_tasks {
+*.sbSystem_Tasks {
 	background-image: url(../icons/type_tasks.png);
 }
 

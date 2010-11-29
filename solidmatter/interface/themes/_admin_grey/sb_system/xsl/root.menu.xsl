@@ -80,7 +80,7 @@
 	<xsl:template name="menuentry">
 		<xsl:param name="path" />
 		<xsl:param name="firstnode" />
-		<xsl:for-each select="children[@mode='tree' or @mode='debug']/sbnode">
+		<xsl:for-each select="content[@mode='menu']/sbnode">
 		<li>
 			<xsl:choose>
 				<xsl:when test="$firstnode=true">
@@ -111,7 +111,7 @@
 			<xsl:otherwise>
 				<a href="javascript:sbMenu.toggleMenuEntry('{$path}')">
 					<xsl:choose>
-					<xsl:when test="children/sbnode">
+					<xsl:when test="content/sbnode">
 						<img id="icon{$path}" src="/theme/sb_system/icons/tree_close.gif" name="close" alt="close"/>
 					</xsl:when>
 					<xsl:otherwise>
@@ -136,7 +136,7 @@
 							</xsl:if>
 							<a class="link" target="main" id="{$path}">
 								<xsl:attribute name="href">/<xsl:value-of select="@uuid" /></xsl:attribute>
-								<xsl:value-of select="@label" />
+								<xsl:call-template name="localize"><xsl:with-param name="label" select="@label" /></xsl:call-template>
 							</a>
 						</span>
 					</xsl:when>
@@ -147,14 +147,14 @@
 								<xsl:attribute name="style">background-image: url(../<xsl:value-of select="@custom_icon" />);</xsl:attribute>
 							</xsl:if>
 							<xsl:attribute name="href">/<xsl:value-of select="@uuid" /></xsl:attribute>
-							<xsl:value-of select="@label" />
+							<xsl:call-template name="localize"><xsl:with-param name="label" select="@label" /></xsl:call-template>
 						</a>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
 		<!-- children -->
-		<xsl:if test="children[@mode='tree' or @mode='debug']/sbnode">
+		<xsl:if test="content[@mode='menu']/sbnode">
 			<ul id="children{$path}">
 				<xsl:call-template name="menuentry">
 					<xsl:with-param name="path" select="$path" />

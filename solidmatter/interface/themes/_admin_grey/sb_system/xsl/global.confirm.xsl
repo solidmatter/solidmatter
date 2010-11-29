@@ -53,9 +53,9 @@
 		<xsl:choose>
 			<xsl:when test="@type='delete'">
 				<h1>Delete</h1> 
-				<span class="type {child/sbnode/@displaytype}"><xsl:value-of select="child/sbnode/@label" /></span>
+				<span class="type {child/sbnode/@displaytype}"><xsl:call-template name="localize"><xsl:with-param name="label" select="child/sbnode/@label" /></xsl:call-template></span>
 				from
-				<span class="type {parent/sbnode/@displaytype}"><xsl:value-of select="parent/sbnode/@label" /></span>
+				<span class="type {parent/sbnode/@displaytype}"><xsl:call-template name="localize"><xsl:with-param name="label" select="parent/sbnode/@label" /></xsl:call-template></span>
 				<br /><br />
 				<xsl:if test="../references">
 					<h2>References:</h2>

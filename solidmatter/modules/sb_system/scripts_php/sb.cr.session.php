@@ -334,7 +334,15 @@ class sbCR_Session {
 		throw new UnsupportedRepositoryOperationException('sbCR does not support value objects yet! (...and propably never will)');
 	}
 	
-	
+	//--------------------------------------------------------------------------
+	/**
+	* TODO: remove this method - will for now break db-caching
+	* @param 
+	* @return 
+	*/
+	public function getDatabase() {
+		return ($this->DB);
+	}
 	
 	
 	
@@ -655,7 +663,6 @@ class sbCR_Session {
 		$aNode['s_label'] = $sLabel;
 		$aNode['s_uid'] = NULL;
 		$aNode['s_displaytype'] = $this->aNodetypes[$sNodetype]['s_displaytype'];
-		$aNode['s_customdisplaytype'] = NULL;
 		$aNode['fk_parent'] = $sParentUUID;
 		// for now always set full inheritance on new nodes
 		$aNode['b_inheritrights'] = 'TRUE';
@@ -778,21 +785,7 @@ class sbCR_Session {
 		$this->loadNodetypes();
 		$elemSubject = ResponseFactory::createElement('sbnode');
 		
-		// create appropriate class instance
-		if (isset($this->aNodetypes[$aRow['fk_nodetype']])) {
-			$sLibrary = $this->aNodetypes[$aRow['fk_nodetype']]['s_classfile'];
-			$sClass = $this->aNodetypes[$aRow['fk_nodetype']]['s_class'];
-			import($sLibrary);
-			$nodeSubject = new $sClass($elemSubject, $this);
-		} else {
-			$nodeSubject = new sbCR_Node($elemSubject, $this);
-		}
-		
 		// prepare special properties
-		// TODO: get more standards-compliant
-		if ($aRow['s_customdisplaytype'] != NULL) {
-			$aRow['s_displaytype'] = $aRow['s_customdisplaytype'];
-		}
 		if ($aRow['s_currentlifecyclestate'] == NULL) {
 			$aRow['s_currentlifecyclestate'] = 'default';
 		}
@@ -804,12 +797,22 @@ class sbCR_Session {
 		$elemSubject->setAttribute('label', $aRow['s_label']);
 		$elemSubject->setAttribute('uid', $aRow['s_uid']);
 		$elemSubject->setAttribute('query', $sQuery);
-		$elemSubject->setAttribute('displaytype', $aRow['s_displaytype']);
+		$elemSubject->setAttribute('displaytype', str_replace(':', '_', $aRow['fk_nodetype']));
 		$elemSubject->setAttribute('parent', $aRow['fk_parent']);
 		$elemSubject->setAttribute('inheritrights', $aRow['b_inheritrights']);
 		$elemSubject->setAttribute('bequeathrights', $aRow['b_bequeathrights']);
 		$elemSubject->setAttribute('bequeathlocalrights', $aRow['b_bequeathlocalrights']);
 		$elemSubject->setAttribute('currentlifecyclestate', $aRow['s_currentlifecyclestate']);
+		
+		// create appropriate class instance
+		if (isset($this->aNodetypes[$aRow['fk_nodetype']])) {
+			$sLibrary = $this->aNodetypes[$aRow['fk_nodetype']]['s_classfile'];
+			$sClass = $this->aNodetypes[$aRow['fk_nodetype']]['s_class'];
+			import($sLibrary);
+			$nodeSubject = new $sClass($elemSubject, $this);
+		} else {
+			$nodeSubject = new sbCR_Node($elemSubject, $this);
+		}
 		
 		// needs a thinkover, too many references prevent object destruction
 		//$this->aNodeCache[$aRow['uuid']][$aRow['fk_parent']] = $nodeSubject;

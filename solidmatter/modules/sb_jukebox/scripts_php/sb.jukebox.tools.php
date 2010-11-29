@@ -66,8 +66,7 @@ class JukeboxTools {
 		headers('cache');
 		
 		// check cache first
-		// TODO: use registry value to en/disable caching
-		if ($iSize != NULL) {
+		if ($iSize != NULL && Registry::getValue('sb.jukebox.cache.images.enabled')) {
 			$cacheImages = CacheFactory::getInstance('images');
 			if ($sImageData = $cacheImages->loadImage($nodeAlbum->getProperty('jcr:uuid'), $iSize, 'custom')) {
 				$imgCurrent = new Image(Image::FROMSTRING, $sImageData);
@@ -93,7 +92,9 @@ class JukeboxTools {
 				$imgCover = new Image(Image::FROMFILE, $sFilename);
 				$imgCover->resample($iSize, $iSize, Image::LOSEASPECT, Image::UPSAMPLE|Image::DOWNSAMPLE);
 				// cache image
-				$cacheImages->storeImage($nodeAlbum->getProperty('jcr:uuid'), $iSize, 'custom', $imgCover->getData());
+				if (Registry::getValue('sb.jukebox.cache.images.enabled')) {
+					$cacheImages->storeImage($nodeAlbum->getProperty('jcr:uuid'), $iSize, 'custom', $imgCover->getData());
+				}
 				header('Content-type: image/jpeg');
 				$imgCover->output(JPG, TRUE);
 			}

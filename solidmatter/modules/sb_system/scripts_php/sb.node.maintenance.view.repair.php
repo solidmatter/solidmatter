@@ -96,7 +96,8 @@ class sbView_maintenance_repair extends sbView {
 		
 		$iOrder = 0;
 		foreach ($aResultset as $aRow) {
-			if (!isset($aRow['b_primary']) || $aRow['b_primary'] == 'TRUE') {
+			// FIX: there are logical problems with non-primary links, the "true" is a quick workaround (which means the last link will "win")
+			if (true || !isset($aRow['b_primary']) || $aRow['b_primary'] == 'TRUE') {
 				$this->rebuildMaterializedPaths($aRow['uuid'], $sMPath, $iLevel+1);
 			}
 			$stmtSetCoordinates = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/setCoordinates/MPath');

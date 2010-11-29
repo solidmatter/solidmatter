@@ -46,11 +46,21 @@ class sbSession {
 	public static function start($sSessionID = NULL, $iTimeout = NULL) {
 		if ($sSessionID != NULL) {
 			self::$sSessionID = $sSessionID;
-			self::$iTimeout = $iTimeout;
 		}
 		self::loadSession();
 		self::$oWatchdog = new sbSessionWatchdog();
 	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public static function setTimeout($iTimeout) {
+		self::$iTimeout = $iTimeout;
+	}
+	
 	
 	//--------------------------------------------------------------------------
 	/**

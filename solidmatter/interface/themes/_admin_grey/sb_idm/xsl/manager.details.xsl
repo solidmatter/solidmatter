@@ -36,78 +36,49 @@
 		
 		<table class="default" width="100%" id="list">
 			<thead>
-				<tr><th class="th2" colspan="6" >OrgRoles</th></tr>
-				<tr>
-					<th width="33%"><xsl:value-of select="$locale/sbSystem/labels/name" /></th>
-					<th width="33%">TechRoles</th>
-					<th width="33%">Type</th>
-					<th width="1%"><xsl:value-of select="$locale/sbSystem/labels/options" /></th>
-				</tr>
+				<tr><th class="th2">Tags</th></tr>
 			</thead>
 			<tbody>
-				<xsl:if test="$content/OrgRoles/nodes/sbnode or $content/InheritedOrgRoles/nodes/sbnode">
-					<xsl:for-each select="$master | $content/OrgRoles/nodes/sbnode[@nodetype='sbIdM:OrgRole'] | $content/InheritedOrgRoles/nodes/sbnode[@nodetype='sbIdM:OrgRole']">
-						<tr>
-							<xsl:call-template name="colorize" />
-							<td>
-								<a href="/{@uuid}/details"><span class="type {@displaytype}"><xsl:value-of select="@label" /></span></a>
-							</td>
-							<td>
-								<xsl:call-template name="render_techroles" />
-							</td>
-							<td>
-								<xsl:choose>
-									<xsl:when test="name(../..) = 'OrgRoles'">Direct</xsl:when>
-									<xsl:when test="name(../..) = 'InheritedOrgRoles'">Inherited</xsl:when>
-									<xsl:otherwise>Self</xsl:otherwise>
-								</xsl:choose>
-							</td>
-							<td>
-								<xsl:if test="position() != 1">
-									<a href="/-/structure/orderBefore/subject={$subjectid}&amp;source={@name}&amp;destination={preceding-sibling::*[1]/@name}" class="option"><img src="/theme/sb_system/icons/move_up.gif" /></a>
-								</xsl:if>
-								<xsl:if test="position() != last()">
-									<a href="/-/structure/orderBefore/subject={$subjectid}&amp;source={following-sibling::*[1]/@name}&amp;destination={@name}" class="option"><img src="/theme/sb_system/icons/move_down.gif" /></a>
-								</xsl:if>
-							</td>
-						</tr>
+				<tr><td>
+					<xsl:for-each select="$master/branchtags/tag">
+						<a href="/{$master/@uuid}/details/-/?tagid={@id}">
+							<xsl:if test="@id = $content/@tagid">
+								<xsl:attribute name="style">font-weight:bold;</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="." />
+						</a>
+						<xsl:if test="position() != last()"> - </xsl:if>
 					</xsl:for-each>
-				</xsl:if>
-				<!-- <xsl:otherwise>
-					<tr><td colspan="6"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>
-				</xsl:otherwise> -->
+				</td></tr>
 			</tbody>
 		</table>
 	
 		<table class="default" width="100%" id="list">
 			<thead>
-				<tr><th class="th2" colspan="6" >Persons (<xsl:value-of select="count(//*[generate-id(.)=generate-id(key('unique_persons', ./@uuid)[1])])" />)</th></tr>
+				<tr><th class="th2" colspan="6" >Result</th></tr>
 				<tr>
 					<th width="33%"><xsl:value-of select="$locale/sbSystem/labels/name" /></th>
-					<th width="66%">TechRoles</th>
-					<th width="1%"><xsl:value-of select="$locale/sbSystem/labels/options" /></th>
+					<th width="33%"></th>
+					<th width="33%"></th>
 				</tr>
 			</thead>
 			<tbody>
 			<xsl:choose>
-				<xsl:when test="children[@mode='debug']//sbnode[@nodetype='sbIdM:Person']">
+				<xsl:when test="content[@mode='tagged']//sbnode">
 					<!-- <xsl:for-each select="children[@mode='debug']//sbnode[@nodetype='sbIdM:Person']"> -->
-						<xsl:for-each select="//*[generate-id(.)=generate-id(key('unique_persons', ./@uuid)[1])]">
+						<xsl:for-each select="content[@mode='tagged']//sbnode">
 						<tr>
 							<xsl:call-template name="colorize" />
 							<td>
-								<a href="/{@uuid}/details"><span class="type {@displaytype}"><xsl:value-of select="@label" /></span></a>
+								<a href="/{@uuid}/"><span class="type {@displaytype}"><xsl:value-of select="@label" /></span></a>
 							</td>
 							<td>
-								<xsl:call-template name="render_techroles" />
+								<xsl:call-template name="break">
+									<xsl:with-param name="text" select="@description" />
+								</xsl:call-template>
 							</td>
-							<td>
-								<xsl:if test="position() != 1">
-									<a href="/-/structure/orderBefore/subject={$subjectid}&amp;source={@name}&amp;destination={preceding-sibling::*[1]/@name}" class="option"><img src="/theme/sb_system/icons/move_up.gif" /></a>
-								</xsl:if>
-								<xsl:if test="position() != last()">
-									<a href="/-/structure/orderBefore/subject={$subjectid}&amp;source={following-sibling::*[1]/@name}&amp;destination={@name}" class="option"><img src="/theme/sb_system/icons/move_down.gif" /></a>
-								</xsl:if>
+							<td style="white-space:pre-wrap;">
+								<xsl:value-of select="@questions" />
 							</td>
 						</tr>
 					</xsl:for-each>

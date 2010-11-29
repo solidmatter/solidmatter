@@ -35,10 +35,8 @@ class sbView_jukebox_jukebox_playlists extends sbJukeboxView {
 				$_RESPONSE->addData($stmtGetPlaylists->fetchElements('playlists'));
 				
 				// add form for new playlist
-				$formCreate = $this->buildCreateForm();
-				$formCreate->saveDOM();
-				$_RESPONSE->addData($formCreate);
-				
+				$this->addCreateForm();
+
 				break;
 				
 			case 'create':
@@ -59,13 +57,33 @@ class sbView_jukebox_jukebox_playlists extends sbJukeboxView {
 				$nodePlaylist->setAuthorisation('write');
 				$_RESPONSE->redirect('-', 'playlists');
 				break;
-			
+				
 			default:
 				throw new sbException(__CLASS__.': action not recognized ('.$sAction.')');
 	
 		}
 		
 	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function addCreateForm() {
+		
+		if (!User::isAuthorised('add_playlists', $this->nodeSubject)) {
+			return (FALSE);
+		}
+		
+		$formCreate = $this->buildCreateForm();
+		$formCreate->saveDOM();
+		global $_RESPONSE;
+		$_RESPONSE->addData($formCreate);
+		
+	}
+	
 	
 	//--------------------------------------------------------------------------
 	/**

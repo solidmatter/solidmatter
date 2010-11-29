@@ -3,32 +3,32 @@
 /* types / icons
 /*----------------------------------------------------------------------------*/
 
-*.sb_jukebox {
+*.sbJukebox_Jukebox {
 	background-image: url(../icons/type_jukebox.png);
 }
-*.sb_playlist {
+*.sbJukebox_Playlist {
 	background-image: url(../icons/type_playlist.png);
 }
-*.sb_track {
+*.sbJukebox_Track {
 	background-image: url(../icons/type_track.png);
 }
-*.sb_album {
+*.sbJukebox_Album {
 	background-image: url(../icons/type_album.png);
 }
-*.sb_artist {
+*.sbJukebox_Artist {
 	background-image: url(../icons/type_artist.png);
 }
-*.sb_cd {
+*.sbJukebox_CD {
 	background-image: url(../icons/type_cd.png);
 }
 
-*.sb_tpl_nowplaying {
+*.sbJukebox_TPL_NowPlaying {
 	background-image: url(../icons/type_tpl_nowplaying.png);
 }
-*.sb_tpl_favorites {
+*.sbJukebox_TPL_Favorites {
 	background-image: url(../icons/type_tpl_favorites.png);
 }
-*.sb_tpl_toprated {
+*.sbJukebox_TPL_TopRated {
 	background-image: url(../icons/type_tpl_toprated.png);
 }
 

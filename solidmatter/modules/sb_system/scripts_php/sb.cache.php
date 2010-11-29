@@ -19,6 +19,7 @@ interface sbCache {
 	* @param 
 	* @return 
 	*/
+	//public function storeData($sKey, $mData, $sSubject = NULL, $sModifier = NULL);
 	public function storeData($sKey, $mData);
 	
 	//--------------------------------------------------------------------------
@@ -27,6 +28,7 @@ interface sbCache {
 	* @param 
 	* @return 
 	*/
+	//public function loadData($sKey, $sSubject = NULL, $sModifier = NULL);
 	public function loadData($sKey);
 	
 	//--------------------------------------------------------------------------
@@ -44,6 +46,14 @@ interface sbCache {
 	* @return 
 	*/
 	public function clear($sKey = '');
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getInfo();
 	
 }
 

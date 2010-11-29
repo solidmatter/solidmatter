@@ -213,7 +213,12 @@
 				PDO:<xsl:value-of select="pdo" />ms
 			</xsl:attribute>
 			<xsl:value-of select="execution_time" />ms | 
-			<a href="/{$content/@uuid}/{$content/@view}/{$content/@action}/?debug=1" target="_blank">XML</a>
+			<a target="_blank">
+				<xsl:attribute name="href">
+					/<xsl:value-of select="$content/@uuid" />/<xsl:value-of select="$content/@view" />/<xsl:value-of select="$content/@action" />/?debug=1<xsl:for-each select="$parameters/param">&amp;<xsl:value-of select="@id" />=<xsl:value-of select="." /></xsl:for-each>
+				</xsl:attribute>
+				XML
+			</a>
 		</span>
 	</xsl:template>
 	
@@ -502,6 +507,8 @@
 				<xsl:choose>
 				<xsl:when test="existingRelations/relation">
 					<xsl:for-each select="existingRelations/relation">
+						<xsl:sort select="@id" />
+						<xsl:sort select="@target_label" />
 						<tr>
 							<xsl:call-template name="colorize" />
 							<td width="30%">

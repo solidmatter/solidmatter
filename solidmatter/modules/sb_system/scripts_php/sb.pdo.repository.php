@@ -141,7 +141,7 @@ class sbPDORepository extends sbPDO {
 		
 		$aSearch = array();
 		$aReplace = array();
-		$aSearch[] = '{PREFIX_FRAMEWORK}';
+		$aSearch[] = '{PREFIX_REPOSITORY}';
 		$aReplace[] = $this->sRepositoryPrefix;
 		$aSearch[] = '{PREFIX_WORKSPACE}';
 		$aReplace[] = $this->sWorkspacePrefix;

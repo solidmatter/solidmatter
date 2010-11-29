@@ -33,6 +33,16 @@ class sbView_jukebox_various_fix extends sbJukeboxView {
 		
 		switch ($sAction) {
 			
+			/*z.b reihenfolge falsch
+[21:37:21] Heiko Thiery: falscher artist .. bzw. falsche schreibweise
+[21:37:28] Heiko Thiery: oder fehler im track name
+[21:37:40] Heiko Thiery: das sind so die drei häufigsten die mir untergekommen sind
+[21:38:00] Heiko Thiery: wobei falsche artist schreibweise eher problematisch ist.
+[21:38:06] Oliver Müller: artist bezogen auf ganze alben vermute ich?
+[21:38:12] Heiko Thiery: da man nach allem den falsch geschriebenen wieder entfernen muss
+[21:38:40] Heiko Thiery: nö .. hauptsächlich z.b marylin manson anstatt marilyn manson auf irgenwelchen smaplern
+*/
+			
 			case 'showOptions':
 				
 				$this->gatherBasicInformation($this->nodeSubject);
@@ -306,11 +316,16 @@ class sbView_jukebox_various_fix extends sbJukeboxView {
 				break;
 				
 			case 'switchArtist':
+				
 				$nodeNewArtist = $this->nodeSubject->getSession()->getNodeByIdentifier($aOptions['target']);
-				$sOldName = $nodeSubject->getProperty('label');
+				$sOldName = $nodeSubject->getParent()->getProperty('label');
 				$sNewName = $nodeNewArtist->getProperty('label');
 				$this->gatherNecessaryActions('rename', $nodeSubject, array('old' => $sOldName, 'new' => $sNewName), $aqActions);
 				
+				$sOldParent = $nodeSubject->getParent()->getProperty('jcr:uuid');
+				$sNewParent = $nodeNewArtist->getProperty('jcr:uuid');
+				$aqActions->addAction('relocate', $nodeSubject, array('old_parent' => $sOldParent, 'new_parent' => $sNewParent, 'ignore' => $sOldParent == $sNewParent));
+								
 				break;
 				
 			case 'renameTrack':
@@ -330,11 +345,11 @@ class sbView_jukebox_various_fix extends sbJukeboxView {
 						$sNewLabel = str_replace($sOld, $sNew, $nodeSubject->getProperty('label'));
 						$sOldName = $nodeSubject->getName();
 						$sNewName = str_replace(str2urlsafe($sOld), str2urlsafe($sNew), $nodeSubject->getName());
-						$sOldArtistTag = $nodeSubject->getTag('TPE1');
+						$sOldArtistTag = $nodeSubject->getID3Tag('TPE1');
 						$sNewArtistTag = str_replace($sOld, $sNew, $sOldArtistTag);
 						$sOldTitle = $nodeSubject->getProperty('info_title');
 						$sNewTitle = str_replace($sOld, $sNew, $sOldTitle);
-						$sOldTitleTag = $nodeSubject->getTag('TIT2');
+						$sOldTitleTag = $nodeSubject->getID3Tag('TIT2');
 						$sNewTitleTag = str_replace($sOld, $sNew, $sOldTitleTag);
 						$sOldFilename = $nodeSubject->getProperty('info_filename');
 						$sNewFilename = str_replace($sOld, $sNew, $nodeSubject->getProperty('info_filename'));
@@ -350,7 +365,7 @@ class sbView_jukebox_various_fix extends sbJukeboxView {
 						break;
 						
 					case 'sbJukebox:Album':
-					
+						
 						foreach ($nodeSubject->getChildren() as $nodeChild) {
 							if ($nodeChild->getPrimaryNodeType() == 'sbJukebox:Track') {
 								$this->gatherNecessaryActions('rename', $nodeChild, $aOptions, $aqActions);

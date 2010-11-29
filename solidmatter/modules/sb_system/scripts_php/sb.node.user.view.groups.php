@@ -49,7 +49,7 @@ class sbView_user_groups extends sbView {
 	
 	protected function addGroupData() {
 		global $_RESPONSE;
-		$nodeUserAccounts = $this->nodeSubject->getParent();
+		$nodeUserAccounts = $this->crSession->getNode('//*[@uid="sbSystem:Useraccounts"]');
 		$niGroups = $nodeUserAccounts->getChildren('groups');
 		$niSharedSet = $this->nodeSubject->getSharedSet();
 		$elemGroups = $_RESPONSE->createElement('groups');
@@ -60,7 +60,7 @@ class sbView_user_groups extends sbView {
 			}
 			// users can't be added to guests
 			if ($nodeGroup->getProperty('uid') == 'sbSystem:Guests') {
-				continue;	
+				continue;
 			}
 			$elemGroup = $_RESPONSE->createElement('group');
 			$elemGroup->setAttribute('uuid', $nodeGroup->getProperty('jcr:uuid'));

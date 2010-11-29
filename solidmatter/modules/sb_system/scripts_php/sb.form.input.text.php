@@ -17,10 +17,10 @@ class sbInput_text extends sbInput {
 	protected $sType = 'text';
 	
 	protected $aConfig = array(
-		'columns' => '50',
+		'columns' => '70',
 		'rows' => '6',
 		'minlength' => '0',
-		'maxlength' => '2000',
+		'maxlength' => '10000',
 		'required' => 'FALSE',
 		'trim' => 'TRUE',
 		'regex' => ''

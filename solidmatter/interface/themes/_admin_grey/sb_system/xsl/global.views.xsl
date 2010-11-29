@@ -33,17 +33,22 @@
 			<xsl:for-each select="../ancestors/sbnode">
 				<xsl:sort order="descending" />
 				<xsl:if test="@nodetype != 'sbSystem:Root'">
-					<a href="/{@uuid}"><span class="type {@displaytype}"><xsl:value-of select="@label" /></span></a>
+					<a href="/{@uuid}"><span class="type {@displaytype}">
+						<xsl:call-template name="localize"><xsl:with-param name="label" select="@label" /></xsl:call-template>
+					</span></a>
 					<xsl:if test="position() != last()+1">
 						/
 					</xsl:if>
 				</xsl:if>
 			</xsl:for-each>
-			<a href="/{../@uuid}"><span class="type {../@displaytype}"><xsl:value-of select="../@label" /></span></a>
+			<a href="/{../@uuid}"><span class="type {../@displaytype}">
+				<xsl:call-template name="localize"><xsl:with-param name="label" select="../@label" /></xsl:call-template>
+			</span></a>
 		</div>
 		<div class="views">
 			<xsl:apply-templates select="/response/metadata/stopwatch" />
 			<ul><xsl:for-each select="view">
+				<xsl:sort select="@order" data-type="number" />
 				<li><a href="/{$subjectid}/{@name}">
 					<xsl:if test="@name=$content/@view">
 						<xsl:attribute name="class">active</xsl:attribute>
@@ -57,7 +62,16 @@
 					</span>
 				</a></li>
 			</xsl:for-each>
-			<li><a href="/{$content/@uuid}/{$content/@view}/{$content/@action}/?debug=1" target="_blank"><span>XML</span></a></li>
+			<xsl:if test="$master/views/view/@name='debug'">
+				<li>
+					<a target="_blank">
+						<xsl:attribute name="href">
+							/<xsl:value-of select="$content/@uuid" />/<xsl:value-of select="$content/@view" />/<xsl:value-of select="$content/@action" />/?debug=1<xsl:for-each select="$parameters/param">&amp;<xsl:value-of select="@id" />=<xsl:value-of select="." /></xsl:for-each>
+						</xsl:attribute>
+						<span>XML</span>
+					</a>
+				</li>
+			</xsl:if>
 			</ul></div>
 		<xsl:apply-templates select="/response/content/errors" />
 	</xsl:template>

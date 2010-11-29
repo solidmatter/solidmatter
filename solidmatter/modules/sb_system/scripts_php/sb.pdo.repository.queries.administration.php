@@ -11,24 +11,21 @@ $_QUERIES['sbCR/nodetype/save'] = '
 					e_type,
 					s_class,
 					s_classfile,
-					s_category,
-					s_displaytype
+					s_category
 				) VALUES (
 					:nodetype,
 					:abstract,
 					:type,
 					:class,
 					:classfile,
-					:category,
-					:displaytype
+					:category
 				)
 	ON DUPLICATE KEY UPDATE
 				s_type = :nodetype,
 				e_type = :type,
 				s_class = :class,
 				s_classfile = :classfile,
-				s_category = :category,
-				s_displaytype = :displaytype
+				s_category = :category
 ';
 $_QUERIES['sbCR/nodetype/remove'] = '
 	DELETE FROM	{TABLE_NODETYPES}

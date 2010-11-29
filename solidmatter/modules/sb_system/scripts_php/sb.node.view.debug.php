@@ -24,7 +24,6 @@ class sbView_debug extends sbView {
 		global $_RESPONSE;
 		
 		$crNodeType = $this->crSession->getWorkspace()->getNodeTypeManager()->getNodeType($this->nodeSubject->getPrimaryNodeType());
-		//var_dumpp($crNodeType->getDebugInfo());
 		
 		$this->nodeSubject->loadChildren('debug', TRUE);
 		$this->nodeSubject->storeChildren();
@@ -36,11 +35,9 @@ class sbView_debug extends sbView {
 		$this->nodeSubject->loadProperties();
 		$this->nodeSubject->getTags();
 		
-		//$this->nodeSubject->loadViews(FALSE);
-		$this->nodeSubject->storeUserAuthorisations();
-		$this->nodeSubject->storeSupportedAuthorisations();
-		//$this->nodeSubject->loadLocalAuthorisations();
-		//$this->nodeSubject->loadInheritedAuthorisations();
+		$this->nodeSubject->loadUserAuthorisations();
+		$this->nodeSubject->loadSecurityAuthorisations();
+		
 		$this->nodeSubject->setAttribute('full_path', $this->nodeSubject->getPath());
 		$this->nodeSubject->setAttribute('internal_path', $this->nodeSubject->getMPath());
 		

@@ -74,6 +74,21 @@ function datetime_mysql2timestamp($sMySQLDateTime) {
 
 //------------------------------------------------------------------------------
 /**
+* Converts a Unix timestamp value to a MySQL-Datetime.
+* @param integer the datetime in seconds passed since 1.1.1970, 00:00:00 (now is assumed if not given)
+* @return string the MySQL-Datetime value ('YYYY-MM-DD HH:MM:SS')
+*/
+function datetime_timestamp2mysql($iTimestamp = NULL) {
+	
+	if ($iTimestamp == NULL) {
+		$iTimestamp = time();
+	}
+	
+	return (date('Y-m-d', $iTimestamp));
+}
+
+//------------------------------------------------------------------------------
+/**
 * Works exactly like @see datetime_mysql2timestamp(), except that it accepts a
 * string in the MySQL date format.
 * @param string the MySQL-date value ('YYYY-MM-DD')

@@ -42,8 +42,8 @@
 								<xsl:variable name="id" select="uuid" />
 								<xsl:if test="$content/sbnode/inherited_authorisations/authorisation[@uuid=$id] or $content/sbnode/local_authorisations/authorisation[@uuid=$id]">
 								<li style="margin-bottom:3px; display:block; position:relative;">
-									<a href="/{$content/sbnode/@uuid}/security/editAuthorisations/?userentity={$id}" class="type sb_usergroup" target="details">
-										<xsl:value-of select="s_label" />
+									<a href="/{$content/sbnode/@uuid}/security/editAuthorisations/?userentity={$id}" class="type sbSystem_Usergroup" target="details">
+										<xsl:call-template name="localize"><xsl:with-param name="label" select="s_label" /></xsl:call-template>
 									</a>
 									<xsl:if test="$content/sbnode/local_authorisations/authorisation[@uuid=$id]">
 										<a href="/{$content/sbnode/@uuid}/security/removeUser/?userentity={$id}" class="type delete" style="position:absolute; right:0;">remove</a>
@@ -55,7 +55,7 @@
 								<xsl:variable name="id" select="uuid" />
 								<xsl:if test="$content/sbnode/inherited_authorisations/authorisation[@uuid=$id] or $content/sbnode/local_authorisations/authorisation[@uuid=$id]">
 								<li style="margin-bottom:3px; display:block; position:relative;">
-									<a href="/{$content/sbnode/@uuid}/security/editAuthorisations/?userentity={$id}" class="type sb_user" target="details">
+									<a href="/{$content/sbnode/@uuid}/security/editAuthorisations/?userentity={$id}" class="type sbSystem_User" target="details">
 										<xsl:value-of select="s_label" />
 									</a>
 									<xsl:if test="$content/sbnode/local_authorisations/authorisation[@uuid=$id]">
@@ -74,7 +74,7 @@
 									<xsl:for-each select="$content/groups/row">
 										<xsl:variable name="uuid" select="uuid" />
 										<xsl:if test="not($content/sbnode/local_authorisations/authorisation[@uuid=$uuid])">
-											<option value="{$uuid}"><xsl:value-of select="s_label" /></option>
+											<option value="{$uuid}"><xsl:call-template name="localize"><xsl:with-param name="label" select="s_label" /></xsl:call-template></option>
 										</xsl:if>
 									</xsl:for-each>
 								</optgroup>

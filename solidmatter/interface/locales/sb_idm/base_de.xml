@@ -4,14 +4,20 @@
 	<labels>
 		<data>Datenzugriff</data>
 		<mainrole>Haupt-Rolle</mainrole>
+		<damagepotential>Schadenspotenzial</damagepotential>
+		<userassignable>zuweisbar an Benutzer</userassignable>
 	</labels>
 	
 	<nodetypes>
 		<type id="sbIdM:Manager">IdM-Manager</type>
+		<type id="sbIdM:System">System</type>
 		<type id="sbIdM:OrgRole">Org. Rolle</type>
 		<type id="sbIdM:TechRole">Techn. Rolle</type>
 		<type id="sbIdM:Person">Person</type>
 		<type id="sbIdM:TechRoleGroup">Techn. Rollen-Gruppe</type>
+		<type id="sbIdM:DataManagement">Datenmanagement</type>
+		<type id="sbIdM:DataCategory">Datenkategorie</type>
+		<type id="sbIdM:Data">Daten</type>
 	</nodetypes>
 	
 	<views>

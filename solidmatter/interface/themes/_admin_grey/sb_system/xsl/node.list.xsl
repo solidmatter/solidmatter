@@ -68,7 +68,7 @@
 							<xsl:call-template name="colorize" />
 							<td width="1"><input type="checkbox" name="marker" id="marker_{@uuid}" /></td>
 							<td>
-								<a href="/{@uuid}"><span class="type {@displaytype}"><xsl:value-of select="@label" /></span></a>
+								<a href="/{@uuid}"><span class="type {@displaytype}"><xsl:call-template name="localize"><xsl:with-param name="label" select="@label" /></xsl:call-template></span></a>
 							</td>
 							<td>
 								<xsl:variable name="type" select="@nodetype" />
@@ -86,6 +86,9 @@
 								</xsl:if>
 								<xsl:if test="position() != last()">
 									<a href="/-/structure/orderBefore/?subject={$subjectid}&amp;source={following-sibling::*[1]/@name}&amp;destination={@name}" class="option"><img src="/theme/sb_system/icons/move_down.gif" /></a>
+								</xsl:if>
+								<xsl:if test="boolean('true')">
+									<a href="javascript:top.sbUtilities.popupModal('/-/structure/deleteChild/?parentnode={$master/@uuid}&amp;childnode={@uuid}', 500, 250, 'sbCommander.issueCommand(\'reloadTree\', null);')" class="option"><img src="/theme/sb_system/icons/doc_delete.gif" /></a>
 								</xsl:if>
 							</td>
 						</tr>
