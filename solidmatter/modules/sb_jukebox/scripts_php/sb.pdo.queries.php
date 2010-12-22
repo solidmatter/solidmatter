@@ -220,28 +220,28 @@ $_QUERIES['sbJukebox/history/getTop/byUser'] = $_QUERIES['sbJukebox/history/getT
 //------------------------------------------------------------------------------
 
 $_QUERIES['sbJukebox/jukebox/gatherInfo'] = '
-	SELECT		(SELECT COUNT(*)
+	SELECT		(SELECT COUNT(DISTINCT n.uuid)
 					FROM		{TABLE_HIERARCHY} h
 					INNER JOIN	{TABLE_NODES} n
 						ON		h.fk_child = n.uuid
 					WHERE		n.fk_nodetype = \'sbJukebox:Album\'
 						AND		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 				) AS n_numalbums,
-				(SELECT COUNT(*)
+				(SELECT COUNT(DISTINCT n.uuid)
 					FROM		{TABLE_HIERARCHY} h
 					INNER JOIN	{TABLE_NODES} n
 						ON		h.fk_child = n.uuid
 					WHERE		n.fk_nodetype = \'sbJukebox:Artist\'
 						AND		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 				) AS n_numartists,
-				(SELECT COUNT(*)
+				(SELECT COUNT(DISTINCT n.uuid)
 					FROM		{TABLE_HIERARCHY} h
 					INNER JOIN	{TABLE_NODES} n
 						ON		h.fk_child = n.uuid
 					WHERE		n.fk_nodetype = \'sbJukebox:Track\'
 						AND		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 				) AS n_numtracks,
-				(SELECT COUNT(*)
+				(SELECT COUNT(DISTINCT n.uuid)
 					FROM		{TABLE_HIERARCHY} h
 					INNER JOIN	{TABLE_NODES} n
 						ON		h.fk_child = n.uuid
@@ -250,7 +250,8 @@ $_QUERIES['sbJukebox/jukebox/gatherInfo'] = '
 				) AS n_numplaylists
 ';
 $_QUERIES['sbJukebox/jukebox/search/anything/byLabel'] = '
-	SELECT		n.uuid,
+	SELECT DISTINCT
+				n.uuid,
 				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name
@@ -266,7 +267,8 @@ $_QUERIES['sbJukebox/jukebox/search/anything/byLabel'] = '
 				n.s_label
 ';
 $_QUERIES['sbJukebox/jukebox/search/various/byLabel'] = '
-	SELECT		n.uuid,
+	SELECT DISTINCT
+				n.uuid,
 				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
@@ -284,7 +286,8 @@ $_QUERIES['sbJukebox/jukebox/search/various/byLabel'] = '
 	ORDER BY	n.s_label
 ';
 $_QUERIES['sbJukebox/jukebox/search/various/numeric'] = '
-	SELECT		n.uuid,
+	SELECT DISTINCT
+				n.uuid,
 				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
@@ -302,7 +305,8 @@ $_QUERIES['sbJukebox/jukebox/search/various/numeric'] = '
 	ORDER BY	n.s_label
 ';
 $_QUERIES['sbJukebox/jukebox/search/albums/byLabel'] = '
-	SELECT		n.uuid,
+	SELECT DISTINCT
+				n.uuid,
 				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
@@ -324,7 +328,8 @@ $_QUERIES['sbJukebox/jukebox/search/albums/byLabel'] = '
 	ORDER BY	n.s_label
 ';
 $_QUERIES['sbJukebox/jukebox/search/albums/numeric'] = '
-	SELECT		n.uuid,
+	SELECT DISTINCT
+				n.uuid,
 				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
@@ -375,7 +380,8 @@ $_QUERIES['sbJukebox/jukebox/albums/getRandom'] = '
 		ON		a.uuid = n.uuid
 ';
 $_QUERIES['sbJukebox/jukebox/albums/getLatest'] = '
-	SELECT		n.uuid,
+	SELECT DISTINCT	
+				n.uuid,
 				n.fk_nodetype as nodetype,
 				n.s_label AS label,
 				n.s_name AS name,
@@ -521,7 +527,11 @@ $_QUERIES['sbJukebox/jukebox/playlists/getAll'] = '
 					INNER JOIN	{TABLE_NODES} ni
 						ON		hi.fk_child = ni.uuid
 					WHERE		hi.fk_parent = n.uuid
-						AND		ni.fk_nodetype = \'sbJukebox:Track\'
+						AND		(
+									ni.fk_nodetype = \'sbJukebox:Track\'
+								OR	ni.fk_nodetype = \'sbJukebox:Album\'
+								OR	ni.fk_nodetype = \'sbJukebox:Playlist\'
+								)
 				) AS numtracks
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_HIERARCHY} h

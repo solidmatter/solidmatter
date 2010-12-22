@@ -72,24 +72,20 @@ class sbNode_jukebox_playlist extends sbJukeboxNode {
 	*/
 	public function addItem($nodeItem) {
 		
-		$aTracks = array();
+		$aItems = array();
 		switch ($nodeItem->getPrimaryNodeType()) {
 			case 'sbJukebox:Track':
-				$aTracks[] = $nodeItem;
-				break;
 			case 'sbJukebox:Album':
-				$niTracks = $nodeItem->getChildren('play');
-				foreach ($niTracks as $nodeTrack) {
-					$aTracks[] = $nodeTrack;
-				}
+			case 'sbJukebox:Playlist':
+				$aItems[] = $nodeItem;
 				break;
 			default:
-				throw new sbException('You can only add Albums and Tracks right now');
+				throw new sbException('You can only add Albums, Tracks and Playlists right now');
 				break;
 		}
 		
-		foreach ($aTracks as $nodeTrack) {
-			$this->addExistingNode($nodeTrack);
+		foreach ($aItems as $nodeItem) {
+			$this->addExistingNode($nodeItem);
 		}
 		$this->save();
 		

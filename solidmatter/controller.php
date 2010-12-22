@@ -58,6 +58,8 @@ Stopwatch::check('tier2_load', 'load');
 // globals
 $_CONTROLLERCONFIG		= simplexml_load_file('_config/controller.xml');
 $_RESPONSE				= ResponseFactory::getInstance('global');
+$_SMROOT				= getcwd();
+$_LOGDIR				= $_SMROOT.'logs/';
 
 // configure
 ERROR_REPORTING ? error_reporting(E_ALL) : error_reporting(0);
@@ -185,6 +187,9 @@ if (TIER2_SEPARATED) {
 // exception handling
 
 } catch (Exception $e) {
+	if (DEBUG::EXCEPTIONS) {
+		DEBUG(get_class($e).': '.$e->getMessage().' ('.$e->getFile().', '.$e->getLine().')');
+	}
 	if ($e instanceof SessionTimeoutException) {
 		// TODO: refresh session lifespan with current registry value
 		// TODO: differentiat between storable and unstorable (e.g. AJAX-) requests

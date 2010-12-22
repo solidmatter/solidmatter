@@ -60,9 +60,12 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 				$this->nodeSubject->getVote(User::getUUID());
 				
 				// add tracks
-				$niTracks = $this->nodeSubject->loadChildren('tracks', TRUE, TRUE, FALSE);
-				foreach ($niTracks as $nodeTrack) {
-					$nodeTrack->getVote($this->getPivotUUID());
+				$niItems = $this->nodeSubject->loadChildren('playlist', TRUE, TRUE, FALSE);
+				foreach ($niItems as $nodeItem) {
+					$nodeItem->getVote($this->getPivotUUID());
+					if ($nodeItem->getPrimaryNodeType() == 'sbJukebox:Track') {
+						$nodeItem->loadProperties();
+					}
 				}
 				
 				// save data in element
@@ -75,6 +78,9 @@ class sbView_jukebox_playlist_details extends sbJukeboxView {
 			
 			case 'addItem':
 				$nodeItem = $this->crSession->getNodeByIdentifier($_REQUEST->getParam('item'));
+				if ($nodeItem->isAncestorOf($this->nodeSubject) || $nodeItem->isSame($this->nodeSubject)) {
+					throw new HierarchyException('the item to be added is an ancestor of this playlist or the playlist itself');
+				}
 				$this->nodeSubject->addItem($nodeItem);
 				break;
 				

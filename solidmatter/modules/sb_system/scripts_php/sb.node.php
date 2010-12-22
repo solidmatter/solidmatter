@@ -1295,28 +1295,18 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
+	public function getNumberOfParents() {
+		return (parent::getNumberOfParents());
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function getNumberOfChildren($sMode = NULL) {
-		
-		if ($this->elemSubject->getAttribute('query') == 'new') {
-			throw new RepositoryException('new nodes don\'t have children');
-		} else {
-			if ($sMode != NULL && $sMode != 'debug') {
-				$stmtGetChildren = $this->crSession->prepareKnown($this->aQueries['countChildren']['byMode']);
-				$stmtGetChildren->bindValue('parent_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
-				$stmtGetChildren->bindValue('mode', $sMode, PDO::PARAM_STR);
-				$stmtGetChildren->execute();
-			} else {
-				$stmtGetChildren = $this->crSession->prepareKnown($this->aQueries['countChildren']['debug']);
-				$stmtGetChildren->bindValue('parent_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
-				$stmtGetChildren->execute();
-			}
-			$aResults = $stmtGetChildren->fetchAll(PDO::FETCH_ASSOC);
-			$stmtGetChildren->closeCursor();
-			$iNumberOfChildren = $aResults[0]['num_children'];
-			return ($iNumberOfChildren);
-			
-		}
-		
+		return (parent::getNumberOfChildren($sMode));
 	}
 	
 	

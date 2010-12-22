@@ -26,7 +26,7 @@ class sbInput_relation extends sbInput_select {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* TODO: implement nodetype, and duplicate checking
 	* @param 
 	* @return 
 	*/

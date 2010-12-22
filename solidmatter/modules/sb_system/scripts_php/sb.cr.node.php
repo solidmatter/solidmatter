@@ -48,15 +48,15 @@ class sbCR_Node {
 	/**
 	* 
 	*/
-	protected $aQueries				= array();
-	/**
-	* 
-	*/
 	protected $sPath				= '';
 	/**
 	* cache for the materialized path of this node
 	*/
 	protected $sMPath				= '';
+	/**
+	* 
+	*/
+	protected $aQueries				= array();
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -411,7 +411,7 @@ class sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function getNumberOfParents() {
+	protected function getNumberOfParents() {
 		
 		if ($this->isNew) {
 			return (0);
@@ -423,6 +423,49 @@ class sbCR_Node {
 			$stmtGetParents->closeCursor();
 			return ($iNumberOfParents);
 		}
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function getNumberOfChildren($sMode = NULL) {
+		
+		if ($this->elemSubject->getAttribute('query') == 'new') {
+			// TODO: this is not correct, new nodes might have new children
+			throw new RepositoryException('new nodes don\'t have children');
+		} else {
+			if ($sMode != NULL && $sMode != 'debug') {
+				$stmtGetChildren = $this->crSession->prepareKnown($this->aQueries['countChildren']['byMode']);
+				$stmtGetChildren->bindValue('parent_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+				$stmtGetChildren->bindValue('mode', $sMode, PDO::PARAM_STR);
+				$stmtGetChildren->execute();
+			} else {
+				$stmtGetChildren = $this->crSession->prepareKnown($this->aQueries['countChildren']['debug']);
+				$stmtGetChildren->bindValue('parent_uuid', $this->getProperty('jcr:uuid'), PDO::PARAM_STR);
+				$stmtGetChildren->execute();
+			}
+			$aResults = $stmtGetChildren->fetchAll(PDO::FETCH_ASSOC);
+			$stmtGetChildren->closeCursor();
+			$iNumberOfChildren = $aResults[0]['num_children'];
+			return ($iNumberOfChildren);
+			
+		}
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* TODO: implement this non-trivial method (options: multiple/unique all/onlyPrimary/onlySecondary all/byMode/byNodetype)
+	* @param 
+	* @return 
+	*/
+	protected function getNumberOfDescendats($sMode = NULL) {
+		
+		
 		
 	}
 	

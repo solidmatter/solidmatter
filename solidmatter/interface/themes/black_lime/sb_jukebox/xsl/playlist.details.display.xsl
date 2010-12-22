@@ -29,7 +29,7 @@
 	<xsl:template name="content">
 		<script language="Javascript" type="text/javascript">
 			sDisplayedPlaylistUUID = '<xsl:value-of select="$master/@uuid" />';
-			<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
+			<xsl:if test="$master/user_authorisations/authorisation[@name='write']">
 				bWriteAllowed = true;
 			</xsl:if>
 		</script>
@@ -54,7 +54,7 @@
 					<xsl:value-of select="' '" />
 					<a class="type remove" href="javascript:submit_form('remove');"><xsl:value-of select="$locale/sbSystem/actions/remove" /></a>
 				</span>
-				<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
+				<xsl:if test="$master/user_authorisations/authorisation[@name='write']">
 					<span style="margin-left: 25px;"></span>
 					<a class="type remove" href="javascript:request_confirmation('/{$master/@uuid}/details/clear');"><xsl:value-of select="$locale/sbSystem/actions/remove_all" /></a>
 				</xsl:if>
@@ -76,7 +76,7 @@
 			<div class="albumdetails" style="float:right;">
 				<!-- bloody form does not submit via submit() alone, so we have to use a crappy workaround -->
 				<input id="playlist_form_submit" type="submit" name="submitbutton" value="submit" style="display:none;" />
-				<!--<xsl:if test="@nodetype='sbJukebox:Playlist' and $master/user_authorisations/authorisation[@name='add_titles' and @grant_type='ALLOW']">
+				<!--<xsl:if test="@nodetype='sbJukebox:Playlist' and $master/user_authorisations/authorisation[@name='add_titles']">
 					<xsl:choose>
 						<xsl:when test="@uuid = $currentPlaylist/@uuid">
 							<a class="type activated icononly" href="/{@uuid}/details/activate" title="{$locale/sbJukebox/actions/activate}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
@@ -98,18 +98,24 @@
 		
 		<ul class="sortable" id="playlist">
 			<xsl:choose>
-				<xsl:when test="children[@mode='tracks']/sbnode">
-					<xsl:for-each select="children[@mode='tracks']/sbnode">
+				<xsl:when test="children[@mode='playlist']/sbnode">
+					<xsl:for-each select="children[@mode='playlist']/sbnode">
 						<li style="position:relative;top:0;left:0;" id="item_{@uuid}">
 							<xsl:call-template name="colorize" />
 							<input class="helper" type="checkbox" id="check_{@uuid}" name="items[]" value="{@uuid}" onclick="toggle_checked('{@uuid}')" style="margin-right: 8px;" />
-							<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
+							<xsl:if test="$master/user_authorisations/authorisation[@name='write']">
 								<a style="position:absolute;top:5px;right:3px;" class="type remove icononly" href="javascript:remove('{@uuid}')" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 							</xsl:if>
 							<span style="width:{$starcolwidth}; vertical-align:middle; padding: 0 5px 0 0;" >
 								<xsl:call-template name="render_stars" />
 							</span>
-							<a href="/{@uuid}" style="position:relative; top:-1px;"><xsl:value-of select="@label" /></a>
+							<span class="type {translate(@nodetype, ':', '_')}"><a href="/{@uuid}" style="position:relative; top:-1px;"><xsl:value-of select="@label" /></a></span>
+							<xsl:if test="string-length(@info_lyrics) &gt; 0">
+								<a class="type searchLyrics icononly" href="javascript:toggle('lyrics_{@uuid}');" style="margin-left:10px;"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+							</xsl:if>
+							<div id="lyrics_{@uuid}" style="padding:10px; text-align:center; white-space:pre; color:lightgrey; font-size:0.9em; display:none;">
+								<xsl:value-of select="@info_lyrics" />
+							</div>
 						</li>
 					</xsl:for-each>
 				</xsl:when>
@@ -127,7 +133,7 @@
 			// init
 			//
 			<xsl:choose>
-				<xsl:when test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
+				<xsl:when test="$master/user_authorisations/authorisation[@name='write']">
 					var oPlaylist = $('playlist');
 					var aInitialState = getOrder(oPlaylist);
 					Sortable.create('playlist', { onChange: redraw, onUpdate: reorder } );

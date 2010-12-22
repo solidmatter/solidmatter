@@ -164,7 +164,8 @@ $_QUERIES['sbCR/getNode/byUUID'] = '
 	LEFT JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child
 	WHERE		n.uuid = :id
-	ORDER BY	h.b_primary DESC
+	ORDER BY	h.b_primary ASC /* caution: this has to be ASC because the enum-field is in order! TRUE=1 FALSE=2 */
+	LIMIT		0, 1
 ';
 $_QUERIES['sbCR/getNode/byUID'] = '
 	SELECT		n.uuid,
@@ -185,7 +186,7 @@ $_QUERIES['sbCR/getNode/byUID'] = '
 	INNER JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child
 	WHERE		n.s_uid = :uid
-	ORDER BY	h.b_primary DESC
+	ORDER BY	h.b_primary ASC /* caution: this has to be ASC because the enum-field is in order! TRUE=1 FALSE=2 */
 ';
 
 // maintenance -----------------------------------------------------------------
@@ -315,38 +316,11 @@ $_QUERIES['sbCR/node/loadChildren/debug'] = '
 		AND		h.fk_deletedby IS NULL /* prevent nodes in trash from showing up */
 	ORDER BY	h.n_order
 ';
-$_QUERIES['sbCR/node/countChildren/debug'] = '
-	SELECT		COUNT(*) as num_children
-	FROM		{TABLE_HIERARCHY} h
-	WHERE		h.fk_parent = :parent_uuid
-		AND		h.fk_deletedby IS NULL /* prevent nodes in trash from showing up */
-';
-$_QUERIES['sbCR/node/countChildren/mode'] = '
-	SELECT		COUNT(*) as num_children
-	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_HIERARCHY} h
-		ON		n.uuid = h.fk_child
-	INNER JOIN	{TABLE_NODES} n2
-		ON		h.fk_parent = n2.uuid
-	WHERE		h.fk_parent = :parent_uuid
-		AND		n.fk_nodetype IN (
-					SELECT		fk_nodetype
-					FROM		{TABLE_MODES}
-					WHERE		s_mode = :mode
-						AND		fk_parentnodetype = n2.fk_nodetype
-				)
-		AND		h.fk_child != :parent_uuid /* prevent root finding itself */
-		AND		h.fk_deletedby IS NULL /* prevent nodes in trash from showing up */
-';
 
-$_QUERIES['sbCR/node/countChildrenByName/debug'] = '
-	SELECT		COUNT(*) as num_children
-	FROM		{TABLE_HIERARCHY} h
-	INNER JOIN	{TABLE_NODES} n
-		ON		n.uuid = h.fk_child
-	WHERE		h.fk_parent = :parent_uuid
-		AND		n.s_name = :child_name
-';
+
+
+
+
 $_QUERIES['sbCR/node/getChild/byName'] = '
 	SELECT		n.uuid,
 				n.fk_nodetype,
@@ -398,23 +372,6 @@ $_QUERIES['sbCR/node/getParents/byNodetype'] = '
 	WHERE		h.fk_child = :child_uuid
 		AND		n.fk_nodetype = :nodetype
 ';
-/*$_QUERIES['sbCR/node/getAncestors'] = '
-	SELECT		h.fk_parent
-	FROM		{TABLE_HIERARCHY} h
-	WHERE		n_left < (
-					SELECT		n_left
-					FROM		{TABLE_HIERARCHY}
-					WHERE		fk_child = :child_uuid
-						AND		b_primary = \'TRUE\'
-				)
-		AND		n_right > (
-					SELECT		n_right
-					FROM		{TABLE_HIERARCHY}
-					WHERE		fk_child = :child_uuid
-						AND		b_primary = \'TRUE\'
-				)
-	ORDER BY	h.n_left DESC
-';*/
 $_QUERIES['sbCR/node/checkDescendant'] = '
 	SELECT		h.fk_parent
 	FROM		{TABLE_HIERARCHY} h
@@ -426,6 +383,94 @@ $_QUERIES['sbCR/node/checkDescendant'] = '
 						AND		b_primary = \'TRUE\'
 				)
 ';
+
+// node counting ---------------------------------------------------------------
+
+$_QUERIES['sbCR/node/countChildren/debug'] = '
+	SELECT		COUNT(*) as num_children
+	FROM		{TABLE_HIERARCHY} h
+	WHERE		h.fk_parent = :parent_uuid
+		AND		h.fk_deletedby IS NULL /* prevent nodes in trash from showing up */
+';
+$_QUERIES['sbCR/node/countChildren/mode'] = '
+	SELECT		COUNT(*) as num_children
+	FROM		{TABLE_NODES} n
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	INNER JOIN	{TABLE_NODES} n2
+		ON		h.fk_parent = n2.uuid
+	WHERE		h.fk_parent = :parent_uuid
+		AND		n.fk_nodetype IN (
+					SELECT		fk_nodetype
+					FROM		{TABLE_MODES}
+					WHERE		s_mode = :mode
+						AND		fk_parentnodetype = n2.fk_nodetype
+				)
+		AND		h.fk_child != :parent_uuid /* prevent root finding itself */
+		AND		h.fk_deletedby IS NULL /* prevent nodes in trash from showing up */
+';
+
+$_QUERIES['sbCR/node/countChildrenByName/debug'] = '
+	SELECT		COUNT(*) as num_children
+	FROM		{TABLE_HIERARCHY} h
+	INNER JOIN	{TABLE_NODES} n
+		ON		n.uuid = h.fk_child
+	WHERE		h.fk_parent = :parent_uuid
+		AND		n.s_name = :child_name
+';
+
+// descendants
+/*$_QUERIES['sbCR/node/countDescendants/all'] = '
+	SELECT		COUNT(*) as num_descendants
+';
+$_QUERIES['sbCR/node/countDescendants/unique'] = '
+	SELECT		COUNT(DISTINCT n.uuid) as num_descendants
+';
+$_QUERIES['sbCR/node/countDescendants/base'] = '
+	FROM		{TABLE_HIERARCHY} h
+	INNER JOIN	{TABLE_NODES} n
+		ON		h.fk_child = n.uuid
+';
+$_QUERIES['sbCR/node/countDescendants/byMode'] = '
+	FROM		{TABLE_HIERARCHY} h
+	INNER JOIN	{TABLE_NODES} n
+		ON		h.fk_child = n.uuid
+	WHERE		h.s_mpath LIKE CONCAT(:current_mpath, \'%\')
+';
+$_QUERIES['sbCR/node/countDescendants/pathConstraint'] = '
+	WHERE		h.s_mpath LIKE CONCAT(:current_mpath, \'%\')
+';
+$_QUERIES['sbCR/node/countDescendants/byNodetype'] = '
+		AND		n.nodetype = :nodetype
+';
+$_QUERIES['sbCR/node/countDescendants/onlyPrimary'] = '
+		AND		h.b_primary = \'TRUE\'
+';
+$_QUERIES['sbCR/node/countDescendants/onlySecondary'] = '
+		AND		h.b_primary = \'FALSE\'
+';
+
+$_QUERIES['sbCR/node/countUniqueDescendants/byMode'] = '
+	SELECT		COUNT(DISTINCT n.uuid) as num_descendants
+	FROM		{TABLE_HIERARCHY} h
+	INNER JOIN	{TABLE_NODES} n
+		ON		h.fk_child = n.uuid
+	WHERE		h.s_mpath LIKE CONCAT(:current_mpath, \'%\')
+		AND		n.nodetype IN (
+					SELECT		m.fk_nodetype
+					FROM		{TABLE_MODES} m
+					WHERE		m.fk_parentnodetype = :parent_nodetype
+						AND		m.s_mode = :mode
+				)
+';
+$_QUERIES['sbCR/node/countUniqueDescendants/byNodetype'] = '
+	SELECT		COUNT(DISTINCT n.uuid) as num_descendants
+	FROM		{TABLE_HIERARCHY} h
+	INNER JOIN	{TABLE_NODES} n
+		ON		h.fk_child = n.uuid
+	WHERE		h.s_mpath LIKE CONCAT(:current_mpath, \'%\')
+		AND		n.nodetype = :nodetype
+';*/
 
 // save/delete -----------------------------------------------------------------
 

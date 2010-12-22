@@ -52,7 +52,7 @@
 			<xsl:choose>
 				<xsl:when test="row">
 					<xsl:for-each select="row">
-						<tr>
+						<tr id="highlight_{@uuid}">
 							<xsl:call-template name="colorize" />
 							<td width="{$starcolwidth}">
 								<xsl:call-template name="render_stars" />
@@ -66,8 +66,9 @@
 							<td>
 								<xsl:value-of select="@user" />
 							</td>
-							<td width="10">
+							<td width="38">
 								<a class="type play icononly" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+								<a class="type addToPlaylist icononly" href="javascript:add_to_playlist('{@uuid}');" title="{$locale/sbJukebox/actions/add_to_playlist}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 							</td>
 						</tr>
 					</xsl:for-each>

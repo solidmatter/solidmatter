@@ -32,7 +32,12 @@ DEBUG('Client: User Agent = '.$_SERVER['HTTP_USER_AGENT'], DEBUG::CLIENT);
 
 session_start();
 $_SESSIONID = session_id();
+// TODO: session id characteristics vary from one PHP-version to another, but this is a crappy workaround anyways -> change to separate handler checking a token
 if (preg_match('/sid=([a-f0-9]{32})/', $_SERVER['REQUEST_URI'], $aMatches)) {
+	$_SESSIONID = $aMatches[1];
+	DEBUG('Interface: URL Session ID = '.$_SESSIONID, DEBUG::SESSION);
+}
+if (preg_match('/sid=([a-z0-9]{26})/', $_SERVER['REQUEST_URI'], $aMatches)) {
 	$_SESSIONID = $aMatches[1];
 	DEBUG('Interface: URL Session ID = '.$_SESSIONID, DEBUG::SESSION);
 }
@@ -258,7 +263,13 @@ $_RESPONSE->saveOutput();
 	$_RESPONSE = ResponseFactory::getInstance('global');
 	$_RESPONSE->addException($e);
 	$_RESPONSE->finalizeMetadata();
-	$_RESPONSE->addHeader('X-sbException: 1'); // TODO: support sensible error codes
+	// TODO: support sensible error codes, this is a workaround because default code is 0, which my be considered as 'success'
+	$iErrorcode = $e->getCode();
+	if ($iErrorcode == 0) {
+		$iErrorcode = 1;	
+	}
+	$_RESPONSE->addHeader('X-sbException: '.$iErrorcode);
+	$_RESPONSE->addHeader('X-sbException-Type: '.get_class($e));
 	// FIXME: this has no effect
 	$sMethod = 'rendered';
 	if (DEBUG) {

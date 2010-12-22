@@ -87,10 +87,9 @@ class sbView_jukebox_various_votes extends sbJukeboxView {
 			case 'placeVote':
 				$iVote = $this->requireParam('vote');
 				$nodeJukebox = $this->nodeSubject->getAncestorOfType('sbJukebox:Jukebox');
-				$iRealVote = $iVote;
 				$this->nodeSubject->removeVote(User::getUUID());
-				$this->nodeSubject->placeVote(User::getUUID(), $iRealVote);
-				if ($this->getPivotUUID() != User::getUUID()) {
+				$this->nodeSubject->placeVote(User::getUUID(), $iVote);
+				if ($this->getPivotUUID() == User::getUUID()) {
 					$iVote = $this->nodeSubject->getVote(User::getUUID());
 				} else {
 					$iVote = $this->nodeSubject->getVote();

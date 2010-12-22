@@ -526,16 +526,20 @@ div.menufooter_info {
 
 /* standard objects/types */
 
-*.track {
+*.track,
+*.sbJukebox_Track {
 	background-image: url(../icons/type_track.png);
 }
-*.album {
+*.album,
+*.sbJukebox_Album {
 	background-image: url(../icons/type_cd.png);
 }
-*.artist {
+*.artist,
+*.sbJukebox_Artist {
 	background-image: url(../icons/type_artist.png);
 }
-*.playlist {
+*.playlist,
+*.sbJukebox_Playlist {
 	background-image: url(../icons/type_playlist.png);
 }
 *.tag {

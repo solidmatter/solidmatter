@@ -120,7 +120,7 @@
 								</td>
 								<td>
 									<xsl:for-each select="tags/tag[starts-with(., 'Series:')]">
-										<a href="/-/tags/listItems/?tagid={@id}">
+										<a href="/-/tags/listItems/?tagid={@id}&amp;expand=albums">
 											<xsl:value-of select="substring-after(., 'Series:')" />
 										</a>
 										<xsl:if test="position() != last()">

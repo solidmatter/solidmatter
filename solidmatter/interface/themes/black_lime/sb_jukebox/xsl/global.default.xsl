@@ -339,7 +339,7 @@
 		<xsl:if test="@nodetype != 'sbJukebox:Playlist' and $with_favorites">
 			<a class="type addToFavorites icononly" href="javascript:add_to_favorites('{@uuid}');" title="{$locale/sbJukebox/actions/add_to_favorites}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
-		<xsl:if test="@nodetype='sbJukebox:Album' or @nodetype='sbJukebox:Track'">
+		<xsl:if test="@nodetype='sbJukebox:Album' or @nodetype='sbJukebox:Track' or @nodetype='sbJukebox:Playlist'">
 			<a class="type addToPlaylist icononly" href="javascript:add_to_playlist('{@uuid}');" title="{$locale/sbJukebox/actions/add_to_playlist}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
 		<xsl:if test="@nodetype='sbJukebox:Album' or @nodetype='sbJukebox:Playlist'">

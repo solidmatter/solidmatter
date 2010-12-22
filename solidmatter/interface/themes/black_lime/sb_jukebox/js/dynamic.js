@@ -271,7 +271,7 @@ function select_playlist(sPlaylistUUID) {
 //
 function remove(sUUID) {
 	
-	var sURL = '/' + sDisplayedPlaylistUUID + '/details/removeItem/?item=' + sUUID + '&amp;silent';
+	var sURL = '/' + sDisplayedPlaylistUUID + '/details/removeItem/?item=' + sUUID + '&silent=1';
 	var myAjaxRemover = new Ajax.Request(
 		sURL, 
 		{

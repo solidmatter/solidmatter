@@ -83,7 +83,7 @@ abstract class DEBUG {
 	const HANDLER		= FALSE;
 	const NODE			= FALSE;
 	const REDIRECT		= FALSE;
-	const EXCEPTIONS	= FALSE;
+	const EXCEPTIONS	= TRUE;
 	const PDO			= TRUE;
 	
 	protected static $aTimes = array();

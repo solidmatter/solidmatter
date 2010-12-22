@@ -40,6 +40,7 @@ class ApplicationRequestHandler extends RequestHandler {
 		$nodeCurrent->loadAncestors();
 		$nodeCurrent->aGetElementFlags['ancestors'] = TRUE;
 		$nodeCurrent->setAttribute('master', 'true');
+		$nodeCurrent->aGetElementFlags['auth_user'] = TRUE;
 		
 		if ($_REQUEST->getParam('sbCommand') != NULL) {
 			$_RESPONSE->addCommand($_REQUEST->getParam('sbCommand'));
