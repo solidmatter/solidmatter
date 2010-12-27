@@ -33,11 +33,7 @@ DEBUG('Client: User Agent = '.$_SERVER['HTTP_USER_AGENT'], DEBUG::CLIENT);
 session_start();
 $_SESSIONID = session_id();
 // TODO: session id characteristics vary from one PHP-version to another, but this is a crappy workaround anyways -> change to separate handler checking a token
-if (preg_match('/sid=([a-f0-9]{32})/', $_SERVER['REQUEST_URI'], $aMatches)) {
-	$_SESSIONID = $aMatches[1];
-	DEBUG('Interface: URL Session ID = '.$_SESSIONID, DEBUG::SESSION);
-}
-if (preg_match('/sid=([a-z0-9]{26})/', $_SERVER['REQUEST_URI'], $aMatches)) {
+if (preg_match('/sid=([a-z0-9]+)/', $_SERVER['REQUEST_URI'], $aMatches)) {
 	$_SESSIONID = $aMatches[1];
 	DEBUG('Interface: URL Session ID = '.$_SESSIONID, DEBUG::SESSION);
 }

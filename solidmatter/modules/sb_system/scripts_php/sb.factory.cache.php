@@ -160,7 +160,7 @@ class CacheFactory {
 		
 		if (!isset(self::$aCaches[$sType])) {
 			
-			$sPrefix = $aCacheTypes[$sType][3];
+			$sPrefix = self::$aCacheTypes[$sType][3];
 			
 			// determine class
 			$sClass = self::$aCacheTypes[$sType][1];
@@ -175,7 +175,7 @@ class CacheFactory {
 			import($sLibrary);
 			
 			// treat special and generic caches differently
-			if ($aCacheTypes[$sType][0] == 'special') {
+			if (self::$aCacheTypes[$sType][0] == 'special') {
 				
 				self::$aCaches[$sType] = new $sClass();
 				

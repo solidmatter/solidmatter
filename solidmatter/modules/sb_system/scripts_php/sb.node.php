@@ -2320,7 +2320,7 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function loadLocalAuthorisations($bForced) {
+	public function loadLocalAuthorisations($bForced = FALSE) {
 		
 		if ($this->aLocalAuthorisations == NULL || $bForced) {
 				
@@ -2482,7 +2482,7 @@ class sbNode extends sbCR_Node {
 	* @return array 
 	*/
 	protected function mergeAuthHierarchy($aUserAuth) {
-		foreach ($this->getSupportedAuthorisations as $sAuth => $sParentAuth) {
+		foreach ($this->getSupportedAuthorisations() as $sAuth => $sParentAuth) {
 			if ($sParentAuth != NULL && isset($aUserAuth[$sParentAuth]) && $aUserAuth[$sParentAuth] == 'ALLOW' && (!isset($aUserAuth[$sAuth]) || $aUserAuth[$sAuth] != 'DENY')) {
 				$aUserAuth[$sAuth] = 'ALLOW';
 			}
