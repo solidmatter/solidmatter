@@ -31,7 +31,7 @@
 			
 		</div>
 		<div class="nav">
-			<xsl:if test="$master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW']">
+			<xsl:if test="$auth[@name='write']">
 				<span style="float: right;">
 					<a class="type remove" href="javascript:request_confirmation('/{$master/@uuid}/fix/delete');"><xsl:value-of select="$locale/sbSystem/actions/delete" /></a>
 				</span>

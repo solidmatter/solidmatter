@@ -303,7 +303,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</a>
-					<xsl:if test="$auth[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1'">
+					<xsl:if test="$auth[@name='write'] and $jukebox/adminmode = '1'">
 						<xsl:value-of select="' '" />
 						<a class="type remove icononly" href="/{$master/@uuid}/votes/removeTag/?tagid={@id}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 					</xsl:if>
@@ -520,7 +520,7 @@
 								</a>
 							</td>
 							<td width="10">
-							<xsl:if test="($auth[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1')">
+							<xsl:if test="($auth[@name='write'] and $jukebox/adminmode = '1')">
 								<a class="type remove icononly" href="/{$master/@uuid}/votes/removeRelation/?type_relation={@id}&amp;target_relation={@target_uuid}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 							</xsl:if>
 							</td>
@@ -586,7 +586,7 @@
 							<xsl:value-of select="php:functionString('datetime_mysql2local', string(@created), string($locale/sbSystem/formats/datetime_short))" />
 						</td>
 						<td width="10">
-						<xsl:if test="@createdby = $system/userid or ($master/user_authorisations/authorisation[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1')">
+						<xsl:if test="@createdby = $system/userid or ($auth[@name='write'] and $jukebox/adminmode = '1')">
 							<a class="type remove icononly" href="/{$master/@uuid}/votes/removeComment/?comment={@uuid}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 						</xsl:if>
 						</td>

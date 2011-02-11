@@ -34,7 +34,7 @@
 		</div>
 		<div class="nav">
 			<span style="float: right;">
-				<xsl:if test="$auth[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1'">
+				<xsl:if test="$auth[@name='write'] and $jukebox/adminmode = '1'">
 					<a class="type maintenance" href="/{$master/@uuid}/fix" title="{$locale/sbJukebox/actions/XXXXXXXXX}">Fix</a>
 				</xsl:if>
 			</span>

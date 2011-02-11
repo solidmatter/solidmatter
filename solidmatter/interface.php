@@ -114,6 +114,7 @@ switch ((string) $elemSite['type']) {
 		// determine requested file
 		if ($aPath[2] == 'global') { // theme-independent global files
 			$sFile = 'interface/themes/_global/'.implode('/', array_slice($aPath, 3));
+			$sFileOverride = 'interface/themes/_global/'.implode('/', array_slice($aPath, 3));
 		} else { // files in current theme
 			$sHandler = (string) $elemSite['handler'];
 			$sTheme = (string) $elemSite['theme'];

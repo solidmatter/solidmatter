@@ -32,7 +32,7 @@
 		</div>
 		<div class="nav">
 			<span style="float: right;">
-				<xsl:if test="($auth[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1') and $master/votes/vote">
+				<xsl:if test="($auth[@name='write'] and $jukebox/adminmode = '1') and $master/votes/vote">
 					<a class="type remove" href="/{$master/@uuid}/votes/removeAllVotes"><xsl:value-of select="$locale/sbJukebox/actions/unset_votes" /></a>
 				</xsl:if>
 			</span>
@@ -84,7 +84,7 @@
 								<xsl:value-of select="@user_label" />
 							</td>
 							<td width="10">
-							<xsl:if test="@user_uuid = $userid or ($auth[@name='write' and @grant_type='ALLOW'] and $jukebox/adminmode = '1')">
+							<xsl:if test="@user_uuid = $userid or ($auth[@name='write'] and $jukebox/adminmode = '1')">
 								<a class="type remove icononly" href="/{$master/@uuid}/votes/removeVote/?user_uuid={@user_uuid}" title="{$locale/sbJukebox/actions/remove}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 							</xsl:if>
 							</td>
