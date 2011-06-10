@@ -21,6 +21,8 @@ class sbDOMRequest extends sbDOMDocument {
 	
 	private $sSessionID = NULL;
 	
+	public $aElementCache = array();
+	
 	//--------------------------------------------------------------------------
 	/**
 	* Constructor, initializes basic DOM structure.
@@ -58,25 +60,45 @@ class sbDOMRequest extends sbDOMDocument {
 		$elemGlobals = $this->createElement('globals');
 		$elemGlobals->setAttribute('xml:id', 'GLOBALS');
 		
+		$elemHeaders = $this->createElement('headers');
+		$elemHeaders->setAttribute('xml:id', 'HEADERS');
+		foreach($_SERVER as $sKey => $sValue) {
+			if (substr($sKey, 0, 5) == 'HTTP_') {
+				$elemHeader = $this->createElement('header');
+				$sKey = str_replace('_', ' ', substr($sKey, 5));
+				$sKey = str_replace(' ', '-', ucwords(strtolower($sKey)));
+				$elemHeader->setAttribute('name', $sKey);
+				$elemHeader->setAttribute('value', $sValue);
+				$elemHeaders->appendChild($elemHeader);
+			}
+		}
+		$elemGlobals->appendChild($elemHeaders);
+		$this->aElementCache['HEADERS'] = $elemHeaders;
+		
 		$elemParams = $this->createElement('params');
 		$elemParams->setAttribute('xml:id', 'PARAMS');
 		$elemGlobals->appendChild($elemParams);
+		$this->aElementCache['PARAMS'] = $elemParams;
 		
 		$elemGET = $this->convertArrayToElement('get', $_GET);
 		$elemGET->setAttribute('xml:id', 'GET');
 		$elemGlobals->appendChild($elemGET);
+		$this->aElementCache['GET'] = $elemGET;
 		
 		$elemPOST = $this->convertArrayToElement('post', $_POST);
 		$elemPOST->setAttribute('xml:id', 'POST');
 		$elemGlobals->appendChild($elemPOST);
+		$this->aElementCache['POST'] = $elemPOST;
 		
 		$elemCOOKIE = $this->convertArrayToElement('cookie', $_COOKIE);
 		$elemCOOKIE->setAttribute('xml:id', 'COOKIE');
 		$elemGlobals->appendChild($elemCOOKIE);
+		$this->aElementCache['COOKIE'] = $elemCOOKIE;
 		
 		$elemSERVER = $this->convertArrayToElement('server', $_SERVER);
 		$elemSERVER->setAttribute('xml:id', 'SERVER');
 		$elemGlobals->appendChild($elemSERVER);
+		$this->aElementCache['SERVER'] = $elemSERVER;
 		
 		if ($bIncludeFiles) {
 			foreach ($_FILES as $sFieldname => $aField) {
@@ -152,7 +174,7 @@ class sbDOMRequest extends sbDOMDocument {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* FIXME: the crappy php-DOM library doesn't always get the damn elements via xml:id, so these are stored in a member array, which is not yet filled in this method in case of 2-tier solidmatter
 	* @param 
 	* @return 
 	*/
@@ -181,6 +203,7 @@ class sbDOMRequest extends sbDOMDocument {
 	* @return 
 	*/
 	public function bounce() {
+		header('Content-type: application/xml; encoding="UTF-8"');
 		echo $this->saveXML();
 		exit();
 	}
@@ -213,19 +236,11 @@ class sbDOMRequest extends sbDOMDocument {
 				}
 				return ($mValue);
 			case 'PARAMS':
-				$elemCurrent = $this->getElementById('PARAMS');
-				break;
 			case 'GET':
-				$elemCurrent = $this->getElementById('GET');
-				break;
 			case 'POST':
-				$elemCurrent = $this->getElementById('POST');
-				break;
 			case 'COOKIE':
-				$elemCurrent = $this->getElementById('COOKIE');
-				break;
 			case 'SERVER':
-				$elemCurrent = $this->getElementById('SERVER');
+				$elemCurrent = $this->aElementCache[$sSource];
 				break;
 		}
 		
@@ -271,16 +286,10 @@ class sbDOMRequest extends sbDOMDocument {
 			
 			switch ($sSource) {
 				case 'PARAMS':
-					$elemCurrent = $this->getElementById('PARAMS');
-					break;
 				case 'GET':
-					$elemCurrent = $this->getElementById('GET');
-					break;
 				case 'POST':
-					$elemCurrent = $this->getElementById('POST');
-					break;
 				case 'COOKIE':
-					$elemCurrent = $this->getElementById('COOKIE');
+					$elemCurrent = $this->aElementCache[$sSource];
 					break;
 			}
 			
@@ -303,7 +312,7 @@ class sbDOMRequest extends sbDOMDocument {
 	* @return 
 	*/
 	public function setParam($sName, $mValue) {
-		$elemParams = $this->getElementById('PARAMS');
+		$elemParams = $this->aElementCache['PARAMS'];
 		$bExists = FALSE;
 		/*$nlParams = $elemParams->getElementsByTagName($sName);
 		foreach ($nlParams as $elemParam) {
@@ -332,12 +341,43 @@ class sbDOMRequest extends sbDOMDocument {
 	*/
 	public function getServerValue($sName) {
 		$sValue = NULL;
-		$elemServer = $this->getElementById('SERVER');
+		$elemServer = $this->aElementCache['SERVER'];
 		$nlParams = $elemServer->getElementsByTagName($sName);
 		foreach ($nlParams as $elemParam) {
 			$sValue = (string) $elemParam->nodeValue;
 		}
 		return ($sValue);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getHeader($sName) {
+		$elemHeaders = $this->aElementCache['HEADERS'];
+		foreach ($elemHeaders->childNodes as $elemHeader) {
+			if ($elemHeader->getAttribute('name') == $sName) {
+				return ((string) $elemHeader->getAttribute('value'));
+			}
+		}
+		return (FALSE);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getAllHeaders() {
+		$aHeaders = array();
+		$elemHeaders = $this->aElementCache['HEADERS'];
+		foreach ($elemHeaders->childNodes as $elemHeader) {
+			$aHeaders[$elemHeader->getAttribute('name')] = (string) $elemHeader->getAttribute('value');
+		}
+		return ($aHeaders);
 	}
 	
 	//--------------------------------------------------------------------------

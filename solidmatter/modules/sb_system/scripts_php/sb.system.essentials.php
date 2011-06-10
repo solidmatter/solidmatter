@@ -75,6 +75,8 @@ abstract class DEBUG {
 	
 	const ENABLED		= TRUE;
 	
+	const LOG_ALL		= FALSE;
+	
 	const BASIC			= TRUE;
 	const CLIENT		= FALSE;
 	const IMPORT		= FALSE;
@@ -107,14 +109,13 @@ abstract class DEBUG {
 * @return 
 */
 function DEBUG($sText, $bInUse = TRUE) {
-	if (!DEBUG::ENABLED || !$bInUse) {
-		return;
+	if (DEBUG::ENABLED && ($bInUse || DEBUG::LOG_ALL)) {
+		static $oDebugger = NULL;
+		if (!$oDebugger) {
+			$oDebugger = new Debugger($_SERVER['REQUEST_URI']);
+		}
+		$oDebugger->addText($sText."\r\n");
 	}
-	static $oDebugger = NULL;
-	if (!$oDebugger) {
-		$oDebugger = new Debugger($_SERVER['REQUEST_URI']);
-	}
-	$oDebugger->addText($sText."\r\n");
 }
 
 //--------------------------------------------------------------------------

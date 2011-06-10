@@ -56,10 +56,12 @@ ul.tree ul ul {
 ul.tree li a {
 	color: black;
 }
-/*ul.tree li a:hover {
+ul.tree li a:hover {
 	text-decoration: none;
-	background-color: #FF7;
-}*/
+	background-color: highlight;
+	background: url(../images/highlight.png) top left repeat-x;
+	text-decoration: none;
+}
 
 
 a.type:hover {
@@ -76,8 +78,8 @@ a.root {
 	text-decoration: none;
 }
 
-a.link {
-	padding: 0 3px 0 19px;
+span.softlink {
+	padding: 0;
 	background-image: url(../icons/link.png);
 	background-repeat: no-repeat;
 }

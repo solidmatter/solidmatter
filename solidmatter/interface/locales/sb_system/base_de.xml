@@ -47,6 +47,7 @@
 		<cut>Ausschneiden</cut>
 		<paste>Einfügen</paste>
 		<create_hardlink>Verknüpfung</create_hardlink>
+		<set_primary>Primärverknüpfung</set_primary>
 		<upload>Hochladen</upload>
 		<download>Herunterladen</download>
 		<activate>Aktivieren</activate>
@@ -64,6 +65,7 @@
 		<purge>Entleeren</purge>
 		<new_relation>Neue Verknüpfung</new_relation>
 		<new_comment>Neuer Kommentar</new_comment>
+		<add_to_favorites>zu Favoriten</add_to_favorites>
 	</actions>
 	
 	<labels>
@@ -86,6 +88,7 @@
 		<email>eMail</email>
 		<abbr_number>Nr.</abbr_number>
 		<description>Beschreibung</description>
+		<explanation>Erläuterung</explanation>
 		<details>Details</details>
 		<notes>Notizen</notes>
 		<title>Titel</title>
@@ -93,6 +96,7 @@
 		<properties>Eigenschaften</properties>
 		<name>Name</name>
 		<label>Bezeichnung</label>
+		<active>Aktiv</active>
 		<module>Modul</module>
 		<nickname>Online-Name</nickname>
 		<shortname>Kurzname</shortname>
@@ -186,6 +190,9 @@
 		<logs>Logs</logs>
 		<registry>Registrierung</registry>
 		<tags>Tags</tags>
+		<favorites>Favoriten</favorites>
+		<inbox>Eingang</inbox>
+		<tasks>Aufgaben</tasks>
 	</nodes>
 	
 	<tags>

@@ -511,6 +511,10 @@ a.explorercard img {
 *.export {
 	background-image: url(../icons/export.png);
 }
+*.add_to_favorites {
+	background-image: url(../icons/type_favorites.png);
+}
+
 
 *.sb_tpl_stats {
 	background-image: url(../icons/type_tpl_stats.png);

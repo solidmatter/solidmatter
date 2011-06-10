@@ -127,13 +127,48 @@
 				<a href="/-/welcome" class="type sb_root" target="main">solidMatter</a>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="boolean(false) and not(@primary='TRUE')">
+				<img class="type {@displaytype}" style="padding-right:1px; margin-right:1px;">
+					<xsl:if test="@custom_icon">
+						<xsl:attribute name="style">background-image: url(../<xsl:value-of select="@custom_icon" />);</xsl:attribute>
+					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="not(@primary='TRUE')">
+							<xsl:attribute name="src">/theme/sb_system/icons/link.png</xsl:attribute>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:attribute name="src">/theme/sb_system/icons/blank.gif</xsl:attribute>
+						</xsl:otherwise>
+					</xsl:choose>
+				</img>
+				<a target="main" id="{$path}" style="padding: 0 2px;">
+				<xsl:attribute name="href">/<xsl:value-of select="@uuid" /></xsl:attribute>
+					
+					<!-- <xsl:if test="not(@primary='TRUE')">
+						<img style="position: relative; left:-15; z-index: 1001;" src="/theme/sb_system/icons/link.png" />
+					</xsl:if>
+					<xsl:choose>
+							<xsl:when test="not(@primary='TRUE')">
+								<xsl:attribute name="src">/theme/sb_system/icons/link.png</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="src">/theme/sb_system/icons/blank.gif</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose> -->
+					
+					
+						<xsl:call-template name="localize"><xsl:with-param name="label" select="@label" /></xsl:call-template>
+							
+
+					
+				</a>
+				<!-- <xsl:choose>
+					<xsl:when test="not(@primary='TRUE')">
 						<span style="padding:0;">
 							<xsl:attribute name="class">type <xsl:value-of select="@displaytype" /></xsl:attribute>
 							<xsl:if test="@custom_icon">
 								<xsl:attribute name="style">background-image: url(../<xsl:value-of select="@custom_icon" />);</xsl:attribute>
 							</xsl:if>
+							<span
 							<a class="link" target="main" id="{$path}">
 								<xsl:attribute name="href">/<xsl:value-of select="@uuid" /></xsl:attribute>
 								<xsl:call-template name="localize"><xsl:with-param name="label" select="@label" /></xsl:call-template>
@@ -142,15 +177,18 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<a target="main" id="{$path}">
-							<xsl:attribute name="class">type <xsl:value-of select="@displaytype" /></xsl:attribute>
-							<xsl:if test="@custom_icon">
-								<xsl:attribute name="style">background-image: url(../<xsl:value-of select="@custom_icon" />);</xsl:attribute>
-							</xsl:if>
 							<xsl:attribute name="href">/<xsl:value-of select="@uuid" /></xsl:attribute>
+							<span style="padding-right: 0; margin-right: 0;">
+								<xsl:attribute name="class">type <xsl:value-of select="@displaytype" /></xsl:attribute>
+								<xsl:if test="@custom_icon">
+									<xsl:attribute name="style">background-image: url(../<xsl:value-of select="@custom_icon" />);</xsl:attribute>
+								</xsl:if>
+							</span>
+							
 							<xsl:call-template name="localize"><xsl:with-param name="label" select="@label" /></xsl:call-template>
 						</a>
 					</xsl:otherwise>
-				</xsl:choose>
+				</xsl:choose> -->
 			</xsl:otherwise>
 		</xsl:choose>
 		<!-- children -->

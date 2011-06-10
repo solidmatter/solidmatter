@@ -22,16 +22,11 @@ class sbView_root_contextmenu extends sbView {
 			
 			case 'generate':
 				
-				// TODO: change to requireParam()
-				$sNodePath = $_REQUEST->getParam('subjectnode');
-				$sParentPath = $_REQUEST->getParam('parentnode');
+				$sNodePath = $this->requireParam('subjectnode');
+				$sParentPath = $this->requireParam('parentnode');
 				
-				if ($sParentPath != NULL) {
-					$nodeParent = $this->crSession->getNode($sParentPath);
-					$sParentUUID = $nodeParent->getProperty('jcr:uuid');
-				} else {
-					$sParentUUID = NULL;
-				}
+				$nodeParent = $this->crSession->getNode($sParentPath);
+				$sParentUUID = $nodeParent->getProperty('jcr:uuid');
 				
 				$nodeCurrent = $this->crSession->getNode($sNodePath);
 				$elemContextMenu = $nodeCurrent->getContextMenu($sParentUUID);

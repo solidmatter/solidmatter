@@ -187,6 +187,7 @@ class sbCR_Node {
 		$this->aQueries['reorder']['moveNode']				= 'sbCR/node/orderBefore/writeOrder/node';
 		$this->aQueries['getLinkStatus']					= 'sbCR/node/getLinkStatus';
 		$this->aQueries['setLinkStatus']['normal']			= 'sbCR/node/setLinkStatus';
+		$this->aQueries['setLinkStatus']['allSecondary']	= 'sbCR/node/setLinkStatus/allSecondary';
 		$this->aQueries['setLinkStatus']['newPrimary']		= 'sbCR/node/setLinkStatus/newPrimary';
 		$this->aQueries['delete']['forGood']				= 'sbCR/node/delete/forGood';
 		
@@ -1059,7 +1060,21 @@ class sbCR_Node {
 	*/
 	protected function setPrimaryLink($nodeParent) {
 		
+		$this->crSession->beginTransaction('NEW_PRIMARY_PARENT');
 		
+		$stmtAllSecondary = $this->crSession->prepareKnown($this->aQueries['setLinkStatus']['allSecondary']);
+		$stmtAllSecondary->bindValue('child_uuid', $this->getIdentifier(), PDO::PARAM_STR);
+		$stmtAllSecondary->execute();
+		
+		$stmtSetPrimary = $this->crSession->prepareKnown($this->aQueries['setLinkStatus']['normal']);
+		$stmtSetPrimary->bindValue('status', 'TRUE', PDO::PARAM_STR);
+		$stmtSetPrimary->bindValue('parent_uuid', $nodeParent->getIdentifier(), PDO::PARAM_STR);
+		$stmtSetPrimary->bindValue('child_uuid', $this->getIdentifier(), PDO::PARAM_STR);
+		$stmtSetPrimary->execute();
+		
+		$this->crSession->commit('NEW_PRIMARY_PARENT');
+		
+		return;
 		
 	}
 	
@@ -2238,7 +2253,9 @@ class sbCR_Node {
 			$sRelativePath = $this->aPropertyTranslation[$sRelativePath];
 		}
 		
-		if ($sRelativePath == 'jcr:primaryType') {
+		if ($sRelativePath == 'jcr:uuid') {
+			return ($this->getIdentifier());
+		} elseif ($sRelativePath == 'jcr:primaryType') {
 			return ($this->getPrimaryNodeType());
 		} elseif ($sRelativePath == 'jcr:mixinTypes') {
 		// TODO: implement multivalue properties and mixin types

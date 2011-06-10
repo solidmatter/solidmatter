@@ -87,6 +87,9 @@ class sbInput_select extends sbInput {
 		$elemInput->setAttribute('value', $this->mValue);
 		$elemInput->setAttribute('label', $this->sLabelPath);
 		$elemInput->setAttribute('size', $this->sLabelPath);
+		if ($this->bDisabled) {
+			$elemInput->setAttribute('disabled', 'TRUE');
+		}
 		foreach ($this->aConfig as $sConfig => $sValue) {
 			$elemInput->setAttribute($sConfig, $sValue);
 		}

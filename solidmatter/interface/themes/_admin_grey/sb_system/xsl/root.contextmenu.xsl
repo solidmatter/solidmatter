@@ -45,6 +45,14 @@
 				<li><a href="javascript:sbMenu.reloadMenuEntry('{@path}')"><span class="type refresh"><xsl:value-of select="$locale/sbSystem/actions/refresh" /></span></a></li>
 			</xsl:if>
 			
+			<!-- add to favorites -->
+			<xsl:if test="@add_to_favorites='TRUE'">
+				<hr />
+			</xsl:if>
+			<xsl:if test="@add_to_favorites='TRUE'">
+				<li><a href="javascript:sbMenu.addToFavorites('{@uuid}')"><span class="type add_to_favorites"><xsl:value-of select="$locale/sbSystem/actions/add_to_favorites" /></span></a></li>
+			</xsl:if>
+			
 			<!-- paste/link -->
 			<xsl:if test="@clipboard='TRUE'">
 				<hr />
@@ -70,7 +78,7 @@
 			</xsl:if>
 			
 			<!-- import/export -->
-			<xsl:if test="@import = 'TRUE' or @export = 'TRUE'">
+			<xsl:if test="@import = 'TRUE' or @export = 'TRUE' or @set_primary = 'TRUE'">
 				<hr />
 			</xsl:if>
 			<xsl:if test="@export = 'TRUE'">
@@ -78,6 +86,9 @@
 			</xsl:if>
 			<xsl:if test="@import = 'TRUE'">
 				<li><a href="#"><span class="type import"><xsl:value-of select="$locale/sbSystem/actions/import" /></span></a></li>
+			</xsl:if>
+			<xsl:if test="@set_primary = 'TRUE'">
+				<li><a href="javascript:sbMenu.setPrimary('{@parent}', '{@uuid}');"><span class="type xxxxxxx"><xsl:value-of select="$locale/sbSystem/actions/set_primary" /></span></a></li>
 			</xsl:if>
 			
 			<!-- delete -->

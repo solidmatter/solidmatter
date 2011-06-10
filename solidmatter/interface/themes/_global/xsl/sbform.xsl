@@ -620,7 +620,9 @@
 		</tr>
 	</xsl:template>
 	<xsl:template match="submit" mode="inputonly">
-		<input type="submit" class="button" name="{@value}" value="{dyn:evaluate(@label)}" />
+		<input type="submit" class="button" name="{@value}" value="{dyn:evaluate(@label)}">
+			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
+		</input>
 	</xsl:template>
 	
 	

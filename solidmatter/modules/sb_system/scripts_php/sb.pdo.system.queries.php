@@ -819,11 +819,34 @@ $_QUERIES['sbSystem/maintenance/view/repair/removeAbandonedNodes/normal'] = '
 					SELECT	fk_child
 					FROM	{TABLE_HIERARCHY}
 				)
+		/* deactivated due to problem with orphan branches
 		AND		uuid NOT IN (
 					SELECT	fk_parent
 					FROM	{TABLE_HIERARCHY}
-				)
+				)*/
 ';
+/*$_QUERIES['sbSystem/maintenance/view/repair/gatherAbandonedNodesInTrashcan'] = '
+	INSERT FROM	{TABLE_HIERARCHY}
+				(
+					fk_parent,
+					fk_child,
+					b_primary,
+					n_order,
+					n_level,
+					fk_deletedby,
+					dt_deleted
+				) VALUES (
+					:,
+					:version_sub,
+					:version_bugfix,
+					:version_suffix,
+					:info_installedon,
+					:info_lastupdate,
+					:info_uninstallable,
+					:config_active,
+					:node_id
+				)
+';*/
 
 //------------------------------------------------------------------------------
 // node:folder

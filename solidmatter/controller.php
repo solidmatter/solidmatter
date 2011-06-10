@@ -79,9 +79,9 @@ if (TIER2_SEPARATED) {
 }
 
 // TODO: registry disabled because DB is not yet initialized
-/*if ($_REQUEST->getParam('bounce') && TRUE) { //Registry::getValue('syb.system.debug.bounce.enabled')) {
+if ($_REQUEST->getParam('bounce') && TRUE) { //Registry::getValue('syb.system.debug.bounce.enabled')) {
 	$_REQUEST->bounce();
-}*/
+}
 
 //------------------------------------------------------------------------------
 // log into repository
@@ -101,10 +101,6 @@ sbSession::setTimeout(Registry::getValue('sb.system.session.timeout'));
 // check if registry cache is current state
 
 if (USE_REGISTRYCACHE) {
-	//var_dumpp(Registry::getValue('sb.system.debug.menu.debugmode', TRUE));
-	//var_dumpp(Registry::getValue('sb.system.debug.menu.debugmode'));
-	//var_dumpp(Registry::getValue('sb.system.cache.registry.changedetection', TRUE));
-	//var_dumpp(Registry::getValue('sb.system.cache.registry.changedetection'));
 	$sCheck = Registry::getValue('sb.system.cache.registry.changedetection');
 	if ($sCheck != Registry::getValue('sb.system.cache.registry.changedetection', TRUE)) {
 		$cacheRegistry = CacheFactory::getInstance('registry');
@@ -192,14 +188,18 @@ if (TIER2_SEPARATED) {
 	}
 	if ($e instanceof SessionTimeoutException) {
 		// TODO: refresh session lifespan with current registry value
-		// TODO: differentiat between storable and unstorable (e.g. AJAX-) requests
+		// TODO: differentiate between page-level and AJAX-requests (prototype.js does directly follow the location-header on 307 status codes)
 		$sZombieRequest = sbSession::getData('last_recallable_action');
 		sbSession::destroy(TRUE);
 		if ($sZombieRequest != NULL) {
 			sbSession::addData('last_recallable_action', $sZombieRequest);
 		}
 		sbSession::commit();
-		$_RESPONSE->redirect('-', 'login', NULL, NULL, 307);
+		if ($_REQUEST->getServerValue('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest') {
+			$_RESPONSE->redirect('-', 'login', NULL, NULL, 401);
+		} else {
+			$_RESPONSE->redirect('-', 'login', NULL, NULL, 307);
+		}
 	}
 	if (TIER2_SEPARATED) {
 		$_RESPONSE = ResponseFactory::getInstance('global');

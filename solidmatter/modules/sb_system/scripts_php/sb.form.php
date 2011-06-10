@@ -24,6 +24,8 @@ class sbDOMForm extends sbDOMDocument {
 	private $aInputs;
 	private $aSubmits;
 	
+	private $bDisabled = FALSE;
+	
 	private $sID;
 	private $sLabel;
 	private $sAction;
@@ -274,6 +276,9 @@ class sbDOMForm extends sbDOMDocument {
 		$elemForm->setAttribute('id', $this->sID);
 		$elemForm->setAttribute('action', $this->sAction);
 		$elemForm->setAttribute('label', $this->sLabel);
+		if ($this->bDisabled) {
+			$elemForm->setAttribute('disabled', 'TRUE');
+		}
 		if ($this->sErrorLabel != '') {
 			$elemForm->setAttribute('errorlabel', $this->sErrorLabel);
 		}
@@ -284,6 +289,9 @@ class sbDOMForm extends sbDOMDocument {
 			$elemSubmit = $this->createElement('submit');
 			$elemSubmit->setAttribute('value', $sValue);
 			$elemSubmit->setAttribute('label', $sLabelPath);
+			if ($this->bDisabled) {
+				$elemSubmit->setAttribute('disabled', 'TRUE');
+			}
 			$elemForm->appendChild($elemSubmit);
 		}
 		$this->appendChild($elemForm);
@@ -297,6 +305,29 @@ class sbDOMForm extends sbDOMDocument {
 	*/
 	public function disable($sName) {
 		$this->aInputs[$sName]->disable();
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function disableAll() {
+		foreach ($this->aInputs as $sName => $unused) {
+			$this->aInputs[$sName]->disable();
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function disableForm() {
+		$this->bDisabled = TRUE;
+		$this->disableAll();
 	}
 	
 	//--------------------------------------------------------------------------

@@ -9,7 +9,15 @@ html {
 	font-family: Arial, Helvetica, Sans-Serif;
 	font-size: 10pt;
 	padding: 0.1cm 0.1cm 2cm 0.1cm;
+	width: 21cm;
 }
+
+h1, h2, h3, h4 {
+	margin-top: 2em;
+	margin-bottom: 0.5em;
+}
+
+
 
 table {
 	font-size: 10pt;

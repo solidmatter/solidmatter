@@ -125,7 +125,7 @@ var sbUtilities = {
 			{
 				method: 'get', 
 				parameters: null,
-				asynchronous: false 
+				asynchronous: false
 			}
 		);
 		

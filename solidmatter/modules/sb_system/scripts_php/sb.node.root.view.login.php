@@ -103,10 +103,18 @@ class sbView_root_login extends sbView {
 						}
 						$this->logEvent(System::INFO, 'LOGIN_SUCCESSFUL', $sUserText.' with fingerprint "'.$aData['fingerprint'].'" from "'.$aData['user_ip'].'"');
 						
+						// check for favorites node and create it if necessary
+						if (!$nodeUser->hasNode('favorites')) {
+							$nodeInbox = $nodeUser->addNode('favorites', 'sbSystem:Favorites');
+							$nodeInbox->setProperty('label', '$locale/sbSystem/nodes/favorites');
+							$nodeUser->save();
+							$this->logEvent(System::INFO, 'CREATED_FAVORITES', 'created favorites node');
+						}
+						
 						// check for inbox node and create it if necessary
 						if (!$nodeUser->hasNode('inbox')) {
 							$nodeInbox = $nodeUser->addNode('inbox', 'sbSystem:Inbox');
-							$nodeInbox->setProperty('label', 'Inbox');
+							$nodeInbox->setProperty('label', '$locale/sbSystem/nodes/inbox');
 							$nodeUser->save();
 							$this->logEvent(System::INFO, 'CREATED_INBOX', 'created inbox node');
 						}
@@ -114,7 +122,7 @@ class sbView_root_login extends sbView {
 						// check for tasks node and create it if necessary
 						if (!$nodeUser->hasNode('tasks')) {
 							$nodeInbox = $nodeUser->addNode('tasks', 'sbSystem:Tasks');
-							$nodeInbox->setProperty('label', 'Tasks');
+							$nodeInbox->setProperty('label', '$locale/sbSystem/nodes/tasks');
 							$nodeUser->save();
 							$this->logEvent(System::INFO, 'CREATED_TASKS', 'created tasks node');
 						}

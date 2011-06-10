@@ -369,7 +369,7 @@ class sbDOMResponse extends sbDOMDocument {
 		$aSources = array('GET', 'POST', 'COOKIE');
 		foreach ($aSources as $sSource) {
 			foreach ($_REQUEST->getParams($sSource) as $sParam => $sValue) {
-				$elemParam = $this->createElement('param', $sValue);
+				$elemParam = $this->createElement('param',  htmlspecialchars($sValue));
 				$elemParam->setAttribute('source', $sSource);
 				$elemParam->setAttribute('id', $sParam);
 				$elemParams->appendChild($elemParam);

@@ -17,11 +17,16 @@ class sbView_properties extends sbView {
 		
 		global $_RESPONSE;
 		
+		$formProperties = $this->buildForm();
+				
+		if (!User::isAuthorised('write', $this->nodeSubject)) {
+			$formProperties->disableForm();
+		}
+		
 		switch ($sAction) {
 			
 			case 'edit':
 				
-				$formProperties = $this->buildForm();
 				$formProperties->saveDOM();
 				$_RESPONSE->addData($formProperties);
 				
@@ -29,7 +34,6 @@ class sbView_properties extends sbView {
 				
 			case 'save':
 				
-				$formProperties = $this->buildForm();
 				$formProperties->recieveInputs();
 				
 				if ($this->checkInputs($formProperties)) {

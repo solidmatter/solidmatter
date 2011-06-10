@@ -79,7 +79,12 @@ var sbMenu = {
 					sUrl, 
 					{
 						method: 'get', 
-						parameters: null
+						parameters: null,
+						onFailure: function(response) {
+							if (response.getHeader('Location') != null) {
+								top.location.href = response.getHeader('Location');
+							}
+						}
 					}
 				);
 				break;
@@ -95,7 +100,12 @@ var sbMenu = {
 					sUrl, 
 					{
 						method: 'get', 
-						parameters: null 
+						parameters: null,
+						onFailure: function(response) {
+							if (response.getHeader('Location') != null) {
+								top.location.href = response.getHeader('Location');
+							}
+						}
 					}
 				);
 				break;
@@ -128,6 +138,14 @@ var sbMenu = {
 	},
 	
 	//--------------------------------------------------------------------------
+    // creates a hardlink from the node in clipboard
+    //
+    setPrimary : function (sParentUUID, sChildUUID) {
+		top.sbUtilities.execute('/-/structure/setPrimary/?parentnode=' + sParentUUID + '&childnode=' + sChildUUID);
+		top.sbCommander.issueCommand('reloadTree', null);
+	},
+	
+	//--------------------------------------------------------------------------
 	// cuts a node from the tree to clipboard
 	//
     cut : function (sParentUUID, sChildUUID) {
@@ -139,6 +157,14 @@ var sbMenu = {
 	//
     purge : function (sTrashcanUUID) {
 		top.sbUtilities.execute('/' + sTrashcanUUID + '/content/purge');
+    },
+	
+	//--------------------------------------------------------------------------
+	// add to favorites
+	//
+    addToFavorites : function (sUUID) {
+		top.sbUtilities.execute('/-/structure/addToFavorites/?node=' + sUUID);
+		top.sbCommander.issueCommand('reloadTree', null);
     }
 	
 }

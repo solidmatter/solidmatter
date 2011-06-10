@@ -706,7 +706,7 @@ class sbCR_Session {
 	* @return 
 	*/
 	public function getInstanceByUUID($sQuery, $sParentUUID = NULL) {
-		// needs a thinkover, too many references prevent object destruction
+		// TODO: needs a thinkover, too many references prevent object destruction
 		/*if (isset($this->aNodeCache[$sQuery])) {
 			if (isset($this->aNodeCache[$sQuery][$sParentUUID])) {
 				return ($this->aNodeCache[$sQuery][$sParentUUID]);
@@ -765,6 +765,9 @@ class sbCR_Session {
 		$stmtInfo->closeCursor();
 		foreach ($aRows as $aRow) {
 			if ($sParentUUID != NULL) {
+				if ($sParentUUID != $aRow['fk_parent']) {
+					$aRow['b_primary'] = 'FALSE';
+				}
 				$aRow['fk_parent'] = $sParentUUID;
 			}
 			$elemInstance = $this->generateInstanceFromRow($aRow, $sQuery);
@@ -799,6 +802,7 @@ class sbCR_Session {
 		$elemSubject->setAttribute('query', $sQuery);
 		$elemSubject->setAttribute('displaytype', str_replace(':', '_', $aRow['fk_nodetype']));
 		$elemSubject->setAttribute('parent', $aRow['fk_parent']);
+		$elemSubject->setAttribute('primary', $aRow['b_primary']);
 		$elemSubject->setAttribute('inheritrights', $aRow['b_inheritrights']);
 		$elemSubject->setAttribute('bequeathrights', $aRow['b_bequeathrights']);
 		$elemSubject->setAttribute('bequeathlocalrights', $aRow['b_bequeathlocalrights']);

@@ -97,7 +97,7 @@ class sbView_structure extends sbView {
 					throw new sbException('creating hardlinks is only possible via copy');
 				}
 				
-				$sNewParentUUID = $_REQUEST->getParam('parentnode');
+				$sNewParentUUID = $this->requireParam('parentnode');
 				$sOldParentUUID = sbSession::$aData['clipboard']['parentnode'];
 				$sSubjectUUID = sbSession::$aData['clipboard']['childnode'];
 				
@@ -120,11 +120,32 @@ class sbView_structure extends sbView {
 				
 				sbSession::commit();
 				break;
+				
+			case 'setPrimary':
+				
+				$sNewParentUUID = $this->requireParam('parentnode');
+				$sSubjectUUID = $this->requireParam('childnode');
+				
+				$nodeNewParent = $this->crSession->getNodeByIdentifier($sNewParentUUID);
+				$nodeSubject = $this->crSession->getNodeByIdentifier($sSubjectUUID);
+				$nodeSubject->setPrimaryParent($nodeNewParent);
+				
+				break;
+				
+			case 'addToFavorites':
+				// TODO: various checks
+				$sSubjectUUID = $this->requireParam('node');
+				$nodeUserFavorites = User::getNode()->getNode('favorites');
+				$nodeSubject = $this->crSession->getNodeByIdentifier($sSubjectUUID);
+				// create link
+				$nodeUserFavorites->addExistingNode($nodeSubject);
+				$nodeUserFavorites->save();
+				break;
 			
 			case 'deleteChild':
 				
-				$sChildUUID = $_REQUEST->getParam('childnode');
-				$sParentUUID = $_REQUEST->getParam('parentnode');
+				$sChildUUID = $this->requireParam('childnode');
+				$sParentUUID = $this->requireParam('parentnode');
 				
 				$nodeParent = $this->crSession->getNodeByIdentifier($sParentUUID);
 				$nodeChild = $this->crSession->getNodeByIdentifier($sChildUUID);

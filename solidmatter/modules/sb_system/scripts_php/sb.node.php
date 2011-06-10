@@ -683,6 +683,7 @@ class sbNode extends sbCR_Node {
 		}
 		
 		$elemSubject = $this->elemSubject->cloneNode();
+		$this->getElementModifications($elemSubject);
 		if (!$this->aChildNodes[$sMode]->isEmpty()) {
 			foreach ($this->aChildNodes[$sMode] as $nodeChild) {
 				$elemSubject->appendChild($nodeChild->getElementTree($sMode));
@@ -1104,7 +1105,6 @@ class sbNode extends sbCR_Node {
 			// TODO: it might be that the node in clipboard is already deleted
 			// the clipboard should instead be cleaned on deletion... (but consider other user's clipboards!)
 			// TODO: implement clipboard for multiple nodes
-			// TODO: check in subtree, too. cyclic recursions are still possible
 			try {
 				
 				$nodeSubject = $this->crSession->getNodeByIdentifier(sbSession::$aData['clipboard']['childnode']);
@@ -1133,6 +1133,17 @@ class sbNode extends sbCR_Node {
 			$elemContextMenu->setAttribute('import', 'FALSE');
 		}
 		
+		// favorites
+		if (User::isAuthorised('read', $this)) {
+			$elemContextMenu->setAttribute('add_to_favorites', 'TRUE');
+		}
+		
+		// change primary parent
+		// TODO: only display this when acting on a secondary linked node
+		if (User::isAdmin()) {
+			$elemContextMenu->setAttribute('set_primary', 'TRUE');
+		}
+		
 		// trash
 		if ($this->getPrimaryNodeType() == 'sbSystem:Trashcan') {
 			$elemContextMenu->setAttribute('purge', 'TRUE');
@@ -1146,6 +1157,19 @@ class sbNode extends sbCR_Node {
 		$elemContextMenu->setAttribute('delete', $sDeletable);
 		
 		return ($elemContextMenu);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function setPrimaryParent($nodeParent) {
+		
+		parent::setPrimaryLink($nodeParent);
+		return;
 		
 	}
 	
@@ -1205,7 +1229,7 @@ class sbNode extends sbCR_Node {
 						$formProperties->setValue($sInputName, implode(', ', $aTags));
 					}
 						
-					// finish form and return�
+					// finish form and return
 					$formProperties->addSubmit('$locale/sbSystem/actions/save');
 					$this->modifyForm($formProperties, 'properties');
 					return ($formProperties);

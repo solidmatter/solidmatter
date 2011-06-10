@@ -39,6 +39,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 			throw new RepositoryException('no array of nodes');
 		} else {
 			// it might be that an associative array was given, this class needs a continuitive indexed array
+			unset($this->aNodeArray);
 			foreach ($aArrayOfNodes as $nodeCurrent) {
 				$this->aNodeArray[] = $nodeCurrent;
 			}
@@ -161,7 +162,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 		foreach ($this->aNodeArray as $nodeCurrent) {
 			$aTemp[$nodeCurrent->getProperty('jcr:uuid')] = $nodeCurrent;
 		}
-		$this->fill($aTemp); 
+		$this->fill($aTemp);
 		$this->rewind();
 	}
 	
@@ -171,9 +172,13 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function append($niSecond) {
-		foreach ($niSecond as $nodeCurrent) {
-			$this->aNodeArray[] = $nodeCurrent;
+	public function append($mItem) {
+		if ($mItem instanceof sbNode) {
+			$this->aNodeArray[] = $mItem;
+		} elseif ($mItem instanceof sbNodeIterator) {
+			foreach ($niSecond as $nodeCurrent) {
+				$this->aNodeArray[] = $nodeCurrent;
+			}
 		}
 		$this->rewind();
 	}

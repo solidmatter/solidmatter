@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: solidmatter
 Target Host: localhost
 Target Database: solidmatter
-Date: 29.11.2010 16:13:11
+Date: 10.06.2011 10:18:20
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -703,7 +703,7 @@ INSERT INTO `rep_nodetypes` VALUES ('sbIdM:DataCategory', 'sbNode', 'sbSystem:sb
 INSERT INTO `rep_nodetypes` VALUES ('sbIdM:DataManagement', 'sbNode', 'sbSystem:sb.node', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbIdM:Manager', 'sbNode', 'sbSystem:sb.node', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbIdM:OrgRole', 'sbNode_idm_orgrole', 'sbIdM:sb.idm.node.orgrole', 'PRIMARY');
-INSERT INTO `rep_nodetypes` VALUES ('sbIdM:Person', 'sbNode', 'sbSystem:sb.node', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbIdM:Person', 'sbNode_idm_person', 'sbIdM:sb.idm.node.person', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbIdM:System', 'sbNode', 'sbSystem:sb.node', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbIdM:TechRole', 'sbNode_idm_techrole', 'sbIdM:sb.idm.node.techrole', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbIdM:TechRoleGroup', 'sbNode', 'sbSystem:sb.node', 'PRIMARY');
@@ -737,7 +737,7 @@ INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Comment', 'sbNode', 'sbSystem:sb.n
 INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Debug', 'sbNode', 'sbSystem:sb.node', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Favorite', 'sbNode', 'sbSystem:sb.node', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbSystem:FavoriteFolder', 'sbNode', 'sbSystem:sb.node', 'PRIMARY');
-INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Favorites', 'sbNode', 'sbSystem:sb.node', 'PRIMARY');
+INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Favorites', 'sbNode_favorites', 'sbSystem:sb.node.favorites', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Inbox', 'sbNode', 'sbSystem:sb.node', 'PRIMARY');
 INSERT INTO `rep_nodetypes` VALUES ('sbSystem:ListView', null, null, 'ABSTRACT');
 INSERT INTO `rep_nodetypes` VALUES ('sbSystem:Logs', 'sbNode', 'sbSystem:sb.node', 'PRIMARY');
@@ -1180,9 +1180,12 @@ INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbJukebox:Track', 'sbSystem:C
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbSystem:Comment', 'sbSystem:Comment', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbSystem:Comment', 'sbSystem:Comment', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbSystem:Maintenance', 'sbSystem:Debug', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbSystem:FavoriteFolder', 'sbSystem:Favorite', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbSystem:FavoriteFolder', 'sbSystem:Favorite', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbSystem:Favorites', 'sbSystem:Favorite', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbSystem:Favorites', 'sbSystem:Favorite', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('create', 'sbSystem:Favorites', 'sbSystem:FavoriteFolder', 'TRUE', 'TRUE');
+INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbSystem:Favorites', 'sbSystem:FavoriteFolder', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbSystem:Favorites', 'sbSystem:FavoriteFolder', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('list', 'sbSystem:Root', 'sbSystem:Favorites', 'TRUE', 'TRUE');
 INSERT INTO `rep_nodetypes_modes` VALUES ('tree', 'sbSystem:Root', 'sbSystem:Favorites', 'TRUE', 'TRUE');
@@ -1583,6 +1586,7 @@ INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'login', 'getCa
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'login', 'login', 'FALSE', null, null, 'RENDERED', 'sb_system:root.login.xsl', 'text/html', 'TRUE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'login', 'logout', 'FALSE', null, null, 'RENDERED', 'sb_system:root.login.xsl', 'text/html', 'TRUE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'menu', 'display', 'TRUE', null, null, 'RENDERED', 'sb_system:root.menu.xsl', 'text/html', 'TRUE', 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'structure', 'addToFavorites', 'FALSE', null, null, 'XML', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'structure', 'copy', 'FALSE', null, null, 'XML', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'structure', 'createChild', 'FALSE', null, null, 'RENDERED', 'sb_system:root.structure.xsl', 'text/html', 'TRUE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'structure', 'createLink', 'FALSE', null, null, 'XML', null, null, 'FALSE', 'FALSE');
@@ -1592,6 +1596,7 @@ INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'structure', 'm
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'structure', 'orderBefore', 'FALSE', null, null, 'RENDERED', null, null, 'TRUE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'structure', 'paste', 'FALSE', null, null, 'XML', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'structure', 'saveChild', 'FALSE', null, null, 'RENDERED', 'sb_system:root.structure.xsl', 'text/html', 'TRUE', 'FALSE');
+INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'structure', 'setPrimary', 'FALSE', null, null, 'XML', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'utilities', 'export_branch', 'FALSE', null, null, 'STREAM', null, null, 'FALSE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'utilities', 'show_progress', 'TRUE', null, null, 'RENDERED', 'sb_system:root.utilities.show_progress.xsl', 'text/html', 'TRUE', 'FALSE');
 INSERT INTO `rep_nodetypes_viewactions` VALUES ('sbSystem:Root', 'welcome', 'display', 'TRUE', null, null, 'RENDERED', 'sb_system:root.welcome.xsl', 'text/html', 'TRUE', 'FALSE');
@@ -1770,7 +1775,7 @@ INSERT INTO `sb_system_eventlog` VALUES ('32', 'sbSystem', 'CACHE_CLEARED', 'de7
 INSERT INTO `sb_system_nodes` VALUES ('00000000000000000000000000000000', 'sbSystem:Root', 'sbSystem:Root', 'solidMatter', 'root', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', 'a6cdee339f11414b8fa732c7030aab85', '0000-00-00 00:00:00', '2007-11-25 13:34:44', null);
 INSERT INTO `sb_system_nodes` VALUES ('0080dc1373b84eb0b2096988254ef361', 'sbSystem:Preferences', 'sbSystem:Preferences', '$locale/sbSystem/nodes/preferences', 'jcr_system', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', 'a6cdee339f11414b8fa732c7030aab85', '0000-00-00 00:00:00', '2007-05-13 23:39:39', null);
 INSERT INTO `sb_system_nodes` VALUES ('02eb2c9c7092418487b1a97aa669ed63', '', 'sbJukebox:Playlist', 'Favorites', '5e97357b8be04b099c2ef20a028ee4ef', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2009-01-11 17:14:58', '2009-01-11 17:14:58', null);
-INSERT INTO `sb_system_nodes` VALUES ('03924e41ea44484bac211cb98a97bdb1', '', 'sbSystem:Inbox', 'Inbox', 'inbox', 'TRUE', 'TRUE', 'TRUE', 'bdf4f48bab2544c7875611d79ea4a0c2', 'bdf4f48bab2544c7875611d79ea4a0c2', '2008-12-21 22:26:27', '2008-12-21 22:26:27', null);
+INSERT INTO `sb_system_nodes` VALUES ('03924e41ea44484bac211cb98a97bdb1', '', 'sbSystem:Inbox', '$locale/sbSystem/nodes/inbox', 'inbox', 'TRUE', 'TRUE', 'TRUE', 'bdf4f48bab2544c7875611d79ea4a0c2', 'bdf4f48bab2544c7875611d79ea4a0c2', '2008-12-21 22:26:27', '2008-12-21 22:26:27', null);
 INSERT INTO `sb_system_nodes` VALUES ('0403708141058bcbd4f286eb45c70555', 'sbCMS', 'sbSystem:Module', 'sbCMS', 'sb_cms', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', null, '0000-00-00 00:00:00', null, null);
 INSERT INTO `sb_system_nodes` VALUES ('07677c2a5ad24835b008ece8c950bbf7', '', 'sbCMS:Page', 'Conclusion', 'conclusion', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', 'a6cdee339f11414b8fa732c7030aab85', '0000-00-00 00:00:00', '2009-02-18 20:02:11', null);
 INSERT INTO `sb_system_nodes` VALUES ('08479177a247489b86078a3a0204a96e', '', 'sbFiles:Asset', 'stifflip.p00', 'Stifflip.p00', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2009-02-19 00:09:50', '2009-02-19 00:09:50', null);
@@ -1779,7 +1784,7 @@ INSERT INTO `sb_system_nodes` VALUES ('0afa05f280404cd0a9acd4637686aa34', '', 's
 INSERT INTO `sb_system_nodes` VALUES ('0d063b3e151a4267852a9f5f5e2a991e', '', 'sbSystem:Reports_Structure', '$locale/sbSystem/nodes/reports_structure', 'structure', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2007-03-18 23:55:31', '2007-04-24 21:37:49', null);
 INSERT INTO `sb_system_nodes` VALUES ('0e0dd3e60ec442d4aaa981198482bdb9', '', 'sbCMS:Page', 'Deeper', 'deeper', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2007-05-12 12:52:15', '2009-02-19 00:14:46', null);
 INSERT INTO `sb_system_nodes` VALUES ('0f7fb53268da465fb67127112785696a', '', 'sbUtilities:Imagefilter_crop', 'Cutter', 'cutter', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2008-01-12 23:32:28', '2008-01-13 01:28:50', null);
-INSERT INTO `sb_system_nodes` VALUES ('1119b9fb4d034dd2870b72ffd769aee2', '', 'sbSystem:Tasks', 'Tasks', 'tasks', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2008-11-09 14:04:05', '2008-11-09 14:04:05', null);
+INSERT INTO `sb_system_nodes` VALUES ('1119b9fb4d034dd2870b72ffd769aee2', '', 'sbSystem:Tasks', '$locale/sbSystem/nodes/tasks', 'tasks', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2008-11-09 14:04:05', '2008-11-09 14:04:05', null);
 INSERT INTO `sb_system_nodes` VALUES ('1148f19ee51d4283935dd32be5282312', '', 'sbFiles:Asset', 'styles_frontend.css', 'styles_frontend.css', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2007-09-22 10:26:57', '2007-09-22 10:26:57', null);
 INSERT INTO `sb_system_nodes` VALUES ('13706b2112bb45aaa416b0dd622917c0', '', 'sbUtilities:Imagefilter_colorize', 'Colorize', 'colorize', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2007-02-03 22:31:01', '2009-02-18 23:52:09', null);
 INSERT INTO `sb_system_nodes` VALUES ('144a8e2473914baf9370168429d8d317', '', 'sbCMS:Page', '\\§!`!`!\"`\"`\"\\\\\\?&&\'\' S#S\' \'\\\\\"ggr\"<><<', 'ghbn', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', 'a6cdee339f11414b8fa732c7030aab85', '0000-00-00 00:00:00', '2007-10-25 23:00:20', null);
@@ -1798,7 +1803,7 @@ INSERT INTO `sb_system_nodes` VALUES ('289a5b61f601431e8410a7932553b220', '', 's
 INSERT INTO `sb_system_nodes` VALUES ('2b49b3e2d1a648a1a80a82c660693c40', 'sbSystem:Reports', 'sbSystem:Reports', '$locale/sbSystem/nodes/reports', 'reports', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', null, '0000-00-00 00:00:00', null, null);
 INSERT INTO `sb_system_nodes` VALUES ('2b49b3e2d1a648a1a80a82c660693c41', 'sbSystem:Reports_DB', 'sbSystem:Reports_DB', '$locale/sbSystem/nodes/reports_database', 'reports_db', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', null, '0000-00-00 00:00:00', null, null);
 INSERT INTO `sb_system_nodes` VALUES ('2ba02334a5e84f54917c30d77da84140', '', 'sbSystem:Debug', '$locale/sbSystem/nodes/debug', 'debug', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2007-05-09 23:05:13', '2007-05-09 23:05:13', null);
-INSERT INTO `sb_system_nodes` VALUES ('2d5ff219b6a74371984e5ce5a0ae2530', '', 'sbSystem:Inbox', 'Inbox', 'inbox', 'TRUE', 'TRUE', 'TRUE', '8ea185a64e394c7c83f098ba6f537073', '8ea185a64e394c7c83f098ba6f537073', '2008-12-20 23:39:38', '2008-12-20 23:39:38', null);
+INSERT INTO `sb_system_nodes` VALUES ('2d5ff219b6a74371984e5ce5a0ae2530', '', 'sbSystem:Inbox', '$locale/sbSystem/nodes/inbox', 'inbox', 'TRUE', 'TRUE', 'TRUE', '8ea185a64e394c7c83f098ba6f537073', '8ea185a64e394c7c83f098ba6f537073', '2008-12-20 23:39:38', '2008-12-20 23:39:38', null);
 INSERT INTO `sb_system_nodes` VALUES ('307f66febf2e460b81d1613a4d9350a5', '', 'sbFiles:Filemanager', 'Demo Files', 'demofiles', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', 'a6cdee339f11414b8fa732c7030aab85', '0000-00-00 00:00:00', '2009-02-28 19:06:52', null);
 INSERT INTO `sb_system_nodes` VALUES ('37cfd45559de4ab7bf15601ede1d4b44', '', 'sbCMS:Page', 'Webdesign', 'webdesign', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', 'a6cdee339f11414b8fa732c7030aab85', '0000-00-00 00:00:00', '2009-03-01 01:34:26', null);
 INSERT INTO `sb_system_nodes` VALUES ('398f26d012ea4b2e8d74986688806b3d', '', 'sbJukebox:Playlist', 'My Playlist', 'myplaylist', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2009-02-18 19:46:30', '2009-02-18 19:46:30', null);
@@ -1845,12 +1850,12 @@ INSERT INTO `sb_system_nodes` VALUES ('81e6030a37504b49b7aed01c4b9005c6', '', 's
 INSERT INTO `sb_system_nodes` VALUES ('847293d6168f4e83a68424c8c46e3e88', '', 'sbCMS:TPL_Image', 'Sectionimage', 'sectionimage', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2007-09-02 01:17:08', '2009-02-18 23:45:07', null);
 INSERT INTO `sb_system_nodes` VALUES ('8574e415d0114caebe004f66f328086c', '', 'sbFiles:Folder', 'Stuff', 'stuff', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2009-02-19 00:04:30', '2009-02-19 00:04:30', null);
 INSERT INTO `sb_system_nodes` VALUES ('86e22252bdea494bacf904674d3711ea', '', 'sbSystem:User', 'Tester', 'test', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', 'a6cdee339f11414b8fa732c7030aab85', '0000-00-00 00:00:00', '2009-02-18 21:26:56', null);
-INSERT INTO `sb_system_nodes` VALUES ('870606ec4b604af88c4d542f8dda61c6', '', 'sbSystem:Inbox', 'Inbox', 'inbox', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2008-11-09 14:01:58', '2008-11-09 14:01:58', null);
+INSERT INTO `sb_system_nodes` VALUES ('870606ec4b604af88c4d542f8dda61c6', '', 'sbSystem:Inbox', '$locale/sbSystem/nodes/inbox', 'inbox', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2008-11-09 14:01:58', '2008-11-09 14:01:58', null);
 INSERT INTO `sb_system_nodes` VALUES ('878ca63166d4417ead30c19f20081ca6', '', 'sbCMS:Page', 'Marx', 'marx', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', 'a6cdee339f11414b8fa732c7030aab85', '0000-00-00 00:00:00', '2007-11-10 18:08:37', null);
 INSERT INTO `sb_system_nodes` VALUES ('87ca916babeb458cb61dc744f23dcd47', '', 'sbGuestbook:Guestbook', 'Guestbook', 'guestbook', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2007-09-09 16:08:52', '2009-02-18 23:48:27', null);
 INSERT INTO `sb_system_nodes` VALUES ('8a7441a710344cd781e1a9e73118f108', '', 'sbCMS:Page', 'Names', 'names', 'TRUE', 'FALSE', 'TRUE', '00000000000000000000000000000000', 'a6cdee339f11414b8fa732c7030aab85', '0000-00-00 00:00:00', '2009-03-01 21:26:56', null);
-INSERT INTO `sb_system_nodes` VALUES ('8a7b4687dcea433a9355b0610dd794c1', '', 'sbSystem:Tasks', 'Tasks', 'tasks', 'TRUE', 'TRUE', 'TRUE', 'df0faa531b374ae8afb95aeb6ffcd841', 'df0faa531b374ae8afb95aeb6ffcd841', '2008-12-21 22:24:13', '2008-12-21 22:24:13', null);
-INSERT INTO `sb_system_nodes` VALUES ('8ce3f563927e43ed9dc0cc43db2a3482', '', 'sbSystem:Inbox', 'Inbox', 'inbox', 'TRUE', 'TRUE', 'TRUE', 'df0faa531b374ae8afb95aeb6ffcd841', 'df0faa531b374ae8afb95aeb6ffcd841', '2008-12-21 22:24:13', '2008-12-21 22:24:13', null);
+INSERT INTO `sb_system_nodes` VALUES ('8a7b4687dcea433a9355b0610dd794c1', '', 'sbSystem:Tasks', '$locale/sbSystem/nodes/tasks', 'tasks', 'TRUE', 'TRUE', 'TRUE', 'df0faa531b374ae8afb95aeb6ffcd841', 'df0faa531b374ae8afb95aeb6ffcd841', '2008-12-21 22:24:13', '2008-12-21 22:24:13', null);
+INSERT INTO `sb_system_nodes` VALUES ('8ce3f563927e43ed9dc0cc43db2a3482', '', 'sbSystem:Inbox', '$locale/sbSystem/nodes/inbox', 'inbox', 'TRUE', 'TRUE', 'TRUE', 'df0faa531b374ae8afb95aeb6ffcd841', 'df0faa531b374ae8afb95aeb6ffcd841', '2008-12-21 22:24:13', '2008-12-21 22:24:13', null);
 INSERT INTO `sb_system_nodes` VALUES ('8ea17aae5fb0496292ea96f5490074b2', '', 'sbPortal:Content', 'TestContent', 'testcontent', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2009-03-15 17:47:18', '2009-03-15 17:47:18', null);
 INSERT INTO `sb_system_nodes` VALUES ('8ea185a64e394c7c83f098ba6f537073', '', 'sbSystem:User', 'Heiko', 'heiko', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', 'a6cdee339f11414b8fa732c7030aab85', '0000-00-00 00:00:00', '2009-02-18 19:52:34', null);
 INSERT INTO `sb_system_nodes` VALUES ('8f1d4495a5b9461a9f09bd4e24410d34', 'sbSystem:Modules', 'sbSystem:Modules', '$locale/sbSystem/nodes/modules', 'modules', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', null, '0000-00-00 00:00:00', null, null);
@@ -1874,7 +1879,7 @@ INSERT INTO `sb_system_nodes` VALUES ('a83386206e574bc68e2f318eccfeb774', '', 's
 INSERT INTO `sb_system_nodes` VALUES ('a83b351baeff4c0c80c68945fb2266cf', 'sbSystem:Admins', 'sbSystem:Usergroup', '$locale/sbSystem/nodes/admins', 'admins', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2007-03-18 18:01:21', '2007-03-18 18:01:21', null);
 INSERT INTO `sb_system_nodes` VALUES ('ac58d48b6a0848dcb4330a7c5957d92d', '', 'sbFiles:Asset', 'blindtexts.txt', 'blindtexts.txt', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2009-02-19 00:06:10', '2009-02-19 00:07:54', null);
 INSERT INTO `sb_system_nodes` VALUES ('ac8aed8179a4432db7f9850c4def87cc', 'sbPortal', 'sbSystem:Module', 'sbPortal', 'sb_portal', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2007-05-06 23:32:52', '2007-05-06 23:32:52', null);
-INSERT INTO `sb_system_nodes` VALUES ('adcff1aa2aa544b0b1a60a5c7e56af89', null, 'sbSystem:Tasks', 'Tasks', 'tasks', 'TRUE', 'TRUE', 'TRUE', 'bdf4f48bab2544c7875611d79ea4a0c2', 'bdf4f48bab2544c7875611d79ea4a0c2', '2008-12-21 22:26:27', '2008-12-21 22:26:27', null);
+INSERT INTO `sb_system_nodes` VALUES ('adcff1aa2aa544b0b1a60a5c7e56af89', null, 'sbSystem:Tasks', '$locale/sbSystem/nodes/tasks', 'tasks', 'TRUE', 'TRUE', 'TRUE', 'bdf4f48bab2544c7875611d79ea4a0c2', 'bdf4f48bab2544c7875611d79ea4a0c2', '2008-12-21 22:26:27', '2008-12-21 22:26:27', null);
 INSERT INTO `sb_system_nodes` VALUES ('af86df686cb2d9b8729200e5b6910631', 'sbJukebox', 'sbSystem:Module', 'sbJukebox', 'sb_jukebox', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2007-10-16 19:29:58', '2007-10-16 19:29:58', null);
 INSERT INTO `sb_system_nodes` VALUES ('afe9922a6e684eb88b3823174db8c072', '', 'sbCMS:Page', 'Philosophy', 'philosophy', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', 'a6cdee339f11414b8fa732c7030aab85', '0000-00-00 00:00:00', '2009-02-18 23:38:02', null);
 INSERT INTO `sb_system_nodes` VALUES ('b49d3dc42f924fc0bf6d9465cb6106fc', '', 'sbPortal:Page', 'Less Important', 'less_important', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2009-03-15 17:28:04', '2009-03-15 17:28:04', null);
@@ -1887,7 +1892,7 @@ INSERT INTO `sb_system_nodes` VALUES ('bfd58271d71c44b3aab9b904d660cdba', null, 
 INSERT INTO `sb_system_nodes` VALUES ('c42afe4b46634ebc90946626a51c57f1', '', 'sbFiles:Image', 'ai.jpg', 'ai.jpg', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2009-02-18 21:44:59', '2009-02-28 18:12:54', null);
 INSERT INTO `sb_system_nodes` VALUES ('c447256f713b4fa2a2344cd562482c9e', null, 'sbCMS:Page', 'CSS', 'CSS', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', null, '0000-00-00 00:00:00', null, null);
 INSERT INTO `sb_system_nodes` VALUES ('c9afb8c17ab643fca4b17c1f7e5288e9', '', 'sbFiles:Image', 'statue.jpg', 'statue.jpg', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2009-02-18 21:45:00', '2009-02-19 01:41:10', null);
-INSERT INTO `sb_system_nodes` VALUES ('cbe174938fab416299930c761fa6f5de', null, 'sbSystem:Tasks', 'Tasks', 'tasks', 'TRUE', 'TRUE', 'TRUE', 'a205b4cdb96442cb85d0d99caff9d530', 'a205b4cdb96442cb85d0d99caff9d530', '2008-12-21 22:24:32', '2008-12-21 22:24:32', null);
+INSERT INTO `sb_system_nodes` VALUES ('cbe174938fab416299930c761fa6f5de', null, 'sbSystem:Tasks', '$locale/sbSystem/nodes/tasks', 'tasks', 'TRUE', 'TRUE', 'TRUE', 'a205b4cdb96442cb85d0d99caff9d530', 'a205b4cdb96442cb85d0d99caff9d530', '2008-12-21 22:24:32', '2008-12-21 22:24:32', null);
 INSERT INTO `sb_system_nodes` VALUES ('ce44f8e6b796456b869230de319f83ef', '', 'sbPortal:Portal', 'Demo Portal', 'demoportal', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2009-03-15 17:26:20', '2009-03-15 17:26:20', null);
 INSERT INTO `sb_system_nodes` VALUES ('cf33a52cce7a4eef99de947addd1d02f', null, 'sbForum:Thread', 'I can\'t created topics', 'notopics', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2007-03-21 08:04:04', '2007-03-21 08:04:04', null);
 INSERT INTO `sb_system_nodes` VALUES ('cff8de79afa84f249a906645c94cc2b5', '', 'sbCMS:CTN_Image', 'Sectionimage', 'sectionimage', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2009-02-18 23:48:48', '2009-02-18 23:48:48', null);
@@ -1898,9 +1903,9 @@ INSERT INTO `sb_system_nodes` VALUES ('d7a3ccd461fb4c6692e0ac7c87ddd7fe', '', 's
 INSERT INTO `sb_system_nodes` VALUES ('dbd92b40e96b4ccca4b7467b9542035d', '', 'sbPortal:Content', 'Other Content', 'other_content', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2009-03-15 17:52:08', '2009-03-15 17:52:08', null);
 INSERT INTO `sb_system_nodes` VALUES ('de7762bc4e074f789ac9c1dda4ce40c5', 'sbSystem:Maintenance', 'sbSystem:Maintenance', '$locale/sbSystem/nodes/maintenance', 'maintenance', 'TRUE', 'TRUE', 'TRUE', '00000000000000000000000000000000', null, '0000-00-00 00:00:00', null, null);
 INSERT INTO `sb_system_nodes` VALUES ('df0faa531b374ae8afb95aeb6ffcd841', '', 'sbSystem:User', 'Miki Maus', 'miki', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2008-12-21 21:51:03', '2008-12-21 21:54:38', null);
-INSERT INTO `sb_system_nodes` VALUES ('e2bef28bd3d64ad6aef46edbdeb1a015', '', 'sbSystem:Inbox', 'Inbox', 'inbox', 'TRUE', 'TRUE', 'TRUE', 'a205b4cdb96442cb85d0d99caff9d530', 'a205b4cdb96442cb85d0d99caff9d530', '2008-12-21 22:24:32', '2008-12-21 22:24:32', null);
+INSERT INTO `sb_system_nodes` VALUES ('e2bef28bd3d64ad6aef46edbdeb1a015', '', 'sbSystem:Inbox', '$locale/sbSystem/nodes/inbox', 'inbox', 'TRUE', 'TRUE', 'TRUE', 'a205b4cdb96442cb85d0d99caff9d530', 'a205b4cdb96442cb85d0d99caff9d530', '2008-12-21 22:24:32', '2008-12-21 22:24:32', null);
 INSERT INTO `sb_system_nodes` VALUES ('e598ce16e7b2b13af2f5f93c92a6f976', 'sbGuestbook', 'sbSystem:Module', 'sbGuestbook', 'sb_guestbook', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2007-05-06 23:32:52', '2007-05-06 23:32:52', null);
-INSERT INTO `sb_system_nodes` VALUES ('eaa56c620fab446d9690604303788b34', '', 'sbSystem:Tasks', 'Tasks', 'tasks', 'TRUE', 'TRUE', 'TRUE', '8ea185a64e394c7c83f098ba6f537073', '8ea185a64e394c7c83f098ba6f537073', '2008-12-20 23:39:38', '2008-12-20 23:39:38', null);
+INSERT INTO `sb_system_nodes` VALUES ('eaa56c620fab446d9690604303788b34', '', 'sbSystem:Tasks', '$locale/sbSystem/nodes/tasks', 'tasks', 'TRUE', 'TRUE', 'TRUE', '8ea185a64e394c7c83f098ba6f537073', '8ea185a64e394c7c83f098ba6f537073', '2008-12-20 23:39:38', '2008-12-20 23:39:38', null);
 INSERT INTO `sb_system_nodes` VALUES ('eb04110996804ef3bbc35ae492738c8a', '', 'sbCMS:Page', 'ת הסיפור המשעשע שחלקתי עמכם כאן בזמנו', 'hindi', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2008-09-27 12:01:58', '2008-09-27 12:01:58', null);
 INSERT INTO `sb_system_nodes` VALUES ('ec3f5a676d7c43e1a7a539cb483ca394', '', 'sbCMS:Site', 'Demo Website', 'demowebsite', 'TRUE', 'FALSE', 'TRUE', '00000000000000000000000000000000', 'a6cdee339f11414b8fa732c7030aab85', '0000-00-00 00:00:00', '2009-03-01 20:48:43', null);
 INSERT INTO `sb_system_nodes` VALUES ('ee8c719706464809976cf033155e8296', '', 'sbForum:Thread', 'No documentation available', 'nodocu', 'TRUE', 'TRUE', 'TRUE', 'a6cdee339f11414b8fa732c7030aab85', 'a6cdee339f11414b8fa732c7030aab85', '2007-03-21 08:01:41', '2007-03-21 08:01:41', null);

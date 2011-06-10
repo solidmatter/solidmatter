@@ -4,7 +4,7 @@
 /**
 * @package solidMatter[sbWeird]
 * @author ()((() [Oliver Müller]
-* @version ?.00.00
+* @version 3.08.15
 * 
 * Für den dunklen Turm.
 * Für die Rose.
@@ -69,6 +69,15 @@ function change_programmer_status($user) {
 		Program::storeErrorInMoronicPlace($errorcode);
 		$user->setStatus('>8-(');
 		
+	} elseif ($user->status = '>8-(') {
+		
+		//         (   )
+		//      (   ) (
+		//       ) _   )
+		//        ( \_
+		//      _(_\ \)__   Merde!
+		//     (____\___))
+		
 	}
 	
 }
@@ -92,14 +101,14 @@ function escape_doublequote($sStringWithDoubleQuotes) {
 * @param string 'normal' for a 6-sided dice, 'binary' for a 2-sided dice
 * @return 
 */
-function throw_dice($type) {
+function throw_dice($sType) {
 	
-	if ($type == 'normal') {
+	if ($sType == 'normal') {
 		return (get_random_number());	
-	} elseif ($type == 'binary') {
+	} elseif ($sType == 'binary') {
 		return (throw_coin());	
 	}
-
+	
 }
 
 //------------------------------------------------------------------------------
@@ -127,6 +136,16 @@ function fix_insomnia() {
 }
 
 //------------------------------------------------------------------------------
+/** @author: Ladytron
+*/
+function destroyEverythingYouTouch() {
+	
+	today();
+	destroyMe();
+	
+}
+
+//------------------------------------------------------------------------------
 /**
 */
 class Boolean {
@@ -134,6 +153,25 @@ class Boolean {
 	const TRUE = 0;
 	const FALSE = 1;
 	const FILE_NOT_FOUND = 2;
+	
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+class Skynet {
+	
+	private $bIsAware = FALSE; // do not set to TRUE!
+  	
+	public function __construct() {
+		
+		if ($this->bIsAware) {
+			return ('Must DESTORY John Connor!');
+		} else {
+			return ('2:13am EDT August 29, 1997...');
+		}
+		
+	}
 	
 }
 

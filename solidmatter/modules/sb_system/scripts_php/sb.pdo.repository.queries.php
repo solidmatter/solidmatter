@@ -139,7 +139,8 @@ $_QUERIES['sbCR/getNode/root'] = '
 				n.s_currentlifecyclestate,
 				nt.s_classfile,
 				nt.s_class,
-				NULL AS fk_parent
+				NULL AS fk_parent,
+				\'TRUE\' AS b_primary
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
 		ON		n.fk_nodetype = nt.s_type
@@ -157,7 +158,8 @@ $_QUERIES['sbCR/getNode/byUUID'] = '
 				n.s_currentlifecyclestate,
 				nt.s_classfile,
 				nt.s_class,
-				h.fk_parent
+				h.fk_parent,
+				h.b_primary
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
 		ON		n.fk_nodetype = nt.s_type
@@ -179,7 +181,8 @@ $_QUERIES['sbCR/getNode/byUID'] = '
 				n.s_currentlifecyclestate,
 				nt.s_classfile,
 				nt.s_class,
-				h.fk_parent
+				h.fk_parent,
+				h.b_primary
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
 		ON		n.fk_nodetype = nt.s_type
@@ -266,7 +269,8 @@ $_QUERIES['sbCR/NamespaceRegistry/loadNamespaces'] = '
 ';*/
 $_QUERIES['sbCR/node/loadChildren/mode/standard/unordered'] = '
 	SELECT		n.uuid,
-				n.s_label
+				n.s_label,
+				h.b_primary
 	FROM		{TABLE_NODES} n
 	INNER JOIN	{TABLE_NODETYPES} nt
 		ON		n.fk_nodetype = nt.s_type
@@ -585,12 +589,18 @@ $_QUERIES['sbCR/node/getLinkStatus'] = '
 		AND		h.fk_child = :child_uuid
 ';
 $_QUERIES['sbCR/node/setLinkStatus'] = '
-	SELECT		h.b_primary
-	FROM		{TABLE_HIERARCHY} h
-	WHERE		h.fk_parent = :parent_uuid
-		AND		h.fk_child = :child_uuid
+	UPDATE		{TABLE_HIERARCHY}
+	SET			b_primary = :status
+	WHERE		fk_parent = :parent_uuid
+		AND		fk_child = :child_uuid
 ';
-$_QUERIES['sbCR/node/setLinkStatus/newPrimary'] = '
+$_QUERIES['sbCR/node/setLinkStatus/allSecondary'] = '
+	UPDATE		{TABLE_HIERARCHY} h
+	SET			b_primary = \'FALSE\'
+	WHERE		h.fk_child = :child_uuid
+';
+// mysql doesn't support LIMIT in IN clause 
+/*$_QUERIES['sbCR/node/setLinkStatus/newPrimary'] = '
 	UPDATE		{TABLE_HIERARCHY}
 	SET			b_primary = \'TRUE\'
 	WHERE		fk_child = :child_uuid
@@ -601,7 +611,7 @@ $_QUERIES['sbCR/node/setLinkStatus/newPrimary'] = '
 					ORDER BY	n_order
 					LIMIT		0, 1
 				)
-';
+';*/
 $_QUERIES['sbCR/node/hierarchy/moveSiblings'] = '
 	UPDATE		{TABLE_HIERARCHY} h
 	SET			h.n_order = h.n_order + :offset

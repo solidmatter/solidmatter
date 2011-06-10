@@ -47,6 +47,7 @@
 		<cut>Cut</cut>
 		<paste>Paste</paste>
 		<create_hardlink>Hardlink</create_hardlink>
+		<set_primary>Primary</set_primary>
 		<upload>Upload</upload>
 		<download>Download</download>
 		<activate>Activate</activate>
@@ -64,6 +65,7 @@
 		<purge>Purge</purge>
 		<new_relation>New relation</new_relation>
 		<new_comment>New comment</new_comment>
+		<add_to_favorites>Add favorite</add_to_favorites>
 	</actions>
 	
 	<labels>
@@ -86,6 +88,7 @@
 		<email>eMail</email>
 		<abbr_number>Nr.</abbr_number>
 		<description>Description</description>
+		<explanation>Explanation</explanation>
 		<details>Details</details>
 		<notes>Notes</notes>
 		<title>Title</title>
@@ -93,6 +96,7 @@
 		<properties>Properties</properties>
 		<name>Name</name>
 		<label>Label</label>
+		<active>Active</active>
 		<module>Module</module>
 		<nickname>Nickname</nickname>
 		<shortname>Shortname</shortname>
@@ -186,6 +190,9 @@
 		<logs>Logs</logs>
 		<registry>Registry</registry>
 		<tags>Tags</tags>
+		<favorites>Favorites</favorites>
+		<inbox>Inbox</inbox>
+		<tasks>Tasks</tasks>
 	</nodes>
 	
 	<tags>
