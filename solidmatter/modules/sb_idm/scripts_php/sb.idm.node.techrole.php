@@ -15,6 +15,7 @@ class sbNode_idm_techrole extends sbNode {
 	
 	protected $aOrgRoles = array();
 	protected $aPersons = array();
+	protected $aDuties = array();
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -32,19 +33,25 @@ class sbNode_idm_techrole extends sbNode {
 	* @param 
 	* @return 
 	*/
-	public function storeRelevantData($bIncludeSubRoles = FALSE) {
+	public function storeRelevantData($bIncludeSubRoles = FALSE, $bIncludeOrgRoles = TRUE, $bIncludePersons = TRUE) {
 		
 		
 		// raw data
-		foreach ($this->getParents() as $nodeParent) {
-			if ($nodeParent->getPrimaryNodeType() == 'sbIdM:OrgRole') {
-				$this->aOrgRoles[$nodeParent->getProperty('jcr:uuid')] = $nodeParent;
-				$this->gatherPersons($nodeParent);
+		// TODO: use more specific filtering of actions/output
+		if ($bIncludeOrgRoles || $bIncludePersons) {
+		
+			foreach ($this->getParents() as $nodeParent) {
+				if ($nodeParent->getPrimaryNodeType() == 'sbIdM:OrgRole') {
+					$this->aOrgRoles[$nodeParent->getProperty('jcr:uuid')] = $nodeParent;
+					$this->gatherPersons($nodeParent);
+				}
 			}
+			
+			$this->addContent('OrgRoles', new sbCR_NodeIterator($this->aOrgRoles));
+			$this->addContent('Persons', new sbCR_NodeIterator($this->aPersons));
+			
 		}
 		
-		$this->addContent('OrgRoles', new sbCR_NodeIterator($this->aOrgRoles));
-		$this->addContent('Persons', new sbCR_NodeIterator($this->aPersons));
 		
 		//$this->initTags();
 		
@@ -54,8 +61,14 @@ class sbNode_idm_techrole extends sbNode {
 		
 		// subrole data
 		if ($bIncludeSubRoles) {
-			$this->gatherSubRoles($this);
+			$this->gatherTechRoles(TRUE);
 		}
+		
+		// duties
+		/*if ($this->getProperty('userassignable') == 'TRUE') {
+			
+		}
+		$this->addContent('Duties', new sbCR_NodeIterator($this->aDuties));*/
 		
 	}
 	
@@ -65,7 +78,12 @@ class sbNode_idm_techrole extends sbNode {
 	* @param 
 	* @return 
 	*/
-	protected function gatherPersons($nodeCurrent) {
+	public function gatherPersons($nodeCurrent) {
+		
+		// dirty hack, clean up gatherSomething-code and remove
+		if (!$nodeCurrent instanceof sbNode) {
+			return;
+		}
 		
 		foreach ($nodeCurrent->getChildren() as $nodeChild) {
 			if ($nodeChild->getPrimaryNodeType() == 'sbIdM:Person') {
@@ -84,19 +102,20 @@ class sbNode_idm_techrole extends sbNode {
 	* @param 
 	* @return 
 	*/
-	protected function gatherSubRoles($nodeCurrent) {
+	public function gatherTechRoles($bDeep = FALSE) {
 		
-		$niChildren = $nodeCurrent->loadChildren('debug', TRUE, TRUE);
+		$niChildren = $this->loadChildren('gatherTechRoles', TRUE, TRUE, TRUE);
 		
 		foreach ($niChildren as $nodeChild) {
-			//$nodeChild->initTags();
 			$nodeChild->aGetElementFlags['tags'] = TRUE;
 			$nodeChild->aGetElementFlags['children'] = TRUE;
 			$nodeChild->aGetElementFlags['content'] = TRUE;
-			$this->gatherSubRoles($nodeChild);
+			if ($bDeep) {
+				$nodeChild->gatherTechRoles(TRUE);
+			}
 		}
 		
-		//$nodeCurrent->storeChildren();
+		$this->storeChildren('gatherTechRoles');
 		
 	}
 	

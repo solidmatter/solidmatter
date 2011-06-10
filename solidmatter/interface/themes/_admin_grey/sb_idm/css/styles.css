@@ -22,8 +22,10 @@
 	background-image: url(../../sb_system/icons/type_guests.png);
 }
 *.sbIdM_DataManagement,
-*.sbIdM_DataCategory,
-*.sbIdM_Data {
+*.sbIdM_DataCategory {
 	background-image: url(../../sb_system/icons/type_modules.png);
+}
+*.sbIdM_Data {
+	background-image: url(../../sb_system/icons/type_module.png);
 }
 

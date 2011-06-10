@@ -58,6 +58,40 @@ class sbView_idm_orgrole_details extends sbView {
 				
 				
 				break;
+				
+			case 'print':
+				
+				ini_set("memory_limit", "256M");
+				ini_set('max_execution_time', '600');
+				
+				$sMode = $this->requireParam('mode');
+				
+				if ($sMode == 'persons') {
+				
+					$niPersons = $this->nodeSubject->gatherPersons();
+					
+					foreach ($niPersons as $nodePerson) {
+						$nodePerson->storeRelevantData();
+					}
+					
+					$this->nodeSubject->addContent('Persons', $niPersons);
+					$this->nodeSubject->aGetElementFlags['content'] = TRUE;
+					
+				} elseif ($sMode = 'orgroles') {
+					
+					$this->gatherChildren($this->nodeSubject);
+					
+					foreach ($niPersons as $nodePerson) {
+						$nodePerson->storeRelevantData();
+					}
+					
+					$this->nodeSubject->addContent('Persons', $niPersons);
+					$this->nodeSubject->aGetElementFlags['content'] = TRUE;
+					
+					
+				}
+				
+				break;
 			
 			default:
 				parent::execute($sAction);

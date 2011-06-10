@@ -5,7 +5,16 @@
 		<data>Datenzugriff</data>
 		<mainrole>Haupt-Rolle</mainrole>
 		<damagepotential>Schadenspotenzial</damagepotential>
+		<confidentiality>Vertraulichkeit</confidentiality>
 		<userassignable>zuweisbar an Benutzer</userassignable>
+		<permission_read>Lesen</permission_read>
+		<permission_write>Schreiben</permission_write>
+		<permission_print>Drucken</permission_print>
+		<permission_datatransfer>Datentransfer</permission_datatransfer>
+		<access>Zugriffsart</access>
+		<integrity>Integrität</integrity>
+		<availability>Verfügbarkeit</availability>
+		<implementation_type>Implementierungsart</implementation_type>
 	</labels>
 	
 	<nodetypes>

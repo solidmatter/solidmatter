@@ -5,7 +5,16 @@
 		<data>Data</data>
 		<mainrole>Main role</mainrole>
 		<damagepotential>Damage Potential</damagepotential>
+		<confidentiality>Confidentiality</confidentiality>
 		<userassignable>User-assignable</userassignable>
+		<permission_read>Read</permission_read>
+		<permission_write>Write</permission_write>
+		<permission_print>Print</permission_print>
+		<permission_datatransfer>Datatransfer</permission_datatransfer>
+		<access>Access</access>
+		<integrity>Integrity</integrity>
+		<availability>Availability</availability>
+		<implementation_type>Implementation Type</implementation_type>
 	</labels>
 	
 	<nodetypes>

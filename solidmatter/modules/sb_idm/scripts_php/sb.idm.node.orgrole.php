@@ -21,25 +21,54 @@ class sbNode_idm_orgrole extends sbNode {
 	* @param 
 	* @return 
 	*/
-	public function gatherPersons() {
+	public function gatherPersons($niPersons = NULL) {
 		
-		$niPersons = new sbCR_NodeIterator();
+		if ($niPersons == NULL) {
+			$niPersons = new sbCR_NodeIterator();
+		}
 		
 		foreach ($this->getChildren() as $nodeChild) {
 			if ($nodeChild->getPrimaryNodeType() == 'sbIdM:Person') {
-				$this->aPersons[$nodeChild->getProperty('jcr:uuid')] = $nodeChild;
+				$niPersons->append($nodeChild);
 			} else {
-				$niPersons->append($nodeChild->gatherPersons());
+				$nodeChild->gatherPersons($niPersons);
 			}
-			
 		}
 		
-		$niPersons->append(new sbCR_NodeIterator($this->aPersons));
 		$niPersons->makeUnique();
+		$niPersons->sortAscending('label');
 		
 		return ($niPersons);
 		
 	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function gatherOrgRoles($niOrgRoles = NULL) {
+		
+		if ($niOrgRoles == NULL) {
+			$niOrgRoles = new sbCR_NodeIterator();
+		}
+		
+		foreach ($this->getChildren() as $nodeChild) {
+			if ($nodeChild->getPrimaryNodeType() == 'sbIdM:Org') {
+				$niOrgRoles->append($nodeChild);
+			} else {
+				$nodeChild->gatherPersons($niOrgRoles);
+			}
+		}
+		
+		$niOrgRoles->makeUnique();
+		$niOrgRoles->sortAscending('label');
+		
+		return ($niOrgRoles);
+		
+	}
+	
 	
 }
 

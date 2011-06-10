@@ -39,7 +39,10 @@
 				<tr>
 					<th colspan="3">MainRoles</th>
 					<th colspan="3" style="text-align:right;">
-						<a href="/{@uuid}/details/print" target="_blank">Print Version</a>
+						Print Version: 
+						<a href="/{@uuid}/details/print?mode=usermain" target="_blank">User/Main</a> / 
+						<a href="/{@uuid}/details/print?mode=userall" target="_blank">User/All</a> / 
+						<a href="/{@uuid}/details/print?mode=dsb" target="_blank">DSB</a>
 					</th>
 				</tr>
 				<tr class="th2">

@@ -76,7 +76,14 @@
 	
 		<table class="default" width="100%" id="list">
 			<thead>
-				<tr><th colspan="6" >Persons (<xsl:value-of select="count(//*[generate-id(.)=generate-id(key('unique_persons', ./@uuid)[1])])" />)</th></tr>
+				<tr>
+					<th colspan="1" >Persons (<xsl:value-of select="count(//*[generate-id(.)=generate-id(key('unique_persons', ./@uuid)[1])])" />)</th>
+					<th colspan="2" style="text-align:right;">
+						<a href="/{@uuid}/details/print?mode=persons" target="_blank">Print Version (Persons)</a>
+						 / 
+						<a href="/{@uuid}/details/print?mode=orgroles" target="_blank">Print Version (OrgRoles)</a>
+					</th>
+				</tr>
 				<tr class="th2">
 					<th width="33%"><xsl:value-of select="$locale/sbSystem/labels/name" /></th>
 					<th width="66%">TechRoles</th>

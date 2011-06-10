@@ -29,7 +29,7 @@ class sbView_idm_person_details extends sbView {
 			
 			case 'display':
 				
-				$this->gatherParentRoles();
+				/*$this->gatherParentRoles();
 				
 				$niOrgRoles = new sbCR_NodeIterator($this->aOrgRoles);
 				$niInheritedOrgRoles = new sbCR_NodeIterator($this->aInheritedOrgRoles);
@@ -44,7 +44,9 @@ class sbView_idm_person_details extends sbView {
 				}
 				
 				$_RESPONSE->addData($niOrgRoles, 'OrgRoles');
-				$_RESPONSE->addData($niInheritedOrgRoles, 'InheritedOrgRoles');
+				$_RESPONSE->addData($niInheritedOrgRoles, 'InheritedOrgRoles');*/
+				
+				$this->nodeSubject->storeRelevantData();
 				
 				break;
 			

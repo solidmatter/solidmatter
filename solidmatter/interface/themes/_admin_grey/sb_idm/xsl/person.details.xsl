@@ -43,8 +43,8 @@
 				</tr>
 			</thead>
 			<tbody>
-				<xsl:if test="$content/OrgRoles/nodes/sbnode or $content/InheritedOrgRoles/nodes/sbnode">
-					<xsl:for-each select="$content/OrgRoles/nodes/sbnode | $content/InheritedOrgRoles/nodes/sbnode">
+				<xsl:if test="$master/content[@mode='OrgRoles']/sbnode">
+					<xsl:for-each select="$master/content[@mode='OrgRoles']/sbnode">
 						<tr>
 							<xsl:call-template name="colorize" />
 							<td>
@@ -55,17 +55,17 @@
 							</td>
 							<td>
 								<xsl:choose>
-									<xsl:when test="name(../..) = 'OrgRoles'">Direct</xsl:when>
-									<xsl:when test="name(../..) = 'InheritedOrgRoles'">Inherited</xsl:when>
+									<xsl:when test="@assigned = 'direct'">Direct</xsl:when>
+									<xsl:when test="@assigned = 'inherited'">Inherited</xsl:when>
 								</xsl:choose>
 							</td>
 							<td>
-								<xsl:if test="position() != 1">
+								<!-- <xsl:if test="position() != 1">
 									<a href="/-/structure/orderBefore/subject={$subjectid}&amp;source={@name}&amp;destination={preceding-sibling::*[1]/@name}" class="option"><img src="/theme/sb_system/icons/move_up.gif" /></a>
 								</xsl:if>
 								<xsl:if test="position() != last()">
 									<a href="/-/structure/orderBefore/subject={$subjectid}&amp;source={following-sibling::*[1]/@name}&amp;destination={@name}" class="option"><img src="/theme/sb_system/icons/move_down.gif" /></a>
-								</xsl:if>
+								</xsl:if> -->
 							</td>
 						</tr>
 					</xsl:for-each>
