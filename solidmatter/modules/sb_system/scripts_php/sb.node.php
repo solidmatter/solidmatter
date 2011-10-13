@@ -22,6 +22,8 @@ class sbNode extends sbCR_Node {
 	* @var 
 	*/
 	public $aGetElementFlags		= array(
+		'essential_properties' => TRUE, // TODO: currently unused
+		'secondary_properties' => TRUE,
 		'deep' => FALSE,
 		'parents' => FALSE,
 		'children' => FALSE,
@@ -363,9 +365,24 @@ class sbNode extends sbCR_Node {
 				$aFlag[$sKey] = $aCustomFlags[$sKey];
 			}
 		}
-		
 		foreach ($this->aAppendedElements as $elemCurrent) {
 			$elemSubject->appendChild($elemCurrent->cloneNode(TRUE));
+		}
+		
+		// remove secondary information if necessary
+		if (!$aFlag['secondary_properties']) {
+			$elemSubject->removeAttribute('name');
+			$elemSubject->removeAttribute('uid');
+			$elemSubject->removeAttribute('query');
+			$elemSubject->removeAttribute('created');
+			$elemSubject->removeAttribute('createdby');
+			$elemSubject->removeAttribute('modified');
+			$elemSubject->removeAttribute('modifiedby');
+			$elemSubject->removeAttribute('inheritrights');
+			$elemSubject->removeAttribute('bequeathrights');
+			$elemSubject->removeAttribute('bequeathlocalrights');
+			$elemSubject->removeAttribute('currentlifecyclestate');
+			$elemSubject->removeAttribute('primary');
 		}
 		
 		// first create and store all children as elements

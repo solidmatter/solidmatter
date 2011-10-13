@@ -761,26 +761,53 @@ form.default textarea.formerror {
 /* exceptions & errors
 /*----------------------------------------------------------------------------*/
 
+div.exception {
+	border: 25px solid black;
+	background-color: black;
+}
 table.exception {
-	border: 2px solid red;
-	background-color: white;
+	border: 1px solid darkred;
+	margin: 0;
+	background-color: black;
 	color: red;
 	font-size: 80%;
 	border-collapse: collapse;
-	margin: 20px;
 }
-table.exception th, table.exception td {
-	text-align: left;
-	border: 1px solid red;
+table.exception th, 
+table.exception td {
 	padding: 2px;
+	text-align: left;
+	border: 1px solid darkred;
+}
+table.exception th {
+	background-color: darkred;
+	color: black;
+	border: 1px solid darkred;
+}
+table.exception th.gurumeditation {
+	text-align: center;
+	background-color: black;
+	color: red;
+	border: 1px solid black;
+	border-bottom: 1px solid darkred;
+	padding: 0;
 }
 table.exception tr.root {
-	background-color: #FCC;
+	font-weight: bold;
 }
-table.exception th.message {
-	color: white;
-	background-color: red;
+
+#gurumeditation {
+	padding: 3px 20px;
+	margin-bottom:20px;
 }
+div.gm_on {
+	border: 5px solid red;
+}
+div.gm_off {
+	border: 5px solid black;
+}
+
+/*----------------------------------------------------------------------------*/
 
 table.warning {
 	border: 2px solid yellow;

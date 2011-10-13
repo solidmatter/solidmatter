@@ -37,7 +37,7 @@ abstract class RequestHandler {
 		$aURI = parse_url($_REQUEST->getURI());
 		
 		// compute requested node / view / action / (rest of path ignored)
-		$aPath = explode('/', $aURI['path']);
+		$aPath = explode('/', $_REQUEST->getRelevantPath());
 		if (isset($aPath[1]) && $aPath[1] != '-' && $aPath[1] != '') {
 			$aRequest['node_uuid'] = $aPath[1];
 		}
@@ -48,13 +48,10 @@ abstract class RequestHandler {
 			$aRequest['action'] = $aPath[3];
 		}
 		
-		// store request parameters
-		if (isset($aURI['query'])) {
-			$aQuery = array();
-			parse_str($aURI['query'], $aQuery);
-			foreach ($aQuery as $sParam => $sValue) {
-				$_REQUEST->setParam($sParam, $sValue);
-			}
+		$aQuery = array();
+		parse_str($_REQUEST->getQuery(), $aQuery);
+		foreach ($aQuery as $sParam => $sValue) {
+			$_REQUEST->setParam($sParam, $sValue);
 		}
 		
 		return ($aRequest);
@@ -70,6 +67,7 @@ abstract class RequestHandler {
 	*/
 	public function generateRequestURL($mSubject = NULL, $sView = NULL, $sAction = NULL, $aParameters = NULL) {
 		
+		// TODO: 
 		$sPrefix = 'http://';
 		/*$sPrefix = '';
 		if (!$bUseHTTPS) {
@@ -128,6 +126,18 @@ abstract class RequestHandler {
 		
 		return ($sURL);
 		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* To be called if the Request fails in basic request processing.
+	* 
+	* @param string the message to deliver to the client
+	* @param int the response code, defaults to "418 i'm a teapot"
+	*/
+	protected function fail($sMessage = "unspecified error", $iCode = 418) {
+		header("X-sbErrorMessage: ".$sMessage, $iCode);
+		die($sMessage);
 	}
 	
 }

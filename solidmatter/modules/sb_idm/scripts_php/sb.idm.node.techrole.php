@@ -33,13 +33,35 @@ class sbNode_idm_techrole extends sbNode {
 	* @param 
 	* @return 
 	*/
-	public function storeRelevantData($bIncludeSubRoles = FALSE, $bIncludeOrgRoles = TRUE, $bIncludePersons = TRUE) {
+	public function storeRelevantData($sMode = 'default') {
 		
+		// init
+		$bIncludeSubRoles = FALSE;
+		$bIncludeOrgRoles = FALSE;
+		$bIncludePersons = FALSE;
+		$bIncludeUserRoles = FALSE;
+		
+		switch ($sMode) {
+			case 'dsb':
+				$bIncludeSubRoles = TRUE;
+				$bIncludePersons = TRUE;
+				break;
+			case 'only_subroles':
+				$bIncludeSubRoles = TRUE;
+				break;
+			case 'userroles_persons':
+				$bIncludeUserassignableRoles = TRUE;
+				break;
+			default:
+				$bIncludeOrgRoles = TRUE;
+				$bIncludePersons = TRUE;
+				break;
+		}
 		
 		// raw data
 		// TODO: use more specific filtering of actions/output
 		if ($bIncludeOrgRoles || $bIncludePersons) {
-		
+			
 			foreach ($this->getParents() as $nodeParent) {
 				if ($nodeParent->getPrimaryNodeType() == 'sbIdM:OrgRole') {
 					$this->aOrgRoles[$nodeParent->getProperty('jcr:uuid')] = $nodeParent;
@@ -64,6 +86,11 @@ class sbNode_idm_techrole extends sbNode {
 			$this->gatherTechRoles(TRUE);
 		}
 		
+		// userrole data
+		if ($bIncludeUserassignableRoles) {
+			$this->gatherUserassignableRoles();
+		}
+		
 		// duties
 		/*if ($this->getProperty('userassignable') == 'TRUE') {
 			
@@ -80,18 +107,31 @@ class sbNode_idm_techrole extends sbNode {
 	*/
 	public function gatherPersons($nodeCurrent) {
 		
+		//echo $nodeCurrent->getName().'<br />';
+		
 		// dirty hack, clean up gatherSomething-code and remove
 		if (!$nodeCurrent instanceof sbNode) {
 			return;
 		}
 		
-		foreach ($nodeCurrent->getChildren() as $nodeChild) {
-			if ($nodeChild->getPrimaryNodeType() == 'sbIdM:Person') {
-				$this->aPersons[$nodeChild->getProperty('jcr:uuid')] = $nodeChild;
-			} else {
-				$this->gatherPersons($nodeChild);
+		if ($nodeCurrent->getPrimaryNodeType() == 'sbIdM:TechRole') {
+				
+			foreach ($nodeCurrent->getParents() as $nodeParent) {
+				if ($nodeParent->getPrimaryNodeType() == 'sbIdM:OrgRole') {
+					$this->gatherPersons($nodeParent);
+				}
 			}
 			
+		} elseif ($nodeCurrent->getPrimaryNodeType() == 'sbIdM:OrgRole') {
+		
+			foreach ($nodeCurrent->getChildren() as $nodeChild) {
+				if ($nodeChild->getPrimaryNodeType() == 'sbIdM:Person') {
+					$this->aPersons[$nodeChild->getProperty('jcr:uuid')] = $nodeChild;
+				} elseif ($nodeChild->getPrimaryNodeType() == 'sbIdM:OrgRole') {
+					$this->gatherPersons($nodeChild);
+				}
+			}
+		
 		}
 		
 	}
@@ -116,6 +156,26 @@ class sbNode_idm_techrole extends sbNode {
 		}
 		
 		$this->storeChildren('gatherTechRoles');
+		
+	}
+	
+//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function gatherUserassignableRoles() {
+		
+		foreach ($this->getParents() as $nodeParent) {
+			if ($nodeParent->getPrimaryNodeType() == 'sbIdM:TechRole' && $nodeParent->getProperty('userassignable') == 'TRUE') {
+				$this->aUserassignableRoles[$nodeParent->getProperty('jcr:uuid')] = $nodeParent;
+				$this->gatherPersons($nodeParent);
+			}
+		}
+		
+		$this->addContent('UserassignableRoles', new sbCR_NodeIterator($this->aUserassignableRoles));
+		$this->addContent('Persons', new sbCR_NodeIterator($this->aPersons));
 		
 	}
 	

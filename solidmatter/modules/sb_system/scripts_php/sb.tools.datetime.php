@@ -84,7 +84,7 @@ function datetime_timestamp2mysql($iTimestamp = NULL) {
 		$iTimestamp = time();
 	}
 	
-	return (date('Y-m-d', $iTimestamp));
+	return (date('Y-m-d H:i:s', $iTimestamp));
 }
 
 //------------------------------------------------------------------------------

@@ -160,12 +160,11 @@ class sbCR_Workspace {
 	* @return 
 	*/
 	public function getQueryManager() {
-		throw new UnsupportedRepositoryOperationException('query api not supported yet');
-		/*if (is_null($this->crQueryManager)) {
+		if (is_null($this->crQueryManager)) {
 			import('sb.cr.querymanager');
 			$this->crQueryManager = new sbCR_QueryManager($this->crSession);
 		}
-		return ($this->crQueryManager);*/
+		return ($this->crQueryManager);
 	}
 	      
 	//--------------------------------------------------------------------------

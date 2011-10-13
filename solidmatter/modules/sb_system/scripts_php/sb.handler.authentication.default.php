@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 import('sb.handler.authentication');
+import('sb.system.security');
 import('sb.tools.datetime');
 
 //------------------------------------------------------------------------------
@@ -17,10 +18,11 @@ import('sb.tools.datetime');
 class DefaultAuthenticationHandler extends AuthenticationHandler {
 	
 	protected $crSession;
+	protected $nodeUser;
 	
-	protected $sUserName;
+	/*protected $sUserName;
 	protected $sUserUUID;
-	protected $aUserInfo;
+	protected $aUserInfo;*/
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -29,7 +31,7 @@ class DefaultAuthenticationHandler extends AuthenticationHandler {
 	* @return 
 	*/
 	public function __construct($crSession) {
-		$this->crSession = $crSession;		
+		$this->crSession = $crSession;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -53,6 +55,10 @@ class DefaultAuthenticationHandler extends AuthenticationHandler {
 		}
 		
 		return ($aRow);
+	
+		/*$nodeUserAccounts = $this->crSession->getNode('//*[@uid="sbSystem:Useraccounts"]');
+		$this->nodeUser = $nodeUserAccounts->getNode($sUserName);*/
+		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -66,8 +72,12 @@ class DefaultAuthenticationHandler extends AuthenticationHandler {
 		$aResult = array(
 			'login_successful' => FALSE,
 			'failure_reason' => 'none',
-			'failure_details' => NULL,
-			'user_uuid' => NULL
+			'failure_details' => array(
+				'failed_logins' => 0,
+				'failed_logins_allowed' => 0,
+				'time_locked' => 0,
+			),
+			'user_uuid' => NULL,
 		);
 		
 		// does user exist? if not return immediately, errors occur otherwise!
@@ -154,7 +164,7 @@ class DefaultAuthenticationHandler extends AuthenticationHandler {
 	* @return 
 	*/
 	protected function checkPassword($sPassword) {
-		if ($this->aUserInfo['s_password'] != $sPassword) {
+		if (!check_password($sPassword, $this->aUserInfo['s_password'])) {
 			return (FALSE);
 		}
 		return (TRUE);

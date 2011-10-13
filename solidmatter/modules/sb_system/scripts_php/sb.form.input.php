@@ -20,6 +20,15 @@ abstract class sbInput {
 	protected $sLabelPath = '';
 	protected $domForm = NULL;
 	protected $sType = '';
+	protected $sHelpPath = '';
+	protected $sHelpLink = '';
+	protected $sHelpText = '';
+	
+	/**
+	* array of additional attributes (name => value) to include in the generated DOM element
+	* @var array 
+	*/
+	protected $aAttributes;
 	
 	protected $aConfig = array();
 	protected $mValue = NULL;
@@ -98,6 +107,36 @@ abstract class sbInput {
 	* @param 
 	* @return 
 	*/
+	public function setAttribute($sName, $sValue) {
+		$aForbiddenAttributes = array('name', 'type', 'value', 'label', 'errorlabel', 'errorhint');
+		if (in_array($sName, $aForbiddenAttributes)) {
+			throw new sbException('attribute "'.$sName.'" can not be set, it would override a standard attribute');
+		}
+		if (isset($this->aConfig[$sName])) {
+			throw new sbException('attribute "'.$sName.'" can not be set, it would override a standard config option');
+		}
+		$this->aAttributes[$sName] = htmlspecialchars($sValue);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function getAttribute($sName) {
+		if (!isset($this->aAttributes[$sName])) {
+			throw new sbException('attribute "'.$sName.'" is not set');
+		}
+		return ($this->aAttributes[$sName]);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function recieveInput() {
 		
 		// don't do anything if disabled (e.g. Firefox will submit nothing for disabled form elements)
@@ -163,6 +202,9 @@ abstract class sbInput {
 		}
 		foreach ($this->aConfig as $sConfig => $sValue) {
 			$elemInput->setAttribute($sConfig, $sValue);
+		}
+		foreach ($this->aAttributes as $sName => $sValue) {
+			$elemInput->setAttribute($sName, htmlspecialchars($sValue));
 		}
 		if ($this->sErrorLabel != '') {
 			$elemInput->setAttribute('errorlabel', $this->sErrorLabel);	

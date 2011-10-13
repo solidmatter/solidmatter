@@ -31,21 +31,21 @@
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<views>
-		<view view=""
+		<view view=""></view>
 		
 	</views>
 	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<actions>
-		<action view="" action="" 
+		<action view="" action="" ></action>
 	
 	</actions>
 	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<viewauthorisations>
-		<action view="" action="" 
+		<action view="" action="" ></action>
 	
 	</viewauthorisations>
 	

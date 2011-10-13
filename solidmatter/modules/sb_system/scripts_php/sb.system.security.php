@@ -51,4 +51,76 @@ function match_ipranges($sIPAddress, $sIPRanges) {
 	return (TRUE);
 }
 
+//------------------------------------------------------------------------------
+/**
+* Salts a given plain text password with a dynamically generated salt to the form "sha1:<salt>:<saltedpassword>"
+* @param string the password
+* @param string an additional salt component to be included in the generated salt
+* @return string the salted password
+*/
+function salt_password($sPassword, $sPepper = NULL) {
+	
+	// prepare salt
+	$sSalt = uniqid(mt_rand(), TRUE);
+	if ($sPepper != NULL) {
+		$sSalt .= $sPepper;
+	}
+	$sSalt = sha1($sSalt);
+	
+	// hash salt & pass multiple times
+	for ($i=0; $i<10; $i++) {
+		$sPassword = sha1($sSalt.$sPassword);
+	}
+	
+	// build storable string
+	$sStorablePass = 'sha1:'.$sSalt.':'.$sPassword;
+	
+	return ($sStorablePass);
+	
+}
+
+//------------------------------------------------------------------------------
+/**
+* Checks a given plain text password against a (stored) salted password
+* @param string the password
+* @param string the stored password
+* @return boolean true if passwords match, false otherwise
+*/
+function check_password($sPassword, $sStoredPassword) {
+	
+	// fallback if the password was not stored in salted format 
+	// TODO: to be removed!
+	if (!preg_match('/sha1:.{40}:.{40}/', $sStoredPassword)) {
+		if ($sPassword == $sStoredPassword) {
+			return (TRUE);
+		}
+	} else { // new, secure storage used
+		list($sAlgorithm, $sSalt, $sStoredPassword) = explode(':', $sStoredPassword);
+		
+		for ($i=0; $i<10; $i++) {
+			$sPassword = sha1($sSalt.$sPassword);
+		}
+		if ($sPassword == $sStoredPassword) {
+			return (TRUE);
+		}
+	}
+	
+	return (FALSE);
+	
+}
+
+//------------------------------------------------------------------------------
+/**
+* Checks if the given password is a salted password in the form "sha1:<salt>:<saltedpassword>"
+* (collisions are possible, but unlikely)
+* @param string the password
+* @return boolean true if password is already salted, false otherwise
+*/
+function is_salted_password($sPassword) {
+	if (!preg_match('/sha1:.{40}:.{40}/', $sPassword)) {
+		return (FALSE);
+	}
+	return (TRUE);
+}
+
 ?>

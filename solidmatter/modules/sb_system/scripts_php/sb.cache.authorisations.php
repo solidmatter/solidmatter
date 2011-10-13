@@ -22,8 +22,8 @@ class AuthorisationCache {
 	* @param 
 	* @return 
 	*/
-	public function __construct($sPrefix) {
-		
+	public function __construct($sPrefix = NULL) {
+		//TODO: what to do with the prefix on authorisation caches?
 	}
 	
 	//--------------------------------------------------------------------------

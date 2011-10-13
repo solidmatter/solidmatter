@@ -38,6 +38,7 @@ class sbView_idm_system_details extends sbView {
 			case 'print':
 				
 				ini_set('max_execution_time', '600');
+				ini_set('memory_limit', '256M');
 				
 				$sMode = $this->requireParam('mode');
 				
@@ -58,7 +59,19 @@ class sbView_idm_system_details extends sbView {
 					
 					$_RESPONSE->addData($niUserAssignableRoles, 'userassignable_roles');
 					$_RESPONSE->addData($niMainRoles, 'main_roles');
+
+				} elseif ($sMode == 'mainuser') {
 					
+					$this->gatherMainRoles($this->nodeSubject);
+					
+					$niMainRoles = new sbCR_NodeIterator($this->aMainRoles);
+					
+					foreach ($niMainRoles as $nodeCurrent) {
+						$nodeCurrent->storeRelevantData('userroles_persons');
+					}
+					
+					$_RESPONSE->addData($niMainRoles, 'main_roles');	
+				
 				} elseif ($sMode == 'dsb') {
 					
 					$this->gatherUserAssignableRoles($this->nodeSubject);
@@ -66,7 +79,7 @@ class sbView_idm_system_details extends sbView {
 					$niUserAssignableRoles = new sbCR_NodeIterator($this->aUserAssignableRoles);
 					
 					foreach ($niUserAssignableRoles as $nodeCurrent) {
-						$nodeCurrent->storeRelevantData(TRUE, FALSE, TRUE);
+						$nodeCurrent->storeRelevantData('dsb');
 					}
 					
 					$_RESPONSE->addData($niUserAssignableRoles, 'userassignable_roles');
@@ -77,7 +90,7 @@ class sbView_idm_system_details extends sbView {
 					$niUserAssignableRoles = new sbCR_NodeIterator($this->aUserAssignableRoles);
 					
 					foreach ($niUserAssignableRoles as $nodeCurrent) {
-						$nodeCurrent->storeRelevantData(TRUE, FALSE, FALSE);
+						$nodeCurrent->storeRelevantData('only_subroles');
 					}
 					
 					$_RESPONSE->addData($niUserAssignableRoles, 'userassignable_roles');

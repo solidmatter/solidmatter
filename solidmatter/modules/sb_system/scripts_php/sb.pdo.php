@@ -34,7 +34,7 @@ class sbPDO extends PDO {
 	* @param 
 	* @return 
 	*/
-	public function beginTransaction($sUID) {
+	public function beginTransaction($sUID = 'DEFAULT') {
 		
 		//echo str_repeat('&nbsp;&nbsp;&nbsp;', count(self::$aTransactionUIDs)).'beginTransaction: '.$sUID.'<br>';
 		
@@ -52,7 +52,7 @@ class sbPDO extends PDO {
 	* @param 
 	* @return 
 	*/
-	public function commit($sUID) {
+	public function commit($sUID = 'DEFAULT') {
 		
 		//echo str_repeat('&nbsp;&nbsp;&nbsp;', count(self::$aTransactionUIDs)-1).'commit: '.$sUID.'<br>';
 		

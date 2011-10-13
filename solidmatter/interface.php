@@ -44,10 +44,11 @@ DEBUG('Interface: Session ID = '.$_SESSIONID, DEBUG::SESSION);
 //------------------------------------------------------------------------------
 // switch according to site definition
 
+
 $aRequest = parse_url('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 $aPath = explode('/', $aRequest['path']);
 if (in_array('..', $aPath)) {
-	die('parent operator not allowed, aborting.');
+	die_fancy('parent operator not allowed, aborting.');
 }
 //var_dumpp($aRequest);
 $sRequestLocation = $aRequest['host'].$aRequest['path'];
@@ -60,7 +61,7 @@ $elemController = $aSite['controller'];
 DEBUG('Interface: Site matched ['.(string) $elemSite['location'].'] with handler ['.(string) $elemSite['handler'].']', DEBUG::BASIC);
 
 if ($elemSite == NULL) {
-	die('could not handle request, aborting.');
+	die_fancy('could not handle request, aborting.');
 }
 
 Stopwatch::check('tier1_sitematch', 'php');
@@ -80,10 +81,27 @@ switch ((string) $elemSite['type']) {
 		Stopwatch::check('tier1_load', 'load');
 		
 		// TODO: transport repository stuff to tier2
-		define('DEBUG',					constant((string) $elemController->debug['enabled']));
+		define('DEBUG', constant((string) $elemController->debug['enabled']));
 		
 		$_REQUEST = new sbDOMRequest();
-		$_REQUEST->setLocation((string) $elemSite['location']);
+		
+		// store basic request info
+		$sLocation = (string) $elemSite['location'];
+		$_REQUEST->setLocation($sLocation);
+		
+		if (substr($_SERVER['SERVER_PROTOCOL'], 0, 4) == 'HTTP') {
+			if (!isset($_SERVER['HTTPS'])) {
+				$sProtocol = 'http';
+			} else {
+				$sProtocol = 'https';
+			}
+		} else {
+			$sProtocol = 'unknown';
+		}
+		$sFullURI = $sProtocol.'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		$_REQUEST->setURI($sFullURI);
+		
+		// store handler and repository info
 		$_REQUEST->setHandler((string) $elemSite['handler']);
 		if ($elemSite['subject'] == NULL) {
 			$_REQUEST->setSubject((string) $elemController['subject']);
@@ -102,9 +120,9 @@ switch ((string) $elemSite['type']) {
 			define('TIER2_SEPARATED', FALSE);
 		} else {
 			define('TIER2_SEPARATED', TRUE);
-			define('TIER2_HOST',			(string) $elemController->tier2['host']);
-			define('TIER2_PORT',			(string) $elemController->tier2['port']);
-			define('TIER2_PATH',			(string) $elemController->tier2['path']);
+			define('TIER2_HOST', (string) $elemController->tier2['host']);
+			define('TIER2_PORT', (string) $elemController->tier2['port']);
+			define('TIER2_PATH', (string) $elemController->tier2['path']);
 		}
 		
 		break;
@@ -114,7 +132,7 @@ switch ((string) $elemSite['type']) {
 		// determine requested file
 		if ($aPath[2] == 'global') { // theme-independent global files
 			$sFile = 'interface/themes/_global/'.implode('/', array_slice($aPath, 3));
-			$sFileOverride = 'interface/themes/_global/'.implode('/', array_slice($aPath, 3));
+			$sFileOverride = '';
 		} else { // files in current theme
 			$sHandler = (string) $elemSite['handler'];
 			$sTheme = (string) $elemSite['theme'];
@@ -139,9 +157,9 @@ switch ((string) $elemSite['type']) {
 		// deliver file
 		headers('cache');
 		import('sb.tools.mime');
-		if (file_exists($sFileOverride)) {
+		if ($sFileOverride != '' && file_exists($sFileOverride)) {
 			$sCurrentFile = $sFileOverride;
-		} elseif (file_exists($sFile)){
+		} elseif (file_exists($sFile)) {
 			$sCurrentFile = $sFile;
 		} else {
 			header('HTTP/1.0 404 Not Found');
@@ -251,6 +269,13 @@ DEBUG('Interface: processing output now', DEBUG::BASIC);
 if (isset($elemSite['theme'])) {
 	$_RESPONSE->setTheme((string) $elemSite['theme']);
 }
+if (DEBUG) {
+	if ($_REQUEST->getParam('debug') !== NULL) {
+		$_RESPONSE->forceRenderMode('debug');
+	} elseif ($_REQUEST->getParam('xml') !== NULL) {
+		$_RESPONSE->forceRenderMode('xml');
+	}
+}
 $_RESPONSE->saveOutput();
 
 //------------------------------------------------------------------------------
@@ -270,9 +295,9 @@ $_RESPONSE->saveOutput();
 	// FIXME: this has no effect
 	$sMethod = 'rendered';
 	if (DEBUG) {
-		if ($_REQUEST->getParam('debug') == TRUE) {
+		if ($_REQUEST->getParam('debug') !== NULL) {
 			$sMethod = 'debug';
-		} elseif ($_REQUEST->getParam('xml') == TRUE) {
+		} elseif ($_REQUEST->getParam('xml') !== NULL) {
 			$sMethod = 'xml';
 		}
 	}
@@ -299,6 +324,11 @@ function match_site($elemCurrentRoot, $sRequestLocation) {
 				$elemCurrentSite = $elemSite;
 			}
 		}
+	}
+	
+	if ($elemCurrentSite == NULL) {
+		header('HTTP/1.1 500 Internal Server Error');
+		die_fancy('The site in request "'.$sRequestLocation.'" is not defined.');
 	}
 	
 	// check if site has subsites and match these

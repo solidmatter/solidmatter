@@ -27,9 +27,11 @@ class sbJukeboxView extends sbView {
 		if ($this->getJukebox()->getProperty('config_islocked') == 'TRUE') {
 			throw new sbException('this jukebox is currently locked');
 		}
-		$this->storeLibraryInfo();
-		$this->storeNowPlaying();
-		$this->storeCurrentPlaylist();
+		if ($_REQUEST->getHandler() != 'api') {
+			$this->storeLibraryInfo();
+			$this->storeNowPlaying();
+			$this->storeCurrentPlaylist();
+		}
 		parent::__init();
 	}
 	
@@ -145,12 +147,7 @@ class sbJukeboxView extends sbView {
 	public function getJukebox() {
 		
 		if ($this->nodeJukebox == NULL) { 
-			// is subject node the jukebox?
-			if ($this->nodeSubject->getPrimaryNodeType() == 'sbJukebox:Jukebox') {
-				$this->nodeJukebox = $this->nodeSubject;
-			} else {
-				$this->nodeJukebox = $this->nodeSubject->getAncestorOfType('sbJukebox:Jukebox');
-			}
+			$this->nodeJukebox = $this->nodeSubject->getJukebox();
 		}
 		
 		return ($this->nodeJukebox);
@@ -248,6 +245,9 @@ class sbJukeboxView extends sbView {
 			// TODO: check user existence, might be deleted
 			$nodeUser = $this->crSession->getNodeByIdentifier($nodeComment->getProperty('jcr:createdBy'));
 			$nodeComment->setAttribute('username', $nodeUser->getProperty('label'));
+			
+			$nodeComment->aGetElementFlags['secondary_properties'] = TRUE;
+			
 		}
 		
 	}

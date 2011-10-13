@@ -319,4 +319,96 @@ function headers($sType, $aOptions = NULL) {
 	
 }
 
+//------------------------------------------------------------------------------
+/**
+* 
+* @param 
+* @return 
+*/
+function die_fancy($sText) {
+	
+	echo '
+		<html>
+			<head>
+				<title>solidMatter has died...</title>
+				<style type="text/css">
+					html {
+						background-color: black;
+						font-family: Arial, Helvetica, Sans-Serif;
+					}
+					div.exception {
+						border: 25px solid black;
+						background-color: black;
+					}
+					table.exception {
+						border: 1px solid darkred;
+						margin: 0;
+						background-color: black;
+						color: red;
+						font-size: 80%;
+						border-collapse: collapse;
+					}
+					table.exception th, 
+					table.exception td {
+						padding: 2px;
+						text-align: left;
+						border: 1px solid darkred;
+					}
+					table.exception th {
+						background-color: darkred;
+						color: black;
+					}
+					table.exception th.gurumeditation {
+						text-align: center;
+						background-color: black;
+						color: red;
+						border: 1px solid black;
+						padding: 0;
+					}
+					
+					#gurumeditation {
+						padding: 3px 30px;
+						margin-bottom:20px;
+					}
+					div.gm_on {
+						border: 5px solid red;
+					}
+					div.gm_off {
+						border: 5px solid black;
+					}
+				</style>
+			</head>
+			<body>
+				<div class="exception"><table class="exception">
+				<tr>
+					<th colspan="4" class="gurumeditation">
+						<div id="gurumeditation" class="gm_on">
+							Guru Meditation #DEAD0815.BEEF4711<br />
+							'.$sText.'
+						</div>
+						<script language="Javascript" type="text/javascript">
+							function toggleGM() {
+								oGM = document.getElementById("gurumeditation");
+								if (oGM.className == "gm_on") {
+									oGM.className = "gm_off";
+								} else {	
+									oGM.className = "gm_on";
+								}
+							}
+							window.setInterval("toggleGM()", 1000);
+						</script>
+					</th>
+				</tr>
+				</table></div>
+			</body>
+		</html>
+	';
+	
+	/*if (is_numeric($sText)) {
+		die((int) $sText);
+	}*/
+	die();
+	
+}
+
 ?>

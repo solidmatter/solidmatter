@@ -79,7 +79,7 @@ if (TIER2_SEPARATED) {
 }
 
 // TODO: registry disabled because DB is not yet initialized
-if ($_REQUEST->getParam('bounce') && TRUE) { //Registry::getValue('syb.system.debug.bounce.enabled')) {
+if ($_REQUEST->getParam('bounce') !== NULL && TRUE) { //Registry::getValue('syb.system.debug.bounce.enabled')) {
 	$_REQUEST->bounce();
 }
 

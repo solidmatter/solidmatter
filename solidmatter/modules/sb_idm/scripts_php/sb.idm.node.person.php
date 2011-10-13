@@ -66,23 +66,25 @@ class sbNode_idm_person extends sbNode {
 	* @param 
 	* @return 
 	*/
-	public function storeRelevantData() {
+	public function storeRelevantData($sMode = 'default') {
 		
-		$this->gatherOrgRoles();
-		
-		// raw data
-		foreach ($this->aOrgRoles as $nodeOrgRole) {
-			$niTechRoles = $nodeOrgRole->loadChildren('gatherTechRoles', TRUE, TRUE, TRUE);
-			foreach ($niTechRoles as $nodeTechRole) {
-				$nodeTechRole->gatherTechRoles(TRUE);
-				$nodeTechRole->aGetElementFlags['children'] = TRUE;
+		if ($sMode == 'default') {
+			$this->gatherOrgRoles();
+			
+			// raw data
+			foreach ($this->aOrgRoles as $nodeOrgRole) {
+				$niTechRoles = $nodeOrgRole->loadChildren('gatherTechRoles', TRUE, TRUE, TRUE);
+				foreach ($niTechRoles as $nodeTechRole) {
+					$nodeTechRole->gatherTechRoles(TRUE);
+					$nodeTechRole->aGetElementFlags['children'] = TRUE;
+				}
+				$nodeOrgRole->storeChildren('gatherTechRoles');
 			}
-			$nodeOrgRole->storeChildren('gatherTechRoles');
+			
+			$this->addContent('OrgRoles', new sbCR_NodeIterator($this->aOrgRoles));
+			
+			$this->aGetElementFlags['content'] = TRUE;
 		}
-		
-		$this->addContent('OrgRoles', new sbCR_NodeIterator($this->aOrgRoles));
-		
-		$this->aGetElementFlags['content'] = TRUE;
 		
 	}
 	

@@ -871,7 +871,7 @@ class sbCR_Session {
 		unset($aPath[0]);
 		
 		$nodeRoot = $this->getRootNode();
-		$sUUID = $this->iteratePath($nodeRoot, &$aPath);
+		$sUUID = $this->iteratePath($nodeRoot, $aPath);
 		
 		if ($sUUID !== NULL) {
 			$cachePaths->storeData($sPath, $sUUID);
@@ -888,12 +888,12 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	private function iteratePath($nodeCurrent, $aPath, $iPosition = 1) {
+	private function iteratePath($nodeCurrent, &$aPath, $iPosition = 1) {
 		
 		$nodeChild = $nodeCurrent->getNode($aPath[$iPosition]);
 		
 		if (isset($aPath[++$iPosition])) {
-			return(self::iteratePath($nodeChild, &$aPath, $iPosition));
+			return(self::iteratePath($nodeChild, $aPath, $iPosition));
 		}
 		return ($nodeChild->getIdentifier());
 		

@@ -39,9 +39,30 @@
 				<xsl:for-each select="sbinput">
 					<tr>
 						<xsl:call-template name="colorize" />
-						<td width="30%"><xsl:value-of select="translate(@name, '_', '.')" /></td>
+						<td width="30%">
+							<span>
+							<xsl:choose>
+								<xsl:when test="@defaultvalue = ''">
+									<xsl:attribute name="title">Default: [empty]</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="title">Default: "<xsl:value-of select="@defaultvalue" />"</xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:choose>
+								<xsl:when test="@default = 'FALSE'">
+									<strong><xsl:value-of select="translate(@name, '_', '.')" /></strong>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="translate(@name, '_', '.')" />
+								</xsl:otherwise>
+							</xsl:choose>
+							</span>
+						</td>
 						<td width="10%"><xsl:value-of select="fg" /></td>
-						<td width="60%"><xsl:apply-templates select="." mode="inputonly" /></td>
+						<td width="60%">
+							<xsl:apply-templates select="." mode="inputonly" /> 
+						</td>
 					</tr>
 				</xsl:for-each>
 				<tr class="lastline">

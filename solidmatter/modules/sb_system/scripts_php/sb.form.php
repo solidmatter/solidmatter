@@ -29,6 +29,11 @@ class sbDOMForm extends sbDOMDocument {
 	private $sID;
 	private $sLabel;
 	private $sAction;
+	/**
+	* array of additional attributes (name => value) to include in the generated DOM element
+	* @var array 
+	*/
+	private $aAttributes;
 	
 	private $crSession = NULL;
 	
@@ -75,8 +80,18 @@ class sbDOMForm extends sbDOMDocument {
 		//echo ($sConfig);
 		$ifInput = InputFactory::getInstance($sConfig, $this);
 		$ifInput->setLabelPath($sLabelPath);
-		$this->aInputs[$sName] = &$ifInput;
-		
+		$this->aInputs[$sName] = $ifInput;
+		return ($ifInput);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function removeInput($sName) {
+		unset($this->aInputs[$sName]);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -86,7 +101,7 @@ class sbDOMForm extends sbDOMDocument {
 	* @return 
 	*/
 	public function addGroup($sName) {
-		
+		throw new LazyBastardException('not supported yet');
 	}
 	
 	//--------------------------------------------------------------------------
@@ -106,7 +121,7 @@ class sbDOMForm extends sbDOMDocument {
 	* @return 
 	*/
 	public function bindInputByRule($sBoundInput, $sObservedInput, $eRule, $aParams = NULL) {
-		
+		throw new LazyBastardException('not supported yet');
 	}
 	
 	//--------------------------------------------------------------------------
@@ -257,11 +272,35 @@ class sbDOMForm extends sbDOMDocument {
 	* @param 
 	* @return 
 	*/
+	public function &getInputs() {
+		return ($this->aInputs);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
 	public function getValue($sName) {
 		if (!isset($this->aInputs[$sName])) {
 			throw new InputNotFoundException($sName);	
 		}
 		return ($this->aInputs[$sName]->getValue());
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function setAttribute($sName, $sValue) {
+		$aForbiddenAttributes = array('id', 'action', 'label', 'disabled', 'errorlabel');
+		if (in_array($sName, $this->aAttributes)) {
+			throw new sbException('attribute "'.$sName.'" can not be set');
+		}
+		$this->aAttributes[$sName] = htmlspecialchars($sValue);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -281,6 +320,9 @@ class sbDOMForm extends sbDOMDocument {
 		}
 		if ($this->sErrorLabel != '') {
 			$elemForm->setAttribute('errorlabel', $this->sErrorLabel);
+		}
+		foreach ($this->aAttributes as $sName => $sValue) {
+			$elemForm->setAttribute($sName, htmlspecialchars($sValue));
 		}
 		foreach ($this->aInputs as $ifInput) {
 			$elemForm->appendChild($ifInput->getElement());

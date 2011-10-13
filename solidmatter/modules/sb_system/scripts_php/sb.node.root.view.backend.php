@@ -40,8 +40,11 @@ class sbView_root_backend extends sbView {
 		
 		switch ($sAction) {
 			
-			// just display the login screen
+			// just display the login screen -> happens automatically if user is not logged in
+			
 			case 'display':
+				// store info on default tree view width
+				$_RESPONSE->addData(Registry::getValue('sb.system.backend.ui.tree.width'), 'treeWidth');
 				// jump back to previous node/view/action if possible
 				$sZombieRequest = sbSession::getData('last_recallable_action');
 				if ($sZombieRequest != NULL) {

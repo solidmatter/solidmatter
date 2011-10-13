@@ -3,7 +3,6 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	version="1.0" 
 	exclude-result-prefixes="html sbform php" 
-	exclude-element-prefixes="html sbform" 
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:sbform="http://www.solidbytes.net/sbform"
 	xmlns:dyn="http://exslt.org/dynamic" 
@@ -449,6 +448,9 @@
 								</xsl:when>
 								<xsl:when test="@info_type = 'LIVE'">
 									- Live
+								</xsl:when>
+								<xsl:when test="@info_type = 'DELUXE EDITION'">
+									- Deluxe Edition
 								</xsl:when>
 							</xsl:choose>
 							</span>

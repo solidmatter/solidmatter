@@ -17,7 +17,8 @@ $_QUERIES['MAPPING']['{TABLE_JB_GENRES}']			= '{PREFIX_WORKSPACE}_jukebox_genres
 $_QUERIES['MAPPING']['{TABLE_JB_TRACKSGENRES}']		= '{PREFIX_WORKSPACE}_jukebox_tracks_genres';
 $_QUERIES['MAPPING']['{TABLE_JB_BLACKLIST}']		= '{PREFIX_WORKSPACE}_jukebox_blacklist';
 $_QUERIES['MAPPING']['{TABLE_JB_NOWPLAYING}']		= '{PREFIX_WORKSPACE}_jukebox_nowplaying';
-$_QUERIES['MAPPING']['{TABLE_JB_HISTORY}']			= '{PREFIX_WORKSPACE}_jukebox_history';
+$_QUERIES['MAPPING']['{TABLE_JB_HISTORY_TRACKS}']	= '{PREFIX_WORKSPACE}_jukebox_history_tracks';
+$_QUERIES['MAPPING']['{TABLE_JB_HISTORY_ALBUMS}']	= '{PREFIX_WORKSPACE}_jukebox_history_albums';
 $_QUERIES['MAPPING']['{TABLE_JB_TOKENS}']			= '{PREFIX_WORKSPACE}_jukebox_tokens';
 
 //------------------------------------------------------------------------------
@@ -65,8 +66,8 @@ $_QUERIES['sbJukebox/nowPlaying/clear'] = '
 // history
 //------------------------------------------------------------------------------
 
-$_QUERIES['sbJukebox/history/set'] = '
-	INSERT INTO	{TABLE_JB_HISTORY}
+$_QUERIES['sbJukebox/history/tracks/set'] = '
+	INSERT INTO	{TABLE_JB_HISTORY_TRACKS}
 				(
 					fk_user,
 					fk_track,
@@ -79,8 +80,8 @@ $_QUERIES['sbJukebox/history/set'] = '
 					NOW()
 				)
 ';
-$_QUERIES['sbJukebox/history/remove'] = '
-	DELETE FROM	{TABLE_JB_HISTORY}
+$_QUERIES['sbJukebox/history/tracks/remove'] = '
+	DELETE FROM	{TABLE_JB_HISTORY_TRACKS}
 	WHERE		fk_user = :user_uuid
 		AND		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(dt_played) < :threshold
 ';
@@ -91,7 +92,7 @@ $_QUERIES['sbJukebox/history/getLatest/byUser'] = '
 				\'sbJukebox:Track\' as nodetype,
 				hi.dt_played as played
 	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_JB_HISTORY} hi
+	INNER JOIN	{TABLE_JB_HISTORY_TRACKS} hi
 		ON		n.uuid = hi.fk_track
 	INNER JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child
@@ -99,6 +100,27 @@ $_QUERIES['sbJukebox/history/getLatest/byUser'] = '
 		AND		hi.fk_user = :user_uuid
 	ORDER BY	hi.dt_played DESC
 	LIMIT		0, :limit
+';
+$_QUERIES['sbJukebox/history/albums/check'] = '
+	SELECT		fk_album
+	FROM		{TABLE_JB_HISTORY_ALBUMS}
+	WHERE		fk_album = :album_uuid
+		AND		UNIX_TIMESTAMP() - UNIX_TIMESTAMP(dt_played) < :threshold
+';
+$_QUERIES['sbJukebox/history/albums/set'] = '
+	INSERT INTO	{TABLE_JB_HISTORY_ALBUMS}
+				(
+					fk_user,
+					fk_album,
+					dt_played
+				) VALUES (
+					:user_uuid,
+					:album_uuid,
+					NOW()
+				)
+		ON DUPLICATE KEY UPDATE
+				fk_user = :user_uuid,
+				dt_played = NOW()
 ';
 
 //------------------------------------------------------------------------------
@@ -163,7 +185,7 @@ $_QUERIES['sbJukebox/jukebox/getVoters'] = '
 					n.s_label AS label,
 					n.fk_nodetype
 		FROM		{TABLE_NODES} n
-		INNER JOIN	{TABLE_JB_HISTORY} hi
+		INNER JOIN	{TABLE_JB_HISTORY_TRACKS} hi
 			ON		n.uuid = hi.fk_user
 		INNER JOIN	{TABLE_HIERARCHY} h
 			ON		hi.fk_track = h.fk_child
@@ -196,7 +218,7 @@ $_QUERIES['sbJukebox/history/getTop/base'] = '
 				COUNT(*) AS times_played,
 				\'sbJukebox:Track\' as nodetype
 	FROM		{TABLE_NODES} n
-	INNER JOIN	{TABLE_JB_HISTORY} hi
+	INNER JOIN	{TABLE_JB_HISTORY_TRACKS} hi
 		ON		n.uuid = hi.fk_track
 	INNER JOIN	{TABLE_HIERARCHY} h
 		ON		n.uuid = h.fk_child
@@ -350,6 +372,17 @@ $_QUERIES['sbJukebox/jukebox/search/albums/numeric'] = '
 		AND		n.s_label REGEXP \'^[0-9]\'
 	ORDER BY	n.s_label
 ';
+$_QUERIES['sbJukebox/jukebox/search/artists/byLabel'] = '
+	SELECT		n.uuid,
+				n.s_label AS label
+	FROM		{TABLE_NODES} n
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		n.uuid = h.fk_child
+	WHERE		h.fk_parent = :jukebox_uuid
+		AND		n.fk_nodetype = \'sbJukebox:Artist\'
+		AND		n.s_label LIKE :searchstring
+	ORDER BY	n.s_label ASC
+';
 // NOTE: optimized via RAND() on well-indexed column (see example below or http://www.paperplanes.de/archives/2008/4/24/mysql_nonos_order_by_rand/)
 //SELECT USERS.* FROM (SELECT ID FROM USERS WHERE IS_ACTIVE = 1
 //ORDER BY RAND() LIMIT 20)  
@@ -400,6 +433,51 @@ $_QUERIES['sbJukebox/jukebox/albums/getLatest'] = '
 	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
 		AND		n.fk_nodetype = :nodetype
 	ORDER BY	n.dt_created DESC
+	LIMIT		0, :limit
+';
+// TODO: this is currently not used - originates from the "send mail with added albums" function not fully implemented yet
+$_QUERIES['sbJukebox/jukebox/albums/getLatestSince'] = '
+	SELECT DISTINCT	
+				n.uuid,
+				n.fk_nodetype as nodetype,
+				n.s_label AS label,
+				n.s_name AS name,
+				n.dt_created AS created,
+				a.b_coverexists,
+				(SELECT 	n_vote 
+					FROM	{TABLE_VOTES} v
+					WHERE	v.fk_subject = n.uuid
+						AND	v.fk_user = :user_uuid
+				) AS vote
+	FROM		{TABLE_NODES} n
+	INNER JOIN	{TABLE_JB_ALBUMS} a
+		ON		n.uuid = a.uuid
+	INNER JOIN	{TABLE_HIERARCHY} h
+		ON		a.uuid = h.fk_child
+	WHERE		h.s_mpath LIKE CONCAT(:jukebox_mpath, \'%\')
+		AND		n.fk_nodetype = :nodetype
+		AND		UNIX_TIMESTAMP(n.dt_created) > UNIX_TIMESTAMP(:last_time)
+	ORDER BY	n.dt_created DESC
+';
+$_QUERIES['sbJukebox/jukebox/albums/getLatestPlayed'] = '
+	SELECT DISTINCT	
+				n.uuid,
+				n.fk_nodetype AS nodetype,
+				n.s_label AS label,
+				n.s_name AS name,
+				n.dt_created AS created,
+				a.b_coverexists,
+				(SELECT 	n_vote 
+					FROM	{TABLE_VOTES} v
+					WHERE	v.fk_subject = n.uuid
+						AND	v.fk_user = :user_uuid
+				) AS vote
+	FROM		{TABLE_JB_HISTORY_ALBUMS} h
+	INNER JOIN	{TABLE_NODES} n
+		ON		n.uuid = h.fk_album
+	INNER JOIN	{TABLE_JB_ALBUMS} a
+		ON		n.uuid = a.uuid
+	ORDER BY	h.dt_played DESC
 	LIMIT		0, :limit
 ';
 $_QUERIES['sbJukebox/jukebox/albums/getAll'] = '

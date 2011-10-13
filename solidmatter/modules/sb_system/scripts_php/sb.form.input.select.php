@@ -93,6 +93,9 @@ class sbInput_select extends sbInput {
 		foreach ($this->aConfig as $sConfig => $sValue) {
 			$elemInput->setAttribute($sConfig, $sValue);
 		}
+		foreach ($this->aAttributes as $sName => $sValue) {
+			$elemInput->setAttribute($sName, htmlspecialchars($sValue));
+		}
 		foreach ($this->aOptions as $sValue => $sLabel) {
 			$elemOption	= $this->domForm->createElement('option');
 			$elemOption->setAttribute('value', $sValue);

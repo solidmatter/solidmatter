@@ -255,8 +255,16 @@ class sbDOMRequest extends sbDOMDocument {
 				if (count($mValue) == 1) {
 					$mValue = $mValue[0];
 				}
+				//import('sb.system.essentials');
+				//if ($sName == 'bounce') var_dumpp($mValue);
+				
 			} else {
 				$mValue = (string) $elemParam->nodeValue;
+				// TODO: this is quite a hack - existing but empty parameters should be handled in a more robust fashion
+				
+// 				if ($mValue == "") {
+// 					$mValue = 'true';
+// 				}
 			}
 		}
 		
@@ -422,6 +430,93 @@ class sbDOMRequest extends sbDOMDocument {
 	
 	//--------------------------------------------------------------------------
 	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function setURI($sURI) {
+		
+		$aURI = parse_url($sURI);
+		
+		// store 
+		$this->firstChild->setAttribute('uri', $sURI);
+		
+		$elemMetadata = $this->getElementById('metadata');
+		$elemURI = $this->createElement('uri');
+		$elemURI->setAttribute('xml:id', 'uri');
+		
+		$sLocation = $this->getLocation();
+		$sAbsolutePath = $aURI['host'].$aURI['path'];
+		$aURI['relevant_path'] = str_replace($sLocation, '', $sAbsolutePath);
+		
+		foreach ($aURI as $sFragment => $sData) {
+			$elemURI->setAttribute($sFragment, $sData);
+		}
+		
+		// compute relevant path
+		$elemMetadata->appendChild($elemURI);
+		
+		return;
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function getURI() {
+		return ((string) $this->firstChild->getAttribute('uri'));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 * Returns the URI with the protocol and location part removed
+	 * @param
+	 * @return
+	 */
+	public function getRelevantPath() {
+		$elemURI = $this->getElementById('uri');
+		return ((string) $elemURI->getAttribute('relevant_path'));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 * Returns the URI with the protocol and location part removed
+	 * @param
+	 * @return
+	 */
+	public function getQuery() {
+		$elemURI = $this->getElementById('uri');
+		return ((string) $elemURI->getAttribute('query'));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	/*public function getURI() {
+	
+		$elemRepository = $this->getElementById('repository');
+	
+		if ($elemRepository == NULL) {
+			return (NULL);
+		}
+	
+		$aRepository['id'] = (string) $elemRepository->getAttribute('id');
+		$aRepository['workspace'] = (string) $elemRepository->getAttribute('workspace');
+		$aRepository['user'] = (string) $elemRepository->getAttribute('user');
+		$aRepository['pass'] = (string) $elemRepository->getAttribute('pass');
+		
+		return ($aRepository);
+	
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* 
 	* @param 
 	* @return 
@@ -446,12 +541,26 @@ class sbDOMRequest extends sbDOMDocument {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	public function getDomain() {
-		return ($this->getServerValue('HTTP_HOST'));
+	 *
+	 * @param
+	 * @return
+	 */
+	/*public function setRelativePath($sPath) {
+		return ($this->firstChild->setAttribute('relative_path', $sPath));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	/*public function getRelativePath() {
+		$sPath = $this->firstChild->getAttribute('relative_path');
+		if (substr($sPath, -1) == '/') {
+			$sPath = substr($sPath, 0, -1);
+		}
+		return ($sPath);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -460,17 +569,8 @@ class sbDOMRequest extends sbDOMDocument {
 	* @param 
 	* @return 
 	*/
-	public function getURI() {
-		if (substr($this->getServerValue('SERVER_PROTOCOL'), 0, 4) == 'HTTP') {
-			if ($this->getServerValue('HTTPS') == NULL) {
-				$sProtocol = 'http';
-			} else {
-				$sProtocol = 'https';
-			}
-		} else {
-			$sProtocol = 'unknown';
-		}
-		return ($sProtocol.'://'.$this->getServerValue('HTTP_HOST').$this->getServerValue('REQUEST_URI'));
+	public function getDomain() {
+		return ($this->getServerValue('HTTP_HOST'));
 	}
 	
 	//--------------------------------------------------------------------------

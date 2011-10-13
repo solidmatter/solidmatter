@@ -85,20 +85,32 @@
 		<style type="text/css">
 			@import url(<xsl:value-of select="$stylesheets_css" />/styles_default.css);
 		</style>
-		<table class="exception">
+		<div class="exception"><table class="exception">
 			<tr>
-				<th colspan="4" class="message" style="text-align:center; text-decoration:blink;">[ <span>GURU MEDITATION</span> ]</th>
-			</tr>
-			<tr>	
-				<th colspan="4" class="message">
-					<xsl:value-of select="@type" />: <xsl:value-of select="@message" /> (<xsl:value-of select="@code" />)
+				<th colspan="4" class="gurumeditation">
+					<div id="gurumeditation" class="gm_on">
+						
+						<xsl:value-of select="@type" />: <xsl:value-of select="@message" /><br />
+						Guru Meditation #DEADBEEF.<xsl:value-of select="@code" />
+					</div>
+					<script language="Javascript" type="text/javascript">
+						function toggleGM() {
+							oGM = document.getElementById('gurumeditation');
+							if (oGM.className == 'gm_on') {
+								oGM.className = 'gm_off';
+							} else {	
+								oGM.className = 'gm_on';
+							}
+						}
+						window.setInterval('toggleGM()', 1000);
+					</script>
 				</th>
 			</tr>
 			<tr>
-				<th class="th2">Class</th>
-				<th class="th2">Method</th>
-				<th class="th2">Line</th>
-				<th class="th2">File</th>
+				<th>Class</th>
+				<th>Method</th>
+				<th>Line</th>
+				<th>File</th>
 			</tr>
 			<xsl:for-each select="trace/*">
 				<tr>
@@ -109,7 +121,7 @@
 					<td><xsl:value-of select="file" /></td>
 				</tr>
 			</xsl:for-each>
-		</table>
+		</table></div>
 	</xsl:template>
 	
 	<xsl:template match="warnings">
@@ -160,7 +172,7 @@
 		</xsl:choose>		
 	</xsl:template>
 	
-	<!-- break arbeitet nur mit n -->
+	<!-- break only works with \n, \r is ignored -->
 	<xsl:template name="break">
 		<xsl:param name="text" select="."/>
 		<xsl:choose>
@@ -181,6 +193,7 @@
 		</xsl:choose>
 	</xsl:template>
 	
+	<!-- tries to follow an xpath to get a localized string if the string starts with "$locale/" -->
 	<xsl:template name="localize">
 		<xsl:param name="label" />
 		<xsl:choose>
@@ -192,6 +205,27 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$label" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<!-- replaces all occurrences of a string in a string with another string -->
+	<xsl:template name="string-replace-all">
+		<xsl:param name="text" />
+		<xsl:param name="replace" />
+		<xsl:param name="by" />
+		<xsl:choose>
+			<xsl:when test="contains($text, $replace)">
+				<xsl:value-of select="substring-before($text,$replace)" />
+				<xsl:value-of select="$by" />
+				<xsl:call-template name="string-replace-all">
+					<xsl:with-param name="text" select="substring-after($text,$replace)" />
+					<xsl:with-param name="replace" select="$replace" />
+					<xsl:with-param name="by" select="$by" />
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$text" />
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

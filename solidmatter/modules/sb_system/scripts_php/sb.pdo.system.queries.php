@@ -978,16 +978,20 @@ $_QUERIES['sbSystem/registry/getEntry'] = '
 	WHERE		r.s_key = :key
 ';
 $_QUERIES['sbSystem/registry/getValue'] = '
-	SELECT		rv.s_value,
-				r.e_type
+	SELECT		rv.fk_user,
+				r.e_type,
+				r.s_defaultvalue,
+				rv.s_value
 	FROM		{TABLE_REGISTRY} r
-	INNER JOIN	{TABLE_REGVALUES} rv
+	LEFT JOIN	{TABLE_REGVALUES} rv
 		ON		r.s_key = rv.s_key
-	WHERE		rv.s_key = :key
+	WHERE		r.s_key = :key
 		AND		(
 					fk_user = :user_uuid
 				OR	
 					fk_user = \'SYSTEM\'
+				OR
+					fk_user IS NULL
 				)
 	ORDER BY	fk_user DESC
 ';

@@ -3,7 +3,6 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	version="1.0" 
 	exclude-result-prefixes="html sbform" 
-	exclude-element-prefixes="sbform xmlns" 
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:sbform="http://www.solidbytes.net/sbform"
 	xmlns:dyn="http://exslt.org/dynamic"
@@ -36,7 +35,8 @@
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="response/errors" />
-			<xsl:apply-templates select="$content/latestAlbums" />
+			<xsl:apply-templates select="$content/latestPlayedAlbums" />
+			<xsl:apply-templates select="$content/latestAddedAlbums" />
 			<!--<xsl:if test="$content/nowPlaying/resultset/row">
 				<xsl:apply-templates select="$content/nowPlaying" />
 			</xsl:if>
@@ -50,7 +50,58 @@
 		</div>
 	</xsl:template>
 	
-	<xsl:template match="latestAlbums">
+	<xsl:template match="latestPlayedAlbums">
+		
+		<table class="default" width="100%" summary="CHANGEME">
+			<thead>
+				<tr>
+					<th colspan="2">
+						<span style="float:right;">
+							<!-- <a class="type rss" href="/rss/abc/{$jukebox/usertoken}" target="_blank" style="margin-right: 20px;">RSS</a>  -->
+							<xsl:choose>
+								<xsl:when test="$content/@expand = 'latestPlayedAlbums'">
+									<a class="type collapse" href="/"><xsl:value-of select="$locale/sbJukebox/actions/collapse" /></a>
+								</xsl:when>
+								<xsl:otherwise>
+									<!-- TODO: only display if there are enough comments -->
+									<xsl:if test="1 or count($nodes) > 9">
+										<a class="type expand" href="/-/-/-/?expand=latestPlayedAlbums"><xsl:value-of select="$locale/sbJukebox/actions/expand" /></a>
+									</xsl:if>
+								</xsl:otherwise>
+							</xsl:choose>
+						</span>
+						<span class="type album"><xsl:value-of select="$locale/sbJukebox/labels/latest_played_albums" /></span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+			<xsl:choose>
+				<xsl:when test="resultset/row">
+					<tr class="odd">
+						<td>
+							<xsl:for-each select="resultset/row">
+								<div class="albumcover">
+									<a class="imglink" href="/{@uuid}" style="position:relative;">
+										<img height="104" width="112" src="/theme/sb_jukebox/images/case_100.png" alt="{@label}" title="{@label}" style="background: url('/{@uuid}/details/getCover/?size=100') 11px 2px; margin-bottom: 1px;" />
+										<!--<img height="100" width="100" src="/{@uuid}/details/getCover/?size=100" alt="{@label}" title="{@label}" onMouseOver="add_playbutton('{@uuid}', this)" onMouseOut="remove_playbutton(this)" />-->
+									</a><br />
+									<xsl:call-template name="render_stars" />
+								</div>
+							</xsl:for-each>
+						</td>
+					</tr>
+				</xsl:when>
+				<xsl:otherwise>
+					<!--<tr><td colspan="5"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>-->
+				</xsl:otherwise>
+			</xsl:choose>
+			
+			</tbody>
+		</table>
+		
+	</xsl:template>
+	
+	<xsl:template match="latestAddedAlbums">
 		
 		<table class="default" width="100%" summary="CHANGEME">
 			<thead>
@@ -70,7 +121,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</span>
-						<span class="type album"><xsl:value-of select="$locale/sbJukebox/labels/latest_albums" /></span>
+						<span class="type album"><xsl:value-of select="$locale/sbJukebox/labels/latest_added_albums" /></span>
 					</th>
 				</tr>
 			</thead>

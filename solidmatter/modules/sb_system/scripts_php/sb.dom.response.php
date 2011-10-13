@@ -119,7 +119,7 @@ class sbDOMResponse extends sbDOMDocument {
 	* @param 
 	* @return 
 	*/
-	public function loadXML($sData) {
+	public function loadXML($sData, $iOptions = 0) {
 		$this->aNodeCache = array();
 		return (parent::loadXML($sData));
 	}
@@ -359,6 +359,8 @@ class sbDOMResponse extends sbDOMDocument {
 		$elemContent->setAttribute('uuid', $sUUID);
 		$elemContent->setAttribute('view', $sView);
 		$elemContent->setAttribute('action', $sAction);
+		//$elemContent->setAttribute('site', $_REQUEST->getLocation());
+		//$elemContent->setAttribute('relative_path', $_REQUEST->getRelativePath());
 		
 		foreach ($_REQUEST->getParams('ALL') as $sParam => $sValue) {
 			$elemContent->setAttribute($sParam, $sValue);
@@ -478,6 +480,24 @@ class sbDOMResponse extends sbDOMDocument {
 	// rendering related
 	//--------------------------------------------------------------------------
 	/**
+	* TODO: check & implement more robust code
+	* @param
+	* @return
+	*/
+	public function getRenderMode() {
+		
+		$sRendermode = (string) $this->firstChild->getAttribute('rendermode');
+		$sForcedRendermode = (string) $this->firstChild->getAttribute('forced_rendermode');
+		
+		if ($sForcedRendermode != '') {
+			$sRendermode = $sForcedRendermode;
+		}
+
+		return ($sRendermode);
+	}
+
+	//--------------------------------------------------------------------------
+	/**
 	* 
 	* @param 
 	* @return 
@@ -551,6 +571,17 @@ class sbDOMResponse extends sbDOMDocument {
 		} else {
 			$elemLocales->setAttribute('used', 'TRUE');
 		}
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function forceLocaleMode($bUseLocales) {
+		$elemLocales = $this->getSectionElement('locales');
+		$elemLocales->setAttribute('used', 'FALSE');
 	}
 	
 	//--------------------------------------------------------------------------

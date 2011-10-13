@@ -28,6 +28,16 @@ class sbJukeboxNode extends sbNode {
 		
 	}
 	
+	public function getJukebox() {
+		
+		if ($this->getPrimaryNodeType() == 'sbJukebox:Jukebox') {
+			return ($this);
+		} else {
+			return ($this->getAncestorOfType('sbJukebox:Jukebox'));
+		}
+		
+	}
+	
 }
 
 ?>

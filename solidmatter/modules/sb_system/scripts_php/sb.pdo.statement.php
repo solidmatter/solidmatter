@@ -59,7 +59,7 @@ class sbPDOStatement extends PDOStatement {
 	* @param 
 	* @return 
 	*/
-	public function bindValue($sParam, $mValue, $eType) {
+	public function bindValue($sParam, $mValue, $eType = PDO::PARAM_STR) {
 		if ($mValue === NULL) {
 			$eType = PDO::PARAM_NULL;
 		}
@@ -76,7 +76,7 @@ class sbPDOStatement extends PDOStatement {
 	* @param 
 	* @return 
 	*/
-	public function bindParam($sParam, &$mValue, $eType) {
+	public function bindParam($sParam, &$mValue, $eType = PDO::PARAM_STR, $iLength = NULL, $mDriverOptions = NULL) {
 		if ($mValue === NULL) {
 			$eType = PDO::PARAM_NULL;
 		}
@@ -84,7 +84,7 @@ class sbPDOStatement extends PDOStatement {
 			$sParam = ':'.$sParam;	
 		}
 		$this->aDebug['params'][$sParam] = $mValue;
-		parent::bindParam($sParam, $mValue, $eType);
+		parent::bindParam($sParam, $mValue, $eType, $iLength, $mDriverOptions);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -93,11 +93,11 @@ class sbPDOStatement extends PDOStatement {
 	* @param 
 	* @return 
 	*/
-	public function execute() {
+	public function execute($aInputParameters = NULL) {
 		Stopwatch::checkGroup('php');
 		DEBUG::STARTCLOCK('statement');
 		try {
-			parent::execute();
+			parent::execute($aInputParameters);
 		} catch (Exception $e) {
 			$this->debug($e);
 			throw $e;

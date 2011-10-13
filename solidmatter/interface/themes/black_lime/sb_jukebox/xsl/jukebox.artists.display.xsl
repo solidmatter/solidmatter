@@ -3,7 +3,6 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	version="1.0" 
 	exclude-result-prefixes="html sbform" 
-	exclude-element-prefixes="html sbform" 
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:sbform="http://www.solidbytes.net/sbform"
 	xmlns:dyn="http://exslt.org/dynamic" extension-element-prefixes="dyn">
@@ -39,19 +38,16 @@
 			<xsl:choose>
 				<xsl:when test="$content/@show">
 					<xsl:call-template name="renderArtists">
-						<xsl:with-param name="data" select="$content/random/resultset/row" />
 						<xsl:with-param name="label" select="concat($locale/sbJukebox/labels/artists_beginning_with, ' ', $content/@show)" />
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:when test="$content/@action = 'search'">
 					<xsl:call-template name="renderArtists">
-						<xsl:with-param name="data" select="$content/searchresult/resultset/row" />
 						<xsl:with-param name="label" select="$locale/sbSystem/labels/search/results" />
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:call-template name="renderArtists">
-						<xsl:with-param name="data" select="$content/random/resultset/row" />
 						<xsl:with-param name="label" select="$locale/sbJukebox/labels/random_artists" />
 					</xsl:call-template>
 				</xsl:otherwise>
@@ -60,7 +56,6 @@
 	</xsl:template>
 	
 	<xsl:template name="renderArtists">
-		<xsl:param name="data" />
 		<xsl:param name="label" />
 		<table class="default" width="100%" summary="">
 			<colgroup>
@@ -74,8 +69,8 @@
 			</thead>
 			<tbody>
 			<xsl:choose>
-				<xsl:when test="$data">
-					<xsl:for-each select="$data">
+				<xsl:when test="$content/artists/*">
+					<xsl:for-each select="$content/artists/*">
 						<tr id="highlight_{@uuid}">
 							<xsl:call-template name="colorize" />
 							<td width="{$starcolwidth}">

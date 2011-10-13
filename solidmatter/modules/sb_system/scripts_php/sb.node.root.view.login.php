@@ -101,6 +101,7 @@ class sbView_root_login extends sbView {
 						} else {
 							$sUserText = '"'.$aInputs['login'].'"';
 						}
+						// TODO: add privacy to IP address, too
 						$this->logEvent(System::INFO, 'LOGIN_SUCCESSFUL', $sUserText.' with fingerprint "'.$aData['fingerprint'].'" from "'.$aData['user_ip'].'"');
 						
 						// check for favorites node and create it if necessary
@@ -136,6 +137,7 @@ class sbView_root_login extends sbView {
 								break;
 							case 'wrong_password':
 								$formLogin->setFormError('$locale//formerrors/wrong_logindata');
+								//$formLogin->setAttribute('num_logins_left')
 								break;
 							case 'locked_manually':
 							case 'locked_temporarily':

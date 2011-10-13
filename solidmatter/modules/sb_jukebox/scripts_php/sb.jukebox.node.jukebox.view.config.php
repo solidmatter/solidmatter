@@ -23,17 +23,24 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 		
 		global $_RESPONSE;
 		
-		$formPassword = $this->buildPasswordForm();
+		if (Registry::getValue('sb.system.security.users.password.change.allowed')) {
+			$formPassword = $this->buildPasswordForm();
+		}
 		$formSettings = $this->buildSettingsForm();
 		
 		switch ($sAction) {
 			
 			case 'display':
-				// everything happens outside of switch
+				// everything happens outside of this switch()
 				break;
 				
 			case 'savePassword':
 				
+				if (!Registry::getValue('sb.system.security.users.password.change.allowed')) {
+					logEvent(System::SECURITY, 'sbJukebox', 'UNAUTHORIZED_PASSWORD_CHANGE', 'user tried to change password while registry entry says "no"', $this->nodeSubject->getProperty('jcr:uuid'));
+					throw new SecurityException('users are not allowed to change passwords - how did you get here?');
+				}
+					
 				$formPassword = $this->buildPasswordForm();
 				$formPassword->recieveInputs();
 				
@@ -44,7 +51,8 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 						$nodeUser->setProperty('security_password', $formPassword->getValue('new_password1'));
 						$nodeUser->save();
 					} else {
-						$formPassword->setFormError('$locale/sbSystem/formerrors/not_identical');
+						$formPassword->setError('new_password1', '$locale/sbSystem/formerrors/not_identical');
+						$formPassword->setError('new_password2', '$locale/sbSystem/formerrors/not_identical');
 					}
 				} else {
 					// do nothing, errors are set
@@ -82,8 +90,10 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 			
 		}
 		
-		$formPassword->saveDOM();
-		$_RESPONSE->addData($formPassword);
+		if (Registry::getValue('sb.system.security.users.password.change.allowed')) {
+			$formPassword->saveDOM();
+			$_RESPONSE->addData($formPassword);
+		}
 		$formSettings->saveDOM();
 		$_RESPONSE->addData($formSettings);
 		

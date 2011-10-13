@@ -87,7 +87,8 @@
 		<bitrate>Bitrate</bitrate>
 		<tracks_on_other_albums>Titel auf anderen Alben</tracks_on_other_albums>
 		<source_album>Quellalbum</source_album>
-		<latest_albums>Neueste Alben</latest_albums>
+		<latest_played_albums>Kürzlich gespielte Alben</latest_played_albums>
+		<latest_added_albums>Neueste Alben</latest_added_albums>
 		<all_albums>Alle Alben</all_albums>
 		<now_playing>gerade abgespielt</now_playing>
 		<random_artists>Zufällige Künstler</random_artists>

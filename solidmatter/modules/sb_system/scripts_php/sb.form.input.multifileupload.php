@@ -68,6 +68,9 @@ class sbInput_multifileupload extends sbInput {
 		foreach ($this->aConfig as $sConfig => $sValue) {
 			$elemInput->setAttribute($sConfig, $sValue);
 		}
+		foreach ($this->aAttributes as $sName => $sValue) {
+			$elemInput->setAttribute($sName, htmlspecialchars($sValue));
+		}
 		if ($this->sErrorLabel != '') {
 			$elemInput->setAttribute('errorlabel', $this->sErrorLabel);	
 		}

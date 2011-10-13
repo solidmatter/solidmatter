@@ -32,6 +32,7 @@ class sbView_registry_edit extends sbView {
 			case 'display':
 				
 				$formRegistry = $this->buildForm();
+				$this->checkDefaults($formRegistry);
 				$formRegistry->saveDOM();
 				$_RESPONSE->addData($formRegistry);
 				
@@ -74,6 +75,8 @@ class sbView_registry_edit extends sbView {
 						
 					}
 					
+					$this->checkDefaults($formRegistry);
+					
 					$formRegistry->saveDOM();
 					$_RESPONSE->addData($formRegistry);
 					
@@ -82,6 +85,8 @@ class sbView_registry_edit extends sbView {
 					return (NULL);
 					
 				} else {
+					
+					$this->checkDefaults($formRegistry);
 					
 					$formRegistry->saveDOM();
 					$_RESPONSE = ResponseFactory::getInstance('global');
@@ -143,7 +148,7 @@ class sbView_registry_edit extends sbView {
 				$sConfig = $aRow['s_internaltype'];
 			} else {
 				switch ($aRow['e_type']) {
-					case 'boolean': 	
+					case 'boolean':
 						$sConfig = 'checkbox';
 						break;
 					case 'integer':
@@ -161,8 +166,9 @@ class sbView_registry_edit extends sbView {
 			$sFormName = str_replace('.', '_', $aRow['s_key']);
 			$sConfig = $sFormName.';'.$sConfig;
 			
-			$formRegistry->addInput($sConfig);
-			$formRegistry->setValue($sFormName, $aRow['s_value']);
+			$ifCurrent = $formRegistry->addInput($sConfig);
+			$ifCurrent->setValue($aRow['s_value']);
+			$ifCurrent->setAttribute('defaultvalue', $aRow['s_defaultvalue']);
 			
 		}
 		
@@ -171,6 +177,26 @@ class sbView_registry_edit extends sbView {
 		$stmtGetData->closeCursor();
 		return ($formRegistry);
 
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function checkDefaults($formRegistry) {
+		
+		foreach ($formRegistry->getInputs() as $ifCurrent) {
+			
+			if ($ifCurrent->getValue() == $ifCurrent->getAttribute('defaultvalue')) {
+				$ifCurrent->setAttribute('default', 'TRUE');
+			} else {
+				$ifCurrent->setAttribute('default', 'FALSE');
+			}
+			
+		}
+		
 	}
 	
 }

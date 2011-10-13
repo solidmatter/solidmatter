@@ -324,6 +324,17 @@ class JukeboxTools {
 		$sFilename = $nodeSubject->getName().'.zip';
 		$aFileList = self::getDownloadItems($nodeSubject);
 		
+		// TODO: check if this is necessary and why (originates from code-merge)
+		iconv_set_encoding("internal_encoding", "UTF-8");
+		iconv_set_encoding("input_encoding", "UTF-8");
+		iconv_set_encoding("output_encoding", "UTF-8");
+		$i=0;
+		for ($i=0; $i<count($aFileList); $i++) {
+			$encoding = iconv_get_encoding('all');
+			//print ("internal: ".$encoding['internal_encoding']." input: ".$encoding[input_encoding]." output: ".$encoding[output_encoding]);
+			//$aFileList[$i] = iconv("UTF-8", "CP437", $aFileList[$i]);
+		};
+
 		import('sbSystem:external:pclzip/pclzip.lib');
 		ini_set('max_execution_time', 6000000);
 		ignore_user_abort(TRUE);

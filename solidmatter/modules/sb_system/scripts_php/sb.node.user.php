@@ -8,6 +8,8 @@
 */
 //------------------------------------------------------------------------------
 
+import('sb.system.security');
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -20,6 +22,8 @@ class sbNode_user extends sbNode {
 	}
 	
 	public function saveNode() {
+		
+		// initialize historic properties if user is created
 		if ($this->isNew()) {
 			$this->setProperty('security_activationkey', uuid());
 			$this->setProperty('security_failedlogins', 0);
@@ -27,7 +31,28 @@ class sbNode_user extends sbNode {
 			$this->setProperty('info_silentlogins', 0);
 			$this->setProperty('info_totalfailedlogins', 0);
 		}
+		
+		// get a salted string of the password before storage (only if password is not already salted - which indicates a newly assigned password)
+		$sPass = $this->getProperty('security_password');
+		if (!is_salted_password($sPass)) {
+			$sStorablePassword = salt_password($sPass, $this->getProperty('jcr:uuid'));
+			$this->setProperty('security_password', $sStorablePassword);
+		}
+		
 		parent::saveNode();
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	protected function modifyForm($formCurrent, $sMode) {
+		if ($sMode == 'properties' && !$this->isNew()) {
+			$formCurrent->removeInput('security_password');
+		}
 	}
 	
 }

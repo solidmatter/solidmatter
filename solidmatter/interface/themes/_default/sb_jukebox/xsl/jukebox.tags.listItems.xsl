@@ -3,13 +3,9 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	version="1.0" 
 	exclude-result-prefixes="html sbform php" 
-	exclude-element-prefixes="html sbform" 
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:sbform="http://www.solidbytes.net/sbform"
-	xmlns:dyn="http://exslt.org/dynamic" 
-	extension-element-prefixes="dyn"
-	xmlns:php="http://php.net/xsl"
-	>
+	xmlns:dyn="http://exslt.org/dynamic">
 
 	<xsl:import href="global.default.xsl" />
 	

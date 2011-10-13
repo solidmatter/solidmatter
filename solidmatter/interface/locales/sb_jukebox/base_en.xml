@@ -87,7 +87,8 @@
 		<bitrate>Bitrate</bitrate>
 		<tracks_on_other_albums>Titles on other Albums</tracks_on_other_albums>
 		<source_album>Sourcealbum</source_album>
-		<latest_albums>Newest albums</latest_albums>
+		<latest_played_albums>Recently played albums</latest_played_albums>
+		<latest_added_albums>Newest albums</latest_added_albums>
 		<all_albums>All albums</all_albums>
 		<now_playing>Now playing</now_playing>
 		<random_artists>Random artists</random_artists>

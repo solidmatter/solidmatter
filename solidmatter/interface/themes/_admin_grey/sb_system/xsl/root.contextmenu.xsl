@@ -88,7 +88,7 @@
 				<li><a href="#"><span class="type import"><xsl:value-of select="$locale/sbSystem/actions/import" /></span></a></li>
 			</xsl:if>
 			<xsl:if test="@set_primary = 'TRUE'">
-				<li><a href="javascript:sbMenu.setPrimary('{@parent}', '{@uuid}');"><span class="type xxxxxxx"><xsl:value-of select="$locale/sbSystem/actions/set_primary" /></span></a></li>
+				<li><a href="javascript:sbMenu.setPrimary('{@parent}', '{@uuid}');"><span class="type make_primary"><xsl:value-of select="$locale/sbSystem/actions/set_primary" /></span></a></li>
 			</xsl:if>
 			
 			<!-- delete -->

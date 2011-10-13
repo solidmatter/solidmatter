@@ -35,6 +35,9 @@
 			<xsl:when test="$parameters/param[@id='mode'] = 'usermain'">
 				<xsl:apply-templates select="$content/sbnode[@master]" mode="usermain" />
 			</xsl:when>
+			<xsl:when test="$parameters/param[@id='mode'] = 'mainuser'">
+				<xsl:apply-templates select="$content/sbnode[@master]" mode="mainuser" />
+			</xsl:when>
 			<xsl:when test="$parameters/param[@id='mode'] = 'userall'">
 				<xsl:apply-templates select="$content/sbnode[@master]" mode="userall" />
 			</xsl:when>
@@ -172,6 +175,47 @@
 		</table>
 		
 	</xsl:template>
+	
+	<xsl:template match="sbnode" mode="mainuser">
+		<table>
+			<tr>
+				<th colspan="">Rollenzuordnungen</th>
+			</tr>
+			<tr>
+				<th>Prozessrolle</th>
+				<th>Funktionen</th>
+				<th>Anzahl Personen</th>
+				<th>Namen der Personen</th>
+			</tr>
+			<xsl:choose>
+				<xsl:when test="$content/main_roles/nodes/sbnode">
+					<xsl:for-each select="$content/main_roles/nodes/sbnode">
+						<xsl:variable name="mainrole_uuid" select="@uuid" />
+						<tr>
+							<td><xsl:value-of select="@label" /></td>
+							<td>
+								<xsl:for-each select="content[@mode='UserassignableRoles']/sbnode">
+									<xsl:value-of select="@label" /><br />
+								</xsl:for-each>
+							</td>
+							<td>
+								<xsl:value-of select="count(content[@mode='Persons']/sbnode)" />
+							</td>
+							<td>
+								<xsl:for-each select="content[@mode='Persons']/sbnode">
+									<xsl:value-of select="@label" /><br />
+								</xsl:for-each>
+							</td>
+						</tr>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$locale/sbSystem/texts/no_subobjects" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</table>
+	</xsl:template>
+	
 	
 	<xsl:template match="sbnode" mode="dsb">
 		

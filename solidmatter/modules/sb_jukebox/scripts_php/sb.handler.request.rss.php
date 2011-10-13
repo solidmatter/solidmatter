@@ -2,67 +2,38 @@
 
 //------------------------------------------------------------------------------
 /**
+* Request URI Format:
+* http://<site>/rss/<type>/<tokenid>
+* 
+* <type> = comments|albums|mostplayed
 * @package	solidMatter:sb_system
 * @author	()((() [Oliver Müller]
 * @version	1.00.00
 */
 //------------------------------------------------------------------------------
 
+import('sb.handler.request.tokenbased');
 import('sb.dom.rss');
 import('sbJukebox:sb.pdo.queries');
 
 //------------------------------------------------------------------------------
 /**
 */
-class JBRSSHandler {
-	
-	protected $crSession = NULL;
-	protected $nodeTrack = NULL;
+class JBRSSHandler extends TokenBasedHandler {
 	
 	//--------------------------------------------------------------------------
 	/**
 	* 
-	* Request URI Format:
-	* http://<site>/rss/<type>/<tokenid>
 	* 
-	* <type> = comments|albums|mostplayed
 	* 
 	* @param 
 	* @return 
 	*/
-	public function handleRequest($crSession) {
-		
-		global $_REQUEST;
-		global $_RESPONSE;
-		
-		$this->crSession = $crSession;
-		$sRSSType = NULL;
-		$sTokenID = NULL;
-		
-		// parse request
-		$aStuff = explode('/', $_REQUEST->getPath(), 5);
-		if (isset($aStuff[1])) {
-			// fixed: "rss"
-		}
-		if (isset($aStuff[2])) {
-			$sRSSType = $aStuff[2];
-		}
-		if (isset($aStuff[3])) {
-			$sTokenID = $aStuff[3];
-		}
-		if ($sRSSType === NULL || $sTokenID === NULL) {
-			die('rss type or token missing');
-		}
-		
-		$sUserID = $this->getTokenOwner($sTokenID);
-		if (!$sUserID) {
-			die('token is invalid');
-		}
-		User::setUUID($sUserID);
+	public function fulfilRequest() {
 		
 		// TODO: check permissions
 		
-		$domFeed = $this->getRSS($sRSSType);
+		$domFeed = $this->getRSS($this->aRequest['subject']);
 		$this->refreshToken();
 		$domFeed->outputXML();
 		exit();
@@ -172,37 +143,6 @@ class JBRSSHandler {
 		
 		return ($domFeed);
 		
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	protected function getTokenOwner($sTokenID) {
-		$stmtClear = $this->crSession->prepareKnown('sbJukebox/tokens/clear');
-		$stmtClear->execute();
-		$stmtGetOwner = $this->crSession->prepareKnown('sbJukebox/tokens/get/byToken');
-		$stmtGetOwner->bindValue('token', $sTokenID, PDO::PARAM_STR);
-		$stmtGetOwner->execute();
-		$sUserUUID = FALSE;
-		foreach ($stmtGetOwner as $aRow) {
-			$sUserUUID = $aRow['user_uuid'];
-		}
-		return ($sUserUUID);
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	protected function refreshToken() {
-		$stmtRefresh = $this->crSession->prepareKnown('sbJukebox/tokens/refresh');
-		$stmtRefresh->bindValue('user_uuid', User::getUUID(), PDO::PARAM_STR);
-		$stmtRefresh->execute();
 	}
 	
 }

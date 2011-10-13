@@ -77,6 +77,7 @@ abstract class Registry {
 		// NOTE: system values are returned first, so looping will suffice
 		foreach ($stmtGetValue as $aRow) {
 			$mValue = $aRow['s_value'];
+			$mDefaultValue = $aRow['s_defaultvalue'];
 			$sType = $aRow['e_type'];
 			$bEmpty = FALSE;
 		}
@@ -85,6 +86,11 @@ abstract class Registry {
 		if ($bEmpty) {
 			throw new sbException('Registry value does not exist! ('.$sKey.')');
 		}
+		
+		if ($mValue === NULL) {
+			$mValue = $mDefaultValue;
+		}
+		
 		//var_dumpp($sKey.'|'.$sType);
 		switch ($sType) {
 			case 'boolean':

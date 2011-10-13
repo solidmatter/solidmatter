@@ -44,7 +44,6 @@ class sbView_maintenance_repair extends sbView {
 				break;
 			
 			case 'gatherAbandonedNodes':
-				throw new LazyBastardException('gatherAbandonedNodes has to be overhauled because of changes to trashcan handling');
 				$nodeTrashcan = $this->crSession->getNode('//*[@uid="sbSystem:Trashcan"]');
 				$niAbandonedNodes = $nodeTrashcan->getAbandonedNodes();
 				foreach ($niAbandonedNodes as $nodeTrash) {

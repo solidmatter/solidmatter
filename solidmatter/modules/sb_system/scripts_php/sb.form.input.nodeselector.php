@@ -43,6 +43,9 @@ class sbInput_nodeselector extends sbInput {
 		foreach ($this->aConfig as $sConfig => $sValue) {
 			$elemInput->setAttribute($sConfig, $sValue);
 		}
+		foreach ($this->aAttributes as $sName => $sValue) {
+			$elemInput->setAttribute($sName, htmlspecialchars($sValue));
+		}
 		if ($this->bDisabled) {
 			$elemInput->setAttribute('disabled', 'TRUE');
 		}
