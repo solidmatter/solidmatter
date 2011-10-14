@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent"
+	android:layout_height="match_parent">
+	<TextView android:id="@+id/textView1" android:layout_height="wrap_content" android:background="@drawable/bg_header" android:layout_width="fill_parent" android:drawableLeft="@drawable/bg_header_logo" android:gravity="center_vertical" android:text="sbJukebox" android:textSize="20dp" android:typeface="sans" android:textStyle="bold"></TextView>
+	<LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="match_parent"
+		android:layout_weight="1">
+		<ImageButton android:layout_height="fill_parent" android:layout_weight="1" android:id="@+id/menu_artists" android:layout_width="fill_parent"
+			android:background="@drawable/main_button" android:layout_margin="0px" android:src="@drawable/ic_start_artists"></ImageButton>
+		<ImageButton android:layout_height="fill_parent" android:layout_weight="1" android:id="@+id/menu_albums" android:layout_width="fill_parent"
+			android:background="@drawable/main_button" android:layout_margin="0px" android:src="@drawable/ic_start_albums"></ImageButton>
+	</LinearLayout>
+	<LinearLayout android:id="@+id/menu_favorites" android:layout_width="match_parent" android:layout_weight="1" android:layout_height="wrap_content">
+		<ImageButton android:id="@+id/imageButton3" android:layout_height="fill_parent" android:layout_width="fill_parent"
+			android:layout_weight="1" android:background="@drawable/main_button" android:src="@drawable/ic_start_favorites"></ImageButton>
+		<ImageButton android:id="@+id/menu_charts" android:layout_height="fill_parent" android:layout_width="fill_parent"
+			android:layout_weight="1" android:background="@drawable/main_button" android:src="@drawable/ic_start_charts"></ImageButton>
+	</LinearLayout>
+</LinearLayout>

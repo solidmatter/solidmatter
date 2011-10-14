@@ -1,0 +1,21 @@
+
+    <resources>
+    	
+    	<color name="white">#FFF</color>
+        <color name="black">#000</color>
+        
+    	
+        <color name="odd">#181818</color>
+        <color name="even">#000</color>
+        <color name="odd_selected">#303030</color>
+        <color name="even_selected">#363636</color>
+        <color name="focused">#35A</color>
+        <color name="text_default">#FFF</color>
+        
+        <color name="button_light_start">#558</color>
+        <color name="button_light_end">#335</color>
+        <color name="button_normal_start">#333</color>
+        <color name="button_normal_end">#000</color>
+        
+        
+    </resources>
