@@ -13,6 +13,7 @@ import net.solidbytes.tools.connection.sbConnection;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -89,28 +90,46 @@ public class AsyncTask_DownloadAlbum extends AsyncTask <Album, Integer, Long> {
 			final File dirDestination = new File("/mnt/sdcard/external_sd/Music");
 			final String sDestinationPath = dirDestination.toString();
 			Log.d("sbJukebox", "extracting album '" + nodeAlbum.getProperty("label") + "' to " + dirDestination.getAbsolutePath());
-			Zip.unzip(fileTemp, dirDestination);
+			final String[] aExtractedFiles = Zip.unzip(fileTemp, dirDestination);
 			fileTemp.delete();
 			Log.d("sbJukebox", "extracting the zip file took " + swUnzip.Stop() + " ms");
 			
+			// done with everything except scanning
 			Log.i("sbJukebox", "downloading and extracting album '" + nodeAlbum.getProperty("label") + "' finished");
 			
-			App.Activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + sDestinationPath)));
+			final String[] aMP3sToScan = Arrays.filterStringArray(aExtractedFiles, ".mp3");
+			
+			MediaScannerConnection.scanFile(App.Context,
+					aMP3sToScan, null,
+			    new MediaScannerConnection.OnScanCompletedListener() {
+			    public void onScanCompleted(String path, Uri uri) {
+			    	Log.i("sbTools", "Scanned " + path + ":");
+			        Log.i("sbTools", "-> uri=" + uri);
+			    }
+			});
+
+//			App.Activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + sDestinationPath)));
+			
 			
 			// tell the media library to scan the newly added album
-			// TODO: it should only scan the newly created folder
-//					final MediaScannerConnection mScanner = new MediaScannerConnection(App.Context, null);
-//					new MediaScannerConnection.MediaScannerConnectionClient() {
-//				        public void onMediaScannerConnected() {
-//				        	mScanner.scanFile(sDestinationPath, null);
-//				        }
-//				        public void onScanCompleted(String path, Uri uri) {
-//			                if (path.equals(sDestinationPath)) {
-//			                        mScanner.disconnect();
-//			                }
-//				        }
-//					}; 
-//					mScanner.connect(); 
+//			final MediaScannerConnection mScanner = new MediaScannerConnection(App.Context, new MediaScannerConnection.MediaScannerConnectionClient() {
+//		        public void onMediaScannerConnected() {
+//		        	Log.d("sbJukebox", "media scanner connected");
+//		        	for (int i=0; i<aExtractedFiles.length; i++) {
+//		        		if (aExtractedFiles[i].contains(".mp3")) {
+//		        			Log.d("sbJukebox", "scanning extracted file: " + aExtractedFiles[i]);
+//			        		mScanner.scanFile(aExtractedFiles[i], null);
+//		        		}
+//		        	}
+//		        }
+//		        public void onScanCompleted(String sPath, Uri uri) {
+//		        	Log.d("sbJukebox", "scanned extracted file: " + sPath);
+////	                if (path.equals(sDestinationPath)) {
+////	                    mScanner.disconnect();
+////	                }
+//		        }
+//			}); 
+//			mScanner.connect();
 			
 			
 			//MediaScannerConnection.scanFile(App.Context, new String[] { dirDestination.toString() }, null, null);
