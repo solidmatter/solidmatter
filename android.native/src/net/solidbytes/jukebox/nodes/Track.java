@@ -3,7 +3,7 @@ package net.solidbytes.jukebox.nodes;
 import java.util.*;
 
 import net.solidbytes.jukebox.R;
-import net.solidbytes.jukebox.connection.sbConnection;
+import net.solidbytes.tools.connection.sbConnection;
 
 import org.w3c.dom.*;
 

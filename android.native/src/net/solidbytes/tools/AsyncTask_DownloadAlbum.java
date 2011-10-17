@@ -6,11 +6,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
 
-import net.solidbytes.jukebox.App;
-import net.solidbytes.jukebox.connection.sbConnection;
 import net.solidbytes.jukebox.nodes.Album;
 import net.solidbytes.tools.archive.Zip;
+import net.solidbytes.tools.connection.sbConnection;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,11 +19,16 @@ import android.util.Log;
 
 public class AsyncTask_DownloadAlbum extends AsyncTask <Album, Integer, Long> {
     
+	Activity actContext;
 	ProgressDialog pdDownload;
 	long lContentLength;
-
+	
+	public AsyncTask_DownloadAlbum(Activity actCurrent) {
+		actContext = actCurrent;
+	}
+	
 	protected void onPreExecute() {
-		pdDownload = new ProgressDialog(App.Context);
+		pdDownload = new ProgressDialog(actContext);
 		pdDownload.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		pdDownload.setMessage("Loading...");
 		pdDownload.setCancelable(false);

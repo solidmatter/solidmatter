@@ -6,12 +6,12 @@ import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import net.solidbytes.jukebox.connection.sbConnection;
-import net.solidbytes.jukebox.connection.sbDOMResponse;
 import net.solidbytes.jukebox.nodes.Album;
 import net.solidbytes.jukebox.nodes.Jukebox;
 import net.solidbytes.jukebox.nodes.Track;
 import net.solidbytes.tools.SpinnerDialog;
+import net.solidbytes.tools.connection.sbConnection;
+import net.solidbytes.tools.connection.sbDOMResponse;
 
 import android.app.Activity;
 import android.os.Bundle;

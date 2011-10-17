@@ -1,7 +1,8 @@
 package net.solidbytes.jukebox;
 
-import net.solidbytes.jukebox.connection.sbConnection;
+import net.solidbytes.tools.App;
 import net.solidbytes.tools.SpinnerDialog;
+import net.solidbytes.tools.connection.sbConnection;
 
 import android.app.Activity;
 import android.app.TabActivity;
@@ -38,12 +39,6 @@ public class Activity_sbJukebox extends Activity {
 		setContentView(R.layout.main);
 		
 		App.setContext(this);
-		
-		if (sbConnection.connect()) {
-			Log.i("sbJukebox", "login to " + sbConnection.getDomain() + " successful");
-		} else {
-			Log.i("sbJukebox", "login failed: " + sbConnection.sError);
-		}
 	    
 		// add onclick events to the buttons
 		ImageButton btArtists = (ImageButton) findViewById(R.id.menu_artists);
@@ -61,6 +56,15 @@ public class Activity_sbJukebox extends Activity {
 	        }
         });
 	   
+	}
+	
+	public void onResume() {
+		super.onResume();
+		if (sbConnection.connect()) {
+			Log.i("sbJukebox", "login to " + sbConnection.getDomain() + " successful");
+		} else {
+			Log.i("sbJukebox", "login failed: " + sbConnection.sError);
+		}
 	}
 	
 	@Override

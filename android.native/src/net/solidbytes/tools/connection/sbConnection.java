@@ -1,7 +1,8 @@
-package net.solidbytes.jukebox.connection;
+package net.solidbytes.tools.connection;
 
-import net.solidbytes.jukebox.App;
 import net.solidbytes.jukebox.R;
+import net.solidbytes.tools.App;
+import net.solidbytes.tools.Logg;
 import net.solidbytes.tools.Stopwatch;
 
 import java.io.*;
@@ -39,17 +40,25 @@ public abstract class sbConnection {
 	public static String sError = "";
 	
 	public static boolean connect() {
+		return connect(false);
+	}
+	
+	public static boolean connect(Boolean bForceReconnect) {
+		
+		if (bForceReconnect == null) {
+			bForceReconnect = false;
+		}
 		
 		sDomain = App.Prefs.getString("server_domain", "ollomulder.dyndns.org");
 		sUser = App.Prefs.getString("server_username", "ollo");
 		sPass = App.Prefs.getString("server_password", "test");
 		
-		sDomain = "ollomulder.dyndns.org";
+		//sDomain = "ollomulder.dyndns.org";
 		//sDomain = "192.168.100.33";
 		//sDomain = "10.7.12.138";
 				
 		// don't reconnect if already connected
-		if (isConnected()) {
+		if (isConnected() && bForceReconnect == false) {
 			return true;
 		}
 		
@@ -88,32 +97,28 @@ public abstract class sbConnection {
 				throw new Exception("no server domain specified");
 			}
 			
-			Log.i("sbConnection", "attempting login at " + sDomain);
+			Log.i("sbTools", "sbConnection: attempting login at " + sDomain);
 			
 			sbDOMResponse domResponse = sendRequest(sAction, sPost);
 			
 			if (domResponse.getUserID() == null) {
 				bSuccess = false;
-				Log.i("sbConnection", "Login failed, no UserID returned");
+				Log.i("sbTools", "sbConnection: Login failed, no UserID returned");
 			} else {
 				sSessionID = domResponse.getSessionID();
-				Log.i("sbConnection", "Login successful, SessionID: " + sSessionID);
+				Log.i("sbTools", "sbConnection: Login successful, SessionID: " + sSessionID);
 			}
 			
 		} catch (UnknownHostException e) {
 			
 			bSuccess = false;
-			sbConnection.sError = "\nError: " + R.string.error_unknown_host + "(" + sDomain + ")";
+			sbConnection.sError = "Error: " + R.string.error_unknown_host + "(" + sDomain + ")";
 		
 		} catch (Exception e) {
 			
 			bSuccess = false;
-			Log.e("sbConnection", "\nError: " + e);
-			StackTraceElement[] es = e.getStackTrace();
-			for (int i=0; i<es.length; i++) {
-				Log.v("sbConnection", es[i].toString());
-			}
-			sbConnection.sError = "\nError: " + e;
+			Logg.e("sbTools", e);
+			sbConnection.sError = "Error: " + e;
 			
 		}
 		
@@ -131,7 +136,7 @@ public abstract class sbConnection {
 		InputStream is = null;
 		
 		Stopwatch tCon = new Stopwatch();
-		Log.d("sbConnection", "sending request: " + sAction);
+		Log.d("sbTools", "sbConnection: sending request: " + sAction);
 		
 		try {
 			
@@ -142,7 +147,7 @@ public abstract class sbConnection {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document domResponse = builder.parse(is);
 			
-            Log.d("sbConnection", "HTTP request and parsing took " + tCon.Stop() + " ms");
+            Log.d("sbTools", "sbConnection: HTTP request and parsing took " + tCon.Stop() + " ms");
             
             // output for debugging purposes
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
@@ -154,44 +159,28 @@ public abstract class sbConnection {
             transformer.transform(source, result);
             
             String xmlString = result.getWriter().toString();
-            Log.v("sbConnection", xmlString);
+            Log.v("sbTools", xmlString);
             
             return (new sbDOMResponse(domResponse));
 			
 		} catch (UnknownHostException e) {
 			
-			Log.e("sbConnection", "Error: " + e);
-			StackTraceElement[] es = e.getStackTrace();
-			for (int i=0; i<es.length; i++) {
-				Log.v("sbConnection", es[i].toString());
-			}
+			Logg.e("sbTools", e);
 			sbConnection.sError = "Error: unknown host (" + sDomain + ")";
-			//throw e;
 			return null;
 			
 			
 		} catch (SocketTimeoutException e) {
 			
-			Log.e("sbConnection", "Error: " + e);
-			StackTraceElement[] es = e.getStackTrace();
-			for (int i=0; i<es.length; i++) {
-				Log.v("sbConnection", es[i].toString());
-			}
+			Logg.e("sbTools", e);
 			sbConnection.sError = "Error: server not responding (" + sDomain + ")";
-			//throw e;
 			return null;
 			
 			
 		} catch (Exception e) {
 			
-			//System.out.println( "\nError: " + ex );
-			Log.e("sbConnection", "\nError: " + e);
-			StackTraceElement[] es = e.getStackTrace();
-			for (int i=0; i<es.length; i++) {
-				Log.v("sbConnection", es[i].toString());
-			}
-			sbConnection.sError = "\nError: " + e;
-			//throw e;
+			Logg.e("sbTools", e);
+			sbConnection.sError = "Error: " + e;
 			return null;
 			
 		} finally {
@@ -207,7 +196,7 @@ public abstract class sbConnection {
 	
 	public static InputStream getStream(String sAction, String sPostData) throws Exception {
 		
-		Log.d("sbConnection", "opening stream ressource");
+		Log.d("sbTools", "sbConnection: opening stream ressource");
 		
 		try {
 			
@@ -219,9 +208,8 @@ public abstract class sbConnection {
 			
 		} catch (Exception e) {
 			
-			//System.out.println( "\nError: " + ex );
-			Log.e("sbConnection", "\nError: " + e);
-			sbConnection.sError = "\nError: " + e;
+			Logg.e("sbTools", e);
+			sbConnection.sError = "Error: " + e;
 			throw e;
 			
 		}
@@ -235,7 +223,7 @@ public abstract class sbConnection {
 		
 		String sURL = "http://" + sDomain + "/api" + sAction;
 		
-		Log.d("sbConnection", "opening connection: " + sURL);
+		Log.d("sbTools", "opening sbConnection: " + sURL);
 		
 		try {
 			
@@ -268,9 +256,8 @@ public abstract class sbConnection {
 			
 		} catch (Exception e) {
 			
-			//System.out.println( "\nError: " + ex );
-			Log.e("sbConnection", "\nError: " + e);
-			sbConnection.sError = "\nError: " + e;
+			Logg.e("sbTools", e);
+			sbConnection.sError = "Error: " + e;
 			throw e;
 			
 		} finally {
@@ -287,30 +274,6 @@ public abstract class sbConnection {
 			return true;
 		} else {
 			return false;
-		}
-		
-	}
-	
-	
-	public static void getArtists() {
-		
-		if (!sbConnection.bConnected) {
-			sbConnection.connect();
-		}
-		
-		
-	}
-	
-	public static void getAlbums() {
-		if (!sbConnection.bConnected) {
-			sbConnection.connect();
-		}
-		
-	}
-	
-	public static void getCharts() {
-		if (!sbConnection.bConnected) {
-			sbConnection.connect();
 		}
 		
 	}

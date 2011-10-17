@@ -3,11 +3,11 @@ package net.solidbytes.jukebox;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.solidbytes.jukebox.connection.sbConnection;
-import net.solidbytes.jukebox.connection.sbDOMResponse;
 import net.solidbytes.jukebox.nodes.Album;
 import net.solidbytes.jukebox.nodes.Artist;
 import net.solidbytes.jukebox.nodes.Jukebox;
+import net.solidbytes.tools.connection.sbConnection;
+import net.solidbytes.tools.connection.sbDOMResponse;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -44,10 +44,10 @@ public class Activity_Artists_List extends sbJukeboxListActivity {
 			
 			if (sShow == "" || sShow == null) {
 				lArtists = Jukebox.getArtists(null);
-				this.title.setText("random artists");
+				this.title.setText(R.string.labels_random_artists);
 			} else {
 				lArtists = Jukebox.getArtists(sShow);
-				this.title.setText("artists beginning with " + sShow);
+				this.title.setText(R.string.labels_artists_beginning_with + sShow);
 			}
 			
 			if (lArtists.isEmpty()) {

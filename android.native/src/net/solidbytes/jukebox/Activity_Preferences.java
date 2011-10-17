@@ -1,5 +1,6 @@
 package net.solidbytes.jukebox;
 
+import net.solidbytes.tools.App;
 import net.solidbytes.tools.Filesystem;
 import android.app.AlertDialog;
 import android.app.Dialog;

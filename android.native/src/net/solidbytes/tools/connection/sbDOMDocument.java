@@ -1,4 +1,4 @@
-package net.solidbytes.jukebox.connection;
+package net.solidbytes.tools.connection;
 
 import org.w3c.dom.Document;
 

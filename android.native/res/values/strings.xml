@@ -3,9 +3,6 @@
     
     <string name="app_name">sbJukebox</string>
     
-    <string name="labels_artists">Artists</string>
-    <string name="labels_albums">Albums</string>
-    <string name="labels_tags">Tags</string>
     
     <string name="option_search">Suche</string>
     <string name="option_preferences">Einstellungen</string>
@@ -14,10 +11,8 @@
     <string name="prefs_domain">Domäne</string>
     <string name="prefs_username">Benutzername</string>
     <string name="prefs_password">Passwort</string>
-    
     <string name="prefs_cat_downloads">Downloads</string>
     <string name="prefs_directory">Verzeichnis</string>
-    
     <string name="prefs_cat_cache">Cache</string>
     <string name="prefs_clear_cache">Cache leeren</string>
     <string name="prefs_clear_cache_message">Alle gecacheten Cover löschen?</string>
@@ -27,6 +22,17 @@
     <string name="dialog_cancel">abbrechen</string>
     
     <string name="error_unknown_host">Unbekannter Host</string>
+    
+    <!-- imported from sbJukebox backend module -->
+    
+    <string name="labels_artists">Künstler</string>
+    <string name="labels_albums">Alben</string>
+    <string name="labels_tags">Tags</string>
+    <string name="labels_random_artists">Zufällige Künstler</string>
+	<string name="labels_random_albums">Zufällige Alben</string>
+	<string name="labels_artists_beginning_with">Künstler beginnend mit</string>
+	<string name="labels_albums_beginning_with">Alben beginnend mit</string>
+		
     
     
 </resources>

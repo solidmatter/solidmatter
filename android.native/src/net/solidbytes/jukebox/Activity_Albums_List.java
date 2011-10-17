@@ -17,11 +17,12 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import net.solidbytes.jukebox.connection.sbConnection;
-import net.solidbytes.jukebox.connection.sbDOMResponse;
 import net.solidbytes.jukebox.nodes.Album;
 import net.solidbytes.jukebox.nodes.Jukebox;
 import net.solidbytes.jukebox.nodes.sbNode;
+import net.solidbytes.tools.AsyncTask_DownloadAlbum;
+import net.solidbytes.tools.connection.sbConnection;
+import net.solidbytes.tools.connection.sbDOMResponse;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -43,14 +44,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class Activity_Albums_List extends sbJukeboxListActivity {
 
-	
-	
 	List<Album>	lAlbums	= new ArrayList<Album>();
-	
-	
-
-	
-	
 
 	/** Called when the activity is first created. */
 	@Override
@@ -67,22 +61,22 @@ public class Activity_Albums_List extends sbJukeboxListActivity {
 		}
 
 		try {
-
+			
 			if (sShow == "" || sShow == null) {
 				lAlbums = Jukebox.getAlbums(null);
-				this.title.setText("random albums");
+				this.title.setText(R.string.labels_random_albums);
 			} else {
 				lAlbums = Jukebox.getAlbums(sShow);
-				this.title.setText("albums beginning with " + sShow);
+				this.title.setText(R.string.labels_albums_beginning_with + sShow);
 			}
 			
 //			if (lAlbums.isEmpty()) {
 //				setContentView(R.layout.no_content);
 //				return;
 //			}
-
+			
 			setListAdapter(new LA_Albums(this, lAlbums));
-
+			
 			ListView lv = getListView();
 			lv.setTextFilterEnabled(true);
 
@@ -97,7 +91,7 @@ public class Activity_Albums_List extends sbJukeboxListActivity {
 			});
 
 			registerForContextMenu(lv);
-
+			
 			// initialize download dialog
 			
 
@@ -152,7 +146,8 @@ public class Activity_Albums_List extends sbJukeboxListActivity {
 		
 		switch (item.getItemId()) {
 		case R.id.download:
-			nodeAlbum.download();
+			new AsyncTask_DownloadAlbum((Activity) this).execute(nodeAlbum);
+			//nodeAlbum.download();
 			return true;
 		default:
 			return super.onContextItemSelected(item);

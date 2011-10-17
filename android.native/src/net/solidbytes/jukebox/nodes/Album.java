@@ -10,13 +10,13 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.solidbytes.jukebox.App;
 import net.solidbytes.jukebox.R;
-import net.solidbytes.jukebox.connection.sbConnection;
+import net.solidbytes.tools.App;
 import net.solidbytes.tools.Filesystem;
 import net.solidbytes.tools.Stopwatch;
 import net.solidbytes.tools.Stream;
 import net.solidbytes.tools.archive.Zip;
+import net.solidbytes.tools.connection.sbConnection;
 import net.solidbytes.tools.AsyncTask_DownloadAlbum;
 
 import org.w3c.dom.Element;
@@ -228,10 +228,10 @@ public class Album extends sbNode {
 	 * @param 
 	 * @return
 	 */
-	public void download() {
-		
-		new AsyncTask_DownloadAlbum().execute(this);
-
-	}
+//	public void download() {
+//		
+//		new AsyncTask_DownloadAlbum().execute(this);
+//
+//	}
 
 }

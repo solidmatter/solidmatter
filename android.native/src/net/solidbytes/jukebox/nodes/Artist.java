@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.solidbytes.jukebox.Activity_Album_Details;
-import net.solidbytes.jukebox.App;
 import net.solidbytes.jukebox.R;
-import net.solidbytes.jukebox.connection.sbConnection;
+import net.solidbytes.tools.App;
+import net.solidbytes.tools.connection.sbConnection;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

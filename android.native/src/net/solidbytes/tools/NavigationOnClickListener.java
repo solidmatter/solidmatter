@@ -1,8 +1,8 @@
 package net.solidbytes.tools;
 
 import net.solidbytes.jukebox.R;
-import net.solidbytes.jukebox.connection.sbConnection;
 import net.solidbytes.jukebox.nodes.sbNode;
+import net.solidbytes.tools.connection.sbConnection;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;

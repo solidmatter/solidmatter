@@ -1,4 +1,4 @@
-package net.solidbytes.jukebox;
+package net.solidbytes.tools;
 
 import java.io.File;
 

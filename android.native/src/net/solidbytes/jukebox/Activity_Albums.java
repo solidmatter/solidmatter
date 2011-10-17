@@ -6,16 +6,17 @@ import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import net.solidbytes.jukebox.connection.sbConnection;
-import net.solidbytes.jukebox.connection.sbDOMResponse;
 import net.solidbytes.jukebox.nodes.Album;
 import net.solidbytes.jukebox.nodes.Artist;
 import net.solidbytes.jukebox.nodes.Jukebox;
 import net.solidbytes.jukebox.nodes.Track;
 import net.solidbytes.tools.SimpleMenuEntry;
+import net.solidbytes.tools.connection.sbConnection;
+import net.solidbytes.tools.connection.sbDOMResponse;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,7 +43,7 @@ public class Activity_Albums extends sbJukeboxListActivity {
 
 		super.onCreate(savedInstanceState);
 		
-		this.title.setText("explore Albums");
+		this.title.setText(R.string.labels_albums);
 		this.icon.setBackgroundResource(R.drawable.ic_header_albums);
 		
 		
@@ -88,9 +89,16 @@ public class Activity_Albums extends sbJukeboxListActivity {
 			lv.setOnItemClickListener(new OnItemClickListener() {
 
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					
+					ProgressDialog pdSpinner = new ProgressDialog(view.getContext(), ProgressDialog.STYLE_SPINNER);
+					pdSpinner.show();
+					
 					Intent myIntent = new Intent(view.getContext(), Activity_Albums_List.class);
 					myIntent.putExtra("show", lEntries.get(position).sSearch);
+					
 					startActivityForResult(myIntent, 0);
+					
+					//pdSpinner.dismiss();
 				}
 
 			});

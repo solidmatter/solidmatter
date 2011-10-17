@@ -3,8 +3,8 @@ package net.solidbytes.jukebox.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.solidbytes.jukebox.connection.sbConnection;
-import net.solidbytes.jukebox.connection.sbDOMResponse;
+import net.solidbytes.tools.connection.sbConnection;
+import net.solidbytes.tools.connection.sbDOMResponse;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
