@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="app_name">sbJukebox</string>
+    
+    <string name="labels_artists">Artists</string>
+    <string name="labels_albums">Albums</string>
+    <string name="labels_tags">Tags</string>
+    
+    <string name="option_search">Suche</string>
+    <string name="option_preferences">Einstellungen</string>
+    
+    <string name="prefs_cat_connection">Verbindung</string>
+    <string name="prefs_domain">Domäne</string>
+    <string name="prefs_username">Benutzername</string>
+    <string name="prefs_password">Passwort</string>
+    
+    <string name="prefs_cat_downloads">Downloads</string>
+    <string name="prefs_directory">Verzeichnis</string>
+    
+</resources>

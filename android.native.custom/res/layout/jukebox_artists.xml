@@ -1,0 +1,9 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:id="@+id/AlbumDetails"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<TextView android:layout_height="wrap_content" android:layout_width="match_parent" android:background="@drawable/headline_bg" android:text="Random Artists" android:drawableLeft="@drawable/ic_tab_artists_white" android:gravity="center_vertical" android:paddingLeft="10dp" android:drawablePadding="10dp"></TextView>
+	<ScrollView  android:id="@+id/ArtistListScroller" android:layout_height="fill_parent" android:layout_width="fill_parent">
+		<LinearLayout android:id="@+id/ArtistList" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+			<!-- ArtistList goes here -->
+		</LinearLayout>
+	</ScrollView>
+</LinearLayout>

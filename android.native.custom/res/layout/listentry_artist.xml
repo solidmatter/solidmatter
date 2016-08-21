@@ -1,0 +1,10 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal" android:layout_width="fill_parent"
+	android:layout_height="wrap_content" android:clickable="true">
+		
+	<TextView android:tag="ArtistName" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:paddingTop="5dip" android:paddingBottom="8dip"
+		android:paddingLeft="8dip" android:paddingRight="8dip" android:textColor="@color/text_default"/>
+
+</LinearLayout>
