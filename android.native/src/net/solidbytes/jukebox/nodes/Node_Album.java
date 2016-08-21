@@ -10,14 +10,15 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.solidbytes.jukebox.AsyncTask_DownloadAlbum;
 import net.solidbytes.jukebox.R;
+import net.solidbytes.solidmatter.sbConnection;
+import net.solidbytes.solidmatter.sbNode;
 import net.solidbytes.tools.App;
 import net.solidbytes.tools.Filesystem;
 import net.solidbytes.tools.Stopwatch;
 import net.solidbytes.tools.Stream;
-import net.solidbytes.tools.archive.Zip;
-import net.solidbytes.tools.connection.sbConnection;
-import net.solidbytes.tools.AsyncTask_DownloadAlbum;
+import net.solidbytes.tools.Zip;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -47,15 +48,15 @@ import android.widget.TextView;
  * @author ollo
  * 
  */
-public class Album extends sbNode {
+public class Node_Album extends sbNode {
 
 	public final static int	ROW				= 1;
 	public final static int	DETAILS			= 2;
 
-	List<Track>				lTracks			= new ArrayList<Track>();
+	List<Node_Track>				lTracks			= new ArrayList<Node_Track>();
 
 
-	public Album(Element eAlbum) {
+	public Node_Album(Element eAlbum) {
 
 		hmProperties.put("uuid", "");
 		hmProperties.put("name", "");
@@ -69,7 +70,11 @@ public class Album extends sbNode {
 		eNode = eAlbum;
 
 	}
-
+	
+	protected int getIconID() {
+		return R.drawable.ic_type_album;
+	}
+	
 	/**
 	 * @param iViewVariant
 	 * @return
@@ -112,12 +117,12 @@ public class Album extends sbNode {
 			this.attachCoverLoader(vCover1, 144);
 
 			TableLayout vTracks = (TableLayout) vDetails.findViewById(R.id.TrackList);
-			List<Track> lTracks = getTracks();
+			List<Node_Track> lTracks = getTracks();
 			for (int i = 0; i < lTracks.size(); i++) {
 				TableRow vTrack = (TableRow) App.inflate(R.layout.listentry_track_numbered, null);
 				TextView vTrackIndex = (TextView) vTrack.findViewWithTag("TrackIndex");
 				TextView vTrackTitle = (TextView) vTrack.findViewWithTag("TrackTitle");
-				Track nodeTrack = lTracks.get(i);
+				Node_Track nodeTrack = lTracks.get(i);
 				vTrackIndex.setText(nodeTrack.getProperty("info_index"));
 				vTrackTitle.setText(nodeTrack.getProperty("info_title"));
 				if (i % 2 == 1) {
@@ -129,17 +134,18 @@ public class Album extends sbNode {
 			}
 
 			return vDetails;
-
+			
+			default:
+				return super.getView(iViewVariant);
+			
 		}
-
-		return null;
 
 	}
 
 	/**
 	 * @return
 	 */
-	public List<Track> getTracks() {
+	public List<Node_Track> getTracks() {
 
 		NodeList nlTracks = super.getNodesByXPath("children[@mode='tracks']/sbnode");
 
@@ -147,7 +153,7 @@ public class Album extends sbNode {
 
 		for (int i = 0; i < nlTracks.getLength(); i++) {
 			Element eCurrent = (Element) nlTracks.item(i);
-			Track tCurrent = new Track(eCurrent);
+			Node_Track tCurrent = new Node_Track(eCurrent);
 			lTracks.add(tCurrent);
 			Log.d("sbJukebox", "found track: " + tCurrent.getProperty("label"));
 		}
@@ -223,6 +229,48 @@ public class Album extends sbNode {
 		thread.start();
 
 	}
+	
+	/**
+	 * @param iSize
+	 * @return
+	 */
+	public String getPlaylist() {
+
+		try {
+
+			InputStream is = null;
+
+			File dirCache = App.getExternalCacheFile("/playlists/");
+			dirCache.mkdirs();
+			File fileCache = new File(dirCache, hmProperties.get("uuid") + ".m3u");
+
+			if (!fileCache.exists()) {
+				
+				Log.d("sbJukebox", "saving new playlist under " + fileCache.getAbsolutePath());
+
+				is = sbConnection.getStream("/" + hmProperties.get("uuid") + "/details/getM3U/", null);
+				OutputStream os = new FileOutputStream(fileCache);
+				
+				Stream.transferCompleteStream(is, os);
+
+			}
+
+			Log.d("sbJukebox", "playlist URI is file://" + fileCache.getAbsolutePath());
+
+			return "file://" + fileCache.getAbsolutePath();
+			
+			// Bitmap img = BitmapFactory.decodeStream(is);
+			// return img;
+			
+		} catch (Exception e) {
+			
+			Log.e("sbJukebox", "Error retrieving album cover >> " + e.getMessage() + " // " + e.toString());
+			return null;
+			
+		}
+
+	}
+	
 	
 	/**
 	 * @param 

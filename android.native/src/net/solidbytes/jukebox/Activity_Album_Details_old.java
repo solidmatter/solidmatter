@@ -5,11 +5,11 @@ import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import net.solidbytes.jukebox.nodes.Album;
-import net.solidbytes.jukebox.nodes.Track;
+import net.solidbytes.jukebox.nodes.Node_Album;
+import net.solidbytes.jukebox.nodes.Node_Track;
+import net.solidbytes.solidmatter.sbConnection;
+import net.solidbytes.solidmatter.sbDOMResponse;
 import net.solidbytes.tools.SpinnerDialog;
-import net.solidbytes.tools.connection.sbConnection;
-import net.solidbytes.tools.connection.sbDOMResponse;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 public class Activity_Album_Details_old extends Activity {
 
-	protected Album nodeAlbum;
+	protected Node_Album nodeAlbum;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -55,8 +55,8 @@ public class Activity_Album_Details_old extends Activity {
 			sbDOMResponse domResponse = sbConnection.sendRequest("/" + sUUID);
 			NodeList nodes = domResponse.getElementsByXPath("//sbnode[@master='true']");
 			
-	        nodeAlbum = new Album((Element) nodes.item(0));
-	        setContentView(nodeAlbum.getView(Album.DETAILS));
+	        nodeAlbum = new Node_Album((Element) nodes.item(0));
+	        setContentView(nodeAlbum.getView(Node_Album.DETAILS));
 	        
 		} catch (Exception e) {
 			

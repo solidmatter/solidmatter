@@ -3,11 +3,11 @@ package net.solidbytes.jukebox;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.solidbytes.jukebox.nodes.Album;
-import net.solidbytes.jukebox.nodes.Artist;
-import net.solidbytes.jukebox.nodes.Jukebox;
-import net.solidbytes.tools.connection.sbConnection;
-import net.solidbytes.tools.connection.sbDOMResponse;
+import net.solidbytes.jukebox.nodes.Node_Album;
+import net.solidbytes.jukebox.nodes.Node_Artist;
+import net.solidbytes.jukebox.nodes.Node_Jukebox;
+import net.solidbytes.solidmatter.sbConnection;
+import net.solidbytes.solidmatter.sbDOMResponse;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -23,7 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class Activity_Artists_List extends sbJukeboxListActivity {
 	
-	List<Artist> lArtists = new ArrayList<Artist>();
+	List<Node_Artist> lArtists = new ArrayList<Node_Artist>();
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -43,10 +43,10 @@ public class Activity_Artists_List extends sbJukeboxListActivity {
 		try {
 			
 			if (sShow == "" || sShow == null) {
-				lArtists = Jukebox.getArtists(null);
+				lArtists = Node_Jukebox.getArtists(null);
 				this.title.setText(R.string.labels_random_artists);
 			} else {
-				lArtists = Jukebox.getArtists(sShow);
+				lArtists = Node_Jukebox.getArtists(sShow);
 				this.title.setText(R.string.labels_artists_beginning_with + sShow);
 			}
 			

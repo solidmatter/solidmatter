@@ -1,4 +1,4 @@
-package net.solidbytes.tools.connection;
+package net.solidbytes.solidmatter;
 
 import org.w3c.dom.Document;
 

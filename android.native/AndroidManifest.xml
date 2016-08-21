@@ -10,7 +10,7 @@
 	<uses-permission android:name="android.permission.DELETE_CACHE_FILES"></uses-permission>
 
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
-		<activity android:name=".Activity_sbJukebox" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar">
+		<activity android:name=".Activity_Jukebox" android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
@@ -28,6 +28,7 @@
 		<activity android:name=".Activity_Artists_List" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name=".Activity_Albums" android:theme="@android:style/Theme.NoTitleBar"></activity>
 		<activity android:name=".Activity_Artist_Details" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name=".Activity_Jukebox_Library_Search" android:theme="@android:style/Theme.NoTitleBar"></activity>
 	</application>
 
 </manifest>

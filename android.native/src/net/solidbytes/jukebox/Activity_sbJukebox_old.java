@@ -1,8 +1,8 @@
 package net.solidbytes.jukebox;
 
+import net.solidbytes.solidmatter.sbConnection;
 import net.solidbytes.tools.App;
 import net.solidbytes.tools.SpinnerDialog;
-import net.solidbytes.tools.connection.sbConnection;
 
 import android.app.Activity;
 import android.app.TabActivity;

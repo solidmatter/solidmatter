@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import net.solidbytes.jukebox.AsyncTask_DownloadAlbum;
+
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;

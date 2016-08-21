@@ -6,9 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
 
-import net.solidbytes.jukebox.nodes.Album;
-import net.solidbytes.tools.archive.Zip;
-import net.solidbytes.tools.connection.sbConnection;
+import net.solidbytes.jukebox.nodes.Node_Album;
+import net.solidbytes.solidmatter.sbConnection;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -28,7 +27,7 @@ public class AsyncTask_AlbumListLoader extends AsyncTask_SetListAdapter {
 	}
 
 	@Override
-	protected Long doInBackground(Album... aAlbums) {
+	protected Long doInBackground(Node_Album... aAlbums) {
 		
 		
 		

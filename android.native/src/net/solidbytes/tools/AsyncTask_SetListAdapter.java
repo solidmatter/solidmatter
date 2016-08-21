@@ -6,9 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
 
-import net.solidbytes.jukebox.nodes.Album;
-import net.solidbytes.tools.archive.Zip;
-import net.solidbytes.tools.connection.sbConnection;
+import net.solidbytes.jukebox.nodes.Node_Album;
+import net.solidbytes.solidmatter.sbConnection;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -18,7 +17,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class AsyncTask_SetListAdapter extends AsyncTask <Album, Void, Long> {
+public class AsyncTask_SetListAdapter extends AsyncTask <Node_Album, Void, Long> {
     
 	Context actCurrent;
 	ProgressDialog pdDownload;
@@ -35,7 +34,7 @@ public class AsyncTask_SetListAdapter extends AsyncTask <Album, Void, Long> {
 		pdDownload.show();
 	}
 
-	protected Long doInBackground(Album... aAlbums) {
+	protected Long doInBackground(Node_Album... aAlbums) {
 		
 		
 		

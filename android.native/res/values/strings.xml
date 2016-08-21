@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
+    
     <string name="app_name">sbJukebox</string>
     
     
@@ -32,7 +33,13 @@
 	<string name="labels_random_albums">Zufällige Alben</string>
 	<string name="labels_artists_beginning_with">Künstler beginnend mit</string>
 	<string name="labels_albums_beginning_with">Alben beginnend mit</string>
-		
-    
+	<string name="labels_search_for">Suche nach</string>
+	
+	<string name="action_search">Suchen</string>
+	
+    <string name="status_connecting">Verbinden&#8230;</string>
+    <string name="status_downloading">Download&#8230;</string>
+    <string name="status_extracting">Entpacken&#8230;</string>
+    <string name="status_percent_downloaded"> % heruntergeladen</string>
     
 </resources>

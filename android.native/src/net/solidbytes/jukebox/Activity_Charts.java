@@ -1,6 +1,6 @@
 package net.solidbytes.jukebox;
 
-import net.solidbytes.tools.connection.sbConnection;
+import net.solidbytes.solidmatter.sbConnection;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;

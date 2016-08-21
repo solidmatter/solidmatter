@@ -6,12 +6,12 @@ import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import net.solidbytes.jukebox.nodes.Album;
-import net.solidbytes.jukebox.nodes.Artist;
-import net.solidbytes.jukebox.nodes.Track;
+import net.solidbytes.jukebox.nodes.Node_Album;
+import net.solidbytes.jukebox.nodes.Node_Artist;
+import net.solidbytes.jukebox.nodes.Node_Track;
+import net.solidbytes.solidmatter.sbConnection;
+import net.solidbytes.solidmatter.sbDOMResponse;
 import net.solidbytes.tools.SpinnerDialog;
-import net.solidbytes.tools.connection.sbConnection;
-import net.solidbytes.tools.connection.sbDOMResponse;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -30,8 +30,8 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class Activity_Artist_Details extends sbJukeboxListActivity {
 
-	protected Artist nodeArtist;
-	List<Album>	lAlbums	= new ArrayList<Album>();
+	protected Node_Artist nodeArtist;
+	List<Node_Album>	lAlbums	= new ArrayList<Node_Album>();
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -55,7 +55,7 @@ public class Activity_Artist_Details extends sbJukeboxListActivity {
 			sbDOMResponse domResponse = sbConnection.sendRequest("/" + sUUID);
 			NodeList nodes = domResponse.getElementsByXPath("//sbnode[@master='true']");
 			
-			nodeArtist = new Artist((Element) nodes.item(0));
+			nodeArtist = new Node_Artist((Element) nodes.item(0));
 			lAlbums = nodeArtist.getAlbums();
 			
 			this.title.setText(nodeArtist.getProperty("label") + " - Alben");

@@ -6,13 +6,13 @@ import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import net.solidbytes.jukebox.nodes.Album;
-import net.solidbytes.jukebox.nodes.Artist;
-import net.solidbytes.jukebox.nodes.Jukebox;
-import net.solidbytes.jukebox.nodes.Track;
+import net.solidbytes.jukebox.nodes.Node_Album;
+import net.solidbytes.jukebox.nodes.Node_Artist;
+import net.solidbytes.jukebox.nodes.Node_Jukebox;
+import net.solidbytes.jukebox.nodes.Node_Track;
+import net.solidbytes.solidmatter.sbConnection;
+import net.solidbytes.solidmatter.sbDOMResponse;
 import net.solidbytes.tools.SimpleMenuEntry;
-import net.solidbytes.tools.connection.sbConnection;
-import net.solidbytes.tools.connection.sbDOMResponse;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -33,7 +34,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 
-public class Activity_Albums extends sbJukeboxListActivity {
+public class Activity_Albums extends sbJukeboxGridActivity {
 	
 	List<SimpleMenuEntry> lEntries = new ArrayList<SimpleMenuEntry>();
 	
@@ -46,8 +47,7 @@ public class Activity_Albums extends sbJukeboxListActivity {
 		this.title.setText(R.string.labels_albums);
 		this.icon.setBackgroundResource(R.drawable.ic_header_albums);
 		
-		
-		lEntries.add(new SimpleMenuEntry("Random", null));
+		lEntries.add(new SimpleMenuEntry("?", null));
 		lEntries.add(new SimpleMenuEntry("#", "0-9"));
 		lEntries.add(new SimpleMenuEntry("A", "A"));
 		lEntries.add(new SimpleMenuEntry("B", "B"));
@@ -81,7 +81,23 @@ public class Activity_Albums extends sbJukeboxListActivity {
 		
 		try {
 			
-			setListAdapter(new LA_SimpleMenu(this, this.lEntries));
+			GridView gridview = (GridView) findViewById(R.id.grid);
+			
+			gridview.setAdapter(new LA_GridMenu(this, lEntries));
+
+		    gridview.setOnItemClickListener(new OnItemClickListener() {
+		        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		        	
+		        	Intent myIntent = new Intent(view.getContext(), Activity_Albums_List.class);
+					myIntent.putExtra("show", lEntries.get(position).sSearch);
+					
+					startActivityForResult(myIntent, 0);
+					
+		        }
+		    });
+			
+			
+			/*setListAdapter(new LA_SimpleMenu(this, this.lEntries));
 			
 			ListView lv = getListView();
 			lv.setTextFilterEnabled(true);
@@ -90,8 +106,8 @@ public class Activity_Albums extends sbJukeboxListActivity {
 
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					
-					ProgressDialog pdSpinner = new ProgressDialog(view.getContext(), ProgressDialog.STYLE_SPINNER);
-					pdSpinner.show();
+//					ProgressDialog pdSpinner = new ProgressDialog(view.getContext(), ProgressDialog.STYLE_SPINNER);
+//					pdSpinner.show();
 					
 					Intent myIntent = new Intent(view.getContext(), Activity_Albums_List.class);
 					myIntent.putExtra("show", lEntries.get(position).sSearch);
@@ -101,7 +117,7 @@ public class Activity_Albums extends sbJukeboxListActivity {
 					//pdSpinner.dismiss();
 				}
 
-			});
+			});*/
 			
 		} catch (Exception e) {
 			

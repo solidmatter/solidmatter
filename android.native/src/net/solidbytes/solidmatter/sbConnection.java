@@ -1,4 +1,4 @@
-package net.solidbytes.tools.connection;
+package net.solidbytes.solidmatter;
 
 import net.solidbytes.jukebox.R;
 import net.solidbytes.tools.App;
@@ -72,8 +72,8 @@ public abstract class sbConnection {
 			Toast toast = Toast.makeText(App.Context, "Could not connect to server. \n" + sbConnection.sError, Toast.LENGTH_LONG);
 			toast.show();
 		} else {
-			Toast toast = Toast.makeText(App.Context, "Connected to " + App.Prefs.getString("server_domain", ""), Toast.LENGTH_SHORT);
-			toast.show();
+			//Toast toast = Toast.makeText(App.Context, "Connected to " + App.Prefs.getString("server_domain", ""), Toast.LENGTH_SHORT);
+			//toast.show();
 		}
 
 		return bSuccess;
@@ -85,6 +85,13 @@ public abstract class sbConnection {
 	 */
 	public static String getDomain() {
 		return sDomain;
+	}
+
+	/**
+	 * @return
+	 */
+	public static String getSessionID() {
+		return sSessionID;
 	}
 
 	/**
@@ -184,23 +191,26 @@ public abstract class sbConnection {
 			return (new sbDOMResponse(domResponse));
 
 		} catch (UnknownHostException e) {
-
+			
 			Logg.e("sbTools", e);
 			sbConnection.sError = "Error: unknown host (" + sDomain + ")";
+			disconnect();
 			return null;
-
+			
 		} catch (SocketTimeoutException e) {
-
+			
 			Logg.e("sbTools", e);
 			sbConnection.sError = "Error: server not responding (" + sDomain + ")";
+			disconnect();
 			return null;
-
+			
 		} catch (Exception e) {
-
+			
 			Logg.e("sbTools", e);
 			sbConnection.sError = "Error: " + e;
+			disconnect();
 			return null;
-
+			
 		} finally {
 
 			// if( os != null ) try { os.close(); } catch( IOException ex )
@@ -308,13 +318,26 @@ public abstract class sbConnection {
 	 * @return
 	 */
 	public static boolean isConnected() {
-
+		
 		if (sSessionID != null) {
 			return true;
 		} else {
 			return false;
 		}
-
+		
+	}
+	
+	/**
+	 * @return
+	 */
+	public static boolean disconnect() {
+		
+		sSessionID = null;
+		sCookie = "";
+		bConnected = false;
+		
+		return (true);
+		
 	}
 
 }

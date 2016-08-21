@@ -1,4 +1,4 @@
-package net.solidbytes.tools.archive;
+package net.solidbytes.tools;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -10,7 +10,6 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import net.solidbytes.tools.Arrays;
 
 import android.util.Log;
 

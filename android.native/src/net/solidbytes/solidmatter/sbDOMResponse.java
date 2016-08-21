@@ -1,4 +1,4 @@
-package net.solidbytes.tools.connection;
+package net.solidbytes.solidmatter;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;

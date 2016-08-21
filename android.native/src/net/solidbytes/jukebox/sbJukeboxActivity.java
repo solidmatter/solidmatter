@@ -1,7 +1,9 @@
 package net.solidbytes.jukebox;
 
+import net.solidbytes.solidmatter.sbConnection;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,7 +12,7 @@ public class sbJukeboxActivity extends Activity {
 
     protected TextView title;
     protected ImageView icon;
- 
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	
@@ -23,5 +25,11 @@ public class sbJukeboxActivity extends Activity {
         icon  = (ImageView) findViewById(R.id.header_icon);
         
     }
+    
+    @Override
+    public void onResume() {
+		super.onResume();
+		sbConnection.connect();
+	}
 	
 }

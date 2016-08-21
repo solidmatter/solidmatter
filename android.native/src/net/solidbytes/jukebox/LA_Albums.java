@@ -2,7 +2,7 @@ package net.solidbytes.jukebox;
 
 import java.util.List;
 
-import net.solidbytes.jukebox.nodes.Album;
+import net.solidbytes.jukebox.nodes.Node_Album;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class LA_Albums extends ArrayAdapter<Album> {
+public class LA_Albums extends ArrayAdapter<Node_Album> {
 
-	public LA_Albums(Activity activity, List<Album> lAlbums) {
+	public LA_Albums(Activity activity, List<Node_Album> lAlbums) {
 		super(activity, 0, lAlbums);
 	}
 	
@@ -38,8 +38,8 @@ public class LA_Albums extends ArrayAdapter<Album> {
 //		
 //		return rowView;
 		
-		Album nodeCurrent = getItem(position);
-		return (nodeCurrent.getView(Album.ROW));
+		Node_Album nodeCurrent = getItem(position);
+		return (nodeCurrent.getView(Node_Album.ROW));
 		
 		
 

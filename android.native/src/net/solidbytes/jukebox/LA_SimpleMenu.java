@@ -2,7 +2,7 @@ package net.solidbytes.jukebox;
 
 import java.util.List;
 
-import net.solidbytes.jukebox.nodes.Artist;
+import net.solidbytes.jukebox.nodes.Node_Artist;
 import net.solidbytes.tools.SimpleMenuEntry;
 import android.app.Activity;
 import android.view.LayoutInflater;

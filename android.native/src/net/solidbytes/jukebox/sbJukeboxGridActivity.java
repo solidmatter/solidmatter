@@ -9,7 +9,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class sbJukeboxListActivity extends ListActivity {
+public class sbJukeboxGridActivity extends Activity {
 
     protected TextView title;
     protected ImageView icon;
@@ -22,7 +22,7 @@ public class sbJukeboxListActivity extends ListActivity {
         
 //        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
  
-        setContentView(R.layout.custom_listactivity);
+        setContentView(R.layout.custom_gridactivity);
         
         
 //        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_window_title);
@@ -31,15 +31,11 @@ public class sbJukeboxListActivity extends ListActivity {
         icon  = (ImageView) findViewById(R.id.header_icon);
         
     }
-    
+	
     @Override
     public void onResume() {
 		super.onResume();
-		if (sbConnection.connect(true)) {
-			Log.i("sbJukebox", "login to " + sbConnection.getDomain() + " successful");
-		} else {
-			Log.i("sbJukebox", "login failed: " + sbConnection.sError);
-		}
+		sbConnection.connect();
 	}
-	
+    
 }

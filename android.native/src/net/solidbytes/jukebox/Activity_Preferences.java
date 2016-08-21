@@ -40,7 +40,6 @@ public class Activity_Preferences extends PreferenceActivity {
 		
 		
 		
-		
 		Preference myPref = findPreference("clear_cache");
 		myPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
@@ -66,10 +65,17 @@ public class Activity_Preferences extends PreferenceActivity {
 	
 	protected void updateInfos() {
 		
-		Preference myPref = findPreference("clear_cache");
+		// show cache size
+		Preference prefCache = findPreference("clear_cache");
 		long lCacheSize = Filesystem.getFileSize(App.getExternalCacheDir());
 		Log.d("sbJukebox", "cache size is " + lCacheSize + " bytes");
-		myPref.setSummary(Filesystem.formatFilesize(lCacheSize));
+		prefCache.setSummary(Filesystem.formatFilesize(lCacheSize));
+		
+		// show download directory
+		Preference prefDir = findPreference("downloads_directory");
+		String sDownloadDir = App.Prefs.getString("downloads_directory", "not specified");
+		Log.d("sbJukebox", "download directory is " + sDownloadDir);
+		prefDir.setSummary(sDownloadDir);
 		
 	}
 	

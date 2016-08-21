@@ -17,18 +17,19 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import net.solidbytes.jukebox.nodes.Album;
-import net.solidbytes.jukebox.nodes.Jukebox;
-import net.solidbytes.jukebox.nodes.sbNode;
-import net.solidbytes.tools.AsyncTask_DownloadAlbum;
-import net.solidbytes.tools.connection.sbConnection;
-import net.solidbytes.tools.connection.sbDOMResponse;
+import net.solidbytes.jukebox.nodes.Node_Album;
+import net.solidbytes.jukebox.nodes.Node_Jukebox;
+import net.solidbytes.solidmatter.sbConnection;
+import net.solidbytes.solidmatter.sbDOMResponse;
+import net.solidbytes.solidmatter.sbNode;
+import net.solidbytes.tools.App;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -44,7 +45,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class Activity_Albums_List extends sbJukeboxListActivity {
 
-	List<Album>	lAlbums	= new ArrayList<Album>();
+	List<Node_Album>	lAlbums	= new ArrayList<Node_Album>();
 
 	/** Called when the activity is first created. */
 	@Override
@@ -54,6 +55,15 @@ public class Activity_Albums_List extends sbJukeboxListActivity {
 
 		this.icon.setBackgroundResource(R.drawable.ic_header_albums);
 		
+		
+
+	}
+
+	@Override 
+	protected void onStart() {
+		
+		super.onStart();
+		
 		String sShow = "";
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -62,13 +72,19 @@ public class Activity_Albums_List extends sbJukeboxListActivity {
 
 		try {
 			
+//			ProgressDialog pdSpinner = new ProgressDialog(getApplicationContext());
+//			pdSpinner.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//			pdSpinner.show();
+			
 			if (sShow == "" || sShow == null) {
-				lAlbums = Jukebox.getAlbums(null);
+				lAlbums = Node_Jukebox.getAlbums(null);
 				this.title.setText(R.string.labels_random_albums);
 			} else {
-				lAlbums = Jukebox.getAlbums(sShow);
+				lAlbums = Node_Jukebox.getAlbums(sShow);
 				this.title.setText(R.string.labels_albums_beginning_with + sShow);
 			}
+			
+//			pdSpinner.dismiss();
 			
 //			if (lAlbums.isEmpty()) {
 //				setContentView(R.layout.no_content);
@@ -120,9 +136,10 @@ public class Activity_Albums_List extends sbJukeboxListActivity {
 			// throw new RuntimeException(e);
 
 		}
-
-	}
-
+		
+	};
+	
+	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 
@@ -134,6 +151,7 @@ public class Activity_Albums_List extends sbJukeboxListActivity {
 
 		menu.setHeaderTitle(nodeAlbum.getProperty("label"));
 		menu.add(0, R.id.download, 0, "Download");
+		menu.add(0, R.id.play, 0, "Play");
 
 	}
 
@@ -142,12 +160,22 @@ public class Activity_Albums_List extends sbJukeboxListActivity {
 		
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		
-		Album nodeAlbum = (Album) info.targetView.getTag(R.id.sbNode);
+		Node_Album nodeAlbum = (Node_Album) info.targetView.getTag(R.id.sbNode);
 		
 		switch (item.getItemId()) {
 		case R.id.download:
 			new AsyncTask_DownloadAlbum((Activity) this).execute(nodeAlbum);
 			//nodeAlbum.download();
+			return true;
+		case R.id.play:
+//			String sURL = "http://" + sbConnection.getDomain() + "/" + nodeAlbum.getProperty("uuid") + "/details/getM3U/playlist.m3u/?sid=" + sbConnection.getSessionID();
+//			Intent i = new Intent(android.content.Intent.ACTION_VIEW);
+//			i.setDataAndType(Uri.parse(sURL), "*/*");
+//			App.Context.startActivity(i);
+			String sURI = nodeAlbum.getPlaylist();
+			Intent i = new Intent(android.content.Intent.ACTION_VIEW);
+			i.setDataAndType(Uri.parse(sURI), "audio/x-mpegurl");
+			App.Context.startActivity(i);
 			return true;
 		default:
 			return super.onContextItemSelected(item);
