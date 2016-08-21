@@ -122,7 +122,7 @@ class guestbook_show_entries extends Action {
 		$tContent->Embed('TITLE_NEWENTRY', gls('GUESTBOOK_TITLE_NEWENTRY'), HTML);
 		$tContent->Embed('URL_NEWENTRY', 'index.php?module=guestbook&action=new_entry', HTML);
 		$tContent->Embed('PAGINATION', $aPagination['html']);
-		$tContent->Embed('ENTRIES', &$tEntry);
+		#PHP7 has to be changed -> $tContent->Embed('ENTRIES', &$tEntry);
 		
 		return ($tContent);
 	}

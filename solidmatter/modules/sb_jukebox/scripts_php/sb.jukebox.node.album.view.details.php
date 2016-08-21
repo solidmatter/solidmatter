@@ -93,6 +93,7 @@ class sbView_jukebox_album_details extends sbJukeboxView {
 			case 'getCover':
 				import('sbJukebox:sb.jukebox.tools');
 				JukeboxTools::sendCover($this->nodeSubject);
+				exit();
 				break;
 			
 			case 'buildQuilt':

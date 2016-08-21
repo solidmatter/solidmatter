@@ -114,6 +114,107 @@
 			</tbody>
 		</table>
 		
+		<xsl:choose>
+			<xsl:when test="$content/sk_concerts">
+				<div class="th_songkick_outer" title="{$locale/sbJukebox/labels/artist_is_linked_to_songkick}"><div class="th_songkick_inner" id="songkick">
+					<span class="type concerts">
+						<xsl:value-of select="$locale/sbJukebox/labels/concerts" />
+					</span>
+				</div></div>
+			</xsl:when>
+			<xsl:when test="$content/sk_artists">
+				<div class="th">
+					<span class="type concerts">
+						<xsl:value-of select="$locale/sbJukebox/labels/concerts" />
+						 (<xsl:value-of select="$locale/sbJukebox/labels/please_choose_artist" />)
+					</span>
+				</div>
+			</xsl:when>
+			<xsl:when test="$content/sk_exception">
+				<div class="th">
+					<span class="type concerts">
+						<xsl:value-of select="$locale/sbJukebox/labels/concerts" />
+						 (ERROR!)
+					</span>
+				</div>
+			</xsl:when>
+			<xsl:otherwise>
+				
+			</xsl:otherwise>
+		</xsl:choose>
+		
+		<xsl:choose>
+			<xsl:when test="$content/sk_artists">
+				<table class="default" width="100%">
+					<tbody>
+					<xsl:for-each select="$content/sk_artists/resultsPage/results/artist">
+					<xsl:sort select="@displayName" />
+						<tr>
+							<xsl:call-template name="colorize" />
+							<td>
+								<xsl:choose>
+									<xsl:when test="@id">
+										<span style="float:right;"><xsl:value-of select="@onTourUntil" /></span>
+										<!-- <a href="http://api.songkick.com/api/3.0/artists/{@id}/calendar.xml?apikey=Y3UXq8R3WcUUbeWZ"><xsl:value-of select="@displayName" /></a> -->
+										<!-- <a href="http://www.songkick.com/artists/{@id}"><xsl:value-of select="@displayName" /></a> -->
+										<a href="/{$master/@uuid}/concerts/linkToSongkick?songkick_id={@id}"><xsl:value-of select="@displayName" /></a>
+									</xsl:when>
+									<xsl:otherwise>
+										<!-- <a href="/{$master/@uuid}/concerts/linkToSongkick?songkick_id={@id}"><xsl:value-of select="@displayName" /></a> -->
+										<xsl:value-of select="@displayName" />
+									</xsl:otherwise>
+								</xsl:choose>
+							</td>
+						</tr>
+					</xsl:for-each>
+					</tbody>
+				</table>
+			</xsl:when>
+			<xsl:when test="$content/sk_concerts">
+				<table class="default" width="100%">
+					<tbody>
+					<xsl:for-each select="$content/sk_concerts/resultsPage/results/event">
+					<xsl:sort select="start/@date" />
+					<xsl:sort select="@displayName" />
+						<tr>
+							<xsl:call-template name="colorize" />
+							<td>
+								<!-- <xsl:value-of select="@displayName" /> -->
+								<xsl:choose>
+									<xsl:when test="@type = 'Concert'">
+										<a href="{@uri}" title="{@displayName}" target="_blank"><xsl:value-of select="venue/@displayName" target="_blank" /></a>
+									</xsl:when>
+									<xsl:when test="@type = 'Festival'">
+										<a href="{@uri}" title="{@displayName}" target="_blank"><xsl:value-of select="@displayName" target="_blank" /> (<xsl:value-of select="venue/@displayName" target="_blank" />)</a>
+									</xsl:when>
+									<xsl:otherwise>
+										??? UNKNOWN TYPE ???
+									</xsl:otherwise>
+								</xsl:choose>
+							</td>
+							<td>
+								<xsl:value-of select="php:functionString('datetime_convert', string(start/@date), string('Y-m-d'), string($locale/sbSystem/date/middle))" />
+								<xsl:if test="end/@date and start/@date != end/@date">
+									 - <xsl:value-of select="php:functionString('datetime_convert', string(end/@date), string('Y-m-d'), string($locale/sbSystem/date/middle))" />							
+								</xsl:if>
+							</td>
+							<td>
+								<xsl:value-of select="venue/metroArea/@displayName" />, <xsl:value-of select="venue/metroArea/country/@displayName" />
+							</td>
+							<td>
+								<xsl:value-of select="@onTourUntil" />
+							</td>
+						</tr>
+					</xsl:for-each>
+					</tbody>
+				</table>
+			</xsl:when>
+			<xsl:otherwise>
+				<!--<tr><td><xsl:value-of select="$locale/sbSystem/texts/no_relations" /></td></tr>-->
+			</xsl:otherwise>
+		</xsl:choose>
+			
+		
 		<xsl:call-template name="render_relationlist" />
 		
 			

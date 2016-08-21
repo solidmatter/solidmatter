@@ -353,6 +353,20 @@ div.th {
 	font-family: Trebuchet MS, Arial, Helvetica, Sans-Serif;
 }
 
+div.th_songkick_inner {
+	padding: 10px 5px;
+	font-weight: normal;
+	text-align: left;
+	vertical-align: middle;
+	font-size: 14px;
+	font-family: Trebuchet MS, Arial, Helvetica, Sans-Serif;
+	background: url(../images/concerts_by_songkick.png) no-repeat center right;
+}
+div.th_songkick_outer {
+	padding: 5px 10px;
+	background: #282828 url(../images/headline_bg.png) repeat-x top center;
+}
+
 div.tags {
 	background-color: #141414;
 	padding: 6px;
@@ -515,7 +529,7 @@ div.menufooter_info {
 }
 
 *.icononly {
-	padding: 0;
+	padding: 1px 0 0 0;
 }
 *.icononly img {
 	vertical-align: middle;
@@ -572,6 +586,9 @@ div.menufooter_info {
 }
 *.comment {
 	background-image: url(../icons/type_comment.png);
+}
+*.concerts {
+	background-image: url(../icons/type_concert.png);
 }
 *.ear {
 	background-image: url(../icons/ear_hover.png);

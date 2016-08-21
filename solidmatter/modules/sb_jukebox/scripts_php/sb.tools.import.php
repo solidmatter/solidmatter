@@ -691,8 +691,8 @@ class JukeboxToolkit {
 		}
 		
 		// set genres
-		if (isset($aSource['content_type'][0]) && $aSource['content_type'][0] != '') {
-			$sGenres = iconv($oGetID3->encoding, 'UTF-8', $aSource['content_type'][0]);
+		if (isset($aSource['genre'][0]) && $aSource['genre'][0] != '') {
+			$sGenres = iconv($oGetID3->encoding, 'UTF-8', $aSource['genre'][0]);
 			if (substr_count($sGenres, '/')) {
 				$aGenres = explode('/', $sGenres);
 			} else {

@@ -10,6 +10,8 @@
 
 import('sbJukebox:sb.pdo.queries');
 
+class SongkickException extends sbException { }
+
 //------------------------------------------------------------------------------
 /**
 */

@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 import('sbJukebox:sb.jukebox.node');
+import('sbJukebox:sb.jukebox.tools');
 
 //------------------------------------------------------------------------------
 /**
@@ -69,7 +70,50 @@ class sbNode_jukebox_artist extends sbJukeboxNode {
 		}
 		
 		$this->storeNodeList($this->niTracksOnDifferentAlbums, TRUE, 'tracks');
-				
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	*
+	* @param
+	* @return
+	*/
+	public function getSongkickArtistInfo() {
+		return(JukeboxTools::getSongkickArtistInfo($this->getProperty('label')));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	*
+	* @param
+	* @return
+	*/
+	public function getSongkickConcertInfo() {
+		return(JukeboxTools::getSongkickConcertInfo($this->getProperty('songkick_id')));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function getSongkickExactArtistMatch() {
+		
+		$domSKResponse = $this->getSongkickArtistInfo();
+		$xpArtists = new DOMXpath($domSKResponse);
+		$aArtists = $xpArtists->query("//results/artist");
+		
+		if (!is_null($aArtists)) {
+			foreach ($aArtists as $eArtist) {
+				if ($eArtist->getAttribute('displayName') == $this->getProperty('label')) {
+					return ($eArtist->getAttribute('id'));
+				}
+			}
+		}
+		
+		return (FALSE);
 	}
 	
 }

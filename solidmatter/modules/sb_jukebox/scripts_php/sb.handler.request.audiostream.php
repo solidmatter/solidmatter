@@ -14,6 +14,9 @@ import('sbJukebox:sb.jukebox.tools');
 
 //------------------------------------------------------------------------------
 /**
+* 
+* 
+*
 */
 class JBAudioStreamHandler extends TokenBasedHandler {
 	
@@ -25,8 +28,6 @@ class JBAudioStreamHandler extends TokenBasedHandler {
 	* Request URI Format:
 	* http://<site>/play/<nodeid>/<tokenid>
 	* 
-	* @param 
-	* @return 
 	*/
 	public function fulfilRequest() {
 		
@@ -45,9 +46,8 @@ class JBAudioStreamHandler extends TokenBasedHandler {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Send the MP3's data depending on the request headers, directly reading from disk.
+	* @return nothing, only passthrough the data and exit
 	*/
 	protected function playTrack() {
 		
@@ -57,15 +57,14 @@ class JBAudioStreamHandler extends TokenBasedHandler {
 		$sSongTitle = $this->nodeTrack->getProperty('label');
 		$iFilesize = filesize($sFilename);
 		
-		// RIPPED FROM AMPACHE
+		// RIPPED FROM AMPACHE - modified to fit solidMatter/sbJukebox logic
 		$startArray = sscanf($_REQUEST->getServerValue('HTTP_RANGE'), 'bytes=%d-');
 		$start = $startArray[0];
 		
 		DEBUG('Play Track: SessionID = '.sbSession::getID(), DEBUG::SESSION);
 		
-		// Send file, possible at a byte offset
+		// open file (possibly at a byte offset) and handle errors
 		$hMP3 = fopen($sFilename, 'rb');
-		
 		if (!$hMP3) {
 			System::logEvent(System::ERROR, 'sbJukebox', 'FILE_INACCESSIBLE', $sFilename, $this->nodeTrack->getProperty('jcr:uuid'));
 			$this->fail('file inaccessible', 500);
@@ -75,14 +74,19 @@ class JBAudioStreamHandler extends TokenBasedHandler {
 			$this->fail('file inaccessible', 500);
 		}
 		
+		// update jukebox and token data
 		$this->setNowPlaying();
 		$this->refreshToken();
 		sbSession::close();
 		
-		// Prevent the script from timing out
+		// prevent the script from timing out
 		set_time_limit(0);
+		
+		// send unconditional headers
 		header('Content-type: audio/mpeg');
 		header("Accept-Ranges: bytes" );
+		
+		// send correct headers depending on whether we are playing from the beginning or not
 		if ($start) {
 			fseek($hMP3, $start);
 			$range = $start ."-". $iFilesize . "/" . $iFilesize;
@@ -96,21 +100,22 @@ class JBAudioStreamHandler extends TokenBasedHandler {
 			header('Content-Disposition: attachment; filename='.$this->nodeTrack->getProperty('info_filename'));
 		}
 		
-		// fpassthru() causes problems with output buffering and/or buggy php versions
+		// Note: fpassthru() causes problems with output buffering and/or buggy php versions
 		//fpassthru($hMP3);
+		// Note: this is the alternative to fpassthru()
 		while (!feof($hMP3)) {
 			$buf = fread($hMP3, 4096);
 			echo $buf;
 			ob_flush();
 		}
 		
+		exit();
+		
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Update the jukebox info on the currently played tracks.
 	*/
 	protected function setNowPlaying() {
 		$stmtSet = $this->crSession->prepareKnown('sbJukebox/nowPlaying/set');
@@ -122,9 +127,7 @@ class JBAudioStreamHandler extends TokenBasedHandler {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Update the jukebox info on the recently played tracks.
 	*/
 	protected function setHistory() {
 		

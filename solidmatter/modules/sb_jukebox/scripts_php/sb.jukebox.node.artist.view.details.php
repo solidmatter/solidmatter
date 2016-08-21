@@ -75,6 +75,20 @@ class sbView_jukebox_artist_details extends sbJukeboxView {
 				$stmtGetTitles->execute();
 				$_RESPONSE->addData($stmtGetTitles->fetchElements(), 'tracks');
 				
+				// add songkick concert info
+				$sArtistSongkickID = $this->nodeSubject->getProperty('songkick_id');
+				if (Registry::getValue('sb.jukebox.songkick.enabled')) {
+					try {
+						if ($sArtistSongkickID == NULL) {
+							$this->storeSongkickArtistInfo();
+						} else {
+							$this->storeSongkickConcertInfo();
+						}
+					} catch (SongkickException $e) {
+						$_RESPONSE->addData($e->getMessage(), 'sk_exception');
+					}
+				}
+				
 				// save data in element
 				$this->nodeSubject->storeChildren();
 				break;
@@ -90,6 +104,35 @@ class sbView_jukebox_artist_details extends sbJukeboxView {
 		
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	*
+	* @param
+	* @return
+	*/
+	public function storeSongkickArtistInfo() {
+		if ($domResponse = $this->nodeSubject->getSongkickArtistInfo()) {
+			global $_RESPONSE;
+			$_RESPONSE->addData($domResponse, 'sk_artists');
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function storeSongkickConcertInfo() {
+		if ($domResponse = $this->nodeSubject->getSongkickConcertInfo()) {
+			global $_RESPONSE;
+			$_RESPONSE->addData($domResponse, 'sk_concerts');
+		}
+	}
+	
 }
+
+
+
 
 ?>

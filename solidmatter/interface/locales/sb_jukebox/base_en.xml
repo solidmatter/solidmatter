@@ -22,6 +22,7 @@
 		<view id="albums">Albums</view>
 		<view id="artists">Artists</view>
 		<view id="charts">Charts</view>
+		<view id="concerts">Concerts</view>
 		<view id="tags">Tags</view>
 		<view id="favorites">Favorites</view>
 		<view id="playlists">Playlists</view>
@@ -38,6 +39,9 @@
 		<config_islocked>Jukebox locked</config_islocked>
 		<config_relyonmp3year>Force years in MP3s</config_relyonmp3year>
 	</Jukebox>
+	<Artist>
+		<songkick_id>Songkick-ID</songkick_id>
+	</Artist>
 	<Album>
 		<info_artist>Artist</info_artist>
 		<info_cdsinset>CDs in set</info_cdsinset>
@@ -97,6 +101,10 @@
 		<albums_beginning_with>Albums beginning with</albums_beginning_with>
 		<artists_containing>Artists containing</artists_containing>
 		<albums_containing>Albums containing</albums_containing>
+		<concerts>Concerts</concerts>
+		<find_concerts>Find concerts</find_concerts>
+		<please_choose_artist>please choose an artist</please_choose_artist>
+		<artist_is_linked_to_songkick>Artist is linked to Songkick</artist_is_linked_to_songkick>
 		<pivot>Pivot</pivot>
 		<top_artists>Top Artists</top_artists>
 		<top_albums>Top Albums</top_albums>

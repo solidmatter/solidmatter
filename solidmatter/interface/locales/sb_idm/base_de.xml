@@ -15,6 +15,7 @@
 		<integrity>Integrität</integrity>
 		<availability>Verfügbarkeit</availability>
 		<implementation_type>Implementierungsart</implementation_type>
+		<data_personal>personenbezogene Daten</data_personal>
 	</labels>
 	
 	<nodetypes>

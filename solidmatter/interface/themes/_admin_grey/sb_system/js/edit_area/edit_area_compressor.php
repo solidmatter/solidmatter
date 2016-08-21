@@ -3,7 +3,7 @@
 	 *
 	 *	EditArea PHP compressor
 	 * 	Developped by Christophe Dolivet
-	 *	Released under LGPL and Apache licenses
+	 *	Released under LGPL, Apache and BSD licenses
 	 *	v1.1.3 (2007/01/18)	 
 	 *
 	******/
@@ -143,14 +143,34 @@
 			$loader= $this->get_content("edit_area_loader.js")."\n";
 			
 			// get the list of other files to load
-	    	$loader= preg_replace("/(this\.scripts_to_load= new Array)\(([^\)]*)\);/e"
+	    	$loader= preg_replace("/(t\.scripts_to_load=\s*)\[([^\]]*)\];/e"
 						, "\$this->replace_scripts('script_list', '\\1', '\\2')"
 						, $loader);
 		
-			$loader= preg_replace("/(this\.sub_scripts_to_load= new Array)\(([^\)]*)\);/e"
+			$loader= preg_replace("/(t\.sub_scripts_to_load=\s*)\[([^\]]*)\];/e"
 						, "\$this->replace_scripts('sub_script_list', '\\1', '\\2')"
 						, $loader);
 
+			// replace languages names
+			$reg_path= $this->path."reg_syntax/";
+			$a_displayName	= array();
+			if (($dir = @opendir($reg_path)) !== false)
+			{
+				while (($file = readdir($dir)) !== false)
+				{
+					if( $file !== "." && $file !== ".." && ( $pos = strpos( $file, '.js' ) ) !== false )
+					{
+						$jsContent	= $this->file_get_contents( $reg_path.$file );
+						if( preg_match( '@(\'|")DISPLAY_NAME\1\s*:\s*(\'|")(.*)\2@', $jsContent, $match ) )
+						{
+							$a_displayName[] = "'". substr( $file, 0, $pos ) ."':'". htmlspecialchars( $match[3], ENT_QUOTES ) ."'";
+						}
+					}
+				}
+				closedir($dir);
+			}
+			$loader	= str_replace( '/*syntax_display_name_AUTO-FILL-BY-COMPRESSOR*/', implode( ",", $a_displayName ), $loader );
+						
 			$this->datas= $loader;
 			$this->compress_javascript($this->datas);
 			
@@ -332,7 +352,7 @@
 				// add line break before "else" otherwise navigators can't manage to parse the file
 				$code= preg_replace('/(\b(else)\b)/', "\n$1", $code);
 				// remove unnecessary spaces
-				$code= preg_replace('/( |\t|\r)?(;|\{|\}|=|==|\-|\+|,|\(|\)|\|\||&\&|\:)( |\t|\r)+/', "$2", $code);
+				$code= preg_replace('/( |\t|\r)*(;|\{|\}|=|==|\-|\+|,|\(|\)|\|\||&\&|\:)( |\t|\r)*/', "$2", $code);
 			}
 		}
 		
@@ -372,7 +392,7 @@
 		function replace_scripts($var, $param1, $param2)
 		{
 			$this->$var=stripslashes($param2);
-	        return $param1."();";
+	        return $param1."[];";
 		}
 
 		/* for php version that have not thoses functions */

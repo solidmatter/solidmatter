@@ -30,6 +30,7 @@
 	</xsl:template>
 	
 	<xsl:template match="sbnode">
+		<xsl:variable name="debug_node" select="." />
 		<table class="invisible">
 			<tr>
 				<td width="50%">
@@ -51,7 +52,7 @@
 								<ul>
 								<xsl:for-each select="children/*">
 									<li style="margin: 2px 0;">
-										<span class="type {@displaytype}"><xsl:value-of select="@label" /> (<xsl:value-of select="@nodetype" />)</span><br/>
+										<span class="type {@displaytype}"><a href="/{@uuid}/debug"><xsl:value-of select="@label" /></a> (<xsl:value-of select="@nodetype" />)</span><br/>
 									</li>
 								</xsl:for-each>
 								</ul>
@@ -61,7 +62,7 @@
 								<ul>
 								<xsl:for-each select="ancestors/*">
 									<li style="margin: 2px 0;">
-										<span class="type {@displaytype}"><xsl:value-of select="@label" /> (<xsl:value-of select="@nodetype" />)</span><br/>
+										<span class="type {@displaytype}"><a href="/{@uuid}/debug"><xsl:value-of select="@label" /></a> (<xsl:value-of select="@nodetype" />)</span><br/>
 									</li>
 								</xsl:for-each>
 								</ul>
@@ -71,7 +72,9 @@
 								<ul>
 								<xsl:for-each select="parents/*">
 									<li style="margin: 2px 0;">
-										<span class="type {@displaytype}"><xsl:value-of select="@label" /> (<xsl:value-of select="@nodetype" />)</span><br/>
+										<span class="type {@displaytype}"><a href="/{@uuid}/debug"><xsl:value-of select="@label" /></a> (<xsl:value-of select="@nodetype" />)</span>
+										<xsl:if test="@uuid = $debug_node/@parent and $debug_node/@primary = 'TRUE'"> PRIMARY</xsl:if>
+										<br/>
 									</li>
 								</xsl:for-each>
 								</ul>

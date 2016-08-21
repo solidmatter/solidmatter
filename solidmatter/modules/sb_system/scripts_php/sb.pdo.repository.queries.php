@@ -364,7 +364,8 @@ $_QUERIES['sbCR/node/getPrimaryParent'] = '
 		AND		b_primary = \'TRUE\'
 ';
 $_QUERIES['sbCR/node/getParents/all'] = '
-	SELECT		fk_parent
+	SELECT		fk_parent,
+				b_primary
 	FROM		{TABLE_HIERARCHY}
 	WHERE		fk_child = :child_uuid
 ';

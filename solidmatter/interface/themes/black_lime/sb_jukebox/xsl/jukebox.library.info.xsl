@@ -252,7 +252,7 @@
 						<tr>
 							<xsl:call-template name="colorize" />
 							<td width="150">
-								<xsl:value-of select="php:functionString('datetime_mysql2local', string(@created), string($locale/sbSystem/formats/date_short))" />
+								<xsl:value-of select="php:functionString('datetime_convert', string(@created), string('Y-m-d G:i:s'), string($locale/sbSystem/date/middle))" />
 							</td>
 							<td>
 								<a href="javascript:toggle('news_{@uuid}');"><xsl:value-of select="@label" /></a>
@@ -311,7 +311,7 @@
 								<a href="/{@item_uuid}#comments"><xsl:value-of select="@item_label" /></a>
 							</td>
 							<td width="1%" style="white-space:pre;">
-								<xsl:value-of select="php:functionString('datetime_mysql2local', string(@created), string($locale/sbSystem/formats/datetime_short))" />
+								<xsl:value-of select="php:functionString('datetime_convert', string(@created), string('Y-m-d H:i:s'), string($locale/sbSystem/datetime/middle))" />
 							</td>
 						</tr>
 					</xsl:for-each>

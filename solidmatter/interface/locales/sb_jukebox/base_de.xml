@@ -22,6 +22,7 @@
 		<view id="albums">Alben</view>
 		<view id="artists">Künstler</view>
 		<view id="charts">Charts</view>
+		<view id="concerts">Konzerte</view>
 		<view id="tags">Tags</view>
 		<view id="favorites">Favoriten</view>
 		<view id="playlists">Playlisten</view>
@@ -38,6 +39,9 @@
 		<config_islocked>Jukebox gesperrt</config_islocked>
 		<config_relyonmp3year>Jahr aus MP3s erzwingen</config_relyonmp3year>
 	</Jukebox>
+	<Artist>
+		<songkick_id>Songkick-ID</songkick_id>
+	</Artist>
 	<Album>
 		<info_artist>Künstler</info_artist>
 		<info_cdsinset>Anzahl CDs</info_cdsinset>
@@ -97,6 +101,10 @@
 		<albums_beginning_with>Alben beginnend mit</albums_beginning_with>
 		<artists_containing>Künstler mit</artists_containing>
 		<albums_containing>Alben mit</albums_containing>
+		<concerts>Konzerte</concerts>
+		<find_concerts>Konzerte finden</find_concerts>
+		<please_choose_artist>bitte den Künstler auswählen</please_choose_artist>
+		<artist_is_linked_to_songkick>Künstler ist mit Songkick verbunden</artist_is_linked_to_songkick>
 		<pivot>Blickwinkel</pivot>
 		<top_artists>Top Künstler</top_artists>
 		<top_albums>Top Alben</top_albums>

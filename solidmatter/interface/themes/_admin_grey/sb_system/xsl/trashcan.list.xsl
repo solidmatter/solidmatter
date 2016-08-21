@@ -54,7 +54,7 @@
 				<tr>
 					<!--<th></th>-->
 					<th><xsl:value-of select="$locale/sbSystem/labels/name" /></th>
-					<th><xsl:value-of select="$locale/sbSystem/labels/type" /></th>
+					<th><xsl:value-of select="$locale/sbSystem/labels/deleted_from" /></th>
 					<th><xsl:value-of select="$locale/sbSystem/labels/created_at" /></th>
 					<th><xsl:value-of select="$locale/sbSystem/labels/modified_at" /></th>
 					<th><xsl:value-of select="$locale/sbSystem/labels/options" /></th>
@@ -71,8 +71,9 @@
 								<a href="/{@uuid}"><span class="type {@displaytype}"><xsl:value-of select="@label" /></span></a>
 							</td>
 							<td>
-								<xsl:variable name="type" select="@nodetype" />
-								<xsl:value-of select="$locale//nodetypes/type[@id=$type]" />
+								<!-- <xsl:variable name="type" select="@nodetype" />
+								<xsl:value-of select="$locale//nodetypes/type[@id=$type]" /> -->
+								<a href="/{@parent}"><span class="type {translate(@parent_nodetype,':','_')}"><xsl:value-of select="@parent_label" /></span></a>
 							</td>
 							<td>
 								<xsl:value-of select="@created" />

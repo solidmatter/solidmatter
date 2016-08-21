@@ -33,7 +33,7 @@ class sbDOMForm extends sbDOMDocument {
 	* array of additional attributes (name => value) to include in the generated DOM element
 	* @var array 
 	*/
-	private $aAttributes;
+	private $aAttributes = array(); #PHP7 changed to "private $aAttributes = array();" instead of "private $aAttributes;", otherwise will give a warning
 	
 	private $crSession = NULL;
 	

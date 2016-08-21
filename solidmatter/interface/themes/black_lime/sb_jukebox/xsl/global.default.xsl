@@ -206,11 +206,9 @@
 	
 	<xsl:template match="/response/metadata/stopwatch">
 		<span>
-			<xsl:attribute name="title">
-				LOAD:<xsl:value-of select="load" />ms | 
-				PHP:<xsl:value-of select="php" />ms |
-				PDO:<xsl:value-of select="pdo" />ms
-			</xsl:attribute>
+			<xsl:attribute name="title">LOAD:<xsl:value-of select="load" />ms
+PHP:<xsl:value-of select="php" />ms
+PDO:<xsl:value-of select="pdo" />ms</xsl:attribute>
 			<xsl:value-of select="execution_time" />ms | 
 			<a target="_blank">
 				<xsl:attribute name="href">

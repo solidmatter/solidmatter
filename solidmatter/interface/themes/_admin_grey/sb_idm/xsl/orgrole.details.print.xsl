@@ -454,7 +454,7 @@
 		<xsl:if test="children[@mode='gatherTechRoles']/sbnode and number($iterations_remaining) > 0">
 			<xsl:if test="$show_empty_techroles = 'true' or children[@mode='gatherTechRoles']/sbnode/children[@mode='gatherTechRoles']/sbnode">
 			<ul>
-			<xsl:for-each select="children[@mode='gatherTechRoles']/sbnode">
+			<xsl:for-each select="children[@mode='gatherTechRoles']/sbnode[@active='TRUE']">
 				<li>
 					<xsl:value-of select="@label" /> [<xsl:value-of select="@name" />]
 					<xsl:call-template name="render_techroles">

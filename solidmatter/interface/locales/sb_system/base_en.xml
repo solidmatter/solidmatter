@@ -3,6 +3,7 @@
 	
 	<lang>English</lang>
 	
+	<!-- TODO: make these obsolete, should be converted to use DateTime object/formats -->
 	<formats>
 		<decimal_separator>,</decimal_separator>
 		<decimal_point>.</decimal_point>
@@ -13,6 +14,16 @@
 		<date_middle>%d.%m.%Y</date_middle>
 		<date_short>%d.%m.%y</date_short>
 	</formats>
+	<date>
+		<short>d.m.y</short>
+		<middle>d.m.Y</middle>
+		<long>a, d. b Y</long>
+	</date>
+	<datetime>
+		<short>d.m.y, H:i:s</short>
+		<middle>d.m.Y, H:i:s</middle>
+		<long>a, d. b Y, H:i:s</long>
+	</datetime>
 	
 	<actions>
 		<new>New</new>
@@ -79,6 +90,7 @@
 		<deleted_by>Deleted by</deleted_by>
 		<login>Login</login>
 		<password>Password</password>
+		<password_new>Password</password_new>
 		<password_repeat>Repeat password</password_repeat>
 		<options>Options</options>
 		<image>Image</image>
@@ -114,10 +126,12 @@
 		<username>Username</username>
 		<group>Group</group>
 		<groups>Groups</groups>
+		<change_password>Change Password</change_password>
 		<constraints>Constraints</constraints>
 		<implementation>Implementation</implementation>
 		<questions>Questions</questions>
 		<selected_items>Selected items</selected_items>
+		<deleted_from>deleted from</deleted_from>
 		<upload_files>Upload files</upload_files>
 		<file>File</file>
 		<files>Files</files>
@@ -127,6 +141,7 @@
 		<width>Width</width>
 		<url>URL</url>
 		<preview>Preview</preview>
+		<priority>Priority</priority>
 		<search>
 			<title>Search</title>
 			<search_for>Search for</search_for>
@@ -285,6 +300,7 @@
 		<view id="system">System</view>
 		<view id="users">Users</view>
 		<view id="authorisations">Authorisations</view>
+		<view id="password">Password</view>
 		<view id="scripts">Scripts</view>
 		<view id="tests">Tests</view>
 		<view id="events">Events</view>

@@ -13,6 +13,16 @@
 		<date_middle>%d.%m.%Y</date_middle>
 		<date_short>%d.%m.%y</date_short>
 	</formats>
+	<date>
+		<short>d.m.y</short>
+		<middle>d.m.Y</middle>
+		<long>a, d. b Y</long>
+	</date>
+	<datetime>
+		<short>d.m.y, H:i:s</short>
+		<middle>d.m.Y, H:i:s</middle>
+		<long>a, d. b Y, H:i:s</long>
+	</datetime>
 	
 	<actions>
 		<new>Neu</new>
@@ -79,6 +89,7 @@
 		<deleted_by>Gelöscht von</deleted_by>
 		<login>Login</login>
 		<password>Passwort</password>
+		<password_new>neues Passwort</password_new>
 		<password_repeat>Passwort wiederholen</password_repeat>
 		<options>Optionen</options>
 		<image>Bild</image>
@@ -114,10 +125,12 @@
 		<username>Benutzername</username>
 		<group>Gruppe</group>
 		<groups>Gruppen</groups>
+		<change_password>Passwort ändern</change_password>
 		<constraints>Einschränkungen</constraints>
 		<implementation>Implementierung</implementation>
 		<questions>Fragen</questions>
 		<selected_items>Markierte</selected_items>
+		<deleted_from>gelöscht aus</deleted_from>
 		<upload_files>Dateien hochladen</upload_files>
 		<file>Datei</file>
 		<files>Dateien</files>
@@ -127,6 +140,7 @@
 		<width>Breite</width>
 		<url>URL</url>
 		<preview>Vorschau</preview>
+		<priority>Priorität</priority>
 		<search>
 			<title>Suche</title>
 			<search_for>Suchen nach</search_for>
@@ -285,6 +299,7 @@
 		<view id="system">System</view>
 		<view id="users">Benutzer</view>
 		<view id="authorisations">Berechtigungen</view>
+		<view id="password">Passwort</view>
 		<view id="scripts">Skripte</view>
 		<view id="tests">Tests</view>
 		<view id="events">Ereignisse</view>

@@ -16,6 +16,7 @@ class sbNode_idm_techrole extends sbNode {
 	protected $aOrgRoles = array();
 	protected $aPersons = array();
 	protected $aDuties = array();
+	protected $aUserassignableRoles = array();
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -40,6 +41,7 @@ class sbNode_idm_techrole extends sbNode {
 		$bIncludeOrgRoles = FALSE;
 		$bIncludePersons = FALSE;
 		$bIncludeUserRoles = FALSE;
+		$bIncludeUserassignableRoles = FALSE;
 		
 		switch ($sMode) {
 			case 'dsb':

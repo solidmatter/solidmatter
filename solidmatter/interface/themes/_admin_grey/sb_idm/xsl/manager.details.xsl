@@ -58,8 +58,8 @@
 				<tr><th class="th2" colspan="6" >Result</th></tr>
 				<tr>
 					<th width="33%"><xsl:value-of select="$locale/sbSystem/labels/name" /></th>
-					<th width="33%"></th>
-					<th width="33%"></th>
+					<th width="33%">Infos</th>
+					<th width="33%">Questions</th>
 				</tr>
 			</thead>
 			<tbody>

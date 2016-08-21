@@ -4,7 +4,7 @@
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<nodetypes>
-		
+		<nodetype class="" sourcefile="" type="" /> <!-- type: PRIMARY/ABSTRACT -->
 	</nodetypes>
 	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -22,7 +22,7 @@
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<lifecycles>
-		
+		<transition nodetype="" sourcestate="" targetstate="" />
 	</lifecycles>
 	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

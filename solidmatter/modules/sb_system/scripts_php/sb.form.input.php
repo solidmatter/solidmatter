@@ -28,7 +28,7 @@ abstract class sbInput {
 	* array of additional attributes (name => value) to include in the generated DOM element
 	* @var array 
 	*/
-	protected $aAttributes;
+	protected $aAttributes = array(); #PHP7 changed to "private $aAttributes = array();" instead of "private $aAttributes;", otherwise will give a warning
 	
 	protected $aConfig = array();
 	protected $mValue = NULL;

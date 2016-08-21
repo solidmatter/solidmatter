@@ -13,19 +13,21 @@ import('sb.tools.filesystem');
 
 //------------------------------------------------------------------------------
 /**
+* Handles requests based on a session-token instead of a session-ID.
+* This allows external applications and third parties to use userspecific content without compromising the session itself.
+* The access domain is constrained via a service identifier and must be enforced in derived classes in method fulfilRequest().
 */
 class TokenBasedHandler extends RequestHandler {
 	
 	protected $crSession = NULL;
-	protected $aRequest = null;
+	protected $aRequest = NULL;
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* The handler method called from outside scope.
 	* Request URI Format to be implemented in derived classes:
 	* http://<site>/<service>/<subject>/<token>
-	* 
-	* @param 
+	* @param crSession the current Content Repository's session
 	* @return 
 	*/
 	public function handleRequest($crSession) {
@@ -45,7 +47,6 @@ class TokenBasedHandler extends RequestHandler {
 		$this->aRequest['service'] = $aStuff[1]; // fixed for the appropriate handler, store anyways
 		$this->aRequest['subject'] = $aStuff[2];
 		$this->aRequest['token'] = $aStuff[3];
-		
 		$sUserID = $this->getTokenOwner($this->aRequest['token']);
 		if (!$sUserID) {
 			$this->fail('token is invalid', 401);
@@ -58,9 +59,9 @@ class TokenBasedHandler extends RequestHandler {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Determines the token's user's UUID.
+	* @param sTokenID the token ID retrieved from the requested URL
+	* @return sUserUUID the UUID of the user who owns the token
 	*/
 	protected function getTokenOwner($sTokenID) {
 		$stmtClear = $this->crSession->prepareKnown('sbJukebox/tokens/clear');
@@ -77,9 +78,7 @@ class TokenBasedHandler extends RequestHandler {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Refreshes the timeout of the used token by setting the timeout start date/time to the moment of the method's calling.
 	*/
 	protected function refreshToken() {
 		$stmtRefresh = $this->crSession->prepareKnown('sbJukebox/tokens/refresh');

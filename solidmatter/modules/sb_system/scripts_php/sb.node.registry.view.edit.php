@@ -45,7 +45,18 @@ class sbView_registry_edit extends sbView {
 				
 				if ($formRegistry->checkInputs()) {
 					
-					$aData = $formRegistry->getValues();
+					/*$aData = $formRegistry->getValues();
+					if ($this->nodeSubject->isNodeType('sbSystem:User')) {
+						$sUserUUID = $this->nodeSubject->getProperty('jcr:uuid');
+					} else {
+						$sUserUUID = 'SYSTEM';
+					}
+					
+					//var_dumpp($aData);
+					foreach($aData as $sKey => $sValue) {
+						$sKey = str_replace('_', '.', $sKey);
+						Registry::setValue($sKey, $sValue, $sUserUUID);
+					}*/
 					
 					$stmtWriteData = $this->crSession->prepareKnown('sbSystem/registry/setValue');
 					$sKey = '';

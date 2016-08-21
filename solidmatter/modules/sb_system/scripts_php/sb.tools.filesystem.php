@@ -59,7 +59,8 @@ function flat_dirtree(&$sRoot, &$aDirs, $sSkipRelative = '', $sRelativePath = ''
 			}
 			if ($sRelativePath.'/'.$sFile != $sSkipRelative) {
 				$aDirs[$sValue] = $sValue;
-				flat_dirtree($sRoot, $aDirs, &$sSkipRelative, $sValue);
+				#PHP7 flat_dirtree($sRoot, $aDirs, &$sSkipRelative, $sValue);
+				flat_dirtree($sRoot, $aDirs, $sSkipRelative, $sValue);
 			}
 		}
 	}

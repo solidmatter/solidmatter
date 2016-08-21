@@ -42,6 +42,10 @@
 			<a href="/{$subjectid}/administration/clearLibrary">Bibliothek löschen</a>
 			<br/>
 			<br/>
+			<a href="/{$subjectid}/administration/findSongkickIDs" target="_blank">Songkick IDs finden</a><br/>
+			<a href="/{$subjectid}/administration/clearSongkickIDs" target="_blank">Songkick IDs löschen</a>
+			<br/>
+			<br/>
 			<a href="/{$subjectid}/administration/storeUGC" target="_blank">User Generated Content speichern</a><br/>
 			<a href="/{$subjectid}/administration/removeUGC" target="_blank">User Generated Content entfernen</a><br/>
 		</div>

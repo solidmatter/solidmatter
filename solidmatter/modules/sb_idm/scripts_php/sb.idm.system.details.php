@@ -42,7 +42,7 @@ class sbView_idm_system_details extends sbView {
 				
 				$sMode = $this->requireParam('mode');
 				
-				if ($sMode == 'usermain') {
+				if ($sMode == 'usermain' || $sMode == 'usermain2' || $sMode == 'rolespersons' || $sMode == 'dsb') {
 					
 					$this->gatherUserAssignableRoles($this->nodeSubject);
 					$this->gatherMainRoles($this->nodeSubject);
@@ -60,6 +60,18 @@ class sbView_idm_system_details extends sbView {
 					$_RESPONSE->addData($niUserAssignableRoles, 'userassignable_roles');
 					$_RESPONSE->addData($niMainRoles, 'main_roles');
 
+				} elseif ($sMode == 'mainsub') {
+					
+					$this->gatherMainRoles($this->nodeSubject);
+					
+					$niMainRoles = new sbCR_NodeIterator($this->aMainRoles);
+					
+					foreach ($niMainRoles as $nodeCurrent) {
+						$nodeCurrent->storeRelevantData('only_subnodes');
+					}
+					
+					$_RESPONSE->addData($niMainRoles, 'main_roles');	
+				
 				} elseif ($sMode == 'mainuser') {
 					
 					$this->gatherMainRoles($this->nodeSubject);
@@ -72,7 +84,7 @@ class sbView_idm_system_details extends sbView {
 					
 					$_RESPONSE->addData($niMainRoles, 'main_roles');	
 				
-				} elseif ($sMode == 'dsb') {
+				/* } elseif ($sMode == 'dsb') {
 					
 					$this->gatherUserAssignableRoles($this->nodeSubject);
 					
@@ -82,7 +94,7 @@ class sbView_idm_system_details extends sbView {
 						$nodeCurrent->storeRelevantData('dsb');
 					}
 					
-					$_RESPONSE->addData($niUserAssignableRoles, 'userassignable_roles');
+					$_RESPONSE->addData($niUserAssignableRoles, 'userassignable_roles'); */
 				
 				} elseif ($sMode == 'userall') {
 					

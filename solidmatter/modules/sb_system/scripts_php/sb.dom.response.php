@@ -20,6 +20,11 @@ class sbDOMResponse extends sbDOMDocument {
 	private $aNodeCache = array();
 	private $aModules = array();
 	
+	public static $aAccessiblePHPFunctions = array(
+		'datetime_mysql2local',
+		'datetime_convert',
+	);
+	
 	//--------------------------------------------------------------------------
 	// initialization
 	//--------------------------------------------------------------------------
@@ -642,10 +647,7 @@ class sbDOMResponse extends sbDOMDocument {
 				$procGenerator = new XSLTProcessor();
 				
 				// register PHP functions, note: support can be checked with hasExsltSupport()
-				$aAllowedFunctions = array(
-					'datetime_mysql2local'
-				);
-				$procGenerator->registerPHPFunctions($aAllowedFunctions);
+				$procGenerator->registerPHPFunctions(sbDOMResponse::$aAccessiblePHPFunctions);
 				
 				restore_error_handler();
 				

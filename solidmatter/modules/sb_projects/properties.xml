@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<properties>
+	<version>1.00.00</version>
+	<updateinfo>
+		<source>http://update.solidbytes.net/sb_projects/autoupdate.xml</source>
+	</updateinfo>
+	<about>
+		<author>Oliver Müller</author>
+		<homepage url="http://www.solidbytes.net">www.solidbytes.de</homepage>
+		<feedback url="mailto:feedback@solidbytes.net?subject=[sbProjects]%20Feedback:">feedback@solidbytes.net</feedback>
+		<support url="mailto:support@solidbytes.net?subject=[sbProjects]%20Support:">support@solidbytes.net</support>
+	</about>
+	<interfaces>
+		<self>
+			<api version="1.00.00" />
+			<locales version="1.00.00" />
+			<themes version="1.00.00" />
+		</self>
+		<requires>
+			<sb_system version="1.00.00" />
+		</requires>
+		<conflicts></conflicts>
+	</interfaces>
+	<history>
+		
+	</history>
+</properties>

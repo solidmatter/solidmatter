@@ -15,6 +15,7 @@
 		<integrity>Integrity</integrity>
 		<availability>Availability</availability>
 		<implementation_type>Implementation Type</implementation_type>
+		<data_personal>Personal Data</data_personal>
 	</labels>
 	
 	<nodetypes>

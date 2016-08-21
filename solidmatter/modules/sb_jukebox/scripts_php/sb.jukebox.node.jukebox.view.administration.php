@@ -104,6 +104,43 @@ class sbView_jukebox_jukebox_administration extends sbJukeboxView {
 				$cacheQuilts = CacheFactory::getInstance('misc');
 				$cacheQuilts->clear('JBQUILT:');
 				break;
+
+			case 'clearSongkickIDs':
+				$iNumDeletedIDs = 0;
+				$niArtists = $this->nodeSubject->getChildren('debug');
+				foreach ($niArtists as $nodeArtist) {
+					if ($nodeArtist->getProperty('songkick_id') != '') {
+						$nodeArtist->setProperty('songkick_id', NULL);
+						$nodeArtist->save();
+						$iNumDeletedIDs++;
+					}
+				}
+				echo $iNumDeletedIDs.' Songkick IDs deleted';
+				break;
+				
+			case 'findSongkickIDs':
+				ob_end_flush();
+				$iNumFoundIDs = 0;
+				$niArtists = $this->nodeSubject->getChildren('artists');
+				foreach ($niArtists as $nodeArtist) {
+					$bFoundExactMatch = FALSE;
+					if ($nodeArtist->getProperty('songkick_id') == NULL) {
+						$sSongkickID = $nodeArtist->getSongkickExactArtistMatch();
+						if ($sSongkickID !== FALSE) {
+							echo '<br/>'.$nodeArtist->getProperty('label').' --> '.$sSongkickID;
+							$nodeArtist->setProperty('songkick_id', $sSongkickID);
+							$nodeArtist->save();
+							$bFoundExactMatch = TRUE;
+							$iNumFoundIDs++;
+						} else {
+							echo '<br/>'.$nodeArtist->getProperty('label').' --> NOT FOUND';
+						}
+					} else {
+						echo '<br/>'.$nodeArtist->getProperty('label').' --> SKIPPED';
+					}
+				}
+				echo '<br/><br/>'.$iNumFoundIDs.' Songkick IDs found';
+				break;
 				
 			case 'storeUGC':
 				ini_set('max_execution_time', 6000000);

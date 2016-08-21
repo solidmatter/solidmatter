@@ -68,7 +68,8 @@ class JukeboxTools {
 		// check cache first
 		if ($iSize != NULL && Registry::getValue('sb.jukebox.cache.images.enabled')) {
 			$cacheImages = CacheFactory::getInstance('images');
-			if ($sImageData = $cacheImages->loadImage($nodeAlbum->getProperty('jcr:uuid'), $iSize, 'custom')) {
+			$sImageData = $cacheImages->loadImage($nodeAlbum->getProperty('jcr:uuid'), $iSize, 'custom');
+			if ($sImageData) {
 				$imgCurrent = new Image(Image::FROMSTRING, $sImageData);
 				$imgCurrent->output(JPG);
 			}
@@ -442,6 +443,95 @@ class JukeboxTools {
 		$stmtGetAllAlbums->closeCursor();
 		
 		return ($aAlbums);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	*
+	* @param
+	* @return
+	*/
+	public static function getSongkickArtistInfo($sArtistName) {
+	
+		global $_KEYS;
+	
+		if (!isset($_KEYS['songkick'])) { // do nothing if API key available
+			return;
+		}
+	
+		# array with the options to create stream context
+		$aOptions = array();
+		# compose HTTP request header
+		$sHeader = "User-Agent: sbJukebox\r\n";
+		$sHeader .= "Connection: close";
+		# define context options for HTTP request (use 'http' index, NOT 'httpS')
+		$aOptions['http']['method'] = 'GET';
+		$aOptions['http']['header'] = $sHeader;
+		# define context options for SSL transport
+		#$opts['ssl']['local_cert'] = $local_cert_path;
+		#$opts['ssl']['passphrase'] = $local_cert_passphrase;
+		# create stream context
+		$streamContext = stream_context_create($aOptions);
+		# POST request and get response
+	
+	
+		$sURL = 'http://api.songkick.com/api/3.0/search/artists.xml?query='.urlencode($sArtistName).'&apikey='.$_KEYS['songkick'];
+		$hResponse = fopen($sURL, 'r', FALSE, $streamContext);
+		$aMetadata = stream_get_meta_data($hResponse);
+		$sResponse = stream_get_contents($hResponse);
+	
+		if ($sResponse !== FALSE) {
+			$domResponse = new sbDOMDocument('1.0', 'UTF-8');
+			$domResponse->loadXML($sResponse);
+			return ($domResponse);
+		}
+		
+		throw new SongkickException('Could not get requested information from songkick');
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	*
+	* @param
+	* @return
+	*/
+	public static function getSongkickConcertInfo($sArtistID) {
+	
+		global $_KEYS;
+		
+		if (!isset($_KEYS['songkick'])) { // do nothing if API key available
+			return;
+		}
+		
+		# array with the options to create stream context
+		$aOptions = array();
+		# compose HTTP request header
+		$sHeader = "User-Agent: sbJukebox\r\n";
+		$sHeader .= "Connection: close";
+		# define context options for HTTP request (use 'http' index, NOT 'httpS')
+		$aOptions['http']['method'] = 'GET';
+		$aOptions['http']['header'] = $sHeader;
+		# define context options for SSL transport
+		#$opts['ssl']['local_cert'] = $local_cert_path;
+		#$opts['ssl']['passphrase'] = $local_cert_passphrase;
+		# create stream context
+		$streamContext = stream_context_create($aOptions);
+		# POST request and get response
+		
+		$sURL = 'http://api.songkick.com/api/3.0/artists/'.$sArtistID.'/calendar.xml?apikey='.$_KEYS['songkick'];
+		$hResponse = fopen($sURL, 'r', FALSE, $streamContext);
+		$aMetadata = stream_get_meta_data($hResponse);
+		$sResponse = stream_get_contents($hResponse);
+		
+		if ($sResponse !== FALSE) {
+			$domResponse = new sbDOMDocument('1.0', 'UTF-8');
+			$domResponse->loadXML($sResponse);
+			return ($domResponse);
+		}
+		
+		throw new SongkickException('Could not get requested information from songkick');
 		
 	}
 	

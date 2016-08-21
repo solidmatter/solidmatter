@@ -74,6 +74,27 @@
 		<debug enabled="false" verbose="false" />
 	</repository>
 	
+	<repository id="test" prefix="rep">
+		<db>
+			<host>localhost</host>
+			<port>3306</port>
+			<user>solidmatter</user>
+			<pass>solidmatter</pass>
+			<schema>solidmatter_test</schema>
+			<charset>utf8</charset>
+			<log enabled="true" verbose="false">
+				<file>_logs/log_database_test.txt</file>
+				<size>1024</size>
+			</log>
+		</db>
+		<workspaces>
+			<workspace id="test" prefix="sb">
+				<user name="system" pass="solidbytes" authorisation="full" />
+			</workspace>
+		</workspaces>
+		<debug enabled="false" verbose="false" />
+	</repository>
+	
 	<!-- FORMAT:
 	
 	<repository id="REPOSITORY_ID" prefix="REPDEF_TABLE_PREFIX">

@@ -42,6 +42,10 @@ class sbCR_Node {
 	*/
 	protected $elemSubject			= NULL;
 	/**
+	*
+	*/
+	//protected $sPrimaryParentUUID	= NULL;
+	/**
 	* 
 	*/
 	protected $aAppendedElements	= array();
@@ -118,6 +122,7 @@ class sbCR_Node {
 		'sbcr:bequeathRights'		=> 'bequeathrights',
 		'sbcr:bequeathLocalRights'	=> 'bequeathlocalrights',
 		'sbcr:uid'					=> 'uid',
+		'sbcr:primary'				=> 'primary',
 	);
 	
 	//--------------------------------------------------------------------------
@@ -1308,6 +1313,9 @@ class sbCR_Node {
 		$aParentUUIDs = array();
 		foreach ($stmtGetParents as $aRow) {
 			$aParentUUIDs[] = $aRow['fk_parent'];
+			/*if ($aRow['b_primary'] == 'TRUE') {
+				$this->sPrimaryParentUUID = $aRow['fk_parent'];
+			}*/
 		}
 		$stmtGetParents->closeCursor();
 		
@@ -1315,6 +1323,9 @@ class sbCR_Node {
 			foreach ($aParentUUIDs as $sParentUUID) {
 				$nodeCurrent = $this->crSession->getNode($sParentUUID);
 				$aParentNodes[] = $nodeCurrent;
+				/*if ($sPrimaryParentUUID != $this->sPrimaryParentUUID) {
+					$nodeCurrent->setProperty('sbcr:primary', 'FALSE');
+				}*/
 			}
 			$niParentNodes = new sbCR_NodeIterator($aParentNodes);
 		} else {

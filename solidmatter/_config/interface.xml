@@ -97,6 +97,7 @@
 	<!-- utilities -->
 	<site location="backend.localhost/phpinfo" type="script" handler="phpinfo.php" />
 	<site location="backend.localhost/apcinfo" type="script" handler="apcinfo.php" />
+	<site location="backend.localhost/opcinfo" type="script" handler="opcinfo.php" />
 	<site location="backend.localhost/test" type="script" handler="test.php" />
 	<site location="frontend.localhost/google" type="redirect" destination="http://www.google.com" />
 	

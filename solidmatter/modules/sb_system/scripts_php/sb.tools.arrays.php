@@ -28,7 +28,8 @@
 * @return multiple the sorted array or FALSE on error
 */
 function ivsort(&$aArray, $sKey, $bNaturalSort = FALSE, $bStrict = FALSE, $bCaseSensitive = FALSE) {
-	return (ivsort_slave(&$aArray, $sKey, $bNaturalSort, $bStrict, FALSE, $bCaseSensitive));
+	#PHP7 return (ivsort_slave(&$aArray, $sKey, $bNaturalSort, $bStrict, FALSE, $bCaseSensitive));
+	return (ivsort_slave($aArray, $sKey, $bNaturalSort, $bStrict, FALSE, $bCaseSensitive));
 }
 
 //------------------------------------------------------------------------------
@@ -43,7 +44,8 @@ function ivsort(&$aArray, $sKey, $bNaturalSort = FALSE, $bStrict = FALSE, $bCase
 * @return multiple the sorted array or FALSE on error
 */
 function ivrsort(&$aArray, $sKey, $bNaturalSort = FALSE, $bStrict = FALSE, $bCaseSensitive = FALSE) {
-	return (ivsort_slave(&$aArray, $sKey, $bNaturalSort, $bStrict, TRUE, $bCaseSensitive));
+	#PHP7 return (ivsort_slave(&$aArray, $sKey, $bNaturalSort, $bStrict, TRUE, $bCaseSensitive));
+	return (ivsort_slave($aArray, $sKey, $bNaturalSort, $bStrict, TRUE, $bCaseSensitive));
 }
 
 //------------------------------------------------------------------------------

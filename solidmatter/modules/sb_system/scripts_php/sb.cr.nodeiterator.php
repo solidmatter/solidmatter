@@ -39,7 +39,8 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 			throw new RepositoryException('no array of nodes');
 		} else {
 			// it might be that an associative array was given, this class needs a continuitive indexed array
-			unset($this->aNodeArray);
+			#PHP7 unset($this->aNodeArray);
+			$this->aNodeArray = array();
 			foreach ($aArrayOfNodes as $nodeCurrent) {
 				$this->aNodeArray[] = $nodeCurrent;
 			}

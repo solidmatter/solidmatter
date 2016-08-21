@@ -15,6 +15,21 @@ setlocale(LC_ALL, 'de_DE@euro', 'de_DE', 'de', 'ge');
 
 //------------------------------------------------------------------------------
 /**
+* 
+* @param 
+* @param 
+* @param 
+* @return 
+*/
+function datetime_convert($sInputString, $sFormatIn, $sFormatOut) {
+	
+	$dtSubject = DateTime::createFromFormat($sFormatIn, $sInputString);
+	return ($dtSubject->format($sFormatOut));
+
+}
+
+//------------------------------------------------------------------------------
+/**
 * Converts a MySQL-datetime value to a local format, dependent on the current locale.
 * There are always 7 formats defined: LONGDATETIME, MIDDLEDATETIME,
 * SHORTDATETIME, LONGDATE, MIDDLEDATE, SHORTDATE and TIME. E.g., for german

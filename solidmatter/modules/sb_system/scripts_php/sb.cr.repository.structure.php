@@ -483,7 +483,8 @@ class sbCR_RepositoryStructure {
 	public function getSupertypeNames($sNodeTypeName, $aSupertypes = array()) {
 		foreach ($this->aNodeTypeHierarchy[$sNodeTypeName] as $sSupertype) {
 			$aSupertypes[$sSupertype] = $sSupertype;
-			$this->getSupertypeNames($sSupertype, &$aSupertypes);
+			#PHP7 $this->getSupertypeNames($sSupertype, &$aSupertypes);
+			$this->getSupertypeNames($sSupertype, $aSupertypes);
 		}
 		return ($aSupertypes);
 	}
@@ -511,7 +512,8 @@ class sbCR_RepositoryStructure {
 	public function getSupertypes($sNodeTypeName, $aSupertypes = array()) {
 		foreach ($this->aNodeTypeHierarchy[$sNodeTypeName] as $sSupertype) {
 			$aSupertypes[$sSupertype] = $this->getNodeType($sSupertype);
-			$this->getSupertypes($sSupertype, &$aSupertypes);
+			#PHP7 $this->getSupertypes($sSupertype, &$aSupertypes);
+			$this->getSupertypes($sSupertype, $aSupertypes);
 		}
 		return ($aSupertypes);
 	}

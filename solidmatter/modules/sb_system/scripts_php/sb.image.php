@@ -279,7 +279,7 @@ class Image {
 				break;
 			case 'image/jpeg':
 				imageinterlace($this->resData, (int) $this->bProgressive);
-				imagejpeg($this->resData, '', $this->iQuality);
+				imagejpeg($this->resData, NULL, $this->iQuality);
 				break;
 			case 'image/png':
 				imageinterlace($this->resData, 1);

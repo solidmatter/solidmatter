@@ -54,6 +54,7 @@ function match_ipranges($sIPAddress, $sIPRanges) {
 //------------------------------------------------------------------------------
 /**
 * Salts a given plain text password with a dynamically generated salt to the form "sha1:<salt>:<saltedpassword>"
+* @todo: support for more secure hashing algorithms than sha1
 * @param string the password
 * @param string an additional salt component to be included in the generated salt
 * @return string the salted password
@@ -82,6 +83,7 @@ function salt_password($sPassword, $sPepper = NULL) {
 //------------------------------------------------------------------------------
 /**
 * Checks a given plain text password against a (stored) salted password
+* @todo: support for more secure hashing algorithms than sha1
 * @param string the password
 * @param string the stored password
 * @return boolean true if passwords match, false otherwise
