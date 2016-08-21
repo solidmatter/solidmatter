@@ -8,10 +8,12 @@
 */
 //------------------------------------------------------------------------------
 
+import('sbSystem:sb.handler.request');
+
 //------------------------------------------------------------------------------
 /**
 */
-class PortalHandler {
+class PortalHandler extends RequestHandler {
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -62,8 +64,8 @@ class PortalHandler {
 		
 		$nodeCurrent->callView($sView, $sAction);
 		$nodeCurrent->loadAncestors();
-		$nodeCurrent->storeSupportedAuthorisations();
-		$nodeCurrent->storeUserAuthorisations();
+		//$nodeCurrent->storeSupportedAuthorisations();
+		//$nodeCurrent->storeUserAuthorisations();
 		$nodeCurrent->setAttribute('master', 'true');
 		
 		if ($_REQUEST->getParam('sbCommand') != NULL) {

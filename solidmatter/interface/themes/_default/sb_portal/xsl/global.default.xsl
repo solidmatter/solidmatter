@@ -10,7 +10,7 @@
 	xmlns:php="http://php.net/xsl"
 	>
 	
-	<xsl:import href="../../sb_system/xsl/global.sbform.xsl" />
+	<xsl:import href="../../../_global/xsl/sbform.xsl" />
 	
 	<xsl:output 
 		method="html"
