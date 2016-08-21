@@ -1,0 +1,4 @@
+Important Note: 
+
+MySQL does not support ON UPDATE CASCADE / OM DELETE CASCADE in the same table
+...this means changes to the UUID will not update other rows e.g. in the tables for Nodes or Hierarchy, instead it acts as "... RESTRICT"
