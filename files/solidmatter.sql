@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `rep_nodetypes_authorisations` (
   `n_order` int(10) unsigned NOT NULL,
   `b_onlyfrontend` enum('TRUE','FALSE') NOT NULL DEFAULT 'FALSE',
   PRIMARY KEY (`fk_nodetype`,`s_authorisation`),
-  CONSTRAINT `rep_nodetypes_authorisations_ibfk_1` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `rep_nodetypes_authorisations_fk_nt` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle solidmatter.rep_nodetypes_authorisations: ~57 rows (ungefähr)
@@ -319,7 +319,7 @@ CREATE TABLE IF NOT EXISTS `rep_nodetypes_dimensions` (
   `s_dimension` varchar(50) NOT NULL,
   `n_steps` int(11) NOT NULL,
   PRIMARY KEY (`fk_nodetype`,`s_dimension`),
-  CONSTRAINT `rep_fk_ntd_nodetype` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `rep_nodetypes_dimensions_fk_nt` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle solidmatter.rep_nodetypes_dimensions: ~4 rows (ungefähr)
@@ -338,8 +338,8 @@ CREATE TABLE IF NOT EXISTS `rep_nodetypes_inheritance` (
   `fk_childnodetype` varchar(40) NOT NULL,
   PRIMARY KEY (`fk_parentnodetype`,`fk_childnodetype`),
   KEY `fk_nti_2` (`fk_childnodetype`),
-  CONSTRAINT `rep_nodetypes_inheritance_ibfk_1` FOREIGN KEY (`fk_childnodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `rep_nodetypes_inheritance_ibfk_2` FOREIGN KEY (`fk_parentnodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `rep_nodetypes_inheritance_fk_cnt` FOREIGN KEY (`fk_parentnodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `rep_nodetypes_inheritance_fk_pnt` FOREIGN KEY (`fk_childnodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle solidmatter.rep_nodetypes_inheritance: ~107 rows (ungefähr)
@@ -461,7 +461,7 @@ CREATE TABLE IF NOT EXISTS `rep_nodetypes_lifecycles` (
   `s_state` varchar(50) NOT NULL,
   `s_statetransition` varchar(50) NOT NULL,
   PRIMARY KEY (`fk_nodetype`,`s_state`,`s_statetransition`),
-  CONSTRAINT `rep_ntlc_nodetype` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `rep_nodetypes_lifecycles_fk_nt` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle solidmatter.rep_nodetypes_lifecycles: ~11 rows (ungefähr)
@@ -487,7 +487,7 @@ CREATE TABLE IF NOT EXISTS `rep_nodetypes_mimetypemapping` (
   `fk_nodetype` varchar(40) NOT NULL,
   PRIMARY KEY (`s_mimetype`),
   KEY `rep_ntmime1` (`fk_nodetype`),
-  CONSTRAINT `rep_nodetypes_mimetypemapping_ibfk_1` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `rep_nodetypes_mimetypemapping_fk_nt` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle solidmatter.rep_nodetypes_mimetypemapping: ~3 rows (ungefähr)
@@ -509,8 +509,8 @@ CREATE TABLE IF NOT EXISTS `rep_nodetypes_modes` (
   PRIMARY KEY (`fk_nodetype`,`fk_parentnodetype`,`s_mode`),
   KEY `parentnodetype` (`fk_parentnodetype`),
   KEY `mode_parentnodetype` (`s_mode`,`fk_parentnodetype`),
-  CONSTRAINT `rep_nodetypes_modes_ibfk_1` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `rep_nodetypes_modes_ibfk_2` FOREIGN KEY (`fk_parentnodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `rep_nodetypes_modes_fk_nt` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `rep_nodetypes_modes_fk_pnt` FOREIGN KEY (`fk_parentnodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle solidmatter.rep_nodetypes_modes: ~294 rows (ungefähr)
@@ -822,8 +822,8 @@ CREATE TABLE IF NOT EXISTS `rep_nodetypes_ontology` (
   PRIMARY KEY (`s_relation`,`fk_sourcenodetype`,`fk_targetnodetype`),
   KEY `rep_nto_source` (`fk_sourcenodetype`),
   KEY `rep_nto_target` (`fk_targetnodetype`),
-  CONSTRAINT `rep_nto_source` FOREIGN KEY (`fk_sourcenodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `rep_nto_target` FOREIGN KEY (`fk_targetnodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `rep_nodetypes_ontology_snt` FOREIGN KEY (`fk_sourcenodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `rep_nodetypes_ontology_tnt` FOREIGN KEY (`fk_targetnodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- Exportiere Daten aus Tabelle solidmatter.rep_nodetypes_ontology: ~19 rows (ungefähr)
@@ -868,7 +868,7 @@ CREATE TABLE IF NOT EXISTS `rep_nodetypes_properties` (
   `s_defaultvalues` varchar(255) DEFAULT NULL,
   `s_descriptionpath` varchar(250) NOT NULL,
   PRIMARY KEY (`fk_nodetype`,`s_attributename`),
-  CONSTRAINT `rep_nodetypes_properties_ibfk_1` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `rep_nodetypes_properties_fk_nt` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle solidmatter.rep_nodetypes_properties: ~176 rows (ungefähr)
@@ -1067,7 +1067,7 @@ CREATE TABLE IF NOT EXISTS `rep_nodetypes_viewactions` (
   `b_uselocale` enum('TRUE','FALSE') NOT NULL DEFAULT 'TRUE',
   `b_isrecallable` enum('TRUE','FALSE') NOT NULL DEFAULT 'FALSE',
   PRIMARY KEY (`fk_nodetype`,`s_view`,`s_action`),
-  CONSTRAINT `rep_nodetypes_viewactions_ibfk_1` FOREIGN KEY (`fk_nodetype`, `s_view`) REFERENCES `rep_nodetypes_views` (`fk_nodetype`, `s_view`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `rep_nodetypes_viewactions_fk_ntv` FOREIGN KEY (`fk_nodetype`, `s_view`) REFERENCES `rep_nodetypes_views` (`fk_nodetype`, `s_view`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle solidmatter.rep_nodetypes_viewactions: ~207 rows (ungefähr)
@@ -1291,7 +1291,7 @@ CREATE TABLE IF NOT EXISTS `rep_nodetypes_viewauthorisations` (
   `fk_authorisation` varchar(30) NOT NULL,
   PRIMARY KEY (`fk_nodetype`,`fk_view`,`fk_action`),
   KEY `rep_ntva2` (`fk_nodetype`,`fk_authorisation`),
-  CONSTRAINT `rep_nodetypes_viewauthorisations_ibfk_1` FOREIGN KEY (`fk_nodetype`, `fk_view`) REFERENCES `rep_nodetypes_views` (`fk_nodetype`, `s_view`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `rep_nodetypes_viewauthorisations_fk_ntv` FOREIGN KEY (`fk_nodetype`, `fk_view`) REFERENCES `rep_nodetypes_views` (`fk_nodetype`, `s_view`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle solidmatter.rep_nodetypes_viewauthorisations: ~39 rows (ungefähr)
@@ -1350,7 +1350,7 @@ CREATE TABLE IF NOT EXISTS `rep_nodetypes_views` (
   `n_order` int(11) DEFAULT NULL,
   `n_priority` int(11) NOT NULL,
   PRIMARY KEY (`fk_nodetype`,`s_view`),
-  CONSTRAINT `rep_nodetypes_views_ibfk_1` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `rep_nodetypes_views_fk_nt` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle solidmatter.rep_nodetypes_views: ~79 rows (ungefähr)
@@ -1492,7 +1492,7 @@ CREATE TABLE IF NOT EXISTS `sb_jukebox_albums` (
   `e_type` enum('DEFAULT','LIVE','FAKE','BOOTLEG','SINGLE','MAXI','BESTOF','TRIBUTE','REMIXES') CHARACTER SET ascii NOT NULL DEFAULT 'DEFAULT',
   `e_defects` enum('NONE','LOW_BITRATE','BAD_QUALITY','INCOMPLETE','CD_MISSING') CHARACTER SET ascii NOT NULL DEFAULT 'NONE',
   PRIMARY KEY (`uuid`),
-  CONSTRAINT `sb_ja_node` FOREIGN KEY (`uuid`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_jukebox_albums_fk_n` FOREIGN KEY (`uuid`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_jukebox_albums: ~0 rows (ungefähr)
@@ -1507,7 +1507,7 @@ CREATE TABLE IF NOT EXISTS `sb_jukebox_history_albums` (
   `dt_played` datetime NOT NULL,
   PRIMARY KEY (`fk_album`),
   KEY `jbtest` (`fk_album`),
-  CONSTRAINT `jbtest` FOREIGN KEY (`fk_album`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_jukebox_history_albums_fk_n` FOREIGN KEY (`fk_album`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_jukebox_history_albums: ~0 rows (ungefähr)
@@ -1523,7 +1523,7 @@ CREATE TABLE IF NOT EXISTS `sb_jukebox_history_tracks` (
   `n_playtime` smallint(6) NOT NULL,
   PRIMARY KEY (`fk_user`,`fk_track`,`dt_played`),
   KEY `sb_jh_fk1` (`fk_track`),
-  CONSTRAINT `sb_jh_track` FOREIGN KEY (`fk_track`) REFERENCES `sb_jukebox_tracks` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_jukebox_history_tracks_fk_n` FOREIGN KEY (`fk_track`) REFERENCES `sb_jukebox_tracks` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_jukebox_history_tracks: ~0 rows (ungefähr)
@@ -1553,7 +1553,7 @@ CREATE TABLE IF NOT EXISTS `sb_jukebox_tokens` (
   `n_lifespan` int(11) NOT NULL,
   PRIMARY KEY (`fk_user`),
   UNIQUE KEY `sb_jbt_tokens` (`s_token`),
-  CONSTRAINT `sb_jbt_owner` FOREIGN KEY (`fk_user`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_jukebox_tokens_fk_n` FOREIGN KEY (`fk_user`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_jukebox_tokens: ~0 rows (ungefähr)
@@ -1578,8 +1578,8 @@ CREATE TABLE IF NOT EXISTS `sb_jukebox_tracks` (
   `n_bitrate` mediumint(6) NOT NULL,
   PRIMARY KEY (`uuid`),
   KEY `fk_artist` (`fk_artist`),
-  CONSTRAINT `sb_jt_artist` FOREIGN KEY (`fk_artist`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `sb_jt_node` FOREIGN KEY (`uuid`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_jukebox_tracks_fk_an` FOREIGN KEY (`fk_artist`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `sb_jukebox_tracks_fk_tn` FOREIGN KEY (`uuid`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_jukebox_tracks: ~0 rows (ungefähr)
@@ -1615,7 +1615,10 @@ CREATE TABLE IF NOT EXISTS `sb_system_cache_authorisations` (
   `e_authtype` enum('AGGREGATED','EFFECTIVE') NOT NULL,
   `fk_authorisation` varchar(30) NOT NULL,
   `e_granttype` enum('ALLOW','DENY') NOT NULL,
-  PRIMARY KEY (`fk_subject`,`fk_entity`,`e_authtype`,`fk_authorisation`)
+  PRIMARY KEY (`fk_subject`,`fk_entity`,`e_authtype`,`fk_authorisation`),
+  KEY `sb_system_cache_authorisations_fk_en` (`fk_entity`),
+  CONSTRAINT `sb_system_cache_authorisations_fk_en` FOREIGN KEY (`fk_entity`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sb_system_cache_authorisations_fk_sn` FOREIGN KEY (`fk_subject`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_system_cache_authorisations: ~0 rows (ungefähr)
@@ -1643,7 +1646,10 @@ CREATE TABLE IF NOT EXISTS `sb_system_commands` (
   `fk_subject` char(32) NOT NULL DEFAULT '',
   `s_uid` varchar(50) NOT NULL DEFAULT '',
   `s_command` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`fk_user`,`fk_subject`,`s_uid`)
+  PRIMARY KEY (`fk_user`,`fk_subject`,`s_uid`),
+  KEY `sb_system_commands_fk_sn` (`fk_subject`),
+  CONSTRAINT `sb_system_commands_fk_sn` FOREIGN KEY (`fk_subject`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sb_system_commands_fk_un` FOREIGN KEY (`fk_user`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_system_commands: ~0 rows (ungefähr)
@@ -1744,9 +1750,7 @@ CREATE TABLE IF NOT EXISTS `sb_system_nodes` (
   KEY `sb_sn_label` (`s_label`),
   KEY `sb_sn_created` (`dt_created`),
   KEY `sb_sn_modified` (`dt_modified`),
-  CONSTRAINT `sb_sn_createdby` FOREIGN KEY (`fk_createdby`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `sb_sn_moifiedby` FOREIGN KEY (`fk_modifiedby`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `sb_system_nodes_ibfk_2` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON UPDATE CASCADE
+  CONSTRAINT `sb_system_nodes_fk_nt` FOREIGN KEY (`fk_nodetype`) REFERENCES `rep_nodetypes` (`s_type`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_system_nodes: ~154 rows (ungefähr)
@@ -1917,8 +1921,8 @@ CREATE TABLE IF NOT EXISTS `sb_system_nodes_authorisation` (
   `e_granttype` enum('ALLOW','DENY') NOT NULL DEFAULT 'ALLOW',
   PRIMARY KEY (`fk_subject`,`fk_authorisation`,`fk_userentity`),
   KEY `fk_entity` (`fk_userentity`),
-  CONSTRAINT `sb_sna_subjectnode` FOREIGN KEY (`fk_subject`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sb_sna_userentity` FOREIGN KEY (`fk_userentity`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_system_nodes_authorisation_fk_sn` FOREIGN KEY (`fk_subject`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sb_system_nodes_authorisation_fk_un` FOREIGN KEY (`fk_userentity`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_system_nodes_authorisation: ~16 rows (ungefähr)
@@ -1953,8 +1957,8 @@ CREATE TABLE IF NOT EXISTS `sb_system_nodes_locks` (
   `n_timetolive` int(10) unsigned NOT NULL,
   PRIMARY KEY (`fk_lockednode`),
   KEY `sb_snl_user` (`fk_user`),
-  CONSTRAINT `sb_snl_lockednode` FOREIGN KEY (`fk_lockednode`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sb_snl_user` FOREIGN KEY (`fk_user`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_system_nodes_locks_fk_n` FOREIGN KEY (`fk_lockednode`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sb_system_nodes_locks_fk_u` FOREIGN KEY (`fk_user`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_system_nodes_locks: ~0 rows (ungefähr)
@@ -1974,8 +1978,8 @@ CREATE TABLE IF NOT EXISTS `sb_system_nodes_parents` (
   `dt_deleted` datetime DEFAULT NULL,
   PRIMARY KEY (`fk_parent`,`fk_child`),
   KEY `fk_child` (`fk_child`,`b_primary`),
-  CONSTRAINT `sb_snp_child` FOREIGN KEY (`fk_child`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sb_snp_parent` FOREIGN KEY (`fk_parent`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_system_nodes_parents_fk_cn` FOREIGN KEY (`fk_child`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sb_system_nodes_parents_fk_pn` FOREIGN KEY (`fk_parent`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_system_nodes_parents: ~164 rows (ungefähr)
@@ -2156,7 +2160,7 @@ CREATE TABLE IF NOT EXISTS `sb_system_nodes_properties` (
   `m_content` longblob,
   PRIMARY KEY (`fk_node`,`fk_attributename`,`fk_version`),
   KEY `sb_snpr_node` (`fk_node`),
-  CONSTRAINT `sb_snp_node` FOREIGN KEY (`fk_node`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_system_nodes_properties_fk_n` FOREIGN KEY (`fk_node`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_system_nodes_properties: ~407 rows (ungefähr)
@@ -2580,7 +2584,7 @@ CREATE TABLE IF NOT EXISTS `sb_system_nodes_properties_binary` (
   `m_content` longblob,
   PRIMARY KEY (`fk_node`,`fk_attributename`,`fk_version`),
   KEY `fk_node` (`fk_node`),
-  CONSTRAINT `sb_snpb_node` FOREIGN KEY (`fk_node`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_system_nodes_properties_binary_fk_n` FOREIGN KEY (`fk_node`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_system_nodes_properties_binary: ~11 rows (ungefähr)
@@ -2612,8 +2616,8 @@ CREATE TABLE IF NOT EXISTS `sb_system_nodes_relations` (
   `fk_entity2` char(32) CHARACTER SET ascii NOT NULL,
   PRIMARY KEY (`fk_entity1`,`s_relation`,`fk_entity2`),
   KEY `sb_srel_target` (`fk_entity2`),
-  CONSTRAINT `sb_srel_source` FOREIGN KEY (`fk_entity1`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sb_srel_target` FOREIGN KEY (`fk_entity2`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_system_nodes_relations_fk_sn` FOREIGN KEY (`fk_entity1`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sb_system_nodes_relations_fk_tn` FOREIGN KEY (`fk_entity2`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_system_nodes_relations: ~0 rows (ungefähr)
@@ -2627,8 +2631,8 @@ CREATE TABLE IF NOT EXISTS `sb_system_nodes_tags` (
   `fk_tag` smallint(5) unsigned NOT NULL,
   PRIMARY KEY (`fk_subject`,`fk_tag`),
   KEY `sb_snt_tag` (`fk_tag`),
-  CONSTRAINT `sb_snt_node` FOREIGN KEY (`fk_subject`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sb_snt_tag` FOREIGN KEY (`fk_tag`) REFERENCES `sb_system_tags` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_system_nodes_tags_fk_sn` FOREIGN KEY (`fk_subject`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sb_system_nodes_tags_fk_t` FOREIGN KEY (`fk_tag`) REFERENCES `sb_system_tags` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_system_nodes_tags: ~0 rows (ungefähr)
@@ -2643,8 +2647,8 @@ CREATE TABLE IF NOT EXISTS `sb_system_nodes_votes` (
   `n_vote` tinyint(4) NOT NULL,
   PRIMARY KEY (`fk_subject`,`fk_user`),
   KEY `sb_snv_user` (`fk_user`,`fk_subject`),
-  CONSTRAINT `sb_snv_node` FOREIGN KEY (`fk_subject`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sb_snv_user` FOREIGN KEY (`fk_user`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_system_nodes_votes_fk_sn` FOREIGN KEY (`fk_subject`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sb_system_nodes_votes_fk_u` FOREIGN KEY (`fk_user`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_system_nodes_votes: ~0 rows (ungefähr)
@@ -2771,7 +2775,7 @@ CREATE TABLE IF NOT EXISTS `sb_system_registry_values` (
   `fk_user` char(32) NOT NULL,
   `s_value` varchar(250) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`s_key`,`fk_user`),
-  CONSTRAINT `sb_srv` FOREIGN KEY (`s_key`) REFERENCES `sb_system_registry` (`s_key`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_system_registry_values_fk_rk` FOREIGN KEY (`s_key`) REFERENCES `sb_system_registry` (`s_key`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_system_registry_values: ~79 rows (ungefähr)
@@ -2898,7 +2902,7 @@ CREATE TABLE IF NOT EXISTS `sb_system_useraccounts` (
   `dt_expires` datetime DEFAULT NULL,
   PRIMARY KEY (`uuid`),
   KEY `id` (`uuid`),
-  CONSTRAINT `sb_sua_node` FOREIGN KEY (`uuid`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sb_system_useraccounts_fk_n` FOREIGN KEY (`uuid`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle solidmatter.sb_system_useraccounts: ~11 rows (ungefähr)

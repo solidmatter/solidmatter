@@ -78,20 +78,26 @@
 	</site>
 	
 	<!-- separate repository for sbPortal tests -->
-	<site location="test.portal/" type="controller" handler="portal" subject="demoportal">
-		<storage repository="portal" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="portal.sm.gotdns.org/stuff" type="rewrite" destination="X:/DigitalerCampus/!NeueDokumente/Mockups" />
-		<site location="portal.sm.gotdns.org/theme" type="theme" handler="backend" theme="_default" />
-		<site location="portal.sm.gotdns.org/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
+	<site location="fhffm.portal/" type="controller" handler="backend">
+		<storage repository="fhffm" workspace="portal" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="true" />
+		<site location="fhffm.portal/theme" type="theme" handler="backend" theme="_admin_grey" />
+		<site location="fhffm.portal/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
+	</site>
+	<site location="fhffm.portaldemo/" type="controller" handler="portal" subject="demoportal">
+		<storage repository="fhffm" workspace="portal" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="true" />
+		<site location="fhffm.portaldemo/stuff" type="rewrite" destination="X:/DigitalerCampus/!NeueDokumente/Mockups" />
+		<site location="fhffm.portaldemo/theme" type="theme" handler="backend" theme="_default" />
+		<site location="fhffm.portaldemo/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
 	</site>
 	
 	<!-- separate repository for sbIdM tests -->
-	<site location="test.idm/" type="controller" handler="backend">
-		<storage repository="idm" workspace="test" user="system" pass="solidbytes" />
+	<site location="fhffm.idm/" type="controller" handler="backend">
+		<storage repository="fhffm" workspace="idm" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
-		<site location="test.idm/theme" type="theme" handler="backend" theme="_admin_grey" />
-		<site location="test.idm/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
+		<site location="fhffm.idm/theme" type="theme" handler="backend" theme="_admin_grey" />
+		<site location="fhffm.idm/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
 	</site>
 	
 	<!-- utilities -->

@@ -99,6 +99,7 @@ class sbPDOStatement extends PDOStatement {
 		try {
 			parent::execute($aInputParameters);
 		} catch (Exception $e) {
+			DEBUG('PDO: statement failed '.$this->aDebug['statementid'].' ('.DEBUG::STOPCLOCK('statement').'ms)', DEBUG::PDO);
 			$this->debug($e);
 			throw $e;
 		}
