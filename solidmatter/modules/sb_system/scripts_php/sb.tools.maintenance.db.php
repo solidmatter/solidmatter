@@ -86,6 +86,32 @@ function rebuild_positions($iNodeID = NULL) {
 }
 
 
+// function optimize_uuids() {
+	
+// 	global $DB;
+	
+// 	$stmtNodes = $DB->query('
+// 		SELECT		uuid
+// 		FROM		'.TABLE_PREFIX.'_system_nodes
+// 	');
+	
+// 	$aResultset = $stmtNodes->fetchALL(PDO::FETCH_ASSOC);
+	
+// 	$iCounter = 0;
+// 	$sOrderedUuidBase64URL = sbUUID();
+// 	foreach ($aResultset as $iRownumber => $aRow) {
+// 		$DB->query('
+// 			UPDATE 	'.TABLE_PREFIX.'_system_nodes
+// 			SET		uuid = '.$iCounter.'
+// 			WHERE	id = '.$aRow['id'].'
+// 		');
+// 		$iCounter++;
+// 		rebuild_positions($aRow['id']);
+// 	}
+	
+// }
+
+
 
 
 

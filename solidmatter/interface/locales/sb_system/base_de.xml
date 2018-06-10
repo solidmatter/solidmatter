@@ -311,6 +311,7 @@
 		<view id="maintenance">Wartung</view>
 		<view id="registry">Registry</view>
 		<view id="details">Details</view>
+		<view id="caches">Caches</view>
 	</views>
 	
 	<config>

@@ -211,22 +211,23 @@ function import($sLibrary, $bRequired = TRUE) {
 * @param 
 * @return 
 */
-function __autoload($sClassName) {
+function sm_autoload($sClassName) {
 	
 	global $_AUTOLOAD;
 	
 	if (isset($_AUTOLOAD[$sClassName])) {
 		import($_AUTOLOAD[$sClassName]);
 	} else {
-		die('__autoload: UNKNOWN CLASS ('.$sClassName.')');	
+		die('sm_autoload: UNKNOWN CLASS ('.$sClassName.')');	
 	}
 	
 }
+spl_autoload_register('sm_autoload', TRUE);
 
 //------------------------------------------------------------------------------
 /**
 * Generates a UUID, hyphens not included!
-* @return string a 16 byte UUID
+* @return string a 16 byte UUID as hexadecimal string
 */
 function uuid() {
 	//return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -236,6 +237,77 @@ function uuid() {
 		mt_rand( 0, 0x3fff ) | 0x8000,
 		mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ) 
 	);
+}
+
+//------------------------------------------------------------------------------
+/**
+ * Generates a sbUUID, which means a ordered and web-safe Base64 representation
+ * @return string a 16 byte UUID
+ */
+function sbUUID() {
+	return base64url_encode(hex2bin(ordered_uuid()));
+}
+
+//------------------------------------------------------------------------------
+/**
+ * 
+ */
+function ordered_uuid() {
+	
+	static $iCounter = 0;
+	static $mtLast = 0;
+	
+	$mtNow = microtime(true);
+	
+	// check if generating UUIDs was too fast for microtime(), add 1ms in this case
+	if ($mtLast != $mtNow) {
+		$mtLast = $mtNow;
+		$iCounter = 0;
+	} else {
+		$mtLast = $mtNow;
+		$iCounter++;
+	}
+// 	echo floor($mtNow);
+// 	echo ($mtNow-floor($mtNow))*10000000;
+// 	echo 'i='.$iCounter;
+// 	echo '|';
+// 	echo $mtNow;
+// 	echo '|';
+// 	echo floor($mtNow);
+// 	echo '|';
+// 	echo floor ((($mtNow-floor($mtNow))*10000000)) + $iCounter;
+// 	echo '|';
+	
+	// 16 bytes = 32 chars hex
+	// 8+6+4+4+4+2
+	return sprintf('%08x%06x%04x%04x%04x%04x%02x',
+			floor($mtNow), 
+			(($mtNow-floor($mtNow))*10000000)+$iCounter,
+			mt_rand( 0, 0xffff ),
+			mt_rand( 0, 0x0fff ) | 0x4000,
+			mt_rand( 0, 0x3fff ) | 0x8000, 
+			mt_rand( 0, 0xffff ),
+			mt_rand( 0, 0xff )
+			);
+}
+
+
+//------------------------------------------------------------------------------
+/**
+ * Converts a binary String to URL-Safe Base64 (without filler '==' at the end)
+ * @return string a 16 byte UUID
+ */
+function base64url_encode($sInput) {
+	return substr(strtr(base64_encode($sInput), '+/', '-_'), 0, -2);
+}
+
+//------------------------------------------------------------------------------
+/**
+ * Converts a sbUUID to a binary string
+ * @return 
+ */
+function base64url_decode($sInput) {
+	return base64_decode(strtr($sInput.'==', '-_', '+/'));
 }
 
 //------------------------------------------------------------------------------

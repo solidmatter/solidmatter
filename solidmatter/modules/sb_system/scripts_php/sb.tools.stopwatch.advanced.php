@@ -111,10 +111,10 @@ class Stopwatch {
 	public static function getTaskTimes($sSpecificTask = NULL) {
 		$aTimes = array_merge(self::$aTaskTimes, self::$aTaskGroupTimes);
 		if ($sSpecificTask != NULL) {
-			return (sprintf('%01.2f', $aTimes[$sSpecificTask] * 1000));
+			return (sprintf('%01.0f', $aTimes[$sSpecificTask] * 1000));
 		}
 		foreach ($aTimes as $sTime => $iTime) {
-			$aResult[$sTime] = sprintf('%01.2f', $iTime * 1000);	
+			$aResult[$sTime] = sprintf('%01.0f', $iTime * 1000);	
 		}
 		return ($aResult);
 	}

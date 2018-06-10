@@ -847,6 +847,16 @@ $_QUERIES['sbSystem/maintenance/view/repair/removeAbandonedNodes/normal'] = '
 					:node_id
 				)
 ';*/
+$_QUERIES['sbSystem/maintenance/view/repair/getAllUUIDs'] = '
+	SELECT		uuid
+	FROM		{TABLE_NODES}
+';
+$_QUERIES['sbSystem/maintenance/view/repair/updateUUID'] = '
+	UPDATE		{TABLE_NODES}
+	SET			uuid = :uuid_new
+	WHERE		uuid = :uuid_old
+';
+
 
 //------------------------------------------------------------------------------
 // node:folder

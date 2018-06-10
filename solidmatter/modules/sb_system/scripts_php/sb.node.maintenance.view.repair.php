@@ -62,6 +62,28 @@ class sbView_maintenance_repair extends sbView {
 				$stmtRemove->execute();
 				$this->logEvent(System::MAINTENANCE, 'NODES_REMOVED', 'removed abandoned nodes');
 				break;
+				
+			case 'optimizeUUIDs':
+// 				$this->logEvent(System::MAINTENANCE, 'UUID_OPTIMIZATION_STARTED', 'started to convert to sbUUIDs');
+				$stmtSelect = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/getAllUUIDs');
+				$stmtSelect->execute();
+				$aResultset = $stmtSelect->fetchALL(PDO::FETCH_ASSOC);
+				
+				$stmtUpdate = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/updateUUID');
+				
+				foreach ($aResultset as $aRow) {
+					if ($aRow['uuid'] != '00000000000000000000000000000000') {
+						$sNewUUID = sbUUID();
+						$stmtUpdate->bindParam('uuid_old', $aRow['uuid'], PDO::PARAM_STR);
+						$stmtUpdate->bindParam('uuid_new', $sNewUUID, PDO::PARAM_STR);
+// 						echo $aRow['uuid'] . ' -> ' . $sNewUUID . '<br/>';
+// 						$stmtUpdate->debug();
+						$stmtUpdate->execute();
+					}
+				}
+				
+// 				$this->logEvent(System::MAINTENANCE, 'UUID_OPTIMIZATION_ENDED', 'Conversion to sbUUIDs finished');
+				break;
 			
 		}
 		

@@ -662,7 +662,9 @@ class sbCR_Session {
 		$aNode['s_name'] = $sName;
 		$aNode['s_label'] = $sLabel;
 		$aNode['s_uid'] = NULL;
-		$aNode['s_displaytype'] = $this->aNodetypes[$sNodetype]['s_displaytype'];
+		if (isset($this->aNodetypes[$sNodetype]['s_displaytype'])) {
+			$aNode['s_displaytype'] = $this->aNodetypes[$sNodetype]['s_displaytype'];
+		}
 		$aNode['fk_parent'] = $sParentUUID;
 		// for now always set full inheritance on new nodes
 		$aNode['b_inheritrights'] = 'TRUE';
@@ -802,7 +804,9 @@ class sbCR_Session {
 		$elemSubject->setAttribute('query', $sQuery);
 		$elemSubject->setAttribute('displaytype', str_replace(':', '_', $aRow['fk_nodetype']));
 		$elemSubject->setAttribute('parent', $aRow['fk_parent']);
-		$elemSubject->setAttribute('primary', $aRow['b_primary']);
+		if (isset($aRow['b_primary'])) {
+			$elemSubject->setAttribute('primary', $aRow['b_primary']);
+		}
 		$elemSubject->setAttribute('inheritrights', $aRow['b_inheritrights']);
 		$elemSubject->setAttribute('bequeathrights', $aRow['b_bequeathrights']);
 		$elemSubject->setAttribute('bequeathlocalrights', $aRow['b_bequeathlocalrights']);

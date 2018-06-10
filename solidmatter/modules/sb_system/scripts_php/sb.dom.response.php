@@ -23,6 +23,7 @@ class sbDOMResponse extends sbDOMDocument {
 	public static $aAccessiblePHPFunctions = array(
 		'datetime_mysql2local',
 		'datetime_convert',
+		'htmlspecialchars',
 	);
 	
 	//--------------------------------------------------------------------------
@@ -681,6 +682,12 @@ class sbDOMResponse extends sbDOMDocument {
 				header('X-sbTransformTime: '.Stopwatch::getTaskTimes('transform'));
 				echo ($sOutput);
 				break;
+			
+			case 'debug':
+				$this->formatOutput = TRUE;
+				header('Content-Type: text/html; charset=utf-8');
+				echo '<html><body><pre style="font-family: monospace; font-size:9px;">'.htmlspecialchars($this->saveXML()).'</pre></body></html>';
+				break;
 				
 			case 'xml':
 				header('X-sbMessageType: sbControllerResponse');
@@ -691,11 +698,6 @@ class sbDOMResponse extends sbDOMDocument {
 				echo $this->saveXML();
 				break;
 				
-			case 'debug':
-				$this->formatOutput = TRUE;
-				header('Content-Type: text/html; charset=utf-8');
-				echo '<html><body><pre style="font-size:9px;">'.htmlspecialchars($this->saveXML()).'</pre></body></html>';
-				break;
 				
 		}
 		

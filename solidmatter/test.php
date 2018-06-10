@@ -8,10 +8,10 @@
 */
 //---------------------------------------------------------
 
-$TEST = 'LOADREPOSSTRUCTURE';
+$TEST = 'UUIDSTUFF';
 
 require_once('modules/sb_system/scripts_php/sb.system.essentials.php');
-require_once('modules/sb_system/scripts_php/sb.tools.stopwatch.php');
+// require_once('modules/sb_system/scripts_php/sb.tools.stopwatch.php');
 
 
 
@@ -500,6 +500,40 @@ if ($TEST == 'IMPORTQUERIES') {
 	$sw->stop();
 	
 	echo '</pre>';
+}
+
+if ($TEST == 'UUIDSTUFF') {
+	
+	echo '<body style="font-family: Andale Mono, monospace;">';
+	
+	for ($i=0; $i<1000; $i++) {
+		/*
+		$m=microtime(true);
+// 		echo sprintf("%08x%04x",floor($m),($m-floor($m))*1000000).'|';
+// 		echo $m.'|';
+// 		echo microtime().'|';
+		
+		$sUUID = sbUUID();
+		echo $sUUID.'|';
+// 		echo hex2bin($sUUID).'|';
+// 		echo base64_encode(hex2bin($sUUID)).'|';
+		$sWebUUID = base64url_encode(hex2bin($sUUID));
+		echo $sWebUUID.'|';
+// 		echo base64url_decode($sWebUUID);
+		echo bin2hex(base64url_decode($sWebUUID));
+		*/
+		echo sbUUID();
+		
+		echo '<br>';
+		
+// 		for ($j=0;$j<100000;$j++) {
+			
+// 		}
+		
+	}
+	
+	echo '</body>';
+	
 }
 
 
