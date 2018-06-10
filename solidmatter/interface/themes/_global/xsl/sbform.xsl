@@ -37,14 +37,17 @@
 						
 					</xsl:otherwise>
 				</xsl:choose>-->
-				<tr>
-					<th colspan="2">
-						<xsl:call-template name="localize">
-							<xsl:with-param name="label" select="@label" />
-						</xsl:call-template>
-						<xsl:apply-templates select="*[@type='hidden']" mode="complete" />
-					</th>
-				</tr>
+				<thead>
+					<tr>
+						<th colspan="2">
+							<xsl:call-template name="localize">
+								<xsl:with-param name="label" select="@label" />
+							</xsl:call-template>
+							<xsl:apply-templates select="*[@type='hidden']" mode="complete" />
+						</th>
+					</tr>
+				</thead>
+				<tbody>
 				<xsl:if test="@errorlabel">
 					<tr>
 						<td></td>
@@ -52,7 +55,10 @@
 					</tr>
 				</xsl:if>
 				<xsl:apply-templates select="*[@type!='hidden']" mode="complete" />
+				</tbody>
+				<tfoot>
 				<xsl:apply-templates select="submit" mode="complete" />
+				</tfoot>
 			</table>
 		</form>
 	</xsl:template>
@@ -621,7 +627,7 @@
 	<xsl:template match="submit" mode="complete">
 		<tr class="lastline">
 			<td width="30%"></td>
-			<td width="/70%"><xsl:apply-templates select="." mode="inputonly" /></td>
+			<td width="70%"><xsl:apply-templates select="." mode="inputonly" /></td>
 		</tr>
 	</xsl:template>
 	<xsl:template match="submit" mode="inputonly">

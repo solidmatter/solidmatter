@@ -63,6 +63,7 @@ $elemController = $aSite['controller'];
 DEBUG('Interface: Site matched ['.(string) $elemSite['location'].'] with handler ['.(string) $elemSite['handler'].']', DEBUG::BASIC);
 
 if ($elemSite == NULL) {
+	header('File not found', TRUE, '404');
 	die_fancy('could not handle request, aborting.');
 }
 

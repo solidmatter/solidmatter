@@ -1,0 +1,164 @@
+
+/*----------------------------------------------------------------------------*/
+/* standard input styles
+/*----------------------------------------------------------------------------*/
+
+form.default {
+	margin:0;
+}
+
+form.default input[type=text],
+form.default input[type=password],
+form.default input[type=color],
+form.default input[type=date],
+form.default input[type=datetime-local],
+form.default input[type=month],
+form.default input[type=week],
+form.default input[type=time],
+form.default input[type=email],
+form.default input[type=url],
+form.default input[type=number],
+form.default input[type=search],
+form.default input[type=tel],
+form.default textarea,
+form.default select {
+	border: 2px solid #FFF;
+	border-radius: 3px;
+	transition: var(--transition-time-default);
+}
+
+/* form.default input[type=checkbox] { */
+/* 	border:5px solid red; */
+/* } */
+
+a.button,
+form.default input[type=button], 
+form.default input[type=submit], 
+form.default input[type=reset] {
+	padding: 2px 6px;
+	font-size: 1.2em;
+	border: 2px solid #666;
+	border-radius: 3px;
+	transition: var(--transition-time-default);
+	background-color: #666;
+	color: #FFF;
+	margin-right: 5px;
+}
+a.button:hover,
+form.default input[type=button]:hover, 
+form.default input[type=submit]:hover, 
+form.default input[type=reset]:hover {
+	background-color: var(--highlight-color);
+	color: var(--highlight-color-text);
+	border: 2px solid var(--highlight-color);
+}
+form.default input[type=button].warning:hover, 
+form.default input[type=submit].warning:hover, 
+form.default input[type=reset].warning:hover {
+	background-color: var(--warning-color);
+	color: var(--warning-color-text);
+	border: 2px solid var(--warning-color);
+}
+
+form.default input:focus, 
+form.default textarea:focus {
+	border: 2px solid var(--highlight-color);
+}
+
+form.default tr td:first-child {
+	padding-top: 0.4em;
+	text-align: right;
+	vertical-align: top;
+}
+
+form.default label {
+/* 	text-align: right; */
+/* 	vertical-align: top; */
+	padding-top: 10px;
+}
+
+/*form.default input, form.default textarea {
+	border: 1px solid black;
+	padding: 1px 3px;
+}*/
+
+span.formerror {
+	color: red;
+	text-decoration: blink;
+}
+form.default input:invalid,
+form.default textarea:invalid,
+form.default input.formerror,
+form.default textarea.formerror {
+	background-color: #FEE;
+	border: 2px solid red !important;
+	padding: 1px 2px;
+}
+
+/*form.default input.button {
+	border: 2px outset
+	padding: 1px 3px;
+}*/
+
+textarea {
+	font-size: 1em;
+	font-family: Arial, Helvetica, Sans-Serif;
+}
+
+
+ul.itemlist {
+	list-style-type: none;
+	padding: 0;
+	margin:0px;
+	margin-bottom:10px;
+}
+ul.itemlist li {
+	padding: 3px;
+	margin: 2px 0;
+	background-color: #FFF;
+}
+/*ul.itemlist li:hover {
+	padding: 3px;
+	margin: 2px 0;
+	background-color: #FF7;
+	cursor: move;
+}*/
+
+
+
+div.ac_suggestions {
+	background-color: #E0E8E0;
+	border: 1px solid #808880;
+	z-index: 2000;
+}
+div.ac_suggestions ul {
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+div.ac_suggestions ul li {
+	cursor: pointer;
+	margin: 2px 0;
+	padding: 2px 4px;
+}
+div.ac_suggestions ul li.selected {
+	background-color: #EEE650;
+	background: url(../images/highlight.png) top left repeat-x;
+}
+
+
+
+.droptarget {
+	border: 1px dashed black;
+	padding: 10px;
+}
+.droptarget_active {
+	border: 1px dashed black;
+	padding: 10px;
+	background-color: white;
+}
+.droptarget_remove {
+	border: 1px dashed black;
+	padding: 10px;
+	background-color: #F66;
+}

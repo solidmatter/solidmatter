@@ -1,0 +1,81 @@
+
+/*************************** _admin styles ************************************/
+
+/*@import url(styles_default.css);
+
+/* view ----------------------------------------------------------------------*/
+
+div.views {
+	font-family: Tahoma, Verdana, Arial, Helvetica, Sans-Serif;
+	background-color: #404840;
+	color: white;
+	float:left;
+	width:100%;
+	line-height:normal;
+	--tab-active-top: #BCBFBC;
+	--tab-active-bottom: #E0E8E0;
+	--tab-hover-top: #F3F77B;
+	--tab-hover-bottom: #E5C701;
+	--tab-inactive: #94A094;
+	--tab-inactive-top: #94A094;
+	--tab-inactive-bottom: #808880;
+}
+div.views ul {
+	margin: 0;
+	padding: 6px 0 0 8px;
+	list-style: none;
+}
+div.views li {
+	float: left;
+	display: inline;
+	background-color: var(--tab-inactive);
+	background: linear-gradient(to bottom, var(--tab-inactive-top), var(--tab-inactive-bottom));
+	margin: 0 4px 0 0;
+	padding: 0;
+	text-decoration: none;
+	border-radius: 5px 5px 0 0;
+}
+div.views a {
+	float: left;
+/* 	background: linear-gradient(to bottom, var(--tab-inactive-top), var(--tab-inactive-bottom)); */
+/* 	background-color: var(--tab-inactive); */
+	margin: 0;
+	padding: 3px 9px 3px 9px;
+	text-decoration: none;
+	border-radius: 5px 5px 0 0;
+	transition: var(--transition-time-default);
+}
+div.views a:hover {
+	text-decoration: none;
+/* 	background: linear-gradient(to bottom, var(--tab-hover-top), var(--tab-hover-bottom)); */
+	background-color: var(--highlight-color);
+}
+div.views a.active {
+	text-decoration: none;
+/* 	background-color: var(--bg-color); */
+	background: linear-gradient(to bottom, var(--tab-active-top), var(--bg-color));
+}
+
+
+div.path {
+	padding: 5px;
+	background-color: #404840;
+	color: white;
+/* 	border-bottom: 1px solid #505850; */
+	overflow: hidden;
+/* 	width: 90%; */
+	height: 16px;
+	white-space: nowrap;
+/* 	text-align: right; */
+}
+
+div.path a {
+	color: #C0C8C0;
+}
+
+
+
+
+
+
+

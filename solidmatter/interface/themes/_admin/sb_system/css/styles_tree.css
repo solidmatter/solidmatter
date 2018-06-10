@@ -1,0 +1,173 @@
+
+/*************************** _admin styles ************************************/
+
+/*@import url(styles_default.css);
+
+/* logo ----------------------------------------------------------------------*/
+
+div.logo {
+	background-color: var(--bg-color-banner);
+/* 	height: 45px; */
+	padding: 5px;
+	position: fixed;
+	width: 100%
+}
+
+div.logo a {
+	display: block;
+	height: 38px;
+	width: 240px;
+	padding: 4px;
+}
+div.logo a img {
+	border: 0;
+}
+div.logo a:hover img {
+/* 	background-image: url(../images/logo_sm_banner_hover_bg.png); */
+}
+
+/* tree elements -------------------------------------------------------------*/
+
+div.tree {
+	font-family: Tahoma, Verdana, Arial, Helvetica, Sans-Serif;
+	padding: 3px 0 0 1px;
+/* 	background-color: var(--bg-color); */
+}
+
+ul.tree {
+	padding: 0;
+	margin: 2px 0 0 3px;
+}
+ul.tree li {
+	list-style-type: none;
+	margin: 1px;
+	padding: 0;
+/* 	background: #FED; */
+}
+ul.tree li a img, ul.tree li img {
+	border: 0;
+	padding: 0;
+	vertical-align: top;
+}
+/* ul.tree li a:hover img { */
+/* 	background-color: #EEE650; */
+/* 	background: url(../images/highlight.png) top left repeat-x; */
+/* 	background-image: linear-gradient(to bottom, var(--highlight-color), var(--highlight-color-bright)); */
+/* 	border-radius: 3px; */
+/* } */
+ul.tree ul {
+	padding: 0 0 0 0px;
+	margin: 0;
+	list-style-type: none;
+	white-space: nowrap;
+}
+ul.tree ul ul {
+	padding: 0 0 0 17px;
+	margin: 0;
+	list-style-type: none;
+	white-space: nowrap;
+}
+ul.tree li a {
+	color: black;
+	border-radius: 3px;
+	transition: var(--transition-time-default);
+}
+
+ul.tree li a.toggle {
+	padding: 0px;
+/* 	background: red; */
+}
+ul.tree li a.toggle img {
+	margin: 0 0 -1px 0; /* cuts last line for square area */
+}
+
+ul.tree li a.label {
+	padding: 1px 4px 0 0;
+	margin: 0 0 0 1px;
+/* 	background: blue; */
+}
+ul.tree li a.label img {
+	padding: 0px !important;
+	margin: 0px 2px 0 2px;
+	background-position: 0px 0px;
+/* 	background: green; */
+}
+/* ul.tree li a.label span { */
+/* 	padding: 0 3px 0 2px; */
+/* 	background: yellow; */
+/* } */
+
+ul.tree li a:hover {
+	text-decoration: none;
+	background-color: var(--highlight-color);
+/* 	background: url(../images/highlight.png) top left repeat-x; */
+/* 	background-image: linear-gradient(to bottom, var(--highlight-color-bright), var(--highlight-color)); */
+	text-decoration: none;
+}
+
+a.root {
+	margin: 15px 0 0 3px;
+	padding: 0 3px 0 18px;
+	background-repeat: no-repeat;
+	background-image: url(../icons/type_node.gif);
+	text-decoration: none;
+}
+
+span.softlink {
+	padding: 0;
+	background-image: url(../icons/link.png);
+	background-repeat: no-repeat;
+}
+
+/* context menu --------------------------------------------------------------*/
+
+#contextmenu {
+	position: absolute;
+	border: 1px solid #808880;
+	border-radius: 4px;
+	background-color: var(--contextmenu-color);
+	cursor: default;
+	z-index: 100;
+	display: none;
+	padding: 0;
+	box-shadow: 1px 1px 5px var(--dropshadow-color);
+}
+#contextmenu hr {
+	border: 0;
+	margin: 0;
+	border-top: 1px solid #808880;
+}
+
+#contextmenu ul {
+	margin: 0px;
+	padding: 0;	
+	list-style-type: none;
+}
+#contextmenu ul ul {
+	margin-left: 0px;
+}
+#contextmenu ul li ul {
+	margin-top: 3px;
+}
+	
+#contextmenu li {
+	margin: 0;
+	padding: 0;
+}
+
+#contextmenu a {
+	display: block;
+	border-radius: 3px;
+	transition: 0.1s;
+	padding: 2px 4px;
+	margin:2px;
+}
+#contextmenu a:hover {
+	text-decoration: underline;
+	background-color: var(--highlight-color);
+	color: var(--highlight-color-text);
+	text-decoration: none;
+}
+
+
+

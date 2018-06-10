@@ -1,0 +1,55 @@
+
+/*----------------------------------------------------------------------------*/
+/* types / icons
+/*----------------------------------------------------------------------------*/
+
+*.sbCMS_Site {
+	background-image: url(../icons/type_site.png);
+}
+*.sbCMS_Templatemanager {
+	background-image: url(../icons/type_templatemanager.png);
+}
+*.sbCMS_Templategroup {
+	background-image: url(../icons/type_templategroup.png);
+}
+*.sbCMS_Template {
+	background-image: url(../icons/type_template.png);
+}
+*.sbCMS_Layout {
+	background-image: url(../icons/type_layout.png);
+}
+*.sbCMS_Page {
+	background-image: url(../icons/type_page.gif);
+}
+
+
+*.sbCMS_CTN_Image {
+	background-image: url(../icons/type_ctn_image.png);
+}
+*.sbCMS_CTN_Container {
+	background-image: url(../icons/type_ctn_container.png);
+}
+*.sbCMS_CTN_Menu {
+	background-image: url(../icons/type_ctn_menu.png);
+}
+*.sbCMS_CTN_Plaintext {
+	background-image: url(../icons/type_ctn_plaintext.png);
+}
+*.sbCMS_CTN_Richtext {
+	background-image: url(../icons/type_ctn_richtext.png);
+}
+*.sbCMS_TPL_Image {
+	background-image: url(../icons/type_tpl_image.png);
+}
+*.sbCMS_TPL_Container {
+	background-image: url(../icons/type_tpl_container.png);
+}
+*.sbCMS_TPL_Menu {
+	background-image: url(../icons/type_tpl_menu.png);
+}
+*.sbCMS_TPL_Plaintext {
+	background-image: url(../icons/type_tpl_plaintext.png);
+}
+*.sbCMS_TPL_Richtext {
+	background-image: url(../icons/type_tpl_richtext.png);
+}

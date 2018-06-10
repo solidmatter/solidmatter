@@ -8,11 +8,11 @@
 		<site location="frontend.localhost/templates" type="controller" handler="xsl" subject="demotemplates" />
 		<site location="frontend.localhost/mmm" type="controller" handler="frontend" subject="demofiles" />
 	</site>
-	<site location="backend.localhost/" type="controller" handler="backend">
+	<site location="backend.localhost/" type="controller" handler="backend" theme="_admin">
 		<storage repository="dev" workspace="dev" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
 		<site location="backend.localhost/templates" type="controller" handler="xsl" subject="demotemplates" />
-		<site location="backend.localhost/theme" type="theme" handler="backend" theme="_admin_grey" />
+		<site location="backend.localhost/theme" type="theme" handler="backend" theme="_admin" />
 		<site location="backend.localhost/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
 	</site>
 	<site location="jukebox.localhost/" type="controller" handler="application" subject="demojukebox">
@@ -40,16 +40,34 @@
 		<site location="test.jukebox/rss" type="controller" handler="jbrss" />
 		<site location="test.jukebox/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
 	</site>
-	<site location="test.backend/" type="controller" handler="backend">
+	<site location="test.backend/" type="controller" handler="backend" theme="_admin">
 		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
 		<site location="test.backend/templates" type="controller" handler="xsl" subject="demotemplates" />
-		<site location="test.backend/theme" type="theme" handler="backend" theme="_admin_grey" />
+		<site location="test.backend/theme" type="theme" handler="backend" theme="_admin" />
 		<site location="test.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
 	</site>
 	
+	<!-- jukebox production repository -->
+	<site location="jukebox/" type="controller" handler="application" subject="demojukebox" theme="black_lime">
+		<storage repository="jukebox" workspace="production" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="jukebox/api" type="controller" handler="api" subject="demojukebox" theme="black_lime" />
+		<site location="jukebox/theme" type="theme" handler="backend" theme="black_lime" theme_override="black_ice" />
+		<site location="jukebox/play" type="controller" handler="jbaudiostream" />
+		<site location="jukebox/rss" type="controller" handler="jbrss" />
+		<site location="jukebox/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
+	</site>
+	<site location="jukebox.admin/" type="controller" handler="backend" theme="_admin">
+		<storage repository="jukebox" workspace="production" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="jukebox.admin/templates" type="controller" handler="xsl" subject="demotemplates" />
+		<site location="jukebox.admin/theme" type="theme" handler="backend" theme="_admin" />
+		<site location="jukebox.admin/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
+	</site>
+	
 	<!-- REMOVE - only for android development - REMOVE -->
-	<site location="ollomulder.dyndns.org/" type="controller" handler="application" subject="demojukebox" theme="black_lime">
+	<!-- <site location="ollomulder.dyndns.org/" type="controller" handler="application" subject="demojukebox" theme="black_lime">
 		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
 		<site location="ollomulder.dyndns.org/api" type="controller" handler="api" subject="demojukebox" theme="black_lime" />
@@ -75,13 +93,13 @@
 		<site location="192.168.100.33/play" type="controller" handler="jbaudiostream" />
 		<site location="192.168.100.33/rss" type="controller" handler="jbrss" />
 		<site location="192.168.100.33/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
-	</site>
+	</site> -->
 	
 	<!-- separate repository for sbPortal tests -->
-	<site location="fhffm.portal/" type="controller" handler="backend">
+	<!-- <site location="fhffm.portal/" type="controller" handler="backend">
 		<storage repository="fhffm" workspace="portal" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="true" />
-		<site location="fhffm.portal/theme" type="theme" handler="backend" theme="_admin_grey" />
+		<site location="fhffm.portal/theme" type="theme" handler="backend" theme="_admin" />
 		<site location="fhffm.portal/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
 	</site>
 	<site location="fhffm.portaldemo/" type="controller" handler="portal" subject="demoportal">
@@ -90,15 +108,15 @@
 		<site location="fhffm.portaldemo/stuff" type="rewrite" destination="X:/DigitalerCampus/!NeueDokumente/Mockups" />
 		<site location="fhffm.portaldemo/theme" type="theme" handler="backend" theme="_default" />
 		<site location="fhffm.portaldemo/favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
-	</site>
+	</site> -->
 	
 	<!-- separate repository for sbIdM tests -->
-	<site location="fhffm.idm/" type="controller" handler="backend">
+	<!-- <site location="fhffm.idm/" type="controller" handler="backend">
 		<storage repository="fhffm" workspace="idm" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
-		<site location="fhffm.idm/theme" type="theme" handler="backend" theme="_admin_grey" />
+		<site location="fhffm.idm/theme" type="theme" handler="backend" theme="_admin" />
 		<site location="fhffm.idm/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
-	</site>
+	</site> -->
 	
 	<!-- utilities -->
 	<site location="backend.localhost/phpinfo" type="script" handler="phpinfo.php" />

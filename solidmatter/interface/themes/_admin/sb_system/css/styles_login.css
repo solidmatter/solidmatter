@@ -1,0 +1,91 @@
+
+@import url("styles_presets.css");
+@import url("styles_forms.css");
+
+body {
+	text-align: center;
+	padding-top: 50px;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 0.8em;
+}
+
+div.login {
+	width: 500px;
+	height: 400px;
+/* 	background: url(../images/login_bg.png) left top repeat-x; */
+	background-image: linear-gradient(to bottom, #BDBEBD, #94A294);
+	border-radius: 15px;
+	text-align: left;
+	margin: 0 auto;
+	padding: 0;
+	position: relative;
+}
+
+div.login span.version {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	color: white;
+}
+
+div.logo {
+	font-family: Arial Narrow, Arial, Helvetica, Sans-Serif;
+	/*background: url(../images/login_logo.png) left top repeat-x;*/
+	/*padding: 20px 20px 0 0;*/
+	position: relative;
+	height: 110px;
+	background: url(../images/login_logo3.png) 10px 10px no-repeat;
+	/*background-color:red;*/
+}
+div.logo h1 {
+	color: white;
+	font-size: 70px;
+	position: relative;
+	top: 30px;
+	left: 140px;
+	/*background-color: blue;*/
+	display: inline;
+	font-weight: normal;
+}
+
+div.logo h1 b {
+	font-family: Trebuchet MS;
+}
+
+div.form {
+	margin: 50px 10px 0 10px;
+/* 	background: url(../images/login_bg_bright.png) left top repeat-x; */
+	padding: 10px 0;
+/* 	background-image: linear-gradient(to bottom, #BDBEBD, #94A294); */
+	background-color: #D6D7D6;
+	border-radius: 7px;
+}
+
+div.form label {
+	margin-right: 5px;
+	
+}
+
+div.form imput[type=text],
+div.form imput[type=password] {
+	border: 2px solid white;
+	border-radius: 3px;
+}
+
+table.login	{
+	font-size: 0.9em;
+	border: 0;
+	border-collapse: collapse;
+	clear: both;
+	width: 430px;
+}
+
+table.default td, table.default th {
+	text-align: left;
+	padding: 2px;
+	border: 0;
+}
+
+/* input { */
+/* 	border: 0; */
+/* } */
