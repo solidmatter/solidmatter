@@ -1,9 +1,0 @@
-
-    <resources>
-        <color name="odd">#181818</color>
-        <color name="even">#000</color>
-        <color name="odd_selected">#303030</color>
-        <color name="even_selected">#363636</color>
-        <color name="focused">#35A</color>
-        <color name="text_default">#FFF</color>
-    </resources>
