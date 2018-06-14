@@ -52,6 +52,16 @@
 		<info_abspath>Absoluter Pfad zum Verzeichnis</info_abspath>
 		<info_published>Erscheinungsjahr</info_published>
 		<info_type>Albumtyp</info_type>
+		<info_type_options>
+			<option id="DEFAULT"></option>
+			<option id="LIVE">Live-Album</option>
+			<option id="SINGLE">Single</option>
+			<option id="MAXI">Maxi</option>
+			<option id="BESTOF">Best Of</option>
+			<option id="BOOTLEG">Bootleg</option>
+			<option id="REMIXES">Remixes</option>
+			<option id="TRIBUTE">Tribute</option>
+		</info_type_options>
 		<info_title>Albumtitel</info_title>
 	</Album>
 	<Track>
@@ -139,14 +149,51 @@
 		<amount_charts>Anzahl Charteinträge</amount_charts>
 		<amount_charts_expanded>Anzahl Charteinträge (aufgeklappt)</amount_charts_expanded>
 		<default_pivot>Standard-Blickwinkel</default_pivot>
+		<default_pivot_options>
+			<option id="SELF">Eigene Bewertung</option>
+			<option id="AVERAGE">Durchschnittswertung</option>
+		</default_pivot_options>
 		<votingstyle>Bewertungsstil</votingstyle>
+		<votingstyle_options>
+			<option id="HOTEL">Hotel</option>
+			<option id="MARKED">markiert</option>
+			<option id="RELATIVE">Relativ</option>
+		</votingstyle_options>
 		<minstars>Negativsterne</minstars>
 		<maxstars>Positivsterne</maxstars>
 		<series>Serie</series>
 		<most_recently_played>zuletzt gespielt</most_recently_played>
 		<more>mehr...</more>
 		<news>News</news>
+		<player>Player</player>
+		<player_options>
+			<option id="EXTERNAL">Externer Player</option>
+			<option id="HTML5">HTML5-Player</option>
+		</player_options>
 	</labels>
+	
+	<relations>
+		<relation id="CouldHaveDone">Könnte auch gemacht haben</relation>
+		<relation id="HasMember">Hat Mitglied</relation>
+		<relation id="HasMixed">Hat gemixed</relation>
+		<relation id="HasRemixed">Hat geremixed</relation>
+		<relation id="IsMemberOf">Ist Mitglied von</relation>
+		<relation id="IsPredecessorTo">Ist Vorgänger von</relation>
+		<relation id="IsPseudonymOf">Ist ein Pseudonym von</relation>
+		<relation id="IsRealNameOf">Ist der echte Name von</relation>
+		<relation id="IsSuccessorOf">Ist Nachfolger von</relation>
+		<relation id="IsSynonymOf">Ist ein Synonym von</relation>
+		<relation id="SharesMembersWith">Teilt Mitglieder mit</relation>
+		<relation id="SoundsLike">Klingt wie</relation>
+		<relation id="YouMightAlsoLike">Dir könnte auch gefallen</relation>
+		<relation id="IsOriginalTo">Ist die Originalversion von</relation>
+		<relation id="IsReferenceTo">Ist eine Refernz auf</relation>
+		<relation id="IsRemixOf">Ist ein Remix von</relation>
+		<relation id="IsCoverOf">Ist eine Coverversion von</relation>
+		<relation id="RemixedBy">Geremixed von</relation>
+		<relation id="CouldBeFrom">Könnte auch sein von</relation>
+		<relation id="MixedBy">Gemixed von</relation>
+	</relations>
 	
 	<menu>
 		<library>Übersicht</library>

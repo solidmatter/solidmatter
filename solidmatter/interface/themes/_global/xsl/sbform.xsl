@@ -211,11 +211,22 @@
 			</td>
 		</tr>
 	</xsl:template>
-	<xsl:template match="sbinput[@type='urlsafe']" mode="inputonly">
+		<xsl:template match="sbinput[@type='urlsafe']" mode="inputonly">
 		<input type="text" size="{@size}" maxlength="{@maxlength}" value="{@value}" name="{@name}" id="{@name}">
 			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
 			<xsl:if test="@errorlabel"><xsl:attribute name="class">formerror</xsl:attribute></xsl:if>
 		</input>
+		<xsl:if test="@name = 'name'">
+			<script language="Javascript" type="text/javascript">
+				oLabel = document.getElementById('label');
+				oName = document.getElementById('name');
+				oLabel.addEventListener('change', function (event) {
+					if (oName.value == '') {
+						oName.value = oLabel.value.replace(/([^a-z0-9]+)/gi, '_');
+					}
+				});
+			</script>
+		</xsl:if>
 		<xsl:call-template name="renderErrorLabel" />
 	</xsl:template>
 	
@@ -283,10 +294,17 @@
 					<xsl:when test="@label">
 						<xsl:value-of select="dyn:evaluate(@label)"/>
 					</xsl:when>
+					<xsl:when test="dyn:evaluate(concat(../@label, '_options/option[@id=&quot;', @value, '&quot;]'))">
+						<xsl:value-of select="dyn:evaluate(concat(../@label, '_options/option[@id=&quot;', @value, '&quot;]'))"/>
+					</xsl:when>
+					<xsl:when test="dyn:evaluate(concat(../@label, '/../options_global/option[@id=&quot;', @value, '&quot;]'))">
+						<xsl:value-of select="dyn:evaluate(concat(../@label, '/../options_global/option[@id=&quot;', @value, '&quot;]'))"/>
+					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="@text" />
 					</xsl:otherwise>
 					</xsl:choose>
+<!-- 					<xsl:value-of select="concat(../@label, '/../../options_global/option[@id=&quot;', @value, '&quot;]')"/> -->
 				</option>
 			</xsl:for-each>
 		</select>
@@ -430,13 +448,17 @@
 						<xsl:attribute name="selected">selected</xsl:attribute>
 					</xsl:if>
 					<xsl:choose>
-					<xsl:when test="@label">
-						<xsl:value-of select="dyn:evaluate(@label)"/>
+<!-- 					<xsl:when test="@label"> -->
+<!-- 						<xsl:value-of select="dyn:evaluate(@label)"/> -->
+<!-- 					</xsl:when> -->
+					<xsl:when test="dyn:evaluate(concat('$locale//relations/relation[@id=&quot;', @value, '&quot;]'))">
+						<xsl:value-of select="dyn:evaluate(concat('$locale//relations/relation[@id=&quot;', @value, '&quot;]'))"/>...
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="@text" />
 					</xsl:otherwise>
 					</xsl:choose>
+<!-- 					<xsl:value-of select="concat('$locale//relations/relation[id=&quot;', @value, '&quot;]')"/> -->
 				</option>
 			</xsl:for-each>
 		</select>

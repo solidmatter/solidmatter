@@ -16,6 +16,23 @@
 		<availability>Availability</availability>
 		<implementation_type>Implementation Type</implementation_type>
 		<data_personal>Personal Data</data_personal>
+		<options_global>
+			<option id="UNSPECIFIED">Unspecified</option>
+			<option id="NONE">None</option>
+			<option id="LOW">Low</option>
+			<option id="MEDIUM">Medium</option>
+			<option id="HIGH">High</option>
+			<option id="VERY HIGH">Very High</option>
+			<option id="EXPOSED">Exposed</option>
+			<option id="RESTRICTED">Restricted</option>
+			<option id="NO">No</option>
+			<option id="REQUIRED">Required</option>
+			<option id="REQUESTED">Requested</option>
+			<option id="SAPGUI">SAP GUI</option>
+			<option id="WEBDYNPRO">WebDynpro</option>
+			<option id="FIORI">FIORI</option>
+			<option id="UI5">UI5</option>
+		</options_global>
 	</labels>
 	
 	<nodetypes>
@@ -29,6 +46,13 @@
 		<type id="sbIdM:DataCategory">Data Category</type>
 		<type id="sbIdM:Data">Data</type>
 	</nodetypes>
+	
+	<relations>
+		<relation id="AlsoRequires">Also requires</relation>
+		<relation id="HasRoleOwner">Has Roleowner</relation>
+		<relation id="IsRequiredBy">Is required by</relation>
+		<relation id="MayBeAssignedBy">May be assigned by</relation>
+	</relations>
 	
 	<views>
 		<view id="xxxxx">xxxxx</view>

@@ -52,6 +52,16 @@
 		<info_abspath>Absolute folder path</info_abspath>
 		<info_published>Published</info_published>
 		<info_type>Albumtype</info_type>
+		<info_type_options>
+			<option id="DEFAULT"></option>
+			<option id="LIVE">Live-Album</option>
+			<option id="SINGLE">Single</option>
+			<option id="MAXI">Maxi</option>
+			<option id="BESTOF">Best Of</option>
+			<option id="BOOTLEG">Bootleg</option>
+			<option id="REMIXES">Remixes</option>
+			<option id="TRIBUTE">Tribute</option>
+		</info_type_options>
 		<info_title>Albumtitle</info_title>
 	</Album>
 	<Track>
@@ -146,7 +156,32 @@
 		<most_recently_played>Most recently played</most_recently_played>
 		<more>more...</more>
 		<news>News</news>
+		<player>Player</player>
 	</labels>
+	
+	<relations>
+		<relation id="CouldHaveDone">Could have done</relation>
+		<relation id="HasMember">Has member</relation>
+		<relation id="HasMixed">Has mixed</relation>
+		<relation id="HasRemixed">Has remixed</relation>
+		<relation id="IsMemberOf">Is member of</relation>
+		<relation id="IsPredecessorTo">Is predecessor to</relation>
+		<relation id="IsPseudonymOf">Is pseudonym of</relation>
+		<relation id="IsRealNameOf">Is real name of</relation>
+		<relation id="IsSuccessorOf">Is successor to</relation>
+		<relation id="IsSynonymOf">Is synonym of</relation>
+		<relation id="SharesMembersWith">Shares members with</relation>
+		<relation id="SoundsLike">Sounds like</relation>
+		<relation id="YouMightAlsoLike">You might also like</relation>
+		<relation id="IsOriginalTo">Is original to</relation>
+		<relation id="IsReferenceTo">Is reference to</relation>
+		<relation id="IsRemixOf">Is remix of</relation>
+		<relation id="RemixedBy">Remixed by</relation>
+		<relation id="CouldBeFrom">Could be from</relation>
+		<relation id="IsOriginalTo">Is original to</relation>
+		<relation id="IsRemixOf">Is remix of</relation>
+		<relation id="MixedBy">Mixed by</relation>
+	</relations>
 	
 	<menu>
 		<library>Library</library>
