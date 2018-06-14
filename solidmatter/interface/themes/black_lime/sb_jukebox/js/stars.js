@@ -7,16 +7,26 @@
 */
 //------------------------------------------------------------------------------
 
-var sStarURL = "/theme/sb_jukebox/images/star_set_normal.png";
-var sStarSmallURL = "/theme/sb_jukebox/images/star_set_small.png";
-var sStarSmallerURL = "/theme/sb_jukebox/images/star_set_smaller.png";
-var sCrapURL = "/theme/sb_jukebox/images/star_crap_normal.png";
-var sCrapSmallURL = "/theme/sb_jukebox/images/star_crap_small.png";
-var sCrapSmallerURL = "/theme/sb_jukebox/images/star_crap_smaller.png";
-var sDotURL = "/theme/sb_jukebox/images/star_dot.png";
-var sHighlightURL = '/theme/sb_jukebox/images/star_select.png';
+//var sStarURL = "/theme/sb_jukebox/images/star_set_normal.png";
+//var sStarSmallURL = "/theme/sb_jukebox/images/star_set_small.png";
+//var sStarSmallerURL = "/theme/sb_jukebox/images/star_set_smaller.png";
+//var sCrapURL = "/theme/sb_jukebox/images/star_crap_normal.png";
+//var sCrapSmallURL = "/theme/sb_jukebox/images/star_crap_small.png";
+//var sCrapSmallerURL = "/theme/sb_jukebox/images/star_crap_smaller.png";
 
-var sDotHTML = '<img src="' + sDotURL + '" alt="star unset"  style="padding-right: 1px;" onMouseOver="highlight_star(this, true)" onMouseOut="highlight_star(this, false)" onClick="vote(this)" />';
+//var sClassGood = "goodstar_normal";
+//var sClassGoodSmall = "goodstar_small";
+//var sClassGoodSmaller = "goodstar_smaller";
+//var sClassBad = "badstar_normal";
+//var sClassBadSmall = "badstar_small";
+//var sClassBadSmaller = "badstar_smaller";
+//var sClassDot = "/theme/sb_jukebox/images/star_dot.png";
+//var sHighlightURL = '/theme/sb_jukebox/images/star_select.png';
+var sHighlightURL = '/theme/sb_jukebox/images/star_set_normal.png';
+
+var sStarURL = '/theme/sb_jukebox/images/star_set_normal.png';
+var sBlankURL = '/theme/sb_jukebox/images/star_blank.png';
+var sDotHTML = '<img src="/theme/sb_jukebox/images/star_blank.png" onMouseOver="highlight_star(this, true)" onMouseOut="highlight_star(this, false)" onClick="vote(this)" />';
 
 var aStarDefinition = new Array();
 var iTotalStars = 0;
@@ -62,15 +72,21 @@ function render_stars(sVote, sUUID, bVotingEnabled) {
 */
 function update_stars(oStarContainer, sVote) {
 	
+	console.log('sVote:' + sVote + 'TotalStars:' + iTotalStars);
+	
 	if (sVote == "") {
 		var iVote = -1;
 	} else {
-		var iVote = parseInt(sVote);
+		var iVote = parseInt(sVote); 
 	}
 	
 	for (var i=0; i<iTotalStars; i++) {
-		oStarContainer.childNodes[i+1].src = getStarURL(iVote, i);
-		oStarContainer.childNodes[i+1].src_orig = oStarContainer.childNodes[i+1].src;
+//		oStarContainer.childNodes[i+1].src = getStarURL(iVote, i);
+//		oStarContainer.childNodes[i+1].src_orig = oStarContainer.childNodes[i+1].src;
+		oStarContainer.childNodes[i+1].className = '';
+		oStarContainer.childNodes[i+1].classList.add(getStarSize(iVote, i));
+		oStarContainer.childNodes[i+1].classList.add(getStarType(iVote, i));
+		oStarContainer.childNodes[i+1].originalClasses = oStarContainer.childNodes[i+1].className;
 	}
 
 }
@@ -79,51 +95,51 @@ function update_stars(oStarContainer, sVote) {
 /**
 * returns the correct star image based on type and step fraction
 */
-function getStarURL(iVote, iPosition) {
-	
-	if (sVotingStyle == 'HOTEL' || iVote >= 37) {
-		var sType = 'good';
-	} else {
-		//var sType = aStarDefinition[iPosition]['type'];
-		var sType = 'bad';
-	}
+function getStarSize(iVote, iPosition) {
 	
 	if (iVote == -1) {
-		return (sDotURL);
+		return ('normal');
 	}
 	
 	if (iPosition == 0) {
-		if (sType == 'good') {
-			return (sStarURL);
-		} else {
-			return (sCrapURL);
-		}
+		return ('normal');
 	}
 	
 	var iRange = aStarDefinition[iPosition]['vote'] - aStarDefinition[iPosition-1]['vote'];
 	var iModulo = iVote - aStarDefinition[iPosition-1]['vote'];
 	
 	if (iModulo <= iRange / 8) {
-		return (sDotURL);
+		return ('none');
 	} else if (iModulo <= iRange / 8 * 3) {
-		if (sType == 'good') {
-			return (sStarSmallerURL);
-		} else {
-			return (sCrapSmallerURL);
-		}
+		return ('smaller');
 	} else if (iModulo <= iRange / 8 * 5) {
-		if (sType == 'good') {
-			return (sStarSmallURL);
-		} else {
-			return (sCrapSmallURL);
-		}
+		return ('small');
 	} else {
-		if (sType == 'good') {
-			return (sStarURL);
-		} else {
-			return (sCrapURL);
-		}
+		return ('normal');
 	}
+	
+}
+
+//------------------------------------------------------------------------------
+/**
+* returns the correct star image based on type and step fraction
+*/
+function getStarType(iVote, iPosition) {
+	
+//	if (iVote == -1) {
+//		return ('good');
+//	}
+	if (sVotingStyle == 'HOTEL') {
+		return('good');
+	}
+	
+//	var iRange = aStarDefinition[iPosition]['vote'] - aStarDefinition[iPosition-1]['vote'];
+	
+	if (sVotingStyle == 'MARKED' && iPosition < Math.abs(iMinStars)) {
+		return('bad');
+	}
+	
+	return('good');
 	
 }
 
@@ -134,10 +150,11 @@ function getStarURL(iVote, iPosition) {
 function highlight_star(oStarImage, bEnable) {
 	
 	if (bEnable) {
-		oStarImage.src_orig = oStarImage.src;
-		oStarImage.src = sHighlightURL;
+		oStarImage.src = sStarURL;
+		oStarImage.classList.add('highlighted');
 	} else {
-		oStarImage.src = oStarImage.src_orig;
+		oStarImage.src = sBlankURL;
+		oStarImage.classList.remove('highlighted');
 	}
 	
 	if (oStarImage.previousSibling != null) {

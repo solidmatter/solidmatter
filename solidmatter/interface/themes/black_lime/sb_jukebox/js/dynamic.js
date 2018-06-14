@@ -496,3 +496,26 @@ function submit_form(sMode) {
 
 }
 
+//------------------------------------------------------------------------------
+//
+//
+function open_player(sURL) {
+//	window.open(sURL,'sbJukeboxPlayer',"resizable=no,toolbar=no,scrollbars=yes,menubar=no,status=no,directories=n o,width=350,height=700,left=50,top=50");
+	oPlayerFrame = window.top.document.getElementById('player_iframe');
+	oContentFrame = window.top.document.getElementById('content_iframe');
+	
+	
+//	console.log("content.width: " + oPlayerFrame.style.marginRight);
+	
+	oPlayerFrame.src = sURL;
+	oPlayerFrame.style.display = 'block';
+	oPlayerFrame.style.width = '300px';
+//	oContentFrame.style.paddingRight = '350px';
+	oContentFrame.style.width = 'calc(100% - 300px)';
+	
+	console.log("player.width: " + oPlayerFrame.style.width);
+	console.log("content.width: " + oContentFrame.style.width);
+	
+//	window.top.padding = '0 350px 0 0';
+	console.log("Opening: " + sURL);
+}

@@ -26,13 +26,88 @@
 	<xsl:variable name="starcolwidth" select="((0 - $jukebox/minstars) + $jukebox/maxstars + 1) * 16 + 5" />
 	
 	<xsl:template match="/response/metadata" priority="10">
+		<xsl:param name="customtitle" />
 		<!-- title -->
-		<title><xsl:value-of select="/response/content/sbnode/@label" /> : <xsl:value-of select="$locale/*/views/view[@id=/response/content/@view]" /></title>
+		<xsl:choose>
+			<xsl:when test="$customtitle">
+				<title><xsl:value-of select="$customtitle" /></title>
+			</xsl:when>
+			<xsl:otherwise>
+				<title><xsl:value-of select="/response/content/sbnode/@label" /> : <xsl:value-of select="$locale/*/views/view[@id=/response/content/@view]" /></title>
+			</xsl:otherwise>
+		</xsl:choose>
 		<!-- styles -->
 		<!-- for now only include jukebox css! -->
 		<link rel="stylesheet" href="/theme/sb_jukebox/css/styles.css" type="text/css" media="all" />
 		<!-- static scripts -->
 		<!--<script language="Javascript" type="text/javascript" src="{$scripts_js}/edit_area/edit_area_full.js"></script>-->
+	</xsl:template>
+	
+	<xsl:template name="frameset">
+		<html>
+		<head>
+			<xsl:apply-templates select="/response/metadata" />
+<!-- 			<script language="Javascript" type="text/javascript" src="/theme/global/js/prototype.js"></script> -->
+<!-- 			<script language="Javascript" type="text/javascript" src="/theme/global/js/scriptaculous.js"></script> -->
+<!-- 			<xsl:choose> -->
+<!-- 				<xsl:when test="$jukebox/votingstyle = 'RELATIVE'"> -->
+<!-- 					<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/stars_relative.js"></script> -->
+<!-- 				</xsl:when> -->
+<!-- 				<xsl:otherwise> -->
+<!-- 					<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/stars.js"></script> -->
+<!-- 				</xsl:otherwise> -->
+<!-- 			</xsl:choose> -->
+<!-- 			<script language="Javascript" type="text/javascript"> -->
+<!-- 				var iMinStars = <xsl:value-of select="$jukebox/minstars" />; -->
+<!-- 				var iMaxStars = <xsl:value-of select="$jukebox/maxstars" />; -->
+<!-- 				var sVotingStyle = '<xsl:value-of select="$jukebox/votingstyle" />'; -->
+<!-- 				init_stars(); -->
+<!-- 			</script> -->
+<!-- 			<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/dynamic.js"></script> -->
+			<style>
+
+			    body,
+			    html {
+				    height: 100%;
+				    margin: 0;
+				    padding: 0;
+<!-- 				    padding-left: 200px; -->
+			    }
+			
+			    #content_iframe {
+				    position: absolute;
+				    top: 0;
+				    left: 0;
+				    border: 0;
+				    height: 100%;
+				    width: 100%;
+<!-- 				    overflow: scroll; -->
+			    }
+			    
+			    #player_iframe {
+				    position: absolute;
+<!-- 				    background-color: rgb(235,0,235); -->
+				    top: 0;
+				    right: 0;
+				    height: 100%;
+				    width: 0px;
+				    border: 0;
+				    border-left: 2px solid #333;
+				    display: none;
+				    overflow: hidden;
+				}
+
+    		</style>
+		</head>
+		<body>
+			<iframe id="content_iframe" src="/?render_content=true" />
+			<iframe id="player_iframe" src="" />
+		</body>
+<!-- 		<frameset cols="*, 0" border="0" bordercolor="#8888AA"> -->
+<!-- 			<frame src="/?render_content=true" name="content" /> -->
+<!-- 			<frame src="" name="player" style="display:none; !important" /> -->
+<!-- 		</frameset> -->
+		</html>
 	</xsl:template>
 	
 	<xsl:template name="layout">
@@ -45,7 +120,7 @@
 				<xsl:when test="$jukebox/votingstyle = 'RELATIVE'">
 					<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/stars_relative.js"></script>
 				</xsl:when>
-				<xsl:otherwise><!-- hotel style -->
+				<xsl:otherwise>
 					<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/stars.js"></script>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -108,10 +183,23 @@
 					</div>
 				</div>
 				<!-- left sidebar - menu -->
-				<div class="menu">
+				<xsl:call-template name="menu" />
+			</div>
+			<div class="body">
+				<xsl:call-template name="content" />
+				<div class="footer">
+					<span style="position:absolute; right:5px; bottom:5px;"><xsl:apply-templates select="/response/metadata/stopwatch" /></span>
+				</div>
+			</div>
+		</body>
+		</html>
+	</xsl:template>
+	
+	<xsl:template name="menu">
+		<div class="menu">
 					<ul>
 						<li>
-							<a href="/-/library">
+							<a href="/-/library?render_content=true">
 								<xsl:if test="$content/@view = 'library'">
 									<xsl:attribute name="class">active</xsl:attribute> 
 								</xsl:if>
@@ -193,22 +281,13 @@
 						<xsl:value-of select="$jukebox/playlists" /> Playlists<br />
 					</div>
 				</div>
-			</div>
-			<div class="body">
-				<xsl:call-template name="content" />
-				<div class="footer">
-					<span style="position:absolute; right:5px; bottom:5px;"><xsl:apply-templates select="/response/metadata/stopwatch" /></span>
-				</div>
-			</div>
-		</body>
-		</html>
 	</xsl:template>
 	
 	<xsl:template match="/response/metadata/stopwatch">
 		<span>
-			<xsl:attribute name="title">LOAD:<xsl:value-of select="load" />ms
-PHP:<xsl:value-of select="php" />ms
-PDO:<xsl:value-of select="pdo" />ms</xsl:attribute>
+			<xsl:attribute name="title">LOAD: <xsl:value-of select="load" />ms
+PHP: <xsl:value-of select="php" />ms
+PDO: <xsl:value-of select="pdo" />ms</xsl:attribute>
 			<xsl:value-of select="execution_time" />ms | 
 			<a target="_blank">
 				<xsl:attribute name="href">
@@ -325,7 +404,10 @@ PDO:<xsl:value-of select="pdo" />ms</xsl:attribute>
 	
 	<xsl:template name="render_buttons">
 		<xsl:param name="with_favorites" select="'true'" />
-		<a class="type play icononly" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
+		<xsl:choose>
+			<xsl:when test="$jukebox/playertype = 'HTML5'"><a class="type play icononly" href="javascript:open_player('/{@uuid}/playlist/openPlayer?sid={$sessionid}')" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a></xsl:when>
+			<xsl:otherwise><a class="type play icononly" href="/{@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}" title="{$locale/sbJukebox/actions/play}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a></xsl:otherwise>
+		</xsl:choose>
 		<xsl:if test="@nodetype != 'sbJukebox:Playlist'">
 			<a class="type recommend icononly" href="/{@uuid}/recommend" title="{$locale/sbJukebox/actions/recommend}"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>
 		</xsl:if>
@@ -423,35 +505,11 @@ PDO:<xsl:value-of select="pdo" />ms</xsl:attribute>
 									[<xsl:value-of select="@info_published" />]
 								</xsl:if>
 							</a>
-							<span style="color:grey;">
-							<xsl:choose>
-								<xsl:when test="@info_type = 'SINGLE'">
-									<!--<img src="/theme/sb_jukebox/icons/type_single.png" style="vertical-align: middle;" />-->
-									- Single
-								</xsl:when>
-								<xsl:when test="@info_type = 'MAXI'">
-									- Maxi
-								</xsl:when>
-								<xsl:when test="@info_type = 'BESTOF'">
-									- Best Of
-								</xsl:when>
-								<xsl:when test="@info_type = 'COMPILATION'">
-									- Compilation
-								</xsl:when>
-								<xsl:when test="@info_type = 'TRIBUTE'">
-									- Tribute
-								</xsl:when>
-								<xsl:when test="@info_type = 'BOOTLEG'">
-									- Bootleg
-								</xsl:when>
-								<xsl:when test="@info_type = 'LIVE'">
-									- Live
-								</xsl:when>
-								<xsl:when test="@info_type = 'DELUXE EDITION'">
-									- Deluxe Edition
-								</xsl:when>
-							</xsl:choose>
-							</span>
+							<xsl:if test="@info_type != 'DEFAULT'">
+								<span style="color:grey;">
+									- <xsl:value-of select="$locale/sbJukebox/Album/info_type_options/option[@id = current()/@info_type]" />
+								</span>
+							</xsl:if>
 							<br />
 							<xsl:call-template name="render_stars" />
 						</td>
@@ -512,7 +570,14 @@ PDO:<xsl:value-of select="pdo" />ms</xsl:attribute>
 						<tr>
 							<xsl:call-template name="colorize" />
 							<td width="30%">
-								<xsl:value-of select="@id" />
+								<xsl:choose>
+								<xsl:when test="dyn:evaluate(concat('$locale//relations/relation[@id=&quot;', @id, '&quot;]'))">
+									<xsl:value-of select="dyn:evaluate(concat('$locale//relations/relation[@id=&quot;', @id, '&quot;]'))"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="@id" />
+								</xsl:otherwise>
+								</xsl:choose>
 							</td>
 							<td>
 								<a href="/{@target_uuid}">

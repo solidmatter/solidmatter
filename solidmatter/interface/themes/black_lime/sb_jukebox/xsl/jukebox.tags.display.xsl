@@ -56,7 +56,7 @@
 					<xsl:with-param name="tags" select="branchtags/tag[contains(., 'Genre:')]" />
 					<xsl:with-param name="weighting" select="$content/weighting/weighting" />
 				</xsl:call-template>
-				<tr><th colspan="5" style="padding:4px 8px;"><hr style="border:1px solid #222;" /></th></tr>
+				<tr class="separator"><th colspan="5"><hr style="border:1px solid #222;" /></th></tr>
 				<xsl:call-template name="render_tags">
 					<xsl:with-param name="group" select="''" />
 					<xsl:with-param name="tags" select="branchtags/tag[not(contains(., 'Year:') or contains(., 'Genre:') or contains(., 'Encoding:') or contains(., 'Defects:') or contains(., 'Series:'))]" />
@@ -68,7 +68,7 @@
 					<xsl:with-param name="tags" select="branchtags/tag[contains(., 'Series:')]" />
 					<xsl:with-param name="weighting" select="$content/weighting/weighting" />
 				</xsl:call-template>-->
-				<tr><th colspan="5" style="padding:4px 8px;"><hr style="border:1px solid #222;" /></th></tr>
+				<tr class="separator"><th colspan="5"><hr style="border:1px solid #222;" /></th></tr>
 				<xsl:call-template name="render_tags">
 					<xsl:with-param name="group" select="'Year:'" />
 					<xsl:with-param name="tags" select="branchtags/tag[contains(., 'Year:')]" />

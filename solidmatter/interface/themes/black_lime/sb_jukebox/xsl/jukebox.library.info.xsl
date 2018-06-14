@@ -21,7 +21,15 @@
 	/>
 	
 	<xsl:template match="/">
-		<xsl:call-template name="layout" />
+		<xsl:choose>
+		<xsl:when test="$parameters/param[@id='render_content']">
+			<xsl:call-template name="layout" />
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:call-template name="frameset" />
+		</xsl:otherwise>
+		</xsl:choose>
+<!-- 		<xsl:call-template name="layout" /> -->
 	</xsl:template>
 	
 	<xsl:template name="content">

@@ -58,8 +58,16 @@
 					<a class="type remove" href="javascript:request_confirmation('/{$master/@uuid}/details/clear');"><xsl:value-of select="$locale/sbSystem/actions/remove_all" /></a>
 				</xsl:if>
 			</span>
-			<a class="type play" href="/{$master/@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}"><xsl:value-of select="$locale/sbJukebox/actions/play" /></a>
-			<a class="type play" href="/{$master/@uuid}/details/getM3U/playlist.m3u?random=true&amp;sid={$sessionid}"><xsl:value-of select="$locale/sbJukebox/actions/play_random" /></a>
+			<xsl:choose>
+				<xsl:when test="$jukebox/playertype = 'HTML5'">
+					<a class="type play" href="javascript:open_player('/{$master/@uuid}/playlist/openPlayer?sid={$sessionid}')"><xsl:value-of select="$locale/sbJukebox/actions/play" /></a>
+					<a class="type play" href="javascript:open_player('/{$master/@uuid}/playlist/openPlayer?sid={$sessionid}&amp;shuffle=true')"><xsl:value-of select="$locale/sbJukebox/actions/play_random" /></a>
+				</xsl:when>
+				<xsl:otherwise>
+					<a class="type play" href="/{$master/@uuid}/details/getM3U/playlist.m3u?sid={$sessionid}"><xsl:value-of select="$locale/sbJukebox/actions/play" /></a>
+					<a class="type play" href="/{$master/@uuid}/details/getM3U/playlist.m3u?random=true&amp;sid={$sessionid}"><xsl:value-of select="$locale/sbJukebox/actions/play_random" /></a>
+				</xsl:otherwise>
+			</xsl:choose>
 		</div>
 		<div class="content">
 			<xsl:apply-templates select="response/errors" />

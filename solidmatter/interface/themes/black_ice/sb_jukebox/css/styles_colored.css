@@ -3,24 +3,47 @@
 /* colored elements (override this file for derived themes)
 /*----------------------------------------------------------------------------*/
 
-body a {
-	color: #57D;
-}
-body a:hover {
-	color: #02ADEC;
+:root {
+
+	--link-color: #57D;
+	--link-color-hover: #02ADEC;
+	
+	--background-color: black;
+	
+ 	--header-color-top: #373333;
+	--header-color-bottom: #1C1C1C;
+ 
+	--row-color-odd: #0D0D0D;
+	--row-color-odd-selected: #303030;
+	--row-color-even: #141414;
+	--row-color-even-selected: #363636;
+	
+	--hue-rotate: 0deg;
+	--badstar-hue-rotate: 130deg;
+	--badstar-saturation: 150%;
+	
+	--hover-brightness: 135%;
+	
 }
 
-div.menu a:hover {
-	color: #02ADEC;
-}
-div.menu a.active {
-	color: #02ADEC;
-}
+/* body a { */
+/* 	color: #57D; */
+/* } */
+/* body a:hover { */
+/* 	color: #02ADEC; */
+/* } */
 
-span.alphalinks a:hover {
-	background-color: #02ADEC;
-}
+/* div.menu a:hover { */
+/* 	color: #02ADEC; */
+/* } */
+/* div.menu a.active { */
+/* 	color: #02ADEC; */
+/* } */
 
-div.ac_suggestions ul li.selected {
-	color: #02ADEC;
-}
+/* span.alphalinks a:hover { */
+/* 	background-color: #02ADEC; */
+/* } */
+
+/* div.ac_suggestions ul li.selected { */
+/* 	color: #02ADEC; */
+/* } */
