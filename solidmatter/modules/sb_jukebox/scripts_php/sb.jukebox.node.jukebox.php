@@ -38,6 +38,25 @@ class sbNode_jukebox_jukebox extends sbJukeboxNode {
 			return (parent::getDefaultView());	
 		}
 	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function getFavoritesNode() {
+		$nodeUser = User::getNode();
+		$sJukeboxUUID = $this->getProperty('jcr:uuid');
+		if ($nodeUser->hasNode($sJukeboxUUID)) {
+			$nodeFavorites = $nodeUser->getNode($sJukeboxUUID);
+		} else {
+			$nodeFavorites = $nodeUser->addNode($sJukeboxUUID, 'sbJukebox:Playlist');
+			$nodeFavorites->setProperty('label', 'Favorites');
+			$nodeUser->save();
+		}
+		return ($nodeFavorites);
+	}
 		
 }
 

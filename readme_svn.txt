@@ -47,8 +47,9 @@ usable:
    the current state in this file before a commit. That means you should NOT 
    use this master DB for testing, i recommend that you use a seperate 
    installation (repository "test"), make sbCR repository changes in the master
-   ("dev") and transport these to the testing DB. (Navicat is a nice tool to
-   make this process easier)
+   ("dev") and transport these to the testing DB. (Navicat *was* a nice tool to
+   make this process easier, nowadays i recommend HeidiSQL, which also produces
+   the matching export SQL)
 
 There are exceptions to 1, 2 and 3, especially in the current state the code is
 in, but try to stick to these rules, in the end it helps everyone working with

@@ -79,6 +79,7 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 					Registry::setValue('sb.jukebox.charts.amount.expanded',			$formSettings->getValue('chartsexpanded'),			User::getUUID());
 					Registry::setValue('sb.jukebox.charts.pivot.default',			$formSettings->getValue('defaultpivot'),			User::getUUID());
 					Registry::setValue('sb.jukebox.adminmode.enabled',				$formSettings->getValue('adminmode'),				User::getUUID());
+					Registry::setValue('sb.jukebox.player.type',					$formSettings->getValue('playertype'),				User::getUUID());
 					
 				} else {
 					// do nothing, errors are set
@@ -150,6 +151,7 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 		$formConfig->addInput('chartsexpanded;integer;minvalue=10;maxvalue=1000;',			'$locale/sbJukebox/labels/amount_charts_expanded');
 		$formConfig->addInput('defaultpivot;select;options=SELF|AVERAGE;',					'$locale/sbJukebox/labels/default_pivot');
 		$formConfig->addInput('adminmode;checkbox;',										'$locale/sbJukebox/labels/adminmode');
+		$formConfig->addInput('playertype;select;options=EXTERNAL|HTML5;',					'$locale/sbJukebox/labels/player');
 		$formConfig->addSubmit('$locale/sbSystem/actions/apply');
 		
 		$formConfig->setValue('votingstyle',			Registry::getValue('sb.jukebox.voting.style'));
@@ -164,6 +166,7 @@ class sbView_jukebox_jukebox_config extends sbJukeboxView {
 		$formConfig->setValue('charts',					Registry::getValue('sb.jukebox.charts.amount.default'));
 		$formConfig->setValue('chartsexpanded',			Registry::getValue('sb.jukebox.charts.amount.expanded'));
 		$formConfig->setValue('defaultpivot',			Registry::getValue('sb.jukebox.charts.pivot.default'));
+		$formConfig->setValue('playertype',				Registry::getValue('sb.jukebox.player.type'));
 		$sAdminMode = 'FALSE';
 		if (Registry::getValue('sb.jukebox.adminmode.enabled')) {
 			$sAdminMode = 'TRUE';

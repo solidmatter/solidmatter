@@ -16,7 +16,7 @@
 
 if (!defined('PRETTYPRINT'))		define('PRETTYPRINT', TRUE);
 //ini_set('opcache.enable', 0);
-include('keys.php'); // keys for 3rd party applications, e.g. webservice APIs
+if (file_exists('keys.php')) { include('keys.php'); }; // keys for 3rd party applications, e.g. webservice APIs
 
 //------------------------------------------------------------------------------
 // create stopwatch

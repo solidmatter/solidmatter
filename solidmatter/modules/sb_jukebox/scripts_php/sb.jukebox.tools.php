@@ -194,6 +194,17 @@ class JukeboxTools {
 				}
 			}
 			$sPlaylist .= '</trackList></playlist>';
+		} elseif ($sFormat == 'ARRAY') {
+			$aOutput = array();
+			foreach ($aPlaylistItems as $aItem) {
+				$aOutputItem = array();
+				$aOutputItem['uuid'] = $aItem['uuid'];
+				$aOutputItem['label'] = $aItem['label'];
+				$aOutputItem['playtime'] = $aItem['playtime'];
+				$aOutputItem['url'] = 'http://'.$_REQUEST->getDomain().'/play/'.$aItem['uuid'].'/'.$sToken.'/'.str2urlsafe($aItem['label'], TRUE, TRUE).".mp3";
+				$aOutput[] = $aOutputItem;
+			}
+			return ($aOutput);
 		}
 		
 		return ($sPlaylist);

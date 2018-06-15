@@ -86,6 +86,20 @@ class sbView_jukebox_jukebox_library extends sbJukeboxView {
 				$_RESPONSE->addData($formSearch);
 				break;
 			
+			case 'openPlayer':
+				
+				import('sbJukebox:sb.jukebox.tools');
+				
+				$nodeSubject = $this->crSession->getNodeByIdentifier($_REQUEST->getParam('subject'));
+				$aPlaylistItems = JukeboxTools::getPlaylist($this->getJukebox(), $nodeSubject, FALSE, 'ARRAY');
+				
+// 				var_dumppp($aPlaylistItems);
+				$_RESPONSE->addData($nodeSubject, 'subject');
+				$_RESPONSE->addData($aPlaylistItems, 'playlist');
+				
+				
+				break;
+				
 			default:
 				throw new sbException(__CLASS__.': action not recognized ('.$sAction.')');
 			

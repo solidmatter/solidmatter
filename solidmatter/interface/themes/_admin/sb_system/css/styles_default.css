@@ -75,9 +75,7 @@ div.top_bar {
 	display: none;
 	position: absolute;
 	background-color: grey;
-	moz-opacity: 0.5;
-	filter: alpha(opacity=50);
-	opacity: 0.50;
+	opacity: 0.5;
 }
 
 

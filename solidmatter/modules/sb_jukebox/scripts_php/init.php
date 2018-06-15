@@ -93,7 +93,7 @@ class sbJukeboxView extends sbView {
 		$aData['adminmode'] = Registry::getValue('sb.jukebox.adminmode.enabled');
 		$aData['quiltcovers'] = Registry::getValue('sb.jukebox.quilts.coveramount');
 		$aData['quiltcoversize'] = Registry::getValue('sb.jukebox.quilts.coversize');
-		
+		$aData['playertype'] = Registry::getValue('sb.jukebox.player.type');
 		
 		// store in response
 		foreach ($aData as $sKey => $sValue) {
