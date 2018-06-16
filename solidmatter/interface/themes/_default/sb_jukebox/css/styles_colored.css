@@ -1,0 +1,39 @@
+
+/*----------------------------------------------------------------------------*/
+/* colored elements (override this file for derived themes)
+/*----------------------------------------------------------------------------*/
+
+:root {
+
+	--link-color: #57D;
+	--link-color-hover: #02ADEC;
+	
+	--background-color: black;
+	
+	--topbar-color-top: #787878;
+	--topbar-color-bottom: #2C2C2C;
+	
+	--actionbar-color-top: #0D0D0D;
+	--actionbar-color-bottom: #141414;
+	
+	--menu-entry-top: #2C2C2C;
+	--menu-entry-bottom: #080808;
+	
+	--menu-footer-top: #787878;
+	--menu-footer-body: #4E4E4E;
+	
+ 	--header-color-top: #373333;
+	--header-color-bottom: #1C1C1C;
+ 
+	--row-color-odd: #0D0D0D;
+	--row-color-odd-selected: #303030;
+	--row-color-even: #141414;
+	--row-color-even-selected: #363636;
+	
+	--hue-rotate: 330deg;
+	--badstar-hue-rotate: 130deg;
+	--badstar-saturation: 150%;
+	
+	--hover-brightness: 135%;
+	
+}
