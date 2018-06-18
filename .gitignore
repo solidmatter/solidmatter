@@ -3,3 +3,4 @@
 /.buildpath
 /solidmatter/_logs/debug.txt
 /solidmatter/_logs/log_database_test.txt
+/solidmatter/keys.php
