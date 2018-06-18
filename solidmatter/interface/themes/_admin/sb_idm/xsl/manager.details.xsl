@@ -36,7 +36,7 @@
 		
 		<table class="default" width="100%" id="list">
 			<thead>
-				<tr><th class="th2">Tags</th></tr>
+				<tr><th>Tags</th></tr>
 			</thead>
 			<tbody>
 				<tr><td>
@@ -56,7 +56,7 @@
 	
 		<table class="default" width="100%" id="list">
 			<thead>
-				<tr><th class="th2" colspan="6" >Result</th></tr>
+				<tr><th colspan="3">Result</th></tr>
 				<tr class="th2">
 					<th width="33%"><xsl:value-of select="$locale/sbSystem/labels/name" /></th>
 					<th width="33%">Infos</th>
@@ -85,7 +85,7 @@
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>
-					<tr><td colspan="6"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>
+					<tr><td colspan="3"><xsl:value-of select="$locale/sbSystem/texts/no_subobjects" /></td></tr>
 				</xsl:otherwise>
 			</xsl:choose>
 			</tbody>
