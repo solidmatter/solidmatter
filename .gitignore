@@ -1,6 +1,5 @@
 .settings
 /.project
 /.buildpath
-/solidmatter/_logs/debug.txt
-/solidmatter/_logs/log_database_test.txt
+/solidmatter/_logs/*
 /solidmatter/keys.php
