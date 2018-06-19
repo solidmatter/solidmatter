@@ -60,6 +60,7 @@ class sbDOMResponse extends sbDOMDocument {
 		$this->createSection('md_commands', 'commands', $elemMetadata);
 		$this->createSection('md_headers', 'headers', $elemMetadata);
 		$this->createSection('md_stopwatch', 'stopwatch', $elemMetadata);
+		$this->createSection('md_request', 'request', $elemMetadata);
 		
 		// insert modules
 		$this->aModules = System::getModules();
@@ -191,6 +192,19 @@ class sbDOMResponse extends sbDOMDocument {
 			$elemHeader->setAttribute('statuscode', $iStatusCode);
 		}
 		$this->addMeta('md_headers', $elemHeader);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function addRequestURIData($aData) {
+		foreach ($aData as $sKey => $sValue) {
+			$elemData = $this->createElement($sKey, $sValue);
+			$this->addMeta('md_request', $elemData);
+		}
 	}
 	
 	//--------------------------------------------------------------------------

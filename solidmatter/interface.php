@@ -46,8 +46,14 @@ DEBUG('Interface: Session ID = '.$_SESSIONID, DEBUG::SESSION);
 //------------------------------------------------------------------------------
 // switch according to site definition
 
-
-$aRequest = parse_url('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+$sCompleteURI = '';
+if (isset($_SERVER['HTTPS'])) {
+	$sCompleteURI = 'https://';
+} else {
+	$sCompleteURI = 'http://';
+}
+$sCompleteURI = $sCompleteURI.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+$aRequest = parse_url($sCompleteURI);
 $aPath = explode('/', $aRequest['path']);
 if (in_array('..', $aPath)) {
 	die_fancy('parent operator not allowed, aborting.');
@@ -66,7 +72,7 @@ if ($elemSite == NULL) {
 	header('File not found', TRUE, '404');
 	die_fancy('could not handle request, aborting.');
 }
-
+// var_dumppp($aSite);
 Stopwatch::check('tier1_sitematch', 'php');
 
 switch ((string) $elemSite['type']) {
@@ -260,6 +266,26 @@ if (TIER2_SEPARATED) {
 	DEBUG('Interface: entering tier2 now (via include())', DEBUG::BASIC);
 	include_once('controller.php');
 }
+
+$aSiteData = $elemSite->attributes();
+unset($aRequest['query']);
+// strip trailing slash
+$sLocation = $aSiteData['location'];
+$sRelativeLocation = '';
+if (substr($sLocation, -1) == '/') {
+	$sLocation = substr($sLocation, 0, -1);
+}
+if (stripos($sLocation, '/')) {
+	$sRelativeLocation = substr($sLocation, stripos($sLocation, '/'));
+}
+
+$aSiteData['location'] = $sLocation;
+$aAdditionalData['relative_location'] = $sRelativeLocation;
+$aRequestData['relative_location'] = 'fuckyou';
+$_RESPONSE->addRequestURIData($aRequest);
+$_RESPONSE->addRequestURIData($aSiteData);
+// $_RESPONSE->addRequestURIData($_SERVER);
+$_RESPONSE->addRequestURIData($aAdditionalData);
 
 DEBUG('Interface: request processing took '.(Stopwatch::stop('execution_time')*1000).'ms', DEBUG::BASIC);
 $_RESPONSE->addStopwatchTimes(Stopwatch::getTaskTimes());

@@ -30,6 +30,7 @@
 	<xsl:variable name="sessionid" select="/response/metadata/system/sessionid" />
 	<xsl:variable name="userid" select="/response/metadata/system/userid" />
 	<xsl:variable name="auth" select="$master/user_authorisations/authorisation" />
+	<xsl:variable name="relativeRoot" select="/response/metadata/request/relative_location" />
 	
 	<xsl:template match="/response/locales"></xsl:template>
 	

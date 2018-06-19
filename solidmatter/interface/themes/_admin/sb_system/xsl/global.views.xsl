@@ -34,7 +34,7 @@
 			<xsl:for-each select="../ancestors/sbnode">
 				<xsl:sort order="descending" />
 				<xsl:if test="@nodetype != 'sbSystem:Root'">
-					<a class="highlighted type {@displaytype}" href="/{@uuid}"><span class="">
+					<a class="highlighted type {@displaytype}" href="{$relativeRoot}/{@uuid}"><span class="">
 						<xsl:call-template name="localize"><xsl:with-param name="label" select="@label" /></xsl:call-template>
 					</span></a>
 					<xsl:if test="position() != last()+1">

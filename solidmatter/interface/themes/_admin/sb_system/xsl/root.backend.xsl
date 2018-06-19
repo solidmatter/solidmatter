@@ -24,13 +24,13 @@
 			<script type="text/javascript" src="{$scripts_js}/commands.js"></script>
 		</head>
 		<frameset cols="280, *" border="2" bordercolor="#8888AA">
-			<frame src="/-/menu" name="navigation" />
+			<frame src="{$relativeRoot}/-/menu" name="navigation" />
 			<xsl:choose>
 				<xsl:when test="$content/lastRecallableAction/lastRecallableAction">
-					<frame src="{$content/lastRecallableAction/lastRecallableAction}" name="main" />
+					<frame src="{$relativeRoot}{$content/lastRecallableAction/lastRecallableAction}" name="main" />
 				</xsl:when>
 				<xsl:otherwise>
-					<frame src="/-/welcome" name="main" />
+					<frame src="{$relativeRoot}/-/welcome" name="main" />
 				</xsl:otherwise>
 			</xsl:choose>
 		</frameset>
