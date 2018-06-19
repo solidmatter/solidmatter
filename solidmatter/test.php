@@ -506,26 +506,21 @@ if ($TEST == 'IMPORTQUERIES') {
 }
 
 if ($TEST == 'UUIDSTUFF') {
+
+	import('sbUUID');
 	
 	echo '<body style="font-family: Andale Mono, monospace;">';
 	
 	for ($i=0; $i<1000; $i++) {
-		/*
-		$m=microtime(true);
-// 		echo sprintf("%08x%04x",floor($m),($m-floor($m))*1000000).'|';
-// 		echo $m.'|';
-// 		echo microtime().'|';
+
+		$sUUID64 = sbUUID::create();
+		$sUUID16a = sbUUID::convertBase64to16($sUUID64);
+		$sUUID16b = sbUUID::convertBase64to16($sUUID64, FALSE);
+		$sUUID64a = sbUUID::convertBase16to64($sUUID16a);
+		$sUUID64b = sbUUID::convertBase16to64($sUUID16b, FALSE);
 		
-		$sUUID = sbUUID();
-		echo $sUUID.'|';
-// 		echo hex2bin($sUUID).'|';
-// 		echo base64_encode(hex2bin($sUUID)).'|';
-		$sWebUUID = base64url_encode(hex2bin($sUUID));
-		echo $sWebUUID.'|';
-// 		echo base64url_decode($sWebUUID);
-		echo bin2hex(base64url_decode($sWebUUID));
-		*/
-		echo sbUUID();
+		echo $sUUID64.'|'.$sUUID16a.'|'.$sUUID16b.'|'.$sUUID64a.'|'.$sUUID64b;
+		
 		
 		echo '<br>';
 		

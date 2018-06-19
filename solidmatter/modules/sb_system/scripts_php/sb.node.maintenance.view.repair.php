@@ -73,7 +73,7 @@ class sbView_maintenance_repair extends sbView {
 				
 				foreach ($aResultset as $aRow) {
 					if ($aRow['uuid'] != '00000000000000000000000000000000') {
-						$sNewUUID = sbUUID();
+						$sNewUUID = sbUUID::create();
 						$stmtUpdate->bindParam('uuid_old', $aRow['uuid'], PDO::PARAM_STR);
 						$stmtUpdate->bindParam('uuid_new', $sNewUUID, PDO::PARAM_STR);
 // 						echo $aRow['uuid'] . ' -> ' . $sNewUUID . '<br/>';
