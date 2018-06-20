@@ -78,7 +78,16 @@ abstract class RequestHandler {
 			$sPrefix = 'https://';
 		}*/
 		
-		$sDestinationURL  = $sPrefix.$_REQUEST->getLocation().$this->generateRequestPath($mSubject, $sView, $sAction, $aParameters);
+		$sPort = '';
+		if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') {
+			$sPort = ':'.$_SERVER['SERVER_PORT'];
+		}
+		$sLocation = $_REQUEST->getLocation();
+		if (substr($sLocation, -1) == '/') {
+			$sLocation = substr($sLocation, 0, -1).$sPort.'/';
+		}
+		
+		$sDestinationURL  = $sPrefix.$sLocation.$this->generateRequestPath($mSubject, $sView, $sAction, $aParameters);
 		
 		return ($sDestinationURL);
 		
