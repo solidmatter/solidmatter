@@ -64,6 +64,7 @@ class sbView_maintenance_repair extends sbView {
 				break;
 				
 			case 'optimizeUUIDs':
+				
 // 				$this->logEvent(System::MAINTENANCE, 'UUID_OPTIMIZATION_STARTED', 'started to convert to sbUUIDs');
 				$stmtSelect = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/getAllUUIDs');
 				$stmtSelect->execute();
@@ -80,6 +81,37 @@ class sbView_maintenance_repair extends sbView {
 // 						$stmtUpdate->debug();
 						$stmtUpdate->execute();
 					}
+					
+					
+					/* TODO: missing updates 
+					
+					update root id
+					
+					sb_system_eventlog
+					fk_user
+					fk_subject
+					
+					sb_system_nodes
+					fk_creadedby
+					fk_modifiedby
+					
+					sb_system_properties <- maybe in values!
+					
+					sb_system_registry_values
+					
+					sb_jukebox_albums
+					fk_artist
+					fk_albumartist?
+					
+					sb_jukebox_historya_albums
+					fk_user
+					
+					sb_jukebox_history_tracks
+					fk_user
+					
+					sb_jukebox_tracks
+					
+					*/
 				}
 				
 // 				$this->logEvent(System::MAINTENANCE, 'UUID_OPTIMIZATION_ENDED', 'Conversion to sbUUIDs finished');
