@@ -944,7 +944,7 @@ class sbCR_Node {
 			foreach ($this->crPropertyDefinitionCache as $sName => $aDetails) {
 				// TODO: remove empty properties
 				if ($aDetails['e_storagetype'] == 'EXTERNAL' && $aDetails['b_protected'] == 'FALSE') {
-					$stmtSave->bindValue(':node_id', $this->getIdentifier(), PDO::PARAM_INT);
+					$stmtSave->bindValue(':node_id', $this->getIdentifier(), PDO::PARAM_STR);
 					$stmtSave->bindValue(':attributename', $sName, PDO::PARAM_STR);
 					$stmtSave->bindValue(':content', $this->elemSubject->getAttribute($sName), PDO::PARAM_LOB);
 					$stmtSave->execute();
@@ -953,7 +953,7 @@ class sbCR_Node {
 			$stmtSave->closeCursor();
 		} elseif ($sType == 'AUXILIARY') {
 			$stmtSave = $this->crSession->prepareKnown($this->aQueries['saveProperties']['auxiliary']);
-			$stmtSave->bindValue(':node_id', $this->getIdentifier(), PDO::PARAM_INT);
+			$stmtSave->bindValue(':node_id', $this->getIdentifier(), PDO::PARAM_STR);
 			foreach ($this->crPropertyDefinitionCache as $sName => $aDetails) {
 				if ($aDetails['e_storagetype'] == 'AUXILIARY') {
 					if ($this->isNew() && $aDetails['b_protectedoncreation'] == 'TRUE') {
