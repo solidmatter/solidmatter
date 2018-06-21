@@ -32,7 +32,7 @@ abstract class sbUUID {
 	 * Generates a UUID after the old model
 	 * @return string a 16 byte UUID (
 	 */
-	public static function getOldUUID($bWithHyphens = FALSE) {
+	public static function createOldUUID($bWithHyphens = FALSE) {
 		if ($bWithHyphens) {
 			$sFormat = '%04x%04x-%04x-%04x-%04x-%04x%04x%04x';
 		} else {

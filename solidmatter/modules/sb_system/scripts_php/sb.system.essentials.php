@@ -236,7 +236,7 @@ spl_autoload_register('sm_autoload', TRUE);
 * @return string a 16 byte UUID as hexadecimal string
 */
 function uuid() {
-	return (sbUUID::create());
+	return (sbUUID::createOldUUID());
 }
 
 //------------------------------------------------------------------------------
