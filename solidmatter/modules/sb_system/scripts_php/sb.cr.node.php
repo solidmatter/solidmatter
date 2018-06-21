@@ -310,7 +310,7 @@ class sbCR_Node {
 				$stmtChildren = $this->crSession->prepareKnown($this->aQueries['loadChildren']['byMode']);
 				$mParam = $this->elemSubject->getAttribute('uuid');
 				$stmtChildren->bindParam(':parent_uuid', $mParam, PDO::PARAM_STR);
-				$stmtChildren->bindParam(':mode', $sMode, PDO::PARAM_INT);
+				$stmtChildren->bindParam(':mode', $sMode, PDO::PARAM_STR);
 			}
 			$stmtChildren->execute();
 			$aChildren = $stmtChildren->fetchAll(PDO::FETCH_ASSOC);
