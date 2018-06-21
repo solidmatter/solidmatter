@@ -391,7 +391,7 @@ function unfucked_base_convert ($numstring, $frombase, $tobase) {
 if ($TEST == 'BASECONVERT') {
 	echo '<pre>';
 	for ($i=0; $i<100; $i++) {
-		$sUUID = uuid();
+		$sUUID = sbUUID::getOldUUID();
 		$sCUUID = unfucked_base_convert($sUUID, 16, 2);
 		$in = $sUUID;
 		$out = unfucked_base_convert(unfucked_base_convert($sUUID, 16, 32), 32, 16);
@@ -507,18 +507,19 @@ if ($TEST == 'IMPORTQUERIES') {
 
 if ($TEST == 'UUIDSTUFF') {
 
-	import('sbUUID');
+	import('sb.system.sbuuid');
 	
 	echo '<body style="font-family: Andale Mono, monospace;">';
 	
 	for ($i=0; $i<1000; $i++) {
-
+		
 		$sUUID64 = sbUUID::create();
 		$sUUID16a = sbUUID::convertBase64to16($sUUID64);
 		$sUUID16b = sbUUID::convertBase64to16($sUUID64, FALSE);
 		$sUUID64a = sbUUID::convertBase16to64($sUUID16a);
 		$sUUID64b = sbUUID::convertBase16to64($sUUID16b, FALSE);
 		
+// 		echo microtime(TRUE).'|'.microtime().'|';
 		echo $sUUID64.'|'.$sUUID16a.'|'.$sUUID16b.'|'.$sUUID64a.'|'.$sUUID64b;
 		
 		

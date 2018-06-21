@@ -19,12 +19,31 @@ abstract class sbUUID {
 	
 	//--------------------------------------------------------------------------
 	/**
-	 * Generates a sbUUID, 
-	 * @return string a 16 byte UUID 
+	 * Generates a sbUUID 
+	 * @return string a 16 byte UUID (in web-safe Base64)
 	 */
 	public static function create() {
 		self::$sLastUUID = self::base64url_encode(hex2bin(self::getOrderedUUID()));
 		return (self::$sLastUUID);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 * Generates a UUID after the old model
+	 * @return string a 16 byte UUID (
+	 */
+	public static function getOldUUID($bWithHyphens = FALSE) {
+		if ($bWithHyphens) {
+			$sFormat = '%04x%04x-%04x-%04x-%04x-%04x%04x%04x';
+		} else {
+			$sFormat = '%04x%04x%04x%04x%04x%04x%04x%04x';
+		}
+		return sprintf($sFormat,
+			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+			mt_rand( 0, 0x0fff ) | 0x4000,
+			mt_rand( 0, 0x3fff ) | 0x8000,
+			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+			);
 	}
 	
 	//--------------------------------------------------------------------------
