@@ -100,7 +100,7 @@
     		</style>
 		</head>
 		<body>
-			<iframe id="content_iframe" src="/?render_content=true" />
+			<iframe id="content_iframe" src="/-/?render_content=true" />
 			<iframe id="player_iframe" src="" />
 		</body>
 <!-- 		<frameset cols="*, 0" border="0" bordercolor="#8888AA"> -->

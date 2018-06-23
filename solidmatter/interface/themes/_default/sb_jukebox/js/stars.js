@@ -56,7 +56,7 @@ function render_stars(sVote, sUUID, bVotingEnabled) {
 */
 function update_stars(sUUID, sVote) {
 	
-	console.log('sVote:' + sVote + 'TotalStars:' + iTotalStars);
+	//console.log('sVote:' + sVote + 'TotalStars:' + iTotalStars);
 	
 	if (sVote == "") {
 		var iVote = -1;

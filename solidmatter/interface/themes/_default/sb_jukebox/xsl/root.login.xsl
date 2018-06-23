@@ -19,7 +19,7 @@
 	/>
 	
 	<xsl:template match="/">
-		<html style="background-color:#222;">
+		<html class="login">
 		<head>
 			<!--<xsl:apply-templates select="/response/metadata" />-->
 			<link rel="stylesheet" href="/theme/sb_jukebox/css/styles.css" type="text/css" media="all" />
@@ -27,9 +27,11 @@
 		<body>
 			<div class="login">
 				<div class="logincontainer">
+					<div>
 					<xsl:apply-templates select="/response/content/sbform[@id='login_backend']" />
 					<div class="slogan">
-						solidbytes Jukebox 0.5beta | Share the music you like with the people you like
+						solidbytes Jukebox | Share the music you like with the people you like
+					</div>
 					</div>
 				</div>
 			</div>

@@ -29,12 +29,12 @@ div.body {
 body a {
 	text-decoration: none;
 	color: var(--link-color);
-	filter: hue-rotate(var(--hue-rotate));
+	filter: hue-rotate(var(--hue-rotate)) saturate(var(--saturation));
 }
 body a:hover {
 /* 	color: var(--link-color-hover); */
 	/*text-decoration: underline;*/
-	filter: brightness(var(--hover-brightness)) hue-rotate(var(--hue-rotate)) saturate(130%);
+	filter: brightness(var(--hover-brightness)) hue-rotate(var(--hue-rotate)) saturate(var(--saturation));
 /* 	filter: brightness(var(--hover-brightness)); */
 }
 
@@ -42,17 +42,36 @@ body a:hover {
 /* login
 /*----------------------------------------------------------------------------*/
 
+html.login {
+	background-color: #222;
+}
+
 div.login {
 	color: white;
-	padding-top: 200px;
+	margin: auto;
+	vertical-align: middle;
+	position: absolute;
+    top: calc(50% - 150px);
+    left: calc(50% - 220px);
 }
-div.logincontainer {
+div.logincontainer,
+div.logincontainer div {
 	margin: auto;
 	padding: 0px;
-	height: 311px;
-	width: 461px;
+	height: 300px;
+	width: 440px;
 	position: relative;
-	background: transparent url(../images/login_bg.png) no-repeat top left;
+	border-radius: 10px;
+	box-shadow: 0px 5px 20px #181818;
+/* 	background: transparent url(../images/login_bg.png) no-repeat top left; */
+}
+div.logincontainer {
+	background-image: linear-gradient(to bottom, #444, #222);
+	}
+div.logincontainer div {
+	background: transparent url(../images/clef.svg) no-repeat top left;
+	background-size: 230px;
+	background-position: -30px 15px;
 }
 form.login {
 	padding-top: 15px;
@@ -81,6 +100,7 @@ div.logincontainer div.slogan {
 	margin: 3px;
 	background: transparent;
 	width: 461px;
+	display: none;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -141,13 +161,15 @@ div.logincontainer div.slogan {
 /*----------------------------------------------------------------------------*/
 
 div.head {
-	background: transparent url(../images/header_bg.png) repeat-x top left;
+	background-image: linear-gradient(to bottom, var(--topbar-color-top), var(--topbar-color-bottom2));
 	filter: hue-rotation(var(--hue-rotation));
 }
 
 div.head h1 {
-	/*background: url(../images/logo.png) no-repeat 50px 5px;
-	padding-left: 100px;*/
+/* 	background: url(../images/logo.png) no-repeat 50px 5px; */
+	background: transparent url(../images/header_bg.png) repeat-x top left;
+	filter: hue-rotation(var(--hue-rotation)) saturation(var(--saturation));
+	padding-left: 100px;
 	padding-left: 60px;
 }
 
@@ -217,7 +239,7 @@ div.menu a {
 	display: block;
 	color: white;
 	text-decoration: none;
-	padding: 13px 22px 0 22px;
+	padding: 14px 22px 0 22px;
 	height: 28px;
 	background-image: linear-gradient(to bottom, var(--menu-entry-top), var(--menu-entry-bottom));
 /* 	background: transparent url(../images/menu_bg.png) repeat-x top left; */
@@ -226,7 +248,8 @@ div.menu a {
 div.menu a:hover {
 	background: transparent url(../images/menu_bg_hover.png) repeat-x top center;
 /* 	color: var(--link-color-hover); */
-	color: var(--link-color);
+/* 	color: var(--link-color); */
+/* 	color: white; */
 /* 	filter: none; */
 /* 	filter: hue-rotation(var(--hue-rotation)); */
 }
@@ -443,7 +466,7 @@ span.stars {
 }
 span.stars img {
 	cursor: pointer;
-	filter: hue-rotate(var(--hue-rotate));
+	filter: hue-rotate(var(--hue-rotate)) saturate(var(--saturation));
 }
 span.actions span.stars {
 	position: relative;
@@ -479,7 +502,7 @@ span.stars img.normal {
 /* 	background-image: /theme/sb_jukebox/images/star_crap_smaller.png; */
 /* } */
 span.stars img.highlighted {
-	filter: brightness(var(--hover-brightness)) hue-rotate(var(--hue-rotate));
+	filter: brightness(var(--hover-brightness)) hue-rotate(var(--hue-rotate)) saturate(var(--saturation));
 }
 span.stars img.bad {
 	filter: hue-rotate(var(--badstar-hue-rotate));
@@ -509,7 +532,7 @@ div.ac_suggestions ul li {
 div.ac_suggestions ul li.selected {
 	background-color: #000;
 	color: var(--link-color);
-	filter: hue-rotate(var(--hue-rotate));
+	filter: hue-rotate(var(--hue-rotate)) saturate(var(--saturation));
 }
 
 /* album details -------------------------------------------------------------*/
@@ -779,7 +802,7 @@ input[type=reset] {
 	border: 1px solid var(--link-color);
 	border-radius: 3px;
 	background-color: var(--link-color);
-	filter: hue-rotate(var(--hue-rotate));
+	filter: hue-rotate(var(--hue-rotate)) saturate(var(--saturation));
 }
 a.button:hover,
 input[type=button]:hover, 
@@ -788,7 +811,7 @@ input[type=reset]:hover {
 /* 	background-color: var(--highlight-color); */
 /* 	color: var(--highlight-color-text); */
 	border: 1px solid var(--link-color);
-	filter: brightness(var(--hover-brightness)) hue-rotate(var(--hue-rotate));
+	filter: brightness(var(--hover-brightness)) hue-rotate(var(--hue-rotate)) saturate(var(--saturation));
 }
 
 /*----------------------------------------------------------------------------*/
