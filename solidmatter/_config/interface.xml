@@ -48,6 +48,13 @@
 		<site location="test.backend/theme" type="theme" handler="backend" theme="_admin" />
 		<site location="test.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
 	</site>
+	<site location="test.backend:666/" type="controller" handler="backend" theme="_admin">
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		<debug enabled="true" verbose="false" />
+		<site location="test.backend:666/templates" type="controller" handler="xsl" subject="demotemplates" />
+		<site location="test.backend:666/theme" type="theme" handler="backend" theme="_admin" />
+		<site location="test.backend:666/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
+	</site>
 	
 	<!-- jukebox production repository -->
 	<site location="jb.jukebox/" type="controller" handler="application" subject="demojukebox" theme="_default">
