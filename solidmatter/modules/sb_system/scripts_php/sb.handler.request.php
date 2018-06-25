@@ -67,7 +67,7 @@ abstract class RequestHandler {
 	*/
 	public function generateRequestURL($mSubject = NULL, $sView = NULL, $sAction = NULL, $aParameters = NULL) {
 		
-		// TODO: 
+		// TODO: completely rewrite request URL/URI handling, port and path to the site should be part of the request and response
 		$sPrefix = 'http://';
 		/*$sPrefix = '';
 		if (!$bUseHTTPS) {
@@ -85,9 +85,15 @@ abstract class RequestHandler {
 		$sLocation = $_REQUEST->getLocation();
 		if (substr($sLocation, -1) == '/') {
 			$sLocation = substr($sLocation, 0, -1).$sPort.'/';
+		} else {
+			$sLocation = $sLocation.$sPort;
 		}
+// 		var_dumpp($sPort);
+// 		var_dumpp($sLocation);
 		
 		$sDestinationURL  = $sPrefix.$sLocation.$this->generateRequestPath($mSubject, $sView, $sAction, $aParameters);
+		
+// 		var_dumpp($sDestinationURL);
 		
 		return ($sDestinationURL);
 		
