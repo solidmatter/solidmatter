@@ -60,7 +60,13 @@ if (in_array('..', $aPath)) {
 }
 //var_dumpp($aRequest);
 $sRequestLocation = $aRequest['host'].$aRequest['path'];
-$sxmlSites = simplexml_load_file('_config/interface.xml');
+function load_interface_config()
+{
+	$configFileName = getenv('SOLIDMATTER_INTERFACE_CONFIG');
+	return simplexml_load_file($configFileName ? $configFileName : '_config/interface.xml');
+}
+
+$sxmlSites = load_interface_config('_config/interface.xml');
 $aSite = match_site($sxmlSites, $sRequestLocation);
 
 $elemSite = $aSite['site'];
