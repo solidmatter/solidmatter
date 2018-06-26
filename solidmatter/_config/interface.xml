@@ -63,5 +63,5 @@
 	<site location="frontend.localhost/google" type="redirect" destination="http://www.google.com" />
 	
 	-->
-	
+
 </config>
