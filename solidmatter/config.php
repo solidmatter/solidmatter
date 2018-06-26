@@ -5,7 +5,7 @@ abstract class CONFIG {
 	// storage information for solidMatter config XMLs
 	const DIR = '_config/';
 	const INTERFACE = 'interface.xml';
-	const CONTROLER = 'controller.xml';
+	const CONTROLLER = 'controller.xml';
 	const REPOSITORIES = 'repositories.xml';
 	
 	// directory for temporary files (e.g. uploads)
