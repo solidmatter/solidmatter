@@ -25,37 +25,6 @@
 		<site location="dev.jukebox/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
 	</site>
 	
-	<!-- test repository, free to play around -->
-	<site location="test.frontend/" type="controller" handler="frontend" subject="demowebsite">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="false" verbose="false" />
-		<site location="test.frontend/templates" type="controller" handler="xsl" subject="demotemplates" />
-		<site location="test.frontend/mmm" type="controller" handler="frontend" subject="demofiles" />
-	</site>
-	<site location="test.jukebox/" type="controller" handler="application" subject="demojukebox" theme="_default">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="test.jukebox/api" type="controller" handler="api" subject="demojukebox" />
-		<site location="test.jukebox/theme" type="theme" handler="backend" theme="_default" />
-		<site location="test.jukebox/play" type="controller" handler="jbaudiostream" />
-		<site location="test.jukebox/rss" type="controller" handler="jbrss" />
-		<site location="test.jukebox/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
-	</site>
-	<site location="test.backend/" type="controller" handler="backend" theme="_admin">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="test.backend/templates" type="controller" handler="xsl" subject="demotemplates" />
-		<site location="test.backend/theme" type="theme" handler="backend" theme="_admin" />
-		<site location="test.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
-	</site>
-	<site location="test.backend:666/" type="controller" handler="backend" theme="_admin">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="test.backend:666/templates" type="controller" handler="xsl" subject="demotemplates" />
-		<site location="test.backend:666/theme" type="theme" handler="backend" theme="_admin" />
-		<site location="test.backend:666/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
-	</site>
-	
 	<!-- jukebox production repository -->
 	<site location="jb.jukebox/" type="controller" handler="application" subject="demojukebox" theme="_default">
 		<storage repository="jukebox" workspace="production" user="system" pass="solidbytes" />

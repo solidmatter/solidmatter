@@ -2,3 +2,5 @@
 /.project
 /.buildpath
 /solidmatter/keys.php
+/solidmatter/_config_dev
+/solidmatter/config_dev.php
