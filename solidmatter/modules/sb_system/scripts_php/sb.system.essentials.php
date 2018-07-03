@@ -73,20 +73,20 @@ $_AUTOLOAD = array(
 */
 abstract class DEBUG {
 	
-	const ENABLED		= TRUE;
+	const ENABLED		= CONFIG::DEBUG['ENABLED'];
 	
-	const LOG_ALL		= FALSE;
+	const LOG_ALL		= CONFIG::DEBUG['LOG_ALL'];
 	
-	const BASIC			= TRUE;
-	const CLIENT		= FALSE;
-	const IMPORT		= FALSE;
-	const SESSION		= FALSE;
-	const REQUEST		= FALSE;
-	const HANDLER		= FALSE;
-	const NODE			= FALSE;
-	const REDIRECT		= FALSE;
-	const EXCEPTIONS	= TRUE;
-	const PDO			= TRUE;
+	const BASIC			= CONFIG::DEBUG['BASIC'];
+	const CLIENT		= CONFIG::DEBUG['CLIENT'];
+	const IMPORT		= CONFIG::DEBUG['IMPORT'];
+	const SESSION		= CONFIG::DEBUG['SESSION'];
+	const REQUEST		= CONFIG::DEBUG['REQUEST'];
+	const HANDLER		= CONFIG::DEBUG['HANDLER'];
+	const NODE			= CONFIG::DEBUG['NODE'];
+	const REDIRECT		= CONFIG::DEBUG['REDIRECT'];
+	const EXCEPTIONS	= CONFIG::DEBUG['EXCEPTIONS'];
+	const PDO			= CONFIG::DEBUG['PDO'];
 	
 	protected static $aTimes = array();
 	

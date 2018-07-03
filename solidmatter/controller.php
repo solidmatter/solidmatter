@@ -20,7 +20,7 @@ if (!defined('USE_SSL'))			define('USE_SSL', FALSE);
 if (!defined('ERROR_REPORTING'))	define('ERROR_REPORTING', TRUE);
 if (!defined('TIER2_SEPARATED'))	define('TIER2_SEPARATED', TRUE);
 
-define('REPOSITORY_DEFINITION_FILE', '_config/repositories.xml');
+define('REPOSITORY_DEFINITION_FILE', CONFIG::DIR.CONFIG::REPOSITORIES);
 
 //------------------------------------------------------------------------------
 // init
@@ -56,7 +56,7 @@ import('sb.cr.session');
 Stopwatch::check('tier2_load', 'load');
 
 // globals
-$_CONTROLLERCONFIG		= simplexml_load_file('_config/controller.xml');
+$_CONTROLLERCONFIG		= simplexml_load_file(CONFIG::DIR.CONFIG::CONTROLLER);
 $_RESPONSE				= ResponseFactory::getInstance('global');
 $_SMROOT				= getcwd();
 $_LOGDIR				= $_SMROOT.'logs/';

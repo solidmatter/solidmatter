@@ -16,7 +16,11 @@
 
 if (!defined('PRETTYPRINT'))		define('PRETTYPRINT', TRUE);
 //ini_set('opcache.enable', 0);
-if (file_exists('keys.php')) { include('keys.php'); }; // keys for 3rd party applications, e.g. webservice APIs
+
+if (!$sConfigFile = getenv('SOLIDMATTER_CONFIG_FILE')) {
+	$sConfigFile = 'config.php';
+}
+require_once $sConfigFile;
 
 //------------------------------------------------------------------------------
 // create stopwatch
@@ -60,13 +64,8 @@ if (in_array('..', $aPath)) {
 }
 //var_dumpp($aRequest);
 $sRequestLocation = $aRequest['host'].$aRequest['path'];
-function load_interface_config()
-{
-	$configFileName = getenv('SOLIDMATTER_INTERFACE_CONFIG');
-	return simplexml_load_file($configFileName ? $configFileName : '_config/interface.xml');
-}
 
-$sxmlSites = load_interface_config('_config/interface.xml');
+$sxmlSites = simplexml_load_file(CONFIG::DIR.CONFIG::INTERFACE);
 $aSite = match_site($sxmlSites, $sRequestLocation);
 
 $elemSite = $aSite['site'];

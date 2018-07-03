@@ -25,58 +25,8 @@
 		<site location="dev.jukebox/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
 	</site>
 	
-	<!-- test repository, free to play around -->
-	<site location="test.frontend/" type="controller" handler="frontend" subject="demowebsite">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="false" verbose="false" />
-		<site location="test.frontend/templates" type="controller" handler="xsl" subject="demotemplates" />
-		<site location="test.frontend/mmm" type="controller" handler="frontend" subject="demofiles" />
-	</site>
-	<site location="test.jukebox/" type="controller" handler="application" subject="demojukebox" theme="_default">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="test.jukebox/api" type="controller" handler="api" subject="demojukebox" />
-		<site location="test.jukebox/theme" type="theme" handler="backend" theme="_default" />
-		<site location="test.jukebox/play" type="controller" handler="jbaudiostream" />
-		<site location="test.jukebox/rss" type="controller" handler="jbrss" />
-		<site location="test.jukebox/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
-	</site>
-	<site location="test.backend/" type="controller" handler="backend" theme="_admin">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="test.backend/templates" type="controller" handler="xsl" subject="demotemplates" />
-		<site location="test.backend/theme" type="theme" handler="backend" theme="_admin" />
-		<site location="test.backend/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
-	</site>
-	<site location="test.backend:666/" type="controller" handler="backend" theme="_admin">
-		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="test.backend:666/templates" type="controller" handler="xsl" subject="demotemplates" />
-		<site location="test.backend:666/theme" type="theme" handler="backend" theme="_admin" />
-		<site location="test.backend:666/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
-	</site>
-	
-	<!-- jukebox production repository -->
-	<site location="jb.jukebox/" type="controller" handler="application" subject="demojukebox" theme="_default">
-		<storage repository="jukebox" workspace="production" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="jb.jukebox/api" type="controller" handler="api" subject="demojukebox" theme="_default" />
-		<site location="jb.jukebox/theme" type="theme" handler="backend" theme="_default" />
-		<site location="jb.jukebox/play" type="controller" handler="jbaudiostream" />
-		<site location="jb.jukebox/rss" type="controller" handler="jbrss" />
-		<site location="jb.jukebox/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
-	</site>
-	<site location="jb.admin/" type="controller" handler="backend" theme="_admin">
-		<storage repository="jukebox" workspace="production" user="system" pass="solidbytes" />
-		<debug enabled="true" verbose="false" />
-		<site location="jb.admin/templates" type="controller" handler="xsl" subject="demotemplates" />
-		<site location="jb.admin/theme" type="theme" handler="backend" theme="_admin" />
-		<site location="jb.admin/favicon.ico" type="passthrough" file="interface/solidmatter.ico" />
-	</site>
-	
 	<!-- utilities -->
 	<site location="backend.localhost/phpinfo" type="script" handler="phpinfo.php" />
-	<site location="backend.localhost/apcinfo" type="script" handler="apcinfo.php" />
 	<site location="backend.localhost/opcinfo" type="script" handler="opcinfo.php" />
 	<site location="backend.localhost/test" type="script" handler="test.php" />
 	<site location="frontend.localhost/google" type="redirect" destination="http://www.google.com" />
@@ -92,7 +42,10 @@
 	</site>-->
 	
 	<!--  examples -->
-	<!-- <site location="test.dyndns.org/" type="controller" handler="application" subject="demojukebox" theme="black_lime">
+	<!-- 
+	
+	Have a parent site of type application with child sites, child sites use the same repository and debug settings if applicable
+	<site location="test.dyndns.org/" type="controller" handler="application" subject="demojukebox" theme="black_lime">
 		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
 		<debug enabled="true" verbose="false" />
 		<site location="test.dyndns.org/api" type="controller" handler="api" subject="demojukebox" theme="black_lime" />
@@ -100,6 +53,15 @@
 		<site location="test.dyndns.org/play" type="controller" handler="jbaudiostream" />
 		<site location="test.dyndns.org/rss" type="controller" handler="jbrss" />
 		<site location="test.dyndns.org/favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
-	</site> -->
+	</site> 
+	
+	Run a PHP script
+	<site location="backend.localhost/runtests" type="script" handler="test.php" />
+	
+	Redirect to another URL
+	<site location="frontend.localhost/google" type="redirect" destination="http://www.google.com" />
+	
+	-->
+	
 	
 </config>
