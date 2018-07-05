@@ -88,15 +88,12 @@ abstract class RequestHandler {
 		} else {
 			$sLocation = $sLocation.$sPort;
 		}
-// 		var_dumpp($sPort);
-// 		var_dumpp($sLocation);
 		
 // 		$sDestinationURL  = $sPrefix.$sLocation.$this->generateRequestPath($mSubject, $sView, $sAction, $aParameters);
 		$sDestinationURL  = $this->generateRequestPath($mSubject, $sView, $sAction, $aParameters);
 		if ($sDestinationURL == '') {
 			$sDestinationURL = '/';
 		}
-// 		var_dumpp($sDestinationURL);
 		
 		return ($sDestinationURL);
 		
