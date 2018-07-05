@@ -174,6 +174,7 @@ function get_mimetype_by_extension($sFilename, $bAllowCustom = FALSE) {
 		'gif' => 'image/gif',
 		'js' => 'text/javascript',
 		'css' => 'text/css',
+		'svg' => 'image/svg+xml',
 	);
 	
 	$aCustomExtensions = array(

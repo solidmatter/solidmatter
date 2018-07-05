@@ -56,18 +56,17 @@ div.login {
 }
 div.logincontainer,
 div.logincontainer div {
-	margin: auto;
 	padding: 0px;
 	height: 300px;
 	width: 440px;
-	position: relative;
-	border-radius: 10px;
-	box-shadow: 0px 5px 20px #181818;
-/* 	background: transparent url(../images/login_bg.png) no-repeat top left; */
 }
 div.logincontainer {
 	background-image: linear-gradient(to bottom, #444, #222);
-	}
+/* 	margin: auto; */
+	position: relative;
+	border-radius: 10px;
+	box-shadow: 0px 5px 20px #181818;
+}
 div.logincontainer div {
 	background: transparent url(../images/clef.svg) no-repeat top left;
 	background-size: 230px;

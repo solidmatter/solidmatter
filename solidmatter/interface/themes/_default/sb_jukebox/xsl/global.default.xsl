@@ -47,23 +47,6 @@
 		<html>
 		<head>
 			<xsl:apply-templates select="/response/metadata" />
-<!-- 			<script language="Javascript" type="text/javascript" src="/theme/global/js/prototype.js"></script> -->
-<!-- 			<script language="Javascript" type="text/javascript" src="/theme/global/js/scriptaculous.js"></script> -->
-<!-- 			<xsl:choose> -->
-<!-- 				<xsl:when test="$jukebox/votingstyle = 'RELATIVE'"> -->
-<!-- 					<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/stars_relative.js"></script> -->
-<!-- 				</xsl:when> -->
-<!-- 				<xsl:otherwise> -->
-<!-- 					<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/stars.js"></script> -->
-<!-- 				</xsl:otherwise> -->
-<!-- 			</xsl:choose> -->
-<!-- 			<script language="Javascript" type="text/javascript"> -->
-<!-- 				var iMinStars = <xsl:value-of select="$jukebox/minstars" />; -->
-<!-- 				var iMaxStars = <xsl:value-of select="$jukebox/maxstars" />; -->
-<!-- 				var sVotingStyle = '<xsl:value-of select="$jukebox/votingstyle" />'; -->
-<!-- 				init_stars(); -->
-<!-- 			</script> -->
-<!-- 			<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/dynamic.js"></script> -->
 			<style>
 
 			    body,
@@ -71,7 +54,6 @@
 				    height: 100%;
 				    margin: 0;
 				    padding: 0;
-<!-- 				    padding-left: 200px; -->
 			    }
 			
 			    #content_iframe {
@@ -81,12 +63,10 @@
 				    border: 0;
 				    height: 100%;
 				    width: 100%;
-<!-- 				    overflow: scroll; -->
 			    }
 			    
 			    #player_iframe {
 				    position: absolute;
-<!-- 				    background-color: rgb(235,0,235); -->
 				    top: 0;
 				    right: 0;
 				    height: 100%;
@@ -100,13 +80,9 @@
     		</style>
 		</head>
 		<body>
-			<iframe id="content_iframe" src="/-/?render_content=true" />
+			<iframe id="content_iframe" src="/-/library/info/foobar?render_content" />
 			<iframe id="player_iframe" src="" />
 		</body>
-<!-- 		<frameset cols="*, 0" border="0" bordercolor="#8888AA"> -->
-<!-- 			<frame src="/?render_content=true" name="content" /> -->
-<!-- 			<frame src="" name="player" style="display:none; !important" /> -->
-<!-- 		</frameset> -->
 		</html>
 	</xsl:template>
 	
@@ -117,14 +93,6 @@
 			<script language="Javascript" type="text/javascript" src="/theme/global/js/prototype.js"></script>
 			<script language="Javascript" type="text/javascript" src="/theme/global/js/scriptaculous.js"></script>
 			<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/stars.js"></script>
-<!-- 			<xsl:choose> -->
-<!-- 				<xsl:when test="$jukebox/votingstyle = 'RELATIVE'"> -->
-<!-- 					<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/stars_relative.js"></script> -->
-<!-- 				</xsl:when> -->
-<!-- 				<xsl:otherwise> -->
-<!-- 					<script language="Javascript" type="text/javascript" src="{$scripts_js_jb}/stars.js"></script> -->
-<!-- 				</xsl:otherwise> -->
-<!-- 			</xsl:choose> -->
 			<script language="Javascript" type="text/javascript">
 				var iMinStars = <xsl:value-of select="$jukebox/minstars" />;
 				var iMaxStars = <xsl:value-of select="$jukebox/maxstars" />;
@@ -261,7 +229,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="/-/login/logout">
+							<a href="/-/login/logout" target="_parent">
 								<span class="type menu_logout"><xsl:value-of select="$locale/sbJukebox/labels/logout" /></span>
 							</a>
 						</li>
