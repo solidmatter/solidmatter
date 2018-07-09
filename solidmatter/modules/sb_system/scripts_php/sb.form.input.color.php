@@ -25,13 +25,33 @@ class sbInput_color extends sbInput {
 	
 	//--------------------------------------------------------------------------
 	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function setValue($mValue) {
+		$this->mValue = '#'.$mValue;
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function getValue() {
+		return (str_replace('#', '', $this->mValue));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* 
 	* @param 
 	* @return 
 	*/
 	public function checkInput() {
 		
-		if (!preg_match('/^[0-9a-f]{6}$/i', $this->mValue)) {
+		if (!preg_match('/^#[0-9a-f]{6}$/i', $this->mValue)) {
 			$this->sErrorLabel = '$locale/sbSystem/formerrors/no_hexcolor';
 		}
 		

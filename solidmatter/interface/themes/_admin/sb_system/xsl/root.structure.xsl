@@ -38,6 +38,7 @@
 
 	<xsl:template name="sbform" match="response/content/sbform[@id='create']">
 		<form class="default" action="{@action}" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+			<xsl:if test="@id"><xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute></xsl:if>
 			<table class="default">
 				<thead>
 					<tr><th colspan="2">

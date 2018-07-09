@@ -29,6 +29,7 @@
 		<new>New</new>
 		<edit>Edit</edit>
 		<create>Create</create>
+		<create_multiple>Create multiple</create_multiple>
 		<delete>Delete</delete>
 		<save>Save</save>
 		<apply>Apply</apply>
