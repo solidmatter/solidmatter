@@ -21,6 +21,30 @@ class sbInput_datetime extends sbInput_string {
 	
 	//--------------------------------------------------------------------------
 	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function recieveInput() {
+		
+		// don't do anything if disabled (e.g. Firefox will submit nothing for disabled form elements)
+		if ($this->bDisabled) {
+			return;
+		}
+		
+		// Note: time input does not really support seconds, so these are set to 00 fixed
+		global $_REQUEST;
+		$this->mValue = NULL;
+		if($_REQUEST->getParam($this->sName.'_date') != NULL) {
+			if ($_REQUEST->getParam($this->sName.'_time') != NULL) {
+				$this->mValue = $_REQUEST->getParam($this->sName.'_date').' '.$_REQUEST->getParam($this->sName.'_time').':00';
+			}
+		}
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* 
 	* @param 
 	* @return 
@@ -30,7 +54,7 @@ class sbInput_datetime extends sbInput_string {
 		if (strlen($this->mValue) == 0 && $this->aConfig['required'] == 'TRUE') {
 			$this->sErrorLabel = '$locale/sbSystem/formerrors/not_null';
 		}
-		if ($this->aConfig['required'] == 'TRUE' && !is_mysqldatetime($this->mValue)) {
+		if ($this->aConfig['required'] == 'TRUE' && $this->mValue != NULL && !is_mysqldatetime($this->mValue)) {
 			$this->sErrorLabel = '$locale/sbSystem/formerrors/no_datetime';
 		}
 		

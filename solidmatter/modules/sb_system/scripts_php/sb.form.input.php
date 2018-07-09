@@ -170,7 +170,6 @@ abstract class sbInput {
 	* @return 
 	*/
 	public function getValue() {
-		//var_dumpp($this->sName.' '.$this->mValue);
 		return ($this->mValue);
 	}
 	
@@ -181,7 +180,6 @@ abstract class sbInput {
 	* @return 
 	*/
 	public function setValue($mValue) {
-		//var_dumpp($mValue);
 		$this->mValue = $mValue;
 	}
 	

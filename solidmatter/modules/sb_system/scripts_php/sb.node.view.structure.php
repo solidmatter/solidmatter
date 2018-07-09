@@ -217,8 +217,14 @@ class sbView_structure extends sbView {
 					}
 					$nodeParent->save();
 					
-					$_RESPONSE->redirect($nodeChild->getProperty('jcr:uuid'), NULL, NULL, array('sbCommand' => 'reloadTree'));
-					
+					if ($formCreate->getChosenSubmit() == 'create_multiple') { // generate fresh form
+						$formCreate = $nodeChild->buildForm('create', $_REQUEST->getParam('parentnode'));
+						$_RESPONSE->addData($formCreate);
+						$_RESPONSE->addCommand('reloadTree');
+					} else { // redirect to default view of newly created node
+						$_RESPONSE->redirect($nodeChild->getProperty('jcr:uuid'), NULL, NULL, array('sbCommand' => 'reloadTree'));
+					}
+						
 				} else {
 					
 					$formCreate->saveDOM();

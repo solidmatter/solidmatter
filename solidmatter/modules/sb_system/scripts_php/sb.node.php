@@ -1274,7 +1274,8 @@ class sbNode extends sbCR_Node {
 						}
 					}
 					$_RESPONSE->addMetadata('md_system', 'displaytype', $this->getProperty('displaytype'));
-					$formCreate->addSubmit('$locale/sbSystem/actions/save');
+					$formCreate->addSubmit('$locale/sbSystem/actions/create');
+					$formCreate->addSubmit('$locale/sbSystem/actions/create_multiple', 'create_multiple');
 					$this->modifyForm($formCreate, 'create');
 					return ($formCreate);
 					

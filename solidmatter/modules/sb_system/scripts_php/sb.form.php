@@ -21,11 +21,16 @@ class sbDOMForm extends sbDOMDocument {
 	const RULE_MATCHREGEX = 2;
 	const RULE_NOTEMPTY = 3;
 	
+	// array of sbInput fields
 	private $aInputs;
+	// array of submit buttons (ID => Label)
 	private $aSubmits;
-	
+	// chosen submit (in case there are different submit actions)
+	private $sChoseSubmit = NULL;
+	// true if the whole form is supposed to be readonly
 	private $bDisabled = FALSE;
 	
+	// form ID
 	private $sID;
 	private $sLabel;
 	private $sAction;
@@ -116,6 +121,16 @@ class sbDOMForm extends sbDOMDocument {
 	
 	//--------------------------------------------------------------------------
 	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function getChosenSubmit() {
+		return ($this->sChosenSubmit);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* 
 	* @param 
 	* @return 
@@ -133,6 +148,11 @@ class sbDOMForm extends sbDOMDocument {
 	public function recieveInputs() {
 		foreach ($this->aInputs as $ifInput) {
 			$ifInput->recieveInput();
+		}
+		foreach ($this->aSubmits as $sSubmit => $sSubmitLabel) {
+			if ($_REQUEST->getParam($sSubmit) != NULL) {
+				$this->sChosenSubmit = $sSubmit;
+			}
 		}
 	}
 	
