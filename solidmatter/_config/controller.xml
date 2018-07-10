@@ -9,7 +9,7 @@
 		<schema>solidmatter</schema>
 		<charset>utf8</charset>
 		<log enabled="false" verbose="false">
-			<file>_logs/log_database_sys.txt</file>
+			<file>log_database_sys.txt</file>
 			<size>1024</size>
 		</log>
 	</system_db>

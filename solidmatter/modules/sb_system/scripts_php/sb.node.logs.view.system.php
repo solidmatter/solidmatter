@@ -42,7 +42,7 @@ class sbView_logs_system extends sbView {
 						break;
 						
 					case 'debug':
-						$sFilename = '_logs/debug.txt';
+						$sFilename = CONFIG::LOGDIR.'debug.txt';
 						break;
 					
 					default:
