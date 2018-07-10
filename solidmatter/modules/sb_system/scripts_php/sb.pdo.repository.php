@@ -55,7 +55,8 @@ class sbPDORepository extends sbPDO {
 		$sCharset	= (string) $sxmlDefinition->charset;
 		$this->bLogEnabled = constant((string) $sxmlDefinition->log['enabled']);
 		$this->bLogVerbose = constant((string) $sxmlDefinition->log['verbose']);
-		$this->sLogFile = (string) $sxmlDefinition->log->file;
+		$this->sLogFile = CONFIG::LOGDIR;
+		$this->sLogFile .= (string) $sxmlDefinition->log->file;
 		$this->sLogSize = (integer) $sxmlDefinition->log->size;
 		
 		$this->query('SET NAMES '.$sCharset);

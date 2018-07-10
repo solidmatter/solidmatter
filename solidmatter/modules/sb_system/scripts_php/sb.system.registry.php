@@ -57,7 +57,7 @@ abstract class Registry {
 	public static function getValue($sKey, $bForced = FALSE) {
 		
 		// cache
-		if (USE_REGISTRYCACHE) {
+		if (CONFIG::USE_REGISTRYCACHE) {
 			$cacheRegistry = CacheFactory::getInstance('registry');
 			if (!$bForced) {
 				$mValue = $cacheRegistry->loadData($sKey);
@@ -111,7 +111,7 @@ abstract class Registry {
 		}
 		
 		// cache
-		if (USE_REGISTRYCACHE) {
+		if (CONFIG::USE_REGISTRYCACHE) {
 			$cacheRegistry->storeData($sKey, $mValue);
 		}
 		
@@ -142,7 +142,7 @@ abstract class Registry {
 		$stmtSetValue->closeCursor();
 		
 		// cache
-		if (USE_REGISTRYCACHE) {
+		if (CONFIG::USE_REGISTRYCACHE) {
 			$cacheRegistry = CacheFactory::getInstance('registry');
 			$cacheRegistry->clear();
 		}

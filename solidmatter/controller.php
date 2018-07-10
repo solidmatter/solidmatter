@@ -15,7 +15,6 @@ try {
 // config
 
 if (!defined('TIMEZONE'))			define('TIMEZONE', 'Europe/Berlin');
-if (!defined('USE_REGISTRYCACHE'))	define('USE_REGISTRYCACHE', TRUE);
 if (!defined('USE_SSL'))			define('USE_SSL', FALSE);
 if (!defined('ERROR_REPORTING'))	define('ERROR_REPORTING', TRUE);
 if (!defined('TIER2_SEPARATED'))	define('TIER2_SEPARATED', TRUE);
@@ -58,12 +57,9 @@ Stopwatch::check('tier2_load', 'load');
 // globals
 $_CONTROLLERCONFIG		= simplexml_load_file(CONFIG::DIR.CONFIG::CONTROLLER);
 $_RESPONSE				= ResponseFactory::getInstance('global');
-$_SMROOT				= getcwd();
-$_LOGDIR				= $_SMROOT.'logs/';
 
 // configure
 ERROR_REPORTING ? error_reporting(E_ALL) : error_reporting(0);
-ERROR_REPORTING ? $iDebuglevel = E_ALL : $iDebuglevel = 0;
 mb_internal_encoding('UTF-8');
 System::init();
 
@@ -100,7 +96,7 @@ sbSession::setTimeout(Registry::getValue('sb.system.session.timeout'));
 //------------------------------------------------------------------------------
 // check if registry cache is current state
 
-if (USE_REGISTRYCACHE) {
+if (CONFIG::USE_REGISTRYCACHE) {
 	$sCheck = Registry::getValue('sb.system.cache.registry.changedetection');
 	if ($sCheck != Registry::getValue('sb.system.cache.registry.changedetection', TRUE)) {
 		$cacheRegistry = CacheFactory::getInstance('registry');

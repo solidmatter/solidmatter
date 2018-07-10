@@ -141,13 +141,13 @@ class System {
 		}
 		switch ($eContext) {
 			case System::SYSTEM:
-				$sFile = '_logs/controller_system.txt';
+				$sFile = CONFIG::LOGDIR.'controller_system.txt';
 				break;
 			case System::DEBUG:
-				$sFile = '_logs/controller_debug.txt';
+				$sFile = CONFIG::LOGDIR.'controller_debug.txt';
 				break;
 			case System::REQUEST:
-				$sFile = '_logs/controller_requests.txt';
+				$sFile = CONFIG::LOGDIR.'controller_requests.txt';
 				break;
 			default:
 				die('unknown context "'.$eContext.'"');

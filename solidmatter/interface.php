@@ -14,9 +14,6 @@
 //------------------------------------------------------------------------------
 // config
 
-if (!defined('PRETTYPRINT'))		define('PRETTYPRINT', TRUE);
-//ini_set('opcache.enable', 0);
-
 if (!$sConfigFile = getenv('SOLIDMATTER_CONFIG_FILE')) {
 	$sConfigFile = 'config.php';
 }

@@ -131,7 +131,7 @@ class sbDOMRequest extends sbDOMDocument {
 		$_FILES = unserialize(html_entity_decode($elemFILES->nodeValue));
 		foreach ($_FILES as $sFieldname => $aField) {
 			for ($i=0; $i<count($_FILES[$sFieldname]); $i++) {
-				$sTempfile = '_temp/uploads/'.uuid().'.tmp';
+				$sTempfile = CONFIG::TEMPDIR.'uploads/'.uuid().'.tmp';
 				file_put_contents($sTempfile, base64_decode($_FILES[$sFieldname][$i]['content']));
 				$_FILES[$sFieldname][$i]['tmp_name'] = $sTempfile;
 			}
