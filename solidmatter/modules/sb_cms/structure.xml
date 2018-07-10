@@ -1,0 +1,285 @@
+<?xml version="1.0" ?>
+<structure>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<!-- 
+		class is optional, defaults to sbNode
+		classfile is optional, defaults to sbSystem:sb.node
+		type is optional, defaults to PRIMARY
+	-->
+	<nodetypes>
+		<nodetype id="sbCMS:CTN_Container" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" /> <!-- type: PRIMARY/ABSTRACT -->
+		<nodetype id="sbCMS:CTN_Image" class="sbNode_ctn_image" classfile="sbFiles:sb.node.ctn_image" type="PRIMARY" />
+		<nodetype id="sbCMS:CTN_Plaintext" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		<nodetype id="sbCMS:CTN_Richtext" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		<nodetype id="sbCMS:Layout" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		<nodetype id="sbCMS:Page" class="sbNode_page" classfile="sbCMS:sb.node.page" type="PRIMARY" />
+		<nodetype id="sbCMS:Site" class="sbNode_site" classfile="sbCMS:sb.node.site" type="PRIMARY" />
+		<nodetype id="sbCMS:Template" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		<nodetype id="sbCMS:Templategroup" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		<nodetype id="sbCMS:Templatemanager" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		<nodetype id="sbCMS:TPL_Container" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		<nodetype id="sbCMS:TPL_Image" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		<nodetype id="sbCMS:TPL_Menu" class="sbNode_tpl_menu" classfile="sbCMS:sb.node.tpl_menu" type="PRIMARY" />
+		<nodetype id="sbCMS:TPL_Plaintext" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		<nodetype id="sbCMS:TPL_Richtext" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		<nodetype id="sbCMS:TPL_Script" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+	</nodetypes>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<nodetypehierarchy>
+		<parent nodtype="sbSystem:PropertiesView">
+			<child nodtype="sbCMS:CTN_Container" />
+			<child nodtype="sbCMS:CTN_Image" />
+			<child nodtype="sbCMS:CTN_Plaintext" />
+			<child nodtype="sbCMS:CTN_Richtext" />
+			<child nodtype="sbCMS:Layout" />
+			<child nodtype="sbCMS:Site" />
+			<child nodtype="sbCMS:Template" />
+			<child nodtype="sbCMS:Templategroup" />
+			<child nodtype="sbCMS:Templatemanager" />
+			<child nodtype="sbCMS:TPL_Container" />
+			<child nodtype="sbCMS:TPL_Image" />
+			<child nodtype="sbCMS:TPL_Menu" />
+			<child nodtype="sbCMS:TPL_Plaintext" />
+			<child nodtype="sbCMS:TPL_Richtext" />
+			<child nodtype="sbCMS:TPL_Script" />
+		</parent>
+		<parent nodtype="sbSystem:ListView">
+			<child nodtype="sbCMS:Page" />
+			<child nodtype="sbCMS:Site" />
+			<child nodtype="sbCMS:Templategroup" />
+			<child nodtype="sbCMS:Templatemanager" />
+		</parent>
+		<parent nodtype="sbSystem:Taggable">
+			<child nodtype="sbCMS:Page" />
+		</parent>
+	</nodetypehierarchy>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<!-- 
+		multiple is deactivated for now, omitted 
+		show is optional, defaults to TRUE
+		storagetype is optional, defaults to TRUE
+		auxname is optional, defaults to NULL
+		protected is optional, defaults to FALSE
+		protectedoncreation is optional, defaults to FALSE
+		defaultvalues is optional, defaults to NULL
+		descriptionpath is optional, defaults to NULL
+		
+	-->
+	<properties>
+		<nodetype id="sbCMS:CTN_Image">
+			<property name="content_image" type="WEAKREFERENCE" internaltype="nodeselector;mode=chooseImage" show="TRUE" labelpath="" storagetype="EXTERNAL" auxname="" order="0" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+		</nodetype>
+		<nodetype id="sbCMS:Layout">
+			<property name="xsl_backend" type="STRING" internaltype="codeeditor;syntax=xml" show="TRUE" labelpath="$locale/sbCMS/Template/xsl_backend/@label" storagetype="EXTERNAL" auxname="" order="1" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+			<property name="xsl_frontend" type="STRING" internaltype="codeeditor;syntax=xml" show="TRUE" labelpath="$locale/sbCMS/Template/xsl_frontend/@label" storagetype="EXTERNAL" auxname="" order="0" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+		</nodetype>
+		<nodetype id="sbCMS:Page">
+			<property name="config_active" type="BOOLEAN" internaltype="checkbox" show="TRUE" labelpath="$locale/sbCMS/Page/config_active/@label" storagetype="EXTERNAL" auxname="" order="6" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+			<property name="config_showinmenu" type="BOOLEAN" internaltype="checkbox" show="TRUE" labelpath="$locale/sbCMS/Page/config_showinmenu/@label" storagetype="EXTERNAL" auxname="" order="5" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+			<property name="properties_additionaltitle" type="STRING" internaltype="string" show="TRUE" labelpath="$locale/sbCMS/Page/properties_additionaltitle/@label" storagetype="EXTERNAL" auxname="" order="1" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+			<property name="properties_keywords" type="STRING" internaltype="text" show="TRUE" labelpath="$locale/sbCMS/Page/properties_keywords/@label" storagetype="EXTERNAL" auxname="" order="4" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+			<property name="properties_notes" type="STRING" internaltype="text;rows=3" show="TRUE" labelpath="$locale/sbCMS/Page/properties_notes/@label" storagetype="EXTERNAL" auxname="" order="7" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+			<property name="properties_pagetitle" type="STRING" internaltype="string" show="TRUE" labelpath="$locale/sbCMS/Page/properties_pagetitle/@label" storagetype="EXTERNAL" auxname="" order="0" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+			<property name="theme_layout" type="REFERENCE" internaltype="nodeselector;mode=chooseLayout;nodetype=sbCMS:Layout" show="TRUE" labelpath="$locale/sbCMS/Page/display_layout/@label" storagetype="EXTERNAL" auxname="" order="3" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+			<property name="theme_template" type="REFERENCE" internaltype="nodeselector;mode=chooseTemplate;nodetype=sbCMS:Template" show="TRUE" labelpath="$locale/sbCMS/Page/display_template/@label" storagetype="EXTERNAL" auxname="" order="2" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+		</nodetype>
+		<nodetype id="sbCMS:Site">
+			<property name="config_boundtemplates" type="REFERENCE" internaltype="nodeselector;mode=chooseSiteTemplates;nodetype=sbCMS:Templatemanager|sbCMS:Templategroup" show="TRUE" labelpath="$locale/sbCMS/Site/config_boundtemplates/@label" storagetype="EXTERNAL" auxname="" order="3" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+			<property name="config_defaultpage" type="REFERENCE" internaltype="nodeselector;mode=choosePage;nodetype=sbCMS:Page" show="TRUE" labelpath="$locale/sbCMS/Site/config_defaultpage/@label" storagetype="EXTERNAL" auxname="" order="0" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+			<property name="config_defaulttemplate" type="REFERENCE" internaltype="nodeselector;mode=chooseTemplate;nodetype=sbCMS:Template" show="TRUE" labelpath="$locale/sbCMS/Site/config_defaulttemplate/@label" storagetype="EXTERNAL" auxname="" order="5" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+			<property name="config_isclosed" type="BOOLEAN" internaltype="checkbox" show="TRUE" labelpath="$locale/sbCMS/Site/config_isclosed/@label" storagetype="EXTERNAL" auxname="" order="1" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+			<property name="config_language" type="STRING" internaltype="string" show="TRUE" labelpath="$locale/sbCMS/Site/config_language/@label" storagetype="EXTERNAL" auxname="" order="2" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+			<property name="config_notes" type="STRING" internaltype="text" show="TRUE" labelpath="$locale/sbCMS/Site/config_notes/@label" storagetype="EXTERNAL" auxname="" order="7" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+			<property name="theme_layout" type="REFERENCE" internaltype="nodeselector;mode=chooseLayout;nodetype=sbCMS:Layout" show="TRUE" labelpath="$locale/sbCMS/Page/display_layout/@label" storagetype="EXTERNAL" auxname="" order="6" protected="FALSE" protectedoncreation="FALSE" defaultvalues="" descriptionpath="" />
+		</nodetype>
+		<nodetype id="sbCMS:Template">
+			<property name="config_containertype" type="STRING" internaltype="string" labelpath="" order="" />
+			<property name="xsl_backend" type="STRING" internaltype="codeeditor;syntax=xml" labelpath="$locale/sbCMS/Template/xsl_backend/@label" order="1" />
+			<property name="xsl_frontend" type="STRING" internaltype="codeeditor;syntax=xml" labelpath="$locale/sbCMS/Template/xsl_frontend/@label" order="0" />
+		</nodetype>
+		<nodetype id="sbCMS:TPL_Container">
+			<property name="config_containertype" type="STRING" internaltype="string" labelpath="" order="" />
+		</nodetype>
+		<nodetype id="sbCMS:TPL_Image">
+			<property name="config_allowlinking" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbFiles/TPL_Image/config_allowlinking/@label" order="1" />
+			<property name="config_filterstack" type="REFERENCE" internaltype="nodeselector;mode=chooseImagefilterstack;nodetype=sbUtilities:Imagefilterstack"  labelpath="$locale/sbFiles/TPL_Image/config_filterstack/@label" order="0" />
+		</nodetype>
+		<nodetype id="sbCMS:TPL_Menu">
+			<property name="config_menuroot" type="WEAKREFERENCE" internaltype="nodeselector;mode=choosePage;required=TRUE" labelpath="$locale/sbCMS/TPL_Menu/config_menuroot/@label" order="1" />
+			<property name="config_numlevels" type="LONG" internaltype="integer;minvalue=1;maxvalue=20" labelpath="$locale/sbCMS/TPL_Menu/config_numlevels/@label" order="0" />
+		</nodetype>
+		<nodetype id="sbCMS:TPL_Richtext">
+			<property name="config_allowhtml" type="BOOLEAN" internaltype="checkbox" labelpath="" order="" />
+			<property name="config_allowsmilies" type="BOOLEAN" internaltype="checkbox" labelpath="" order="" />
+			<property name="config_allowstyles" type="BOOLEAN" internaltype="checkbox" labelpath="" order="" />
+			<property name="config_numimagesallowed" type="LONG" internaltype="integer;minvalue=0;maxvalue=50" labelpath="" order="" />
+		</nodetype>
+	</properties>
+<!-- 	<properties> -->
+<!-- 		<nodetype id=""> -->
+<!-- 			<property name="" type="" internaltype="" show="" labelpath="" storagetype="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalues="" descriptionpath="" /> -->
+<!-- 		</nodetype> -->
+<!-- 	</properties> -->
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<lifecycles>
+		<transitions nodetype="sbCMS:Page">
+			<transition sourcestate="approved" targetstate="published" />
+			<transition sourcestate="approved" targetstate="wip" />
+			<transition sourcestate="default" targetstate="wip" />
+			<transition sourcestate="published" targetstate="wip" />
+			<transition sourcestate="review" targetstate="approved" />
+			<transition sourcestate="review" targetstate="wip" />
+			<transition sourcestate="wip" targetstate="review" />
+		</transitions>
+	</lifecycles>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<!-- 
+		multiple is deactivated for now, omitted 
+	-->
+	<views>
+		<view nodetype="sbCMS:Page" view="edit" display="TRUE" labelpath="" class="sbView_edit" classfile="sbCMS:sb.node.view.edit" order="0" priority="0" />
+		<view nodetype="sbCMS:Page" view="preview" display="TRUE" labelpath="" class="sbView_preview" classfile="sbCMS:sb.node.view.preview" order="1" priority="0" />
+		<view nodetype="sbCMS:Page" view="properties" display="TRUE" labelpath="" class="sbView_page_properties" classfile="sbCMS:sb.node.page.view.properties" order="2" priority="100" />
+		<view nodetype="sbCMS:Page" view="render" display="FALSE" labelpath="" class="sbView_render" classfile="sbCMS:sb.node.view.render" order="" priority="0" />
+	</views>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<!-- 
+		class & classfile are deactivated for now, omitted
+		
+	-->
+	<actions>
+		<action nodetype="sbCMS:Page" view="edit" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_system:node.edit.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+		<action nodetype="sbCMS:Page" view="edit" action="render" default="FALSE" outputtype="RENDERED" stylesheet="" mimetype="" uselocale="TRUE" isrecallable="FALSE" />
+		<action nodetype="sbCMS:Page" view="preview" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_cms:node.preview.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+		<action nodetype="sbCMS:Page" view="preview" action="render" default="FALSE" outputtype="RENDERED" stylesheet="" mimetype="" uselocale="TRUE" isrecallable="FALSE" />
+		<action nodetype="sbCMS:Page" view="properties" action="edit" default="TRUE" outputtype="RENDERED" stylesheet="sb_system:node.properties.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+		<action nodetype="sbCMS:Page" view="properties" action="save" default="FALSE" outputtype="RENDERED" stylesheet="sb_system:node.properties.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+		<action nodetype="sbCMS:Page" view="render" action="onthefly" default="TRUE" outputtype="RENDERED" stylesheet="" mimetype="" uselocale="TRUE" isrecallable="FALSE" />
+	</actions>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<viewauthorisations>
+		<!-- 
+		<nodetype id="sbJukebox:Album">
+			<authorisation view="" action="" authorisation="" />
+			<authorisation view="" action="" authorisation="" />
+			<authorisation view="" action="" authorisation="" />
+			<authorisation view="" action="" authorisation="" />
+			<authorisation view="" action="" authorisation="" />
+			<authorisation view="" action="" authorisation="" />
+		
+		</nodetype>
+		 -->
+	</viewauthorisations>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<!-- display & choosable is deactivated for now (always TRUE), omitted -->
+	<modes>
+		<mode type="tree">
+			<parent nodetype="sbCMS:Layout">
+				<child nodetype="sbJukebox:TPL_TopRated" />
+				<child nodetype="sbCMS:Template" />
+				<child nodetype="sbCMS:TPL_Menu" />
+				<child nodetype="sbJukebox:TPL_MostHeard" />
+				<child nodetype="sbJukebox:TPL_Favorites" />
+				<child nodetype="sbJukebox:TPL_NowPlaying" />
+				<child nodetype="sbGuestbook:TPL_Entries" />
+			</parent>
+			<parent nodetype="sbCMS:Page">
+				<child nodetype="sbCMS:Page" />
+				<child nodetype="sbGuestbook:Guestbook" />
+			</parent>
+			<parent nodetype="sbCMS:Site">
+				<child nodetype="sbForum:Forum" />
+				<child nodetype="sbGuestbook:Guestbook" />
+				<child nodetype="sbJukebox:Jukebox" />
+				<child nodetype="sbCMS:Page" />
+			</parent>
+		</mode>
+		<mode type="create">
+			<parent nodetype="sbCMS:Layout">
+				<child nodetype="sbCMS:TPL_Menu" />
+				<child nodetype="sbJukebox:TPL_TopRated" />
+				<child nodetype="sbJukebox:TPL_NowPlaying" />
+				<child nodetype="sbGuestbook:TPL_Entries" />
+				<child nodetype="sbJukebox:TPL_Favorites" />
+				<child nodetype="sbJukebox:TPL_MostHeard" />
+			</parent>
+			<parent nodetype="sbCMS:Page">
+				<child nodetype="sbGuestbook:Guestbook" />
+				<child nodetype="sbCMS:Page" />
+				<child nodetype="sbForum:Forum" />
+			</parent>
+			<parent nodetype="sbCMS:Site">
+				<child nodetype="sbJukebox:Jukebox" />
+				<child nodetype="sbForum:Forum" />
+				<child nodetype="sbGuestbook:Guestbook" />
+				<child nodetype="sbCMS:Page" />
+			</parent>
+		</mode>
+		<mode type="gatherContent">
+			<parent nodetype="sbCMS:CTN_Container">
+				<child nodetype="sbCMS:CTN_Image" />
+				<child nodetype="sbCMS:CTN_Plaintext" />
+				<child nodetype="sbCMS:CTN_Richtext" />
+			</parent>
+			<parent nodetype="sbCMS:Layout">
+				<child nodetype="sbCMS:TPL_Menu" />
+			</parent>
+			<parent nodetype="sbCMS:Page">
+				<child nodetype="sbCMS:CTN_Container" />
+				<child nodetype="sbCMS:CTN_Plaintext" />
+				<child nodetype="sbCMS:CTN_Image" />
+				<child nodetype="sbCMS:CTN_Richtext" />
+			</parent>
+		</mode>
+		<mode type="choosePage">
+			<parent nodetype="sbCMS:Page">
+				<child nodetype="sbForum:Forum" />
+				<child nodetype="sbGuestbook:Guestbook" />
+				<child nodetype="sbCMS:Page" />
+			</parent>
+			<parent nodetype="sbCMS:Site">
+				<child nodetype="sbForum:Forum" />
+				<child nodetype="sbGuestbook:Guestbook" />
+				<child nodetype="sbCMS:Page" />
+			</parent>
+		</mode>
+		<mode type="list">
+			<parent nodetype="sbCMS:Page">
+				<child nodetype="sbCMS:Page" />
+			</parent>
+			<parent nodetype="sbCMS:Site">
+				<child nodetype="sbCMS:Page" />
+				<child nodetype="sbForum:Forum" />
+			</parent>
+		</mode>
+	</modes>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<ontology>
+<!-- 		<relation source="" forward="" backward="" destination="" /> -->
+	</ontology>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<registry>
+<!-- 		<entry key="" type="" internaltype="" userspecific="" defaultvalue="" comment="" /> -->
+	</registry>
+	
+</structure>

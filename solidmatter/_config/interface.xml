@@ -26,10 +26,11 @@
 	</site>
 	
 	<!-- utilities -->
-	<site location="backend.localhost/phpinfo" type="script" handler="phpinfo.php" />
-	<site location="backend.localhost/opcinfo" type="script" handler="opcinfo.php" />
-	<site location="backend.localhost/test" type="script" handler="test.php" />
-	<site location="frontend.localhost/google" type="redirect" destination="http://www.google.com" />
+	<site location="dev.backend/phpinfo" type="script" handler="phpinfo.php" />
+	<site location="dev.backend/opcinfo" type="script" handler="opcinfo.php" />
+	<site location="dev.backend/test" type="script" handler="test.php" />
+	<site location="dev.backend/google" type="redirect" destination="http://www.google.com" />
+	<site location="dev.backend/setup" type="script" handler="setup.php" />
 	
 	<!-- format -->
 	<!--<site location="tier1.localhost/theme" type="theme" handler="backend" />
