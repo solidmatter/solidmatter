@@ -700,7 +700,7 @@ class sbDOMResponse extends sbDOMDocument {
 			case 'debug':
 				$this->formatOutput = TRUE;
 				header('Content-Type: text/html; charset=utf-8');
-				echo '<html><body><pre style="font-family: monospace; font-size:9px;">'.htmlspecialchars($this->saveXML()).'</pre></body></html>';
+				echo '<html><body><pre style="font-family: \'Lucida Console\', Monaco, monospace; font-size: 9px;">'.htmlspecialchars($this->saveXML()).'</pre></body></html>';
 				break;
 				
 			case 'xml':
