@@ -64,7 +64,8 @@ class sbCR {
 	 * @return
 	 */
 	public static function getSimpleXML() {
-		
+		self::loadRepositoryDefinitions();
+		return (self::$sxmlRepositoryDefinitions);
 	}
 	
 	

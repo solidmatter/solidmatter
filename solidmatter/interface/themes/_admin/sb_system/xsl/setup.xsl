@@ -11,7 +11,6 @@
 	<xsl:import href="global.default.xsl" />
 	<xsl:import href="global.sbform.xsl" />
 	
-	
 	<xsl:output 
 		method="html"
 		encoding="UTF-8"
@@ -30,11 +29,31 @@
 	<body>
 		<xsl:apply-templates select="response/errors" />
 		<div class="setup">
-			<div class="logo"><h1><b>solid</b><i>Matter</i></h1></div>
+			<div class="logo"><h1><b>solid</b><i>Matter</i></h1><h2>Setup</h2></div>
 			<xsl:apply-templates select="/response/content/sbform[@id='create']" />
+			<ul>
+			<xsl:for-each select="$content/repositories/repository">
+				<xsl:call-template name="renderRepository" />
+			</xsl:for-each>
+			</ul>
 		</div>
 	</body>
 	</html>
+	</xsl:template>
+	
+	<xsl:template name="renderRepository">
+		<li>
+			Repository: "<xsl:value-of select="@id" />" (Prefix: "<xsl:value-of select="@prefix" />")
+			<xsl:for-each select="workspaces/workspace">
+				<xsl:call-template name="renderWorkspace" />
+			</xsl:for-each>
+		</li>
+	</xsl:template>
+
+	<xsl:template name="renderWorkspace">
+		<br />
+		Workspace: "<xsl:value-of select="@id" />" (Prefix: "<xsl:value-of select="@prefix" />")
+	
 	</xsl:template>
 
 </xsl:stylesheet>

@@ -60,6 +60,8 @@ $_RESPONSE = ResponseFactory::getInstance('global');
 $_RESPONSE->setTheme('_admin');
 $_RESPONSE->setRenderMode('RENDERED', 'text/html', "sb_system:setup.xsl");
 
+$_RESPONSE->addData(sbCR::getSimpleXML());
+
 $formCreate = new sbDOMForm('create', 'Create Repository', $_REQUEST->getLocation());
 $formCreate->addInput('db;string;', 'DB');
 $formCreate->addInput('dbuser;string;', 'User');

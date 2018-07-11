@@ -473,6 +473,8 @@ class sbDOMResponse extends sbDOMDocument {
 			foreach ($mData as $nodeCurrent) {
 				$elemData->appendChild($nodeCurrent->getElement());
 			}
+		} elseif ($mData instanceof SimpleXMLElement) {
+			$elemData = dom_import_simplexml($mData);
 		} elseif (is_array($mData)) {
 			$elemData = $this->convertArrayToElement($sNodeName, $mData);
 		} elseif (is_string($mData)) {

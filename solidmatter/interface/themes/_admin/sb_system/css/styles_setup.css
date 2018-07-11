@@ -11,8 +11,6 @@ body {
 
 div.setup {
 	width: 800px;
-	height: 600px;
-/* 	background: url(../images/login_bg.png) left top repeat-x; */
 	background-image: linear-gradient(to bottom, #BDBEBD, #94A294);
 	border-radius: 15px;
 	text-align: left;
@@ -29,34 +27,33 @@ div.login span.version {
 }
 
 div.logo {
-	font-family: Arial Narrow, Arial, Helvetica, Sans-Serif;
-	/*background: url(../images/login_logo.png) left top repeat-x;*/
-	/*padding: 20px 20px 0 0;*/
 	position: relative;
 	height: 110px;
-	background: url(../images/login_logo3.png) 10px 10px no-repeat;
-	/*background-color:red;*/
+	padding: 20px 0 0 130px;
+	background: url(../images/login_logo3.png) 0px 0px no-repeat;
+}
+div.logo {
+	font-family: Trebuchet MS;
 }
 div.logo h1 {
 	color: white;
 	font-size: 70px;
-	position: relative;
-	top: 30px;
-	left: 140px;
-	/*background-color: blue;*/
 	display: inline;
 	font-weight: normal;
 }
-
-div.logo h1 b {
-	font-family: Trebuchet MS;
+div.logo h1 i {
+	font-family: Arial Narrow, Arial, Helvetica, Sans-Serif;
 }
+div.logo h2 {
+	padding-left: 30px;
+	font-size: 40px;
+	color: white;
+	display: inline;
+}
+
 
 div.form {
 	margin: 50px 10px 0 10px;
-/* 	background: url(../images/login_bg_bright.png) left top repeat-x; */
-	padding: 10px 0;
-/* 	background-image: linear-gradient(to bottom, #BDBEBD, #94A294); */
 	background-color: #D6D7D6;
 	border-radius: 7px;
 }
@@ -85,7 +82,3 @@ table.default td, table.default th {
 	padding: 2px;
 	border: 0;
 }
-
-/* input { */
-/* 	border: 0; */
-/* } */
