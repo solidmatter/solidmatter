@@ -216,6 +216,15 @@ switch ((string) $elemSite['type']) {
 	case 'redirect':
 		header('Location: '.(string) $elemSite['destination'], TRUE, '303');
 		exit;
+		
+	case 'setup':
+		$_REQUEST = new sbDOMRequest();
+		
+		// store basic request info
+		$sLocation = (string) $elemSite['location'];
+		$_REQUEST->setLocation($sLocation);
+		include('setup.php');
+		exit;
 	
 	default:
 		header('File not found', TRUE, '404');

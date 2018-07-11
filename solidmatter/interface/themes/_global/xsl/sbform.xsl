@@ -653,7 +653,12 @@
 		</tr>
 	</xsl:template>
 	<xsl:template match="submit" mode="inputonly">
-		<input type="submit" class="button" name="{@value}" value="{dyn:evaluate(@label)}">
+		<input type="submit" class="button" name="{@value}">
+			<xsl:attribute name="value">
+				<xsl:call-template name="localize">
+					<xsl:with-param name="label" select="@label" />
+				</xsl:call-template>
+			</xsl:attribute>
 			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
 		</input>
 	</xsl:template>

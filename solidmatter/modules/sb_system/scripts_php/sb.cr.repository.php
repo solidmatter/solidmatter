@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 import('sb.pdo.repository');
+import('sb.cr');
 import('sb.cr.propertydefinitioncache');
 
 // xml file containing all information on repositories this sbCR instance supports
@@ -57,23 +58,11 @@ class sbCR_Repository {
 	* @param 
 	* @return 
 	*/
-	public function __construct($sRepositoryID) {
+	public function __construct(string $sRepositoryID) {
 		
 		// store ID for later use
 		$this->sID = $sRepositoryID;
-		
-		// load definitions
-		$this->sxmlRepositoryDefinitions = simplexml_load_file(REPOSITORY_DEFINITION_FILE);
-		
-		// check in repository exists
-		foreach ($this->sxmlRepositoryDefinitions->repository as $elemRepository) {
-			if ($elemRepository['id'] == $sRepositoryID) {
-				$this->elemRepositoryDefinition = $elemRepository;
-			}
-		}
-		if ($this->elemRepositoryDefinition == NULL) {
-			throw new RepositoryException('no such repository "'.$this->sRepositoryID.'"');
-		}
+		$this->elemRepositoryDefinition = sbCR::getRepositoryDefinition($sRepositoryID);
 		
 	}
 	

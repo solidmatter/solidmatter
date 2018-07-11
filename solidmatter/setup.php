@@ -12,7 +12,8 @@
 //------------------------------------------------------------------------------
 // config
 
-if (!defined('PRETTYPRINT'))		define('PRETTYPRINT', TRUE);
+if (!defined('PRETTYPRINT'))	define('PRETTYPRINT', TRUE);
+if (!defined('DEBUG'))			define('DEBUG', TRUE);
 
 if (!$sConfigFile = getenv('SOLIDMATTER_CONFIG_FILE')) {
 	$sConfigFile = 'config.php';
@@ -29,6 +30,7 @@ Stopwatch::start();
 // init
 
 require_once('modules/sb_system/scripts_php/sb.system.essentials.php');
+require_once('modules/sb_system/scripts_php/sb.form.php');
 
 // load libraries
 import('sb.system.errors');
@@ -51,73 +53,38 @@ import('sb.cr.session');
 //------------------------------------------------------------------------------
 // display form
 
-$sCompleteURI = '';
-if (isset($_SERVER['HTTPS'])) {
-	$sCompleteURI = 'https://';
-} else {
-	$sCompleteURI = 'http://';
-}
-$sCompleteURI = $sCompleteURI.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-$aRequest = parse_url($sCompleteURI);
-$aPath = explode('/', $aRequest['path']);
-if (in_array('..', $aPath)) {
-	die_fancy('parent operator not allowed, aborting.');
-}
-//var_dumpp($aRequest);
-$sRequestLocation = $aRequest['host'].$aRequest['path'];
-
-// TODO: transport repository stuff to tier2
-define('DEBUG', constant((string) $elemController->debug['enabled']));
-		
 $_REQUEST = new sbDOMRequest();
+$_REQUEST->includeRequest('NO SESSION SUPPORTED');
 
-// store basic request info
-$sLocation = (string) $elemSite['location'];
-$_REQUEST->setLocation($sLocation);
+$_RESPONSE = ResponseFactory::getInstance('global');
+$_RESPONSE->setTheme('_admin');
+$_RESPONSE->setRenderMode('RENDERED', 'text/html', "sb_system:setup.xsl");
 
-if (substr($_SERVER['SERVER_PROTOCOL'], 0, 4) == 'HTTP') {
-	if (!isset($_SERVER['HTTPS'])) {
-		$sProtocol = 'http';
-	} else {
-		$sProtocol = 'https';
-	}
-} else {
-	$sProtocol = 'unknown';
+$formCreate = new sbDOMForm('create', 'Create Repository', $_REQUEST->getLocation());
+$formCreate->addInput('db;string;', 'DB');
+$formCreate->addInput('dbuser;string;', 'User');
+$formCreate->addInput('dbpass;string;', 'Pass');
+$formCreate->addInput('repository;string;', 'Repository');
+$formCreate->addInput('repository_prefix;string;', 'Prefix');
+$formCreate->addInput('workspace;string;', 'Workspace');
+$formCreate->addInput('workspace_prefix;string;', 'Prefix');
+$formCreate->addSubmit('Create');
+
+$_RESPONSE->addData($formCreate);
+
+if (false) {
+	// $aRepository = $_REQUEST->getRepository();
+	$crCredentials = new sbCR_Credentials($aRepository['user'], $aRepository['pass']);
+	$crRepository = new sbCR_Repository($aRepository['id']);
+	$crSession = $crRepository->login($crCredentials, $aRepository['workspace']);
 }
-$sFullURI = $sProtocol.'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-$_REQUEST->setURI($sFullURI);
 
-// store handler and repository info
-$_REQUEST->setHandler((string) $elemSite['handler']);
-if ($elemSite['subject'] == NULL) {
-	$_REQUEST->setSubject((string) $elemController['subject']);
-} else {
-	$_REQUEST->setSubject((string) $elemSite['subject']);
-}
-$_REQUEST->setRepository(
-	(string) $elemController->storage['repository'],
-	(string) $elemController->storage['workspace'],
-	(string) $elemController->storage['user'],
-	(string) $elemController->storage['pass']
-);
-	
 //------------------------------------------------------------------------------
 // process request
 
-
-
-
-DEBUG('Interface: request processing took '.(Stopwatch::stop('execution_time')*1000).'ms', DEBUG::BASIC);
-$_RESPONSE->addStopwatchTimes(Stopwatch::getTaskTimes());
-if ($_REQUEST->getParam('debug') != TRUE) {
-	$_RESPONSE->importLocales();
-}
-
-// output
-DEBUG('Interface: processing output now', DEBUG::BASIC);
-if (isset($elemSite['theme'])) {
-	$_RESPONSE->setTheme((string) $elemSite['theme']);
-}
+// if (isset($elemSite['theme'])) {
+// 	$_RESPONSE->setTheme('_admin');
+// }
 if (DEBUG) {
 	if ($_REQUEST->getParam('debug') !== NULL) {
 		$_RESPONSE->forceRenderMode('debug');
@@ -125,7 +92,7 @@ if (DEBUG) {
 		$_RESPONSE->forceRenderMode('xml');
 	}
 }
+// $_RESPONSE->forceRenderMode('debug');
 $_RESPONSE->saveOutput();
-
 
 ?>

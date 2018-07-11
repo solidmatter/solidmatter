@@ -47,7 +47,7 @@ class sbDOMForm extends sbDOMDocument {
 	* @param 
 	* @return 
 	*/
-	public function __construct($sID, $sLabel, $sAction, $crSession) {
+	public function __construct($sID, $sLabel, $sAction, $crSession = NULL) {
 		parent::__construct();
 		$this->sID = $sID;
 		$this->sLabel = $sLabel;
