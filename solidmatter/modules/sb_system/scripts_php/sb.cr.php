@@ -54,6 +54,7 @@ class sbCR {
 			} else {
 				self::$sxmlRepositoryDefinitions = simplexml_load_file($sDefinitionFile);
 			}
+		}
 	}
 	
 	//--------------------------------------------------------------------------
