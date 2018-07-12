@@ -68,6 +68,50 @@ class sbCR {
 		return (self::$sxmlRepositoryDefinitions);
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public static function createRepository(string $sRepositoryID, string $sPrefix) {
+		import('sb.pdo.repository.queries.repositories');
+		$sxmlDefinition = self::getRepositoryDefinition($sRepositoryID);
+		$pdoRepository = new sbPDORepository($sxmlDefinition);
+		$stmtCreate = $pdoRepository->prepareKnown('sbCR/repository/create');
+		$stmtCreate->execute();
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public static function initRepository(string $sRepositoryID) {
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public static function createWorkspace($sID) {
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public static function initWorkspace($sID) {
+		
+	}
+	
 	
 }
 

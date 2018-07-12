@@ -61,6 +61,7 @@ $_RESPONSE->setTheme('_admin');
 $_RESPONSE->setRenderMode('RENDERED', 'text/html', "sb_system:setup.xsl");
 
 $_RESPONSE->addData(sbCR::getSimpleXML());
+$_RESPONSE->addRequestData('SETUP', '', '');
 
 $formCreate = new sbDOMForm('create', 'Create Repository', $_REQUEST->getLocation());
 $formCreate->addInput('db;string;', 'DB');
@@ -80,6 +81,12 @@ if (false) {
 	$crRepository = new sbCR_Repository($aRepository['id']);
 	$crSession = $crRepository->login($crCredentials, $aRepository['workspace']);
 }
+
+if ($_REQUEST->getParam('action') == 'init_repository') {
+	$sRepositoryID = $_REQUEST->getParam('repo_id');
+	sbCR::initRepository($sRepositoryID);
+}
+
 
 //------------------------------------------------------------------------------
 // process request
