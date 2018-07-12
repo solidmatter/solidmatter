@@ -2,7 +2,7 @@
 
 //ini_set('opcache.enable', 0);
 
-abstract class CONFIG {
+class CONFIG {
 	
 	// storage information for solidMatter config XMLs
 	const DIR = '_config/';
@@ -42,6 +42,55 @@ abstract class CONFIG {
 	
 	// API key for the Songkick webservice
 	const KEY_SONGKICK = 'jhDU4U3JHdui256Fs';
+	
+	static $SITES = array();
+	static $REPOSITORIES = array();
+	static $DATABASES = array();
+	static $HANDLERS = array();
+	
+	//------------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	static function init() {
+		self::$SITES = include(self::DIR.'databases.php');
+		self::$REPOSITORIES = include(self::DIR.'repositories.php');
+		self::$DATABASES = include(self::DIR.'databases.php');
+		self::$DATABASES = include(self::DIR.'databases.php');
+		
+	}
+		
+	//------------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	static function getDBConfig(string $sDatabaseID) {
+		
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	static function getRepositoryConfig(string $sDatabaseID) : array {
+		
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	static function getRepositoryConfig(string $sDatabaseID) {
+		
+	}
 	
 }
 
