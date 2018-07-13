@@ -134,13 +134,14 @@ class sbCR_Repository {
 		}
 		
 		$sRepositoryPrefix = (string) $this->elemRepositoryDefinition['prefix'];
+		$sDBID = (string) $this->elemRepositoryDefinition['db'];
 		
 		// init database
-		if ((string) $this->elemRepositoryDefinition->db['use'] == 'system') {
+		if ($sDBID == 'system') {
 			$this->DB = System::getDatabase();
 			$this->DB->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
 		} else {
-			$this->DB = new sbPDORepository($this->elemRepositoryDefinition->db);
+			$this->DB = new sbPDORepository($sDBID);
 			$this->DB->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
 			// TODO: keep the frickin system db out of here!
 			System::getDatabase()->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);

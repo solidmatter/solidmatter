@@ -55,7 +55,6 @@ import('sb.cr.session');
 Stopwatch::check('tier2_load', 'load');
 
 // globals
-$_CONTROLLERCONFIG		= simplexml_load_file(CONFIG::DIR.CONFIG::CONTROLLER);
 $_RESPONSE				= ResponseFactory::getInstance('global');
 
 // configure
@@ -144,7 +143,8 @@ if (Registry::getValue('sb.system.log.access.enabled')) {
 //------------------------------------------------------------------------------
 // assign request handler
 
-$aHandler = match_handler($_CONTROLLERCONFIG, $_REQUEST->getHandler());
+// $aHandler = match_handler($_CONTROLLERCONFIG, $_REQUEST->getHandler());
+$aHandler = CONFIG::getHandlerConfig($_REQUEST->getHandler());
 DEBUG('Controller: using Handler '.$aHandler['class'].'('.$aHandler['module'].':'.$aHandler['library'].')', DEBUG::HANDLER);
 import($aHandler['library'], $aHandler['module']);
 $hndProcessor = new $aHandler['class']();

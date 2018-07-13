@@ -31,17 +31,14 @@ class sbPDORepository extends sbPDO {
 	* @param 
 	* @return 
 	*/
-	public function __construct($sxmlDefinition) {
+	public function __construct($sRepositoryID) {
 		
-		$sHost		= (string) $sxmlDefinition->host;
-		$sPort		= (string) $sxmlDefinition->port;
-		$sUser		= (string) $sxmlDefinition->user;
-		$sPass		= (string) $sxmlDefinition->pass;
-		$sDatabase	= (string) $sxmlDefinition->schema;
-		$sDSN = 'mysql:host='.$sHost.';port='.$sPort.';dbname='.$sDatabase;
-		parent::__construct($sDSN, $sUser, $sPass);
+		$aRepositoryDefinition = CONFIG::getRepositoryConfig($sRepositoryID);
+		$aDBConfig = CONFIG::getDatabaseConfig($aRepositoryDefinition['db']);
+		$sDSN = 'mysql:host='.$aDBConfig['host'].';port='.$aDBConfig['port'].';dbname='.$aDBConfig['schema'];
+		parent::__construct($sDSN, $aDBConfig['user'], $aDBConfig['pass']);
 		
-		$this->init($sxmlDefinition);
+		$this->init($aDBConfig);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -50,16 +47,14 @@ class sbPDORepository extends sbPDO {
 	* @param 
 	* @return 
 	*/
-	protected function init($sxmlDefinition) {
+	protected function init($aDBConfig) {
 		
-		$sCharset	= (string) $sxmlDefinition->charset;
-		$this->bLogEnabled = constant((string) $sxmlDefinition->log['enabled']);
-		$this->bLogVerbose = constant((string) $sxmlDefinition->log['verbose']);
-		$this->sLogFile = CONFIG::LOGDIR;
-		$this->sLogFile .= (string) $sxmlDefinition->log->file;
-		$this->sLogSize = (integer) $sxmlDefinition->log->size;
+		$this->bLogEnabled = $aDBConfig['log_enabled'];;
+		$this->bLogVerbose = $aDBConfig['log_verbose'];;
+		$this->sLogFile = $aDBConfig['log_file'];
+		$this->sLogSize = $aDBConfig['log_size'];;
 		
-		$this->query('SET NAMES '.$sCharset);
+		$this->query('SET NAMES '.$aDBConfig['charset']);
 		
 		$this->log('repository definition loaded', TRUE);
 		

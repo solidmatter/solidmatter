@@ -55,21 +55,36 @@ class CONFIG {
 	 * @return
 	 */
 	static function init() {
-		self::$SITES = include(self::DIR.'databases.php');
-		self::$REPOSITORIES = include(self::DIR.'repositories.php');
-		self::$DATABASES = include(self::DIR.'databases.php');
-		self::$DATABASES = include(self::DIR.'databases.php');
-		
+// 		self::$SITES = include(self::DIR.'databases.php');
+// 		self::$REPOSITORIES = include(self::DIR.'repositories.php');
+// 		self::$DATABASES = include(self::DIR.'databases.php');
+// 		self::$DATABASES = include(self::DIR.'databases.php');
+		self::$SITES = simplexml_load_file(self::DIR.'sites.xml');
+		self::$HANDLERS = simplexml_load_file(self::DIR.'handlers.xml');
+		self::$REPOSITORIES = simplexml_load_file(self::DIR.'repositories.xml');
+		self::$DATABASES = simplexml_load_file(self::DIR.'databases.xml');
 	}
-		
+			
 	//------------------------------------------------------------------------------
 	/**
 	 *
 	 * @param
 	 * @return
 	 */
-	static function getDBConfig(string $sDatabaseID) {
-		
+	static function getHandlerConfig(string $sHandlerID) {
+		if (!isset(self::$HANDLERS->$sHandlerID)) {
+			throw new sbException('handler '.$sHandlerID.' could not be initialized');
+		} else {
+			$elemHandler = self::$HANDLERS->$sHandlerID;
+			$aHandler['library'] = (string) $elemHandler->library;
+			$aHandler['class'] = (string) $elemHandler->class;
+			// Todo: implement some kind of handler registration for modules
+			$aHandler['module'] = 'sb_system';
+			if (isset($elemHandler->module)) {
+				$aHandler['module'] = (string) $elemHandler->module;
+			}
+			return ($aHandler);
+		}
 	}
 	
 	//------------------------------------------------------------------------------
@@ -78,8 +93,13 @@ class CONFIG {
 	 * @param
 	 * @return
 	 */
-	static function getRepositoryConfig(string $sDatabaseID) : array {
-		
+	static function getRepositoryConfig(string $sRepositoryID) : array {
+		if (!isset(self::$REPOSITORIES->$sRepositoryID)) {
+			throw new sbException('repository '.$sRepositoryID.' not defined');
+		} else {
+			$elemRepository = self::$REPOSITORIES->$sRepositoryID;
+			return ($elemRepository);
+		}
 	}
 	
 	//------------------------------------------------------------------------------
@@ -88,10 +108,27 @@ class CONFIG {
 	 * @param
 	 * @return
 	 */
-	static function getRepositoryConfig(string $sDatabaseID) {
-		
+	static function getDatabaseConfig(string $sDatabaseID) : array {
+		if (!isset(self::$DATABASES->$sDatabaseID)) {
+			throw new sbException('database '.$sHandlerID.' not defined');
+		} else {
+			$elemDatabase = self::$DATABASES->$sDatabaseID;
+			$aDatabaseDefinition['host'] = (string) $elemDatabase->host;
+			$aDatabaseDefinition['port'] = (string) $elemDatabase->port;
+			$aDatabaseDefinition['user'] = (string) $elemDatabase->user;
+			$aDatabaseDefinition['pass'] = (string) $elemDatabase->pass;
+			$aDatabaseDefinition['schema'] = (string) $elemDatabase->schema;
+			$aDatabaseDefinition['charset'] = (string) $elemDatabase->charset;
+			$aDatabaseDefinition['log_enabled'] = (string) constant((string) $elemDatabase->log['enabled']);
+			$aDatabaseDefinition['log_verbose'] = (string) constant((string) $elemDatabase->log['verbose']);
+			$aDatabaseDefinition['log_file'] = self::LOGDIR . (string) $elemDatabase->log->file;
+			$aDatabaseDefinition['log_size'] = (integer) $elemDatabase->log->size;
+			return ($aDatabaseDefinition);
+		}
 	}
 	
 }
+
+CONFIG::init();
 
 ?>
