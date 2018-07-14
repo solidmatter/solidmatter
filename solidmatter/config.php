@@ -1,14 +1,34 @@
 <?php
 
-//ini_set('opcache.enable', 0);
+//------------------------------------------------------------------------------
+/**
+ *	@package solidMatter
+ *	@author	()((() [Oliver Müller]
+ *	@version 1.00.00
+ */
+//------------------------------------------------------------------------------
 
+if (!defined('TIMEZONE'))			define('TIMEZONE', 'Europe/Berlin');
+if (!defined('ERROR_REPORTING'))	define('ERROR_REPORTING', TRUE);
+if (!defined('USE_SSL'))			define('USE_SSL', FALSE);
+
+// here you can add or change various configuration steps that should be applicable for all requests that are routed through solidMatter.
+ini_set('opcache.enable', 0);
+ERROR_REPORTING ? error_reporting(E_ALL) : error_reporting(0);
+mb_internal_encoding('UTF-8');
+date_default_timezone_set(TIMEZONE);
+
+//-----------------------------------------------------------------------------
+/**
+ *
+ *
+ *
+ */
 class CONFIG {
 	
-	// storage information for solidMatter config XMLs
+	// storage information for solidMatter config XML
 	const DIR = '_config/';
-	const INTERFACE = 'interface.xml';
-	const CONTROLLER = 'controller.xml';
-	const REPOSITORIES = 'repositories.xml';
+	const FILE = 'configuration.xml';
 	
 	// directory for temporary files (e.g. uploads)
 	const TEMPDIR = '_temp/';
@@ -43,92 +63,36 @@ class CONFIG {
 	// API key for the Songkick webservice
 	const KEY_SONGKICK = 'jhDU4U3JHdui256Fs';
 	
-	static $SITES = array();
-	static $REPOSITORIES = array();
-	static $DATABASES = array();
-	static $HANDLERS = array();
+	// file/class used for configuration reading
+	static $CONFIGURATION_READER_LIBRARY = 'modules/sb_system/scripts_php/sb.system.configuration.reader.default.php';
 	
-	//------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	/**
-	 *
-	 * @param
-	 * @return
+	 * Initializes the CONFIG class, e.g. loading additional values from config files.
+	 * Currently only loads the configuration XML at DIR.FILE and stores it.
 	 */
 	static function init() {
-// 		self::$SITES = include(self::DIR.'databases.php');
-// 		self::$REPOSITORIES = include(self::DIR.'repositories.php');
-// 		self::$DATABASES = include(self::DIR.'databases.php');
-// 		self::$DATABASES = include(self::DIR.'databases.php');
-		self::$SITES = simplexml_load_file(self::DIR.'sites.xml');
-		self::$HANDLERS = simplexml_load_file(self::DIR.'handlers.xml');
-		self::$REPOSITORIES = simplexml_load_file(self::DIR.'repositories.xml');
-		self::$DATABASES = simplexml_load_file(self::DIR.'databases.xml');
+		require_once(self::$CONFIGURATION_READER_LIBRARY);
+		sbConfigurationReader::init();
 	}
-			
-	//------------------------------------------------------------------------------
-	/**
-	 *
-	 * @param
-	 * @return
-	 */
+	
+	// wrapped functions
+	static function getSiteConfig(string $sSitePath) {
+		return (sbConfigurationReader::getSiteConfig($sSitePath));
+	}
 	static function getHandlerConfig(string $sHandlerID) {
-		if (!isset(self::$HANDLERS->$sHandlerID)) {
-			throw new sbException('handler '.$sHandlerID.' could not be initialized');
-		} else {
-			$elemHandler = self::$HANDLERS->$sHandlerID;
-			$aHandler['library'] = (string) $elemHandler->library;
-			$aHandler['class'] = (string) $elemHandler->class;
-			// Todo: implement some kind of handler registration for modules
-			$aHandler['module'] = 'sb_system';
-			if (isset($elemHandler->module)) {
-				$aHandler['module'] = (string) $elemHandler->module;
-			}
-			return ($aHandler);
-		}
+		return (sbConfigurationReader::getHandlerConfig($sHandlerID));
 	}
-	
-	//------------------------------------------------------------------------------
-	/**
-	 *
-	 * @param
-	 * @return
-	 */
-	static function getRepositoryConfig(string $sRepositoryID) : array {
-		if (!isset(self::$REPOSITORIES->$sRepositoryID)) {
-			throw new sbException('repository '.$sRepositoryID.' not defined');
-		} else {
-			$elemRepository = self::$REPOSITORIES->$sRepositoryID;
-			return ($elemRepository);
-		}
+	static function getRepositoryConfig(string $sRepositoryID) {
+		return (sbConfigurationReader::getRepositoryConfig($sRepositoryID));
 	}
-	
-	//------------------------------------------------------------------------------
-	/**
-	 *
-	 * @param
-	 * @return
-	 */
-	static function getDatabaseConfig(string $sDatabaseID) : array {
-		if (!isset(self::$DATABASES->$sDatabaseID)) {
-			throw new sbException('database '.$sHandlerID.' not defined');
-		} else {
-			$elemDatabase = self::$DATABASES->$sDatabaseID;
-			$aDatabaseDefinition['host'] = (string) $elemDatabase->host;
-			$aDatabaseDefinition['port'] = (string) $elemDatabase->port;
-			$aDatabaseDefinition['user'] = (string) $elemDatabase->user;
-			$aDatabaseDefinition['pass'] = (string) $elemDatabase->pass;
-			$aDatabaseDefinition['schema'] = (string) $elemDatabase->schema;
-			$aDatabaseDefinition['charset'] = (string) $elemDatabase->charset;
-			$aDatabaseDefinition['log_enabled'] = (string) constant((string) $elemDatabase->log['enabled']);
-			$aDatabaseDefinition['log_verbose'] = (string) constant((string) $elemDatabase->log['verbose']);
-			$aDatabaseDefinition['log_file'] = self::LOGDIR . (string) $elemDatabase->log->file;
-			$aDatabaseDefinition['log_size'] = (integer) $elemDatabase->log->size;
-			return ($aDatabaseDefinition);
-		}
+	static function getDatabaseConfig(string $sDatabaseID) {
+		return (sbConfigurationReader::getDatabaseConfig($sDatabaseID));
 	}
 	
 }
 
+// immediately initialize the configuration class
 CONFIG::init();
 
 ?>

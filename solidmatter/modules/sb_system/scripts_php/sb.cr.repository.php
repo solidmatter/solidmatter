@@ -44,7 +44,6 @@ class sbCR_Repository {
 	);
 	
 	// basic info about existing repositories 
-	private $sxmlRepositoryDefinitions = NULL;
 	private $elemRepositoryDefinition = NULL;
 	
 	private $cacheRepository = NULL;
@@ -62,7 +61,7 @@ class sbCR_Repository {
 		
 		// store ID for later use
 		$this->sID = $sRepositoryID;
-		$this->elemRepositoryDefinition = sbCR::getRepositoryDefinition($sRepositoryID);
+		$this->elemRepositoryDefinition = CONFIG::getRepositoryConfig($sRepositoryID);
 		
 	}
 	
@@ -115,7 +114,7 @@ class sbCR_Repository {
 		
 		// check if workspace exists
 		$elemWorkspace = NULL;
-		foreach ($this->elemRepositoryDefinition->workspaces->workspace as $elemCurrentWorkspace) {
+		foreach ($this->elemRepositoryDefinition->xpath('workspace') as $elemCurrentWorkspace) {
 			if ($elemCurrentWorkspace['id'] == $sWorkspaceName) {
 				$elemWorkspace = $elemCurrentWorkspace;
 				$sWorkspacePrefix = (string) $elemCurrentWorkspace['prefix'];

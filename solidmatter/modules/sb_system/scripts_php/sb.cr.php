@@ -26,19 +26,7 @@ class sbCR {
 	 * @return
 	 */
 	public static function getRepositoryDefinition(string $sRepositoryID) {
-		
-		self::loadRepositoryDefinitions();
-		
-		// check in repository exists
-		foreach (self::$sxmlRepositoryDefinitions->repository as $elemRepository) {
-			self::$aRepositories[(string) $elemRepository['id']] = $elemRepository;
-		}
-		if (!isset(self::$aRepositories[$sRepositoryID])) {
-			throw new RepositoryException('no such repository "'.$sRepositoryID.'"');
-		}
-		
-		return (self::$aRepositories[$sRepositoryID]);
-		
+		return (CONFIG::getRepositoryConfig($sRepositoryID));
 	}
 	
 	//--------------------------------------------------------------------------

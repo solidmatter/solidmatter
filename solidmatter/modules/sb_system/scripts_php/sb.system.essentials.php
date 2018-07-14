@@ -156,7 +156,7 @@ class Debugger {
 * @param 
 * @return 
 */
-function import($sLibrary, $bRequired = TRUE) {
+function import(string $sLibrary, bool $bRequired = TRUE) {
 	
 	//DEBUG('Import: requested library '.$sLibrary, DEBUG::IMPORT);
 	

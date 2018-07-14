@@ -11,21 +11,11 @@
 
 try {
 
-//------------------------------------------------------------------------------
-// config
-
-if (!defined('TIMEZONE'))			define('TIMEZONE', 'Europe/Berlin');
-if (!defined('USE_SSL'))			define('USE_SSL', FALSE);
-if (!defined('ERROR_REPORTING'))	define('ERROR_REPORTING', TRUE);
-if (!defined('TIER2_SEPARATED'))	define('TIER2_SEPARATED', TRUE);
-
-define('REPOSITORY_DEFINITION_FILE', CONFIG::DIR.CONFIG::REPOSITORIES);
 
 //------------------------------------------------------------------------------
 // init
 
-// locale settings
-date_default_timezone_set(TIMEZONE);
+if (!defined('TIER2_SEPARATED'))	define('TIER2_SEPARATED', TRUE);
 
 // create stopwatch
 require_once('modules/sb_system/scripts_php/sb.tools.stopwatch.advanced.php');
@@ -58,25 +48,22 @@ Stopwatch::check('tier2_load', 'load');
 $_RESPONSE				= ResponseFactory::getInstance('global');
 
 // configure
-ERROR_REPORTING ? error_reporting(E_ALL) : error_reporting(0);
-mb_internal_encoding('UTF-8');
 System::init();
-
 Stopwatch::check('tier2_init', 'php');
 
 //------------------------------------------------------------------------------
 // recieve request
 
-if (TIER2_SEPARATED) {
-	$_REQUEST = new sbDOMRequest();
-	$_REQUEST->recieveData();
-	$_REQUEST->extractFiles();
-}
+// if (TIER2_SEPARATED) {
+// 	$_REQUEST = new sbDOMRequest();
+// 	$_REQUEST->recieveData();
+// 	$_REQUEST->extractFiles();
+// }
 
 // TODO: registry disabled because DB is not yet initialized
-if ($_REQUEST->getParam('bounce') !== NULL && TRUE) { //Registry::getValue('syb.system.debug.bounce.enabled')) {
-	$_REQUEST->bounce();
-}
+// if ($_REQUEST->getParam('bounce') !== NULL && TRUE) { //Registry::getValue('syb.system.debug.bounce.enabled')) {
+// 	$_REQUEST->bounce();
+// }
 
 //------------------------------------------------------------------------------
 // log into repository
@@ -143,11 +130,11 @@ if (Registry::getValue('sb.system.log.access.enabled')) {
 //------------------------------------------------------------------------------
 // assign request handler
 
-// $aHandler = match_handler($_CONTROLLERCONFIG, $_REQUEST->getHandler());
-$aHandler = CONFIG::getHandlerConfig($_REQUEST->getHandler());
-DEBUG('Controller: using Handler '.$aHandler['class'].'('.$aHandler['module'].':'.$aHandler['library'].')', DEBUG::HANDLER);
-import($aHandler['library'], $aHandler['module']);
-$hndProcessor = new $aHandler['class']();
+$elemHandler = CONFIG::getHandlerConfig($_REQUEST->getHandler());
+$sHandlerClass = (string) $elemHandler['class'];
+DEBUG('Controller: using Handler '.$elemHandler['class'].'('.$elemHandler['module'].':'.$elemHandler['library'].')', DEBUG::HANDLER);
+import((string) $elemHandler['library'], (string) $elemHandler['module']);
+$hndProcessor = new $sHandlerClass();
 System::setRequestHandler($hndProcessor);
 $hndProcessor->handleRequest($crSession);
 
@@ -197,36 +184,14 @@ if (TIER2_SEPARATED) {
 			$_RESPONSE->redirect('-', 'login', NULL, NULL, 307);
 		}
 	}
-	if (TIER2_SEPARATED) {
-		$_RESPONSE = ResponseFactory::getInstance('global');
-		$_RESPONSE->addException($e);
-		$_RESPONSE->addMetadata();
-		$_RESPONSE->saveOutput('xml');
-	} else {
+// 	if (TIER2_SEPARATED) {
+// 		$_RESPONSE = ResponseFactory::getInstance('global');
+// 		$_RESPONSE->addException($e);
+// 		$_RESPONSE->addMetadata();
+// 		$_RESPONSE->saveOutput('xml');
+// 	} else {
 		throw $e;
-	}
-}
-
-//------------------------------------------------------------------------------
-// utility functions
-
-function match_handler($elemCurrentRoot, $sHandlerID) {
-	
-	// match site root
-	foreach ($elemCurrentRoot->handlers->handler as $elemHandler) {
-		if ($sHandlerID == (string) $elemHandler['id']) {
-			$aHandler['library'] = (string) $elemHandler->library;
-			$aHandler['class'] = (string) $elemHandler->class;
-			$aHandler['module'] = 'sb_system';
-			if (isset($elemHandler->module)) {
-				$aHandler['module'] = (string) $elemHandler->module;
-			}
-			return ($aHandler);
-		}
-	}
-	
-	throw new sbException('handler '.$sHandlerID.' could not be initialized');
-	
+// 	}
 }
 
 ?>

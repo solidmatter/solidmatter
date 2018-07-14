@@ -65,9 +65,8 @@ class System {
 	*/
 	public static function getDatabase() {
 		if (self::$dbSystem === NULL) {
-			global $_CONTROLLERCONFIG;
 			import('sb.pdo.system');
-			self::$dbSystem = new sbPDOSystem($_CONTROLLERCONFIG->system_db);
+			self::$dbSystem = new sbPDOSystem('solidmatter');
 		}
 		return (self::$dbSystem);
 	}

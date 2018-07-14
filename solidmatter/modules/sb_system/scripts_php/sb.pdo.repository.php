@@ -31,14 +31,14 @@ class sbPDORepository extends sbPDO {
 	* @param 
 	* @return 
 	*/
-	public function __construct($sRepositoryID) {
+	public function __construct(string $sRepositoryID) {
 		
-		$aRepositoryDefinition = CONFIG::getRepositoryConfig($sRepositoryID);
-		$aDBConfig = CONFIG::getDatabaseConfig($aRepositoryDefinition['db']);
-		$sDSN = 'mysql:host='.$aDBConfig['host'].';port='.$aDBConfig['port'].';dbname='.$aDBConfig['schema'];
-		parent::__construct($sDSN, $aDBConfig['user'], $aDBConfig['pass']);
+		$elemRepository = CONFIG::getRepositoryConfig($sRepositoryID);
+		$elemDB = CONFIG::getDatabaseConfig($elemRepository['db']);
+		$sDSN = 'mysql:host='.$elemDB['host'].';port='.$elemDB['port'].';dbname='.$elemDB['schema'];
+		parent::__construct($sDSN, $elemDB['user'], $elemDB['pass']);
 		
-		$this->init($aDBConfig);
+		$this->init($elemDB);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -47,14 +47,16 @@ class sbPDORepository extends sbPDO {
 	* @param 
 	* @return 
 	*/
-	protected function init($aDBConfig) {
+	protected function init($elemDB) {
 		
-		$this->bLogEnabled = $aDBConfig['log_enabled'];;
-		$this->bLogVerbose = $aDBConfig['log_verbose'];;
-		$this->sLogFile = $aDBConfig['log_file'];
-		$this->sLogSize = $aDBConfig['log_size'];;
+		if (isset($elemDB->log)) {
+			$this->bLogEnabled = (bool) $elemDB->log['enabled'];
+			$this->bLogVerbose = (bool) $elemDB->log['verbose'];
+			$this->sLogFile = $elemDB->log['file'];
+			$this->sLogSize = $elemDB->log['size'];
+		}
 		
-		$this->query('SET NAMES '.$aDBConfig['charset']);
+		$this->query('SET NAMES '.$elemDB['charset']);
 		
 		$this->log('repository definition loaded', TRUE);
 		
@@ -166,7 +168,7 @@ class sbPDORepository extends sbPDO {
 			$sText = "\r\n".'-- '.get_class($this).': '.strftime('%y-%m-%d %H:%M:%S', time()).' '.str_repeat('-', 80)."\r\n".$sText;
 		}
 		
-		error_log($sText."\r\n", 3, System::getDir().$this->sLogFile);
+		error_log($sText."\r\n", 3, CONFIG::LOGDIR.$this->sLogFile);
 
 	}
 
