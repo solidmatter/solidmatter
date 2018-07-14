@@ -45,6 +45,7 @@ import('sb.cr.session');
 Stopwatch::check('tier2_load', 'load');
 
 // globals
+
 $_RESPONSE				= ResponseFactory::getInstance('global');
 
 // configure
@@ -81,6 +82,7 @@ sbSession::setTimeout(Registry::getValue('sb.system.session.timeout'));
 
 //------------------------------------------------------------------------------
 // check if registry cache is current state
+
 
 if (CONFIG::USE_REGISTRYCACHE) {
 	$sCheck = Registry::getValue('sb.system.cache.registry.changedetection');
