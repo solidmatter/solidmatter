@@ -9,8 +9,6 @@
 */
 //------------------------------------------------------------------------------
 
-if (!defined('PRETTYPRINT'))		define('PRETTYPRINT', TRUE);
-
 //------------------------------------------------------------------------------
 /**
 */
@@ -473,6 +471,8 @@ class sbDOMResponse extends sbDOMDocument {
 			foreach ($mData as $nodeCurrent) {
 				$elemData->appendChild($nodeCurrent->getElement());
 			}
+		} elseif ($mData instanceof SimpleXMLElement) {
+			$elemData = dom_import_simplexml($mData);
 		} elseif (is_array($mData)) {
 			$elemData = $this->convertArrayToElement($sNodeName, $mData);
 		} elseif (is_string($mData)) {
@@ -683,7 +683,7 @@ class sbDOMResponse extends sbDOMDocument {
 				//header('Content-type: '.$sMimetype);
 				
 				// TODO: find a way to prettyprint correctly
-				if (PRETTYPRINT) {
+				if (CONFIG::PRETTYPRINT) {
 					$procGenerator->formatOutput = TRUE;
 					//import('sb.tools.xml');
 					//echo pretty_print($procGenerator->transformToXML($this));
@@ -706,7 +706,7 @@ class sbDOMResponse extends sbDOMDocument {
 			case 'xml':
 				header('X-sbMessageType: sbControllerResponse');
 				header('Content-Type: text/xml; charset=utf-8');
-				if (PRETTYPRINT) {
+				if (CONFIG::PRETTYPRINT) {
 					$this->formatOutput = TRUE;
 				}
 				echo $this->saveXML();

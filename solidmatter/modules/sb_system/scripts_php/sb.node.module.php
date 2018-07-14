@@ -38,6 +38,20 @@ class sbNode_module extends sbNode {
 		parent::save();
 	}
 	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function getStruture() {
+		
+		$sStructureFile = REPOSITORY_DEFINITION_FILE;
+		
+		return (simplexml_load_file($sStructureFile));
+		
+	}
+	
 }
 
 ?>

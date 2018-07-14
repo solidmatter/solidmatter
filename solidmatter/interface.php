@@ -10,23 +10,21 @@
 //------------------------------------------------------------------------------
 
 //echo (file_get_contents('php://input'));
-
-//------------------------------------------------------------------------------
-// config
-
-if (!defined('PRETTYPRINT'))		define('PRETTYPRINT', TRUE);
-//ini_set('opcache.enable', 0);
-
-if (!$sConfigFile = getenv('SOLIDMATTER_CONFIG_FILE')) {
-	$sConfigFile = 'config.php';
-}
-require_once $sConfigFile;
+if (!defined('TIER2_SEPARATED'))	define('TIER2_SEPARATED', FALSE);
 
 //------------------------------------------------------------------------------
 // create stopwatch
 
 require_once('modules/sb_system/scripts_php/sb.tools.stopwatch.advanced.php');
 Stopwatch::start();
+
+//------------------------------------------------------------------------------
+// config
+
+if (!$sConfigFile = getenv('SOLIDMATTER_CONFIG_FILE')) { $sConfigFile = 'config.php'; }
+require_once $sConfigFile;
+Stopwatch::checkGroup('init');
+// echo Stopwatch::getTaskTimes('config');
 
 //------------------------------------------------------------------------------
 // init
@@ -50,13 +48,11 @@ DEBUG('Interface: Session ID = '.$_SESSIONID, DEBUG::SESSION);
 //------------------------------------------------------------------------------
 // switch according to site definition
 
-$sCompleteURI = '';
-if (isset($_SERVER['HTTPS'])) {
-	$sCompleteURI = 'https://';
-} else {
-	$sCompleteURI = 'http://';
-}
-$sCompleteURI = $sCompleteURI.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+$sCompleteURI = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+DEBUG('Interface: Request URI  = '.$sCompleteURI, DEBUG::BASIC);
+// var_dumpp($sCompleteURI);
+// var_dumpp($_SERVER);
+
 $aRequest = parse_url($sCompleteURI);
 $aPath = explode('/', $aRequest['path']);
 if (in_array('..', $aPath)) {
@@ -64,19 +60,13 @@ if (in_array('..', $aPath)) {
 }
 //var_dumpp($aRequest);
 $sRequestLocation = $aRequest['host'].$aRequest['path'];
-
-$sxmlSites = simplexml_load_file(CONFIG::DIR.CONFIG::INTERFACE);
-$aSite = match_site($sxmlSites, $sRequestLocation);
-
+$aSite = CONFIG::getSiteConfig($sRequestLocation);
 $elemSite = $aSite['site'];
 $elemController = $aSite['controller'];
-
 DEBUG('Interface: Site matched ['.(string) $elemSite['location'].'] with handler ['.(string) $elemSite['handler'].']', DEBUG::BASIC);
 
-if ($elemSite == NULL) {
-	header('File not found', TRUE, '404');
-	die_fancy('could not handle request, aborting.');
-}
+// var_dumpp($aSite);
+
 // var_dumppp($aSite);
 Stopwatch::check('tier1_sitematch', 'php');
 
@@ -102,18 +92,7 @@ switch ((string) $elemSite['type']) {
 		// store basic request info
 		$sLocation = (string) $elemSite['location'];
 		$_REQUEST->setLocation($sLocation);
-		
-		if (substr($_SERVER['SERVER_PROTOCOL'], 0, 4) == 'HTTP') {
-			if (!isset($_SERVER['HTTPS'])) {
-				$sProtocol = 'http';
-			} else {
-				$sProtocol = 'https';
-			}
-		} else {
-			$sProtocol = 'unknown';
-		}
-		$sFullURI = $sProtocol.'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-		$_REQUEST->setURI($sFullURI);
+		$_REQUEST->setURI($sCompleteURI);
 		
 		// store handler and repository info
 		$_REQUEST->setHandler((string) $elemSite['handler']);
@@ -130,14 +109,14 @@ switch ((string) $elemSite['type']) {
 		);
 		
 		// prepare communication to tier2 if necessary
-		if (!isset($elemController->tier2) || $elemController->tier2['separated'] == 'false') {
-			define('TIER2_SEPARATED', FALSE);
-		} else {
-			define('TIER2_SEPARATED', TRUE);
-			define('TIER2_HOST', (string) $elemController->tier2['host']);
-			define('TIER2_PORT', (string) $elemController->tier2['port']);
-			define('TIER2_PATH', (string) $elemController->tier2['path']);
-		}
+// 		if (!isset($elemController->tier2) || $elemController->tier2['separated'] == 'false') {
+// 			define('TIER2_SEPARATED', FALSE);
+// 		} else {
+// 			define('TIER2_SEPARATED', TRUE);
+// 			define('TIER2_HOST', (string) $elemController->tier2['host']);
+// 			define('TIER2_PORT', (string) $elemController->tier2['port']);
+// 			define('TIER2_PATH', (string) $elemController->tier2['path']);
+// 		}
 		
 		break;
 		
@@ -215,6 +194,15 @@ switch ((string) $elemSite['type']) {
 		
 	case 'redirect':
 		header('Location: '.(string) $elemSite['destination'], TRUE, '303');
+		exit;
+		
+	case 'setup':
+		$_REQUEST = new sbDOMRequest();
+		
+		// store basic request info
+		$sLocation = (string) $elemSite['location'];
+		$_REQUEST->setLocation($sLocation);
+		include('setup.php');
 		exit;
 	
 	default:
@@ -336,55 +324,6 @@ $_RESPONSE->saveOutput();
 		}
 	}
 	$_RESPONSE->saveOutput($sMethod);
-}
-
-//------------------------------------------------------------------------------
-// utility functions
-
-function match_site($elemCurrentRoot, $sRequestLocation) {
-	
-	$aSiteDefinition = array();
-	$elemCurrentSite = NULL;
-	$elemCurrentSubSite = NULL;
-	$sCurrentSite = '';
-	$sCurrentSubSite = '';
-	
-	// match site root
-	foreach ($elemCurrentRoot->site as $elemSite) {
-		$sSiteLocation = (string) $elemSite['location'];
-		if (substr_count($sRequestLocation, $sSiteLocation) > 0) {
-			if (strlen($sSiteLocation) >= strlen($sCurrentSite)) {
-				$sCurrentSite = $sSiteLocation;
-				$elemCurrentSite = $elemSite;
-			}
-		}
-	}
-	
-	if ($elemCurrentSite == NULL) {
-		header('HTTP/1.1 500 Internal Server Error');
-		die_fancy('The site in request "'.$sRequestLocation.'" is not defined.');
-	}
-	
-	// check if site has subsites and match these
-	foreach ($elemCurrentSite->site as $elemSite) {
-		$sSiteLocation = (string) $elemSite['location'];
-		if (substr_count($sRequestLocation, $sSiteLocation) > 0) {
-			if (strlen($sSiteLocation) >= strlen($sCurrentSite)) {
-				$sCurrentSite = $sSiteLocation;
-				$elemCurrentSubSite = $elemSite;
-			}
-		}
-	}
-	
-	if ($elemCurrentSubSite !== NULL) {
-		$aSiteDefinition['site'] = $elemCurrentSubSite;
-	} else {
-		$aSiteDefinition['site'] = $elemCurrentSite;
-	}
-	$aSiteDefinition['controller'] = $elemCurrentSite;
-	
-	return ($aSiteDefinition);
-	
 }
 
 ?>

@@ -9,6 +9,9 @@
 //---------------------------------------------------------
 
 $TEST = 'UUIDSTUFF';
+if (isset($_REQUEST['test'])) {
+	$TEST = $_REQUEST['test'];
+}
 
 require_once('modules/sb_system/scripts_php/sb.system.essentials.php');
 // require_once('modules/sb_system/scripts_php/sb.tools.stopwatch.php');
@@ -529,6 +532,29 @@ if ($TEST == 'UUIDSTUFF') {
 // 		for ($j=0;$j<100000;$j++) {
 			
 // 		}
+		
+	}
+	
+	echo '</body>';
+	
+}
+
+if ($TEST == 'MICROTIME') {
+	
+	echo '<body style="font-family: Andale Mono, monospace;">';
+	
+	for ($i=0; $i<1000; $i++) {
+		$sTime=microtime();
+		$fTime=microtime(TRUE);
+		echo $sTime.'|';
+		echo $fTime.'|';
+		
+
+		echo '<br>';
+		
+		// 		for ($j=0;$j<100000;$j++) {
+		
+		// 		}
 		
 	}
 	

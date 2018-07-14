@@ -126,17 +126,23 @@ function DEBUG($sText, $bInUse = TRUE) {
 */
 class Debugger {
 	protected $sCWD;
+	protected $sLogfile;
 	protected $sRequestID;
 	protected $sContent;
 	public function __construct($sRequestID) {
 		// TODO: improve timezone handling (dirty hack to avoid strict warning below)
 		date_default_timezone_set('Europe/Berlin');
 		$this->sCWD = getcwd();
+		if (!CONFIG::LOGDIR_ABS) { // log directory is not absolute path
+			$this->sLogfile = $this->sCWD.'/'.CONFIG::LOGDIR.'debug.txt';
+		} else {
+			$this->sLogfile = CONFIG::LOGDIR.'debug.txt';
+		}
 		$this->sRequestID = substr(uuid(), 0, 5);
 		$this->sContent .= "\r\n----- [ ".strftime('%y-%m-%d %H:%M:%S', time())." ] ----- [ $sRequestID ]\r\n";
 	}
 	public function __destruct() {
-		error_log($this->sContent, 3, $this->sCWD.'/_logs/debug.txt');
+		error_log($this->sContent, 3, $this->sLogfile);
 	}
 	public function addText($sText) {
 		$this->sContent .= $sText;
@@ -150,7 +156,7 @@ class Debugger {
 * @param 
 * @return 
 */
-function import($sLibrary, $bRequired = TRUE) {
+function import(string $sLibrary, bool $bRequired = TRUE) {
 	
 	//DEBUG('Import: requested library '.$sLibrary, DEBUG::IMPORT);
 	

@@ -4,21 +4,26 @@
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<nodetypes>
-		<nodetype id="sbIdM:" />
-		
+		<nodetype id="sbIdM:Manager" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		<nodetype id="sbIdM:OrgRole" class="sbNode_idm_orgrole" classfile="sbIdM:sb.idm.node.orgrole" type="PRIMARY" />
+		<nodetype id="sbIdM:Person" class="sbNode_idm_person" classfile="sbIdM:sb.idm.node.person" type="PRIMARY" />
+		<nodetype id="sbIdM:System" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		<nodetype id="sbIdM:TechRole" class="sbNode_idm_techrole" classfile="sbIdM:sb.idm.node.techrole" type="PRIMARY" />
+		<nodetype id="sbIdM:TechRoleGroup" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+<!-- 		<nodetype id="sbIdM:Data" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" /> -->
+<!-- 		<nodetype id="sbIdM:DataCategory" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" /> -->
+<!-- 		<nodetype id="sbIdM:DataManagement" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" /> -->
 	</nodetypes>
 	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<nodetypehierarchy>
 		
-		
 	</nodetypehierarchy>
 	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<properties>
-		
 		
 	</properties>
 	
@@ -96,5 +101,11 @@
 	<ontology>
 		<relation source="" forward="" backward="" destination="" />
 	</ontology>
+	
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<registry>
+		<entry id="sb.idm.display.persons.enabled" type="boolean" internaltype="" userspecific="TRUE" defaultvalue="TRUE" comment="" />
+	</registry>
 	
 </setup>

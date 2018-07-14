@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 import('sb.pdo.repository');
+import('sb.cr');
 import('sb.cr.propertydefinitioncache');
 
 // xml file containing all information on repositories this sbCR instance supports
@@ -43,7 +44,6 @@ class sbCR_Repository {
 	);
 	
 	// basic info about existing repositories 
-	private $sxmlRepositoryDefinitions = NULL;
 	private $elemRepositoryDefinition = NULL;
 	
 	private $cacheRepository = NULL;
@@ -57,23 +57,11 @@ class sbCR_Repository {
 	* @param 
 	* @return 
 	*/
-	public function __construct($sRepositoryID) {
+	public function __construct(string $sRepositoryID) {
 		
 		// store ID for later use
 		$this->sID = $sRepositoryID;
-		
-		// load definitions
-		$this->sxmlRepositoryDefinitions = simplexml_load_file(REPOSITORY_DEFINITION_FILE);
-		
-		// check in repository exists
-		foreach ($this->sxmlRepositoryDefinitions->repository as $elemRepository) {
-			if ($elemRepository['id'] == $sRepositoryID) {
-				$this->elemRepositoryDefinition = $elemRepository;
-			}
-		}
-		if ($this->elemRepositoryDefinition == NULL) {
-			throw new RepositoryException('no such repository "'.$this->sRepositoryID.'"');
-		}
+		$this->elemRepositoryDefinition = CONFIG::getRepositoryConfig($sRepositoryID);
 		
 	}
 	
@@ -126,7 +114,7 @@ class sbCR_Repository {
 		
 		// check if workspace exists
 		$elemWorkspace = NULL;
-		foreach ($this->elemRepositoryDefinition->workspaces->workspace as $elemCurrentWorkspace) {
+		foreach ($this->elemRepositoryDefinition->xpath('workspace') as $elemCurrentWorkspace) {
 			if ($elemCurrentWorkspace['id'] == $sWorkspaceName) {
 				$elemWorkspace = $elemCurrentWorkspace;
 				$sWorkspacePrefix = (string) $elemCurrentWorkspace['prefix'];
@@ -145,13 +133,14 @@ class sbCR_Repository {
 		}
 		
 		$sRepositoryPrefix = (string) $this->elemRepositoryDefinition['prefix'];
+		$sDBID = (string) $this->elemRepositoryDefinition['db'];
 		
 		// init database
-		if ((string) $this->elemRepositoryDefinition->db['use'] == 'system') {
+		if ($sDBID == 'system') {
 			$this->DB = System::getDatabase();
 			$this->DB->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
 		} else {
-			$this->DB = new sbPDORepository($this->elemRepositoryDefinition->db);
+			$this->DB = new sbPDORepository($sDBID);
 			$this->DB->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
 			// TODO: keep the frickin system db out of here!
 			System::getDatabase()->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
@@ -271,7 +260,195 @@ class sbCR_Repository {
 		//var_dumpp ($domReposInfo->saveXML());
 		//$domReposInfo->save('repository_structure_'.$sRepository.'.xml');
 		return ($domReposInfo);
-	}	
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 * Add/Update or delete repository definitions.
+	 * TODO: this is not compliant with JCR - needs to be converted to the appropriate XYZTemplates and logic.
+	 * @param string The repository aspect to change (nodetype/view/action/property/..)
+	 * @param string The action to execute (add/modify/remove)
+	 * @param array The definition data for the current aspect, needs to be complete
+	 * @return
+	 */
+	public function changeRepositoryDefinition($sType, $sMode, $aData) {
+		
+		switch ($sType) {
+			
+			case 'nodetype':
+				if ($sMode == 'add' || $sMode == 'modify') {
+					$stmtAdd = $this->DB->prepareKnown('sbCR/nodetype/save');
+					$stmtAdd->bindParam('nodetype', $aData['nodetype']);
+					$stmtAdd->bindParam('class', $aData['class']);
+					$stmtAdd->bindParam('classfile', $aData['classfile']);
+					$stmtAdd->bindParam('type', $aData['type']);
+					$stmtAdd->execute();
+				} else {
+					$stmtRemove = $this->DB->prepareKnown('sbCR/nodetype/remove');
+					$stmtRemove->bindParam('nodetype', $aData['nodetype']);
+					$stmtRemove->execute();
+				}
+				break;
+			
+			case 'view':
+				if ($sMode == 'add' || $sMode == 'modify') {
+					$stmtAdd = $this->DB->prepareKnown('sbCR/view/save');
+					$stmtAdd->bindParam('nodetype', $aData['nodetype']);
+					$stmtAdd->bindParam('view', $aData['view']);
+					$stmtAdd->bindParam('display', $aData['display']);
+					$stmtAdd->bindParam('labelpath', $aData['labelpath']);
+					$stmtAdd->bindParam('class', $aData['nodetype']);
+					$stmtAdd->bindParam('classfile', $aData['nodetype']);
+					$stmtAdd->bindParam('order', $aData['order']);
+					$stmtAdd->bindParam('priority', $aData['priority']);
+					$stmtAdd->execute();
+				} else {
+					$stmtRemove = $this->DB->prepareKnown('sbCR/view/remove');
+					$stmtRemove->bindParam('nodetype', $aData['nodetype']);
+					$stmtRemove->bindParam('view', $aData['view']);
+					$stmtRemove->execute();
+				}
+				break;
+				
+			case 'action':
+				if ($sMode == 'add' || $sMode == 'modify') {
+					$stmtAdd = $this->DB->prepareKnown('sbCR/action/save');
+					$stmtAdd->bindParam('nodetype', $aData['nodetype']);
+					$stmtAdd->bindParam('view', $aData['view']);
+					$stmtAdd->bindParam('action', $aData['action']);
+					$stmtAdd->bindParam('default', $aData['default']);
+					$stmtAdd->bindParam('class', $aData['class']);
+					$stmtAdd->bindParam('classfile', $aData['classfile']);
+					$stmtAdd->bindParam('outputtype', $aData['outputtype']);
+					$stmtAdd->bindParam('stylesheet', $aData['stylesheet']);
+					$stmtAdd->bindParam('mimetype', $aData['mimetype']);
+					$stmtAdd->bindParam('uselocale', $aData['uselocale']);
+					$stmtAdd->bindParam('isrecallable', $aData['isrecallable']);
+					$stmtAdd->execute();
+				} else {
+					$stmtRemove = $this->DB->prepareKnown('sbCR/action/remove');
+					$stmtRemove->bindParam('nodetype', $aData['nodetype']);
+					$stmtRemove->bindParam('view', $aData['view']);
+					$stmtRemove->bindParam('action', $aData['action']);
+					$stmtRemove->execute();
+				}
+				break;
+				
+			case 'inheritance':
+				if ($sMode == 'add' || $sMode == 'modify') {
+					$stmtAdd = $this->DB->prepareKnown('sbCR/hierarchy/save');
+					$stmtAdd->bindParam('parentnodetype', $aData['parentnodetype']);
+					$stmtAdd->bindParam('childnodetype', $aData['childnodetype']);
+					$stmtAdd->execute();
+				} else {
+					$stmtRemove = $this->DB->prepareKnown('sbCR/hierarchy/remove');
+					$stmtRemove->bindParam('parentnodetype', $aData['parentnodetype']);
+					$stmtRemove->bindParam('childnodetype', $aData['childnodetype']);
+					$stmtRemove->execute();
+				}
+				break;
+				
+			case 'property':
+				if ($sMode == 'add' || $sMode == 'modify') {
+					$stmtAdd = $this->DB->prepareKnown('sbCR/property/save');
+					$stmtAdd->bindParam('nodetype', $aData['nodetype']);
+					$stmtAdd->bindParam('attributename', $aData['attributename']);
+					$stmtAdd->bindParam('type', $aData['type']);
+					$stmtAdd->bindParam('internaltype', $aData['internaltype']);
+					$stmtAdd->bindParam('showinproperties', $aData['showinproperties']);
+					$stmtAdd->bindParam('labelpath', $aData['labelpath']);
+					$stmtAdd->bindParam('storagetype', $aData['storagetype']);
+					$stmtAdd->bindParam('auxname', $aData['auxname']);
+					$stmtAdd->bindParam('order', $aData['order']);
+					$stmtAdd->bindParam('protected', $aData['protected']);
+					$stmtAdd->bindParam('protectedoncreation', $aData['protectedoncreation']);
+					$stmtAdd->bindParam('multiple', $aData['multiple']);
+					$stmtAdd->bindParam('defaultvalues', $aData['defaultvalues']);
+					$stmtAdd->bindParam('descriptionpath', $aData['descriptionpath']);
+					$stmtAdd->execute();
+				} else {
+					$stmtRemove = $this->DB->prepareKnown('sbCR/property/remove');
+					$stmtRemove->bindParam('nodetype', $aData['nodetype']);
+					$stmtRemove->bindParam('attributename', $aData['attributename']);
+					$stmtRemove->execute();
+				}
+				break;
+			
+			case 'authorisation':
+				if ($sMode == 'add' || $sMode == 'modify') {
+					$stmtAdd = $this->DB->prepareKnown('sbCR/authorisation/save');
+					$stmtAdd->bindParam('nodetype', $aData['nodetype']);
+					$stmtAdd->bindParam('authorisation', $aData['authorisation']);
+					$stmtAdd->bindParam('parentauthorisation', $aData['parentauthorisation']);
+					$stmtAdd->bindParam('default', $aData['default']);
+					$stmtAdd->bindParam('order', $aData['order']);
+					$stmtAdd->bindParam('onlyfrontend', $aData['onlyfrontend']);
+					$stmtAdd->execute();
+				} else {
+					$stmtRemove = $this->DB->prepareKnown('sbCR/authorisation/remove');
+					$stmtRemove->bindParam('mode', $aData['mode']);
+					$stmtRemove->bindParam('parentnodetype', $aData['parentnodetype']);
+					$stmtRemove->bindParam('childnodetype', $aData['childnodetype']);
+					$stmtRemove->execute();
+				}
+				break;
+				
+			case 'viewauthorisation':
+				if ($sMode == 'add' || $sMode == 'modify') {
+					$stmtAdd = $this->DB->prepareKnown('sbCR/viewauthorisation/save');
+					$stmtAdd->bindParam('nodetype', $aData['nodetype']);
+					$stmtAdd->bindParam('view', $aData['view']);
+					$stmtAdd->bindParam('action', $aData['action']);
+					$stmtAdd->bindParam('authorisation', $aData['default']);
+					$stmtAdd->execute();
+				} else {
+					$stmtRemove = $this->DB->prepareKnown('sbCR/viewauthorisation/remove');
+					$stmtRemove->bindParam('nodetype', $aData['nodetype']);
+					$stmtRemove->bindParam('view', $aData['view']);
+					$stmtRemove->bindParam('action', $aData['action']);
+					$stmtRemove->execute();
+				}
+				break;
+				
+			case 'mode':
+				if ($sMode == 'add' || $sMode == 'modify') {
+					$stmtAdd = $this->DB->prepareKnown('sbCR/mode/save');
+					$stmtAdd->bindParam('mode', $aData['mode']);
+					$stmtAdd->bindParam('parentnodetype', $aData['parentnodetype']);
+					$stmtAdd->bindParam('childnodetype', $aData['childnodetype']);
+					$stmtAdd->bindParam('display', $aData['display']);
+					$stmtAdd->bindParam('choosable', $aData['choosable']);
+					$stmtAdd->execute();
+				} else {
+					$stmtRemove = $this->DB->prepareKnown('sbCR/mode/remove');
+					$stmtRemove->bindParam('mode', $aData['mode']);
+					$stmtRemove->bindParam('parentnodetype', $aData['parentnodetype']);
+					$stmtRemove->bindParam('childnodetype', $aData['childnodetype']);
+					$stmtRemove->execute();
+				}
+				break;
+			
+			case 'ontology':
+				if ($sMode == 'add' || $sMode == 'modify') {
+					$stmtAdd = $this->DB->prepareKnown('sbCR/ontology/save');
+					$stmtAdd->bindParam('relation', $aData['relation']);
+					$stmtAdd->bindParam('sourcenodetype', $aData['sourcenodetype']);
+					$stmtAdd->bindParam('targetnodetype', $aData['targetnodetype']);
+					$stmtAdd->bindParam('reverserelation', $aData['reverserelation']);
+					$stmtAdd->execute();
+				} else {
+					$stmtRemove = $this->DB->prepareKnown('sbCR/ontology/remove');
+					$stmtRemove->bindParam('relation', $aData['relation']);
+					$stmtRemove->bindParam('sourcenodetype', $aData['sourcenodetype']);
+					$stmtRemove->bindParam('targetnodetype', $aData['targetnodetype']);
+					$stmtRemove->execute();
+				}
+				break;
+				
+			
+		}
+		
+	}
 	
 }
 

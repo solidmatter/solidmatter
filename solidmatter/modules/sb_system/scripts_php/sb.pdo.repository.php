@@ -31,17 +31,14 @@ class sbPDORepository extends sbPDO {
 	* @param 
 	* @return 
 	*/
-	public function __construct($sxmlDefinition) {
+	public function __construct(string $sRepositoryID) {
 		
-		$sHost		= (string) $sxmlDefinition->host;
-		$sPort		= (string) $sxmlDefinition->port;
-		$sUser		= (string) $sxmlDefinition->user;
-		$sPass		= (string) $sxmlDefinition->pass;
-		$sDatabase	= (string) $sxmlDefinition->schema;
-		$sDSN = 'mysql:host='.$sHost.';port='.$sPort.';dbname='.$sDatabase;
-		parent::__construct($sDSN, $sUser, $sPass);
+		$elemRepository = CONFIG::getRepositoryConfig($sRepositoryID);
+		$elemDB = CONFIG::getDatabaseConfig($elemRepository['db']);
+		$sDSN = 'mysql:host='.$elemDB['host'].';port='.$elemDB['port'].';dbname='.$elemDB['schema'];
+		parent::__construct($sDSN, $elemDB['user'], $elemDB['pass']);
 		
-		$this->init($sxmlDefinition);
+		$this->init($elemDB);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -50,15 +47,16 @@ class sbPDORepository extends sbPDO {
 	* @param 
 	* @return 
 	*/
-	protected function init($sxmlDefinition) {
+	protected function init($elemDB) {
 		
-		$sCharset	= (string) $sxmlDefinition->charset;
-		$this->bLogEnabled = constant((string) $sxmlDefinition->log['enabled']);
-		$this->bLogVerbose = constant((string) $sxmlDefinition->log['verbose']);
-		$this->sLogFile = (string) $sxmlDefinition->log->file;
-		$this->sLogSize = (integer) $sxmlDefinition->log->size;
+		if (isset($elemDB->log)) {
+			$this->bLogEnabled = (bool) $elemDB->log['enabled'];
+			$this->bLogVerbose = (bool) $elemDB->log['verbose'];
+			$this->sLogFile = $elemDB->log['file'];
+			$this->sLogSize = $elemDB->log['size'];
+		}
 		
-		$this->query('SET NAMES '.$sCharset);
+		$this->query('SET NAMES '.$elemDB['charset']);
 		
 		$this->log('repository definition loaded', TRUE);
 		
@@ -170,7 +168,7 @@ class sbPDORepository extends sbPDO {
 			$sText = "\r\n".'-- '.get_class($this).': '.strftime('%y-%m-%d %H:%M:%S', time()).' '.str_repeat('-', 80)."\r\n".$sText;
 		}
 		
-		error_log($sText."\r\n", 3, System::getDir().$this->sLogFile);
+		error_log($sText."\r\n", 3, CONFIG::LOGDIR.$this->sLogFile);
 
 	}
 
