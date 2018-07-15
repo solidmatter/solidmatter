@@ -52,7 +52,7 @@ class sbView_registry_edit extends sbView {
 					if ($this->nodeSubject->isNodeType('sbSystem:User')) {
 						$sUserUUID = $this->nodeSubject->getProperty('jcr:uuid');	
 					} else {
-						$sUserUUID = 'SYSTEM';
+						$sUserUUID = $this->crSession->getRootNode()->getIdentifier();
 					}
 					
 					$stmtWriteData->bindParam('key', $sKey, PDO::PARAM_STR);
@@ -136,7 +136,7 @@ class sbView_registry_edit extends sbView {
 		if ($this->nodeSubject->isNodeType('sbSystem:User')) {
 			$sUserUUID = $this->nodeSubject->getProperty('jcr:uuid');	
 		} else {
-			$sUserUUID = 'SYSTEM';
+			$sUserUUID = $this->crSession->getRootNode()->getIdentifier();
 		}
 		$stmtGetData = $this->crSession->prepareKnown('sbSystem/registry/getAllEntries');
 		$stmtGetData->bindParam('user_uuid', $sUserUUID, PDO::PARAM_STR);

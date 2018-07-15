@@ -80,9 +80,7 @@
 		
 	Descriptions of available repositories, their workspaces and users. A repository must specify a database where the tables reside in.
 	Repositories and workspaces have prefixes that are prepended to their respective tables in the database. 
-	A repository "solidmatter" is mandatory for now, it is used for the global session and cache tables and can also contain additional repositories/workspaces.
 	TODO: Workspace definition and user management should be moved into the repository tables
-	TODO: the global tables should not need to rely on a repository, only a database
 	
 	<RepositoryID prefix="RepositoryTablePrefix" db="DatabaseID">
 		<workspace id="WorkspaceID" prefix="WorkspacePrefix">
@@ -98,7 +96,7 @@
 	
 	-->
 	<repositories>
-		<solidmatter prefix="rep" db="solidmatter">
+		<solidmatter prefix="rep" db="system">
 			<workspace id="dev" prefix="sb">
 				<user name="system" pass="solidbytes" authorisation="full" />
 			</workspace>
@@ -109,13 +107,19 @@
 	<!-- 
 		
 	Definition of the available databases to this solidMatter installation with mostly the usual stuff.
+	A database "system" is mandatory for now, it is used for the global session and cache tables and can also contain additional repositories/workspaces.
+	
 	Log file is relative to configured log directory.
+	
+	<DatabaseID host="localhost" port="3306" user="db_user" pass="user_password" schema="database_schema" charset="utf8">
+		<log enabled="false" verbose="false" file="logfile.txt" size="1024" />
+	</DatabaseID>
 	
 	 -->
 	<databases>
-		<solidmatter host="localhost" port="3306" user="solidmatter" pass="solidmatter" schema="solidmatter" charset="utf8">
+		<system host="localhost" port="3306" user="solidmatter" pass="solidmatter" schema="solidmatter" charset="utf8">
 			<log enabled="false" verbose="false" file="log_database_sys.txt" size="1024" />
-		</solidmatter>
+		</system>
 	</databases>
 	
 </config>

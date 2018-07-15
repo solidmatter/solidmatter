@@ -19,8 +19,7 @@ interface sbCache {
 	* @param 
 	* @return 
 	*/
-	//public function storeData($sKey, $mData, $sSubject = NULL, $sModifier = NULL);
-	public function storeData($sKey, $mData);
+	public function storeData(string $sKey, $mData);
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -28,8 +27,7 @@ interface sbCache {
 	* @param 
 	* @return 
 	*/
-	//public function loadData($sKey, $sSubject = NULL, $sModifier = NULL);
-	public function loadData($sKey);
+	public function loadData(string $sKey);
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -37,7 +35,7 @@ interface sbCache {
 	* @param 
 	* @return 
 	*/
-	public function exists($sKey);
+	public function exists(string $sKey);
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -45,7 +43,7 @@ interface sbCache {
 	* @param 
 	* @return 
 	*/
-	public function clear($sKey = '');
+	public function clear(string $sKey = '');
 	
 	//--------------------------------------------------------------------------
 	/**

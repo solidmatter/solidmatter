@@ -22,7 +22,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function __construct($aArrayOfNodes = NULL) {
+	public function __construct(array $aArrayOfNodes = NULL) {
 		if ($aArrayOfNodes !== NULL) {
 			$this->fill($aArrayOfNodes);
 		}
@@ -34,7 +34,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	private function fill($aArrayOfNodes = NULL) {
+	private function fill(array $aArrayOfNodes = NULL) {
 		if (!is_array($aArrayOfNodes)) {
 			throw new RepositoryException('no array of nodes');
 		} else {
@@ -154,6 +154,16 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	
 	//--------------------------------------------------------------------------
 	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function remove() {
+		unset($this->aNodeArray[$iPosition]);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* TODO: find more stable way to determine the lasting nodes, not just the last one
 	* @param 
 	* @return 
@@ -224,7 +234,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function skip($iNumElements) {
+	public function skip(int $iNumElements) {
 		$this->iPosition += $iNumElements;
 	}
 	
@@ -234,7 +244,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function sortAscending($sProperty) {
+	public function sortAscending(string $sProperty) {
 		$this->sortSlave($sProperty, FALSE);
 	}
 	
@@ -244,7 +254,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function sortDescending($sProperty) {
+	public function sortDescending(string $sProperty) {
 		$this->sortSlave($sProperty, TRUE);
 	}
 	
@@ -254,7 +264,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	protected function sortSlave($sProperty, $bDescending, $bNaturalSort = TRUE, $bCaseSensitive = FALSE) {
+	protected function sortSlave(string $sProperty, bool $bDescending, bool $bNaturalSort = TRUE, bool $bCaseSensitive = FALSE) {
 		
 		$aOrdered	= array();
 		$aTemp		= array();
@@ -293,7 +303,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function getElement($sName = NULL) {
+	public function getElement(string $sName = NULL) {
 		if ($sName == NULL) {
 			throw new sbException('a name is required');	
 		}
@@ -315,7 +325,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function crop($iTotalNodes) {
+	public function crop(int $iTotalNodes) {
 		$i = 0;
 		if (count($this->aNodeArray) > $iTotalNodes) {
 			foreach ($this->aNodeArray as $sLabel => $nodeCurrent) {

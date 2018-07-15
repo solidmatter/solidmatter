@@ -2126,7 +2126,7 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* FIXME: currently there are bugs in the auth logic, e.g. users/groups seen as local when they are only inherited
 	* @param 
 	* @return 
 	*/

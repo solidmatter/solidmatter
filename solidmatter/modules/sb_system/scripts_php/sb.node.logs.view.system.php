@@ -30,7 +30,7 @@ class sbView_logs_system extends sbView {
 				switch ($_REQUEST->getParam('log')) {
 					
 					case 'database':
-						$sFilename = LOG_DB_FILE;
+						$sFilename = 'none';
 						break;
 					
 					case 'access':
