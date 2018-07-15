@@ -16,6 +16,7 @@
 abstract class Registry {
 	
 	private static $crSession = NULL;
+	private static $sSystemUUID = NULL;
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -25,6 +26,7 @@ abstract class Registry {
 	*/
 	public static function setSession($crSession) {
 		self::$crSession = $crSession;
+		self::$sSystemUUID = self::$crSession->getRootNode()->getIdentifier();
 	}
 	
 	//--------------------------------------------------------------------------
@@ -50,14 +52,21 @@ abstract class Registry {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* Returns a value to a key from registry.
+	* The order in which the possible values are considered is sbSession -> RegistryCache -> user -> system -> default
+	* Throws an exception if the registry entry does not exist.
 	* @param 
 	* @return 
 	*/
 	public static function getValue($sKey, $bForced = FALSE) {
 		
+		// check temporary setting first (uses sbSesion storage)
+		if (isset(sbSession::$aData['registry'][$sKey])) {
+			return (sbSession::$aData['registry'][$sKey]);
+		}
+		
 		// cache
-		if (USE_REGISTRYCACHE) {
+		if (CONFIG::USE_REGISTRYCACHE) {
 			$cacheRegistry = CacheFactory::getInstance('registry');
 			if (!$bForced) {
 				$mValue = $cacheRegistry->loadData($sKey);
@@ -72,26 +81,28 @@ abstract class Registry {
 		$stmtGetValue->bindValue('key', $sKey, PDO::PARAM_STR);
 		$stmtGetValue->bindValue('user_uuid', User::getUUID(), PDO::PARAM_STR);
 		$stmtGetValue->execute();
+
+		// 		$stmtGetValue->debug();
+// 		var_dumpp($stmtGetValue->fetchAll());
+
+		$mValue = NULL;
+		$sType= NULL;
+		$bNoValueFound = TRUE;
 		
-		$bEmpty = TRUE;
-		// NOTE: system values are returned first, so looping will suffice
+		// there can only be one result row
 		foreach ($stmtGetValue as $aRow) {
-			$mValue = $aRow['s_value'];
-			$mDefaultValue = $aRow['s_defaultvalue'];
 			$sType = $aRow['e_type'];
-			$bEmpty = FALSE;
+			// use values in order user -> system -> default
+			if ($aRow['s_uservalue'] != NULL) {
+				$mValue = $aRow['s_uservalue'];
+			} elseif ($aRow['s_systemvalue'] != NULL) {
+				$mValue = $aRow['s_systemvalue'];
+			} else {
+				$mValue = $aRow['s_defaultvalue'];
+			}
 		}
 		$stmtGetValue->closeCursor();
 		
-		if ($bEmpty) {
-			throw new sbException('Registry value does not exist! ('.$sKey.')');
-		}
-		
-		if ($mValue === NULL) {
-			$mValue = $mDefaultValue;
-		}
-		
-		//var_dumpp($sKey.'|'.$sType);
 		switch ($sType) {
 			case 'boolean':
 				if ($mValue == 'TRUE') {
@@ -111,7 +122,7 @@ abstract class Registry {
 		}
 		
 		// cache
-		if (USE_REGISTRYCACHE) {
+		if (CONFIG::USE_REGISTRYCACHE) {
 			$cacheRegistry->storeData($sKey, $mValue);
 		}
 		
@@ -125,10 +136,18 @@ abstract class Registry {
 	* @param 
 	* @return 
 	*/
-	public static function setValue($sKey, $mValue, $sUserID = 'SYSTEM') {
+	public static function setValue($sKey, $mValue, $sUserID = NULL, $bTemporary = FALSE) {
 		
-		if ($sUserID != 'SYSTEM' && !self::isUserSpecific($sKey)) {
+		if ($sUserID == NULL) {
+			$sUserID = self::$sSystemUUID;
+		}
+		if ($sUserID != self::$sSystemUUID && !self::isUserSpecific($sKey)) {
 			throw new sbException('attempt to set a registry value ('.$sKey.') for a user that is not user-specific');
+		}
+		
+		// if the value should only persist until end of session
+		if ($bTemporary) {
+			sbSession::$aData['registry'][$sKey] = $mValue;
 		}
 		
 		// logic
@@ -142,7 +161,7 @@ abstract class Registry {
 		$stmtSetValue->closeCursor();
 		
 		// cache
-		if (USE_REGISTRYCACHE) {
+		if (CONFIG::USE_REGISTRYCACHE) {
 			$cacheRegistry = CacheFactory::getInstance('registry');
 			$cacheRegistry->clear();
 		}

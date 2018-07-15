@@ -16,14 +16,15 @@ class AuthorisationCache {
 	const AUTH_EFFECTIVE = 1;
 	const AUTH_AGGREGATED = 2;
 	
+	protected $crSession = NULL;
+	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	public function __construct($sPrefix = NULL) {
-		//TODO: what to do with the prefix on authorisation caches?
+	 * Creates an Imagecache for the given Session.
+	 * @param
+	 */
+	public function __construct(sbCR_Session $crSession) {
+		$this->crSession = $crSession;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -33,7 +34,7 @@ class AuthorisationCache {
 	* @return 
 	*/
 	public function storeAuthorisations($sSubjectUUID, $sEntityUUID, $eAuthType, $aAuthorisations) {
-		$stmtStore = System::getDatabase()->prepareKnown('sb_system/cache/authorisation/store');
+		$stmtStore = $this->crSession->getDatabase()->prepareKnown('sb_system/cache/authorisation/store');
 		if ($eAuthType == self::AUTH_EFFECTIVE) {
 			$sAuthType = 'EFFECTIVE';
 		} else {
@@ -58,7 +59,7 @@ class AuthorisationCache {
 	*/
 	public function loadAuthorisations($sSubjectUUID, $sEntityUUID, $eAuthType) {
 		$aAuthorisations = array();
-		$stmtLoad = System::getDatabase()->prepareKnown('sb_system/cache/authorisation/load');
+		$stmtLoad = $this->crSession->getDatabase()->prepareKnown('sb_system/cache/authorisation/load');
 		if ($eAuthType == self::AUTH_EFFECTIVE) {
 			$sAuthType = 'EFFECTIVE';
 		} else {
@@ -84,9 +85,9 @@ class AuthorisationCache {
 	public function clearAuthorisations($sEntityUUID = NULL) {
 		
 		if ($sEntityUUID == NULL) {
-			$stmtClear = System::getDatabase()->prepareKnown('sb_system/cache/authorisation/empty');
+			$stmtClear = $this->crSession->getDatabase()->prepareKnown('sb_system/cache/authorisation/empty');
 		} else {
-			$stmtClear = System::getDatabase()->prepareKnown('sb_system/cache/authorisation/clear');
+			$stmtClear = $this->crSession->getDatabase()->prepareKnown('sb_system/cache/authorisation/clear');
 			$stmtClear->bindParam('entity_uuid', $sEntityUUID, PDO::PARAM_STR);
 		}
 		$stmtClear->execute();

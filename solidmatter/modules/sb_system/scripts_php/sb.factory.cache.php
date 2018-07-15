@@ -14,114 +14,24 @@ import('sb.cache');
 //------------------------------------------------------------------------------
 /**
 */
-/*class CacheFactory {
-	
-	private static $cacheSystem = NULL;
-	private static $cachePaths = NULL;
-	private static $cacheRegistry = NULL;
-	private static $cacheImages = NULL;
-	private static $cacheAuthorisations = NULL;
-	private static $cacheRepository = NULL;
-	private static $cacheMisc = NULL;
-	
-	//--------------------------------------------------------------------------
-	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	/*public static function getInstance($sType) {
-		
-		switch ($sType) {
-			
-			case 'system':
-				if (self::$cacheSystem === NULL) {
-					import('sb.cache.session');
-					self::$cacheSystem = new SessionCache();
-				}
-				return (self::$cacheSystem);
-				//break;
-			
-			case 'paths':
-				if (self::$cachePaths === NULL) {
-					import('sb.cache.paths');
-					self::$cachePaths = new PathCache();
-				}
-				return (self::$cachePaths);
-				//break;
-			
-			case 'registry':
-				if (self::$cacheRegistry === NULL) {
-					import('sb.cache.registry');
-					self::$cacheRegistry = new RegistryCache();
-				}
-				return (self::$cacheRegistry);
-				//break;
-				
-			case 'images':
-				if (self::$cacheImages === NULL) {
-					import('sb.cache.images');
-					self::$cacheImages = new ImageCache();
-				}
-				return (self::$cacheImages);
-				//break;
-			
-			case 'authorisations':
-				if (self::$cacheAuthorisations === NULL) {
-					import('sb.cache.authorisations');
-					self::$cacheAuthorisations = new AuthorisationCache();
-				}
-				return (self::$cacheAuthorisations);
-				//break;
-				
-			case 'repository':
-				if (self::$cacheRepository === NULL) {
-					import('sb.cache.repository');
-					self::$cacheRepository = new RepositoryCache();
-				}
-				return (self::$cacheRepository);
-				//break;
-				
-			case 'misc':
-				if (self::$cacheMisc === NULL) {
-					import('sb.cache.misc');
-					self::$cacheMisc = new MiscCache();
-				}
-				return (self::$cacheMisc);
-				//break;
-				
-			default:
-				throw new sbException('type not recognized: '.$sType);
-				break;
-			
-			
-		}	
-		
-	}
-	
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 class CacheFactory {
 	
 	private static $crSession = NULL;
 	
 	private static $aCacheTypes = array(
 		
-		// type => 				array(main class,	class, 				scope, 			prefix)
+		// type => 				array(main class,	class, 					scope, 			prefix)
 		
 		// special caches
 		'images' => 			array('special',	'ImageCache',			'workspace',	''),
 		'authorisations' => 	array('special',	'AuthorisationCache',	'workspace',	''),
 		
 		// multipurpose caches
-		'paths' =>				array('generic',	'MemoryCache',			'workspace',	'PATHS:'),
+		'misc' => 				array('generic',	'DatabaseCache',		'global',		'MISC:'),
 		'system' =>				array('generic',	'MemoryCache', 			'global',		'SYSTEM:'),
 		'registry' =>			array('generic',	'SessionCache',			'session',		'REGISTRY:'),
+		'paths' =>				array('generic',	'MemoryCache',			'workspace',	'PATHS:'),
 		'repository' => 		array('generic',	'MemoryCache',			'repository',	'REPOSITORY:'),
-		'misc' => 				array('generic',	'DatabaseCache',		'global',		'MISC:'),
 		
 	);
 	
@@ -143,7 +53,16 @@ class CacheFactory {
 	* @return 
 	*/
 	public static function setSession($crSession) {
+		
 		self::$crSession = $crSession;
+		
+		// purge existing session-dependent caches
+		foreach (self::$aCacheTypes as $sCacheType => $aCacheDefinition) {
+			if ($aCacheDefinition[0] == 'special') {
+				self::$aCaches[$sCacheType] = NULL; 
+			}
+		}
+		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -177,7 +96,7 @@ class CacheFactory {
 			// treat special and generic caches differently
 			if (self::$aCacheTypes[$sType][0] == 'special') {
 				
-				self::$aCaches[$sType] = new $sClass();
+				self::$aCaches[$sType] = new $sClass(self::$crSession);
 				
 			} else { // generic
 				
@@ -195,7 +114,7 @@ class CacheFactory {
 						$sPrefix .= 'W['.self::$crSession->getRepository()->getID().':'.self::$crSession->getWorkspace()->getName().']:';
 						break;
 					case 'session':
-						if ($sClass != 'SessionCache') { // TODO: for now, no prefis is needed with SessionCache
+						if ($sClass != 'SessionCache') { // TODO: for now, no prefix is needed with SessionCache
 							$sPrefix .= 'S['.sbSession::getID().']:';
 						}
 						break;
@@ -209,7 +128,6 @@ class CacheFactory {
 				if ($sClass == 'DatabaseCache') {
 					self::$aCaches[$sType]->setDatabase(System::getDatabase());
 				}
-				
 				
 			}
 			

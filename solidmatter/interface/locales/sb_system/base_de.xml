@@ -28,6 +28,7 @@
 		<new>Neu</new>
 		<edit>Bearbeiten</edit>
 		<create>Erstellen</create>
+		<create_multiple>Mehrere Erstellen</create_multiple>
 		<delete>Löschen</delete>
 		<save>Speichern</save>
 		<apply>Übernehmen</apply>

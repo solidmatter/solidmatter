@@ -269,6 +269,7 @@ class sbCR_Session {
 	//--------------------------------------------------------------------------
 	/**
 	* Returns the root node of the workspace.
+	* TODO: make the root node UUID flexible, e.g. for change to sbUUID
 	* @param 
 	* @return 
 	*/

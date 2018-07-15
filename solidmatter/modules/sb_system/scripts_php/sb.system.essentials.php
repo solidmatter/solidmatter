@@ -108,13 +108,13 @@ abstract class DEBUG {
 * @param 
 * @return 
 */
-function DEBUG($sText, $bInUse = TRUE) {
+function DEBUG(string $sText, bool $bInUse = FALSE) {
 	if (DEBUG::ENABLED && ($bInUse || DEBUG::LOG_ALL)) {
 		static $oDebugger = NULL;
 		if (!$oDebugger) {
-			$oDebugger = new Debugger($_SERVER['REQUEST_URI']);
+			$oDebugger = new Logger($_SERVER['REQUEST_URI'], 'debug.txt');
 		}
-		$oDebugger->addText($sText."\r\n");
+		$oDebugger->addText($sText);
 	}
 }
 
@@ -124,22 +124,27 @@ function DEBUG($sText, $bInUse = TRUE) {
 * @param 
 * @return 
 */
-class Debugger {
-	protected $sCWD;
-	protected $sRequestID;
+class Logger {
+	protected $sLogfile;
 	protected $sContent;
-	public function __construct($sRequestID) {
+	public function __construct(string $sSubject, string $sLogFile) {
 		// TODO: improve timezone handling (dirty hack to avoid strict warning below)
 		date_default_timezone_set('Europe/Berlin');
 		$this->sCWD = getcwd();
-		$this->sRequestID = substr(uuid(), 0, 5);
-		$this->sContent .= "\r\n----- [ ".strftime('%y-%m-%d %H:%M:%S', time())." ] ----- [ $sRequestID ]\r\n";
+		if (!CONFIG::LOGDIR_ABS) { // log directory is not absolute path
+			$this->sLogfile = $this->sCWD.'/'.CONFIG::LOGDIR.$sLogFile;
+		} else {
+			$this->sLogfile = CONFIG::LOGDIR.$sLogFile;
+		}
+		// TODO: use this info?
+		//$this->sLogSize
+		$this->sContent .= '----- [ '.strftime('%y-%m-%d %H:%M:%S', time()).' ] ----- [ '.$_SERVER['REQUEST_URI']." ] -----\r\n";
 	}
 	public function __destruct() {
-		error_log($this->sContent, 3, $this->sCWD.'/_logs/debug.txt');
+		error_log($this->sContent."\r\n", 3, $this->sLogfile);
 	}
-	public function addText($sText) {
-		$this->sContent .= $sText;
+	public function addText(string $sText) {
+		$this->sContent .= $sText."\r\n";
 	}
 }
 
@@ -150,7 +155,7 @@ class Debugger {
 * @param 
 * @return 
 */
-function import($sLibrary, $bRequired = TRUE) {
+function import(string $sLibrary, bool $bRequired = TRUE) {
 	
 	//DEBUG('Import: requested library '.$sLibrary, DEBUG::IMPORT);
 	
@@ -342,7 +347,7 @@ function headers($sType, $aOptions = NULL) {
 			}
 			header('Pragma:');
 			header('Expires: '.gmdate('D, d M Y H:i:s', time() + $aOptions['seconds']).' GMT');
-			header('Cache-Control: public; max-age='.$aOptions['seconds']);
+			header('Cache-Control: max-age='.$aOptions['seconds']);
 			break;
 		case 'no_cache':
 			header('Pragma: no-cache');

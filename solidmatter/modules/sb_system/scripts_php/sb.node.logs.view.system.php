@@ -30,7 +30,7 @@ class sbView_logs_system extends sbView {
 				switch ($_REQUEST->getParam('log')) {
 					
 					case 'database':
-						$sFilename = LOG_DB_FILE;
+						$sFilename = 'none';
 						break;
 					
 					case 'access':
@@ -42,7 +42,7 @@ class sbView_logs_system extends sbView {
 						break;
 						
 					case 'debug':
-						$sFilename = '_logs/debug.txt';
+						$sFilename = CONFIG::LOGDIR.'debug.txt';
 						break;
 					
 					default:

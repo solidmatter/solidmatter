@@ -21,6 +21,7 @@
 		<xsl:param name="noLabel" />
 		<xsl:param name="label" />
 		<form class="default" action="{@action}" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+			<xsl:if test="@id"><xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute></xsl:if>
 			<table class="default">
 				<!-- TODO: configuring label display does not work -->
 				<!--<xsl:choose>
@@ -74,6 +75,9 @@
 	
 	<xsl:template name="renderLabel">
 		<label for="{@name}">
+			<xsl:if test="@required = 'true'">
+				<xsl:attribute name="class">required</xsl:attribute>
+			</xsl:if>
 			<xsl:call-template name="localize">
 				<xsl:with-param name="label" select="@label" />
 			</xsl:call-template>
@@ -135,7 +139,7 @@
 		</tr>
 	</xsl:template>
 	<xsl:template match="sbinput[@type='email']" mode="inputonly">
-		<input type="text" size="{@size}" maxlength="{@maxlength}" value="{@value}" name="{@name}" id="{@name}">
+		<input type="email" size="{@size}" maxlength="{@maxlength}" value="{@value}" name="{@name}" id="{@name}">
 			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
 			<xsl:if test="@errorlabel"><xsl:attribute name="class">formerror</xsl:attribute></xsl:if>
 		</input>
@@ -154,10 +158,17 @@
 		</tr>
 	</xsl:template>
 	<xsl:template match="sbinput[@type='datetime']" mode="inputonly">
-		<input type="text" size="{@size}" maxlength="{@maxlength}" value="{@value}" name="{@name}" id="{@name}">
+		<xsl:variable name="date"><xsl:value-of select="substring(@value, 0, 11)" /></xsl:variable>
+		<xsl:variable name="time"><xsl:value-of select="substring(@value, 12, 5)" /></xsl:variable>
+		<input type="date" size="{@size}" maxlength="{@maxlength}" value="{$date}" name="{@name}_date" id="{@name}_date">
 			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
 			<xsl:if test="@errorlabel"><xsl:attribute name="class">formerror</xsl:attribute></xsl:if>
 		</input>
+		<input type="time" size="{@size}" maxlength="{@maxlength}" value="{$time}" name="{@name}_time" id="{@name}_time">
+			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
+			<xsl:if test="@errorlabel"><xsl:attribute name="class">formerror</xsl:attribute></xsl:if>
+		</input>
+<!-- 		<xsl:value-of select="$date" /> - '<xsl:value-of select="$time" />' -->
 		<xsl:call-template name="renderErrorLabel" />
 	</xsl:template>
 	
@@ -242,7 +253,7 @@
 		</tr>
 	</xsl:template>
 	<xsl:template match="sbinput[@type='color']" mode="inputonly">
-		<input type="text" size="6" maxlength="6" value="{@value}" name="{@name}" id="{@name}">
+		<input type="color" size="6" maxlength="6" value="{@value}" name="{@name}" id="{@name}">
 			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
 			<xsl:if test="@errorlabel"><xsl:attribute name="class">formerror</xsl:attribute></xsl:if>
 		</input>
@@ -261,7 +272,9 @@
 		</tr>
 	</xsl:template>
 	<xsl:template match="sbinput[@type='integer']" mode="inputonly">
-		<input type="text" size="{@size}" maxlength="{@maxlength}" value="{@value}" name="{@name}" id="{@name}">
+		<input type="number" size="{@size}" maxlength="{@maxlength}" value="{@value}" name="{@name}" id="{@name}">
+			<xsl:if test="@minvalue"><xsl:attribute name="min"><xsl:value-of select="@minvalue" /></xsl:attribute></xsl:if>
+			<xsl:if test="@maxvalue"><xsl:attribute name="max"><xsl:value-of select="@maxvalue" /></xsl:attribute></xsl:if>
 			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
 			<xsl:if test="@errorlabel"><xsl:attribute name="class">formerror</xsl:attribute></xsl:if>
 		</input>
@@ -533,26 +546,51 @@
 	<xsl:template match="sbinput[@type='checkbox']" mode="complete">
 		<tr>
 			<td width="30%"><xsl:call-template name="renderLabel" /></td>
-			<td width="70%">
+			<td width="70%" style="text-align:left;">
 				<xsl:apply-templates select="." mode="inputonly" />
 			</td>
 		</tr>
 	</xsl:template>
 	<xsl:template match="sbinput[@type='checkbox']" mode="inputonly">
-		<input type="checkbox" name="{@name}" id="{@name}">
-			<xsl:attribute name="title">
-				<xsl:choose>
-					<xsl:when test="substring(@label, 1, 1) = '$'">
-						<xsl:value-of select="dyn:evaluate(@label)" />
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="@label" />
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-			<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
-			<xsl:if test="@value='TRUE'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
-		</input>
+		<xsl:choose>
+		<xsl:when test="OLD">
+			<input type="checkbox" name="{@name}" id="{@name}">
+				<xsl:attribute name="title">
+					<xsl:choose>
+						<xsl:when test="substring(@label, 1, 1) = '$'">
+							<xsl:value-of select="dyn:evaluate(@label)" />
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="@label" />
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+				<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
+				<xsl:if test="@value='TRUE'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
+			</input>
+		</xsl:when>
+		<xsl:otherwise>
+			<div class="fancy_checkbox">
+				<input type="checkbox" name="{@name}" id="{@name}">
+					<xsl:if test="@value='TRUE'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
+					<xsl:if test="@disabled"><xsl:attribute name="disabled">disabled</xsl:attribute></xsl:if>
+				</input>
+				<label for="{@name}">
+					<xsl:attribute name="title">
+						<xsl:choose>
+							<xsl:when test="substring(@label, 1, 1) = '$'">
+								<xsl:value-of select="dyn:evaluate(@label)" />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="@label" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
+				✖</label>
+<!-- 				<label for="{@name}">✓</label> -->
+			</div>
+		</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 	

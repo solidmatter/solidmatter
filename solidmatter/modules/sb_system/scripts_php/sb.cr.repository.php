@@ -44,7 +44,6 @@ class sbCR_Repository {
 	);
 	
 	// basic info about existing repositories 
-	private $sxmlRepositoryDefinitions = NULL;
 	private $elemRepositoryDefinition = NULL;
 	
 	private $cacheRepository = NULL;
@@ -62,7 +61,7 @@ class sbCR_Repository {
 		
 		// store ID for later use
 		$this->sID = $sRepositoryID;
-		$this->elemRepositoryDefinition = sbCR::getRepositoryDefinition($sRepositoryID);
+		$this->elemRepositoryDefinition = CONFIG::getRepositoryConfig($sRepositoryID);
 		
 	}
 	
@@ -110,12 +109,12 @@ class sbCR_Repository {
 		
 		// credentials and workspace are mandatory
 		if ($crCredentials == NULL || $sWorkspaceName == NULL) {
-			throw new RepositoryException('credentials or workspace missing');	
+			throw new RepositoryException('credentials or workspace missing');
 		}
 		
 		// check if workspace exists
 		$elemWorkspace = NULL;
-		foreach ($this->elemRepositoryDefinition->workspaces->workspace as $elemCurrentWorkspace) {
+		foreach ($this->elemRepositoryDefinition->xpath('workspace') as $elemCurrentWorkspace) {
 			if ($elemCurrentWorkspace['id'] == $sWorkspaceName) {
 				$elemWorkspace = $elemCurrentWorkspace;
 				$sWorkspacePrefix = (string) $elemCurrentWorkspace['prefix'];
@@ -134,16 +133,15 @@ class sbCR_Repository {
 		}
 		
 		$sRepositoryPrefix = (string) $this->elemRepositoryDefinition['prefix'];
+		$sDBID = (string) $this->elemRepositoryDefinition['db'];
 		
 		// init database
-		if ((string) $this->elemRepositoryDefinition->db['use'] == 'system') {
+		if ($sDBID == 'system') {
 			$this->DB = System::getDatabase();
 			$this->DB->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
 		} else {
-			$this->DB = new sbPDORepository($this->elemRepositoryDefinition->db);
+			$this->DB = new sbPDORepository($sDBID);
 			$this->DB->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
-			// TODO: keep the frickin system db out of here!
-			System::getDatabase()->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
 		}
 		
 		// load and store repository infos if necessary

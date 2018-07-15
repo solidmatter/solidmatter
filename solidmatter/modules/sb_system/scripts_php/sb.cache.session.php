@@ -30,7 +30,7 @@ class SessionCache implements sbCache {
 	* @param 
 	* @return 
 	*/
-	public function __construct($sPrefix = NULL) {
+	public function __construct(string $sPrefix = NULL) {
 		if ($sPrefix != NULL) {
 			$this->sPrefix = $sPrefix;
 		}
@@ -43,7 +43,7 @@ class SessionCache implements sbCache {
 	* @param multiple the data to be stored
 	* @return 
 	*/
-	public function storeData($sKey, $mData) {
+	public function storeData(string $sKey, $mData) {
 		
 		sbSession::$aData['cache'][$this->sPrefix.$sKey] = serialize($mData);
 		
@@ -55,7 +55,7 @@ class SessionCache implements sbCache {
 	* @param 
 	* @return 
 	*/
-	public function loadData($sKey) {
+	public function loadData(string $sKey) {
 		
 		$mData = NULL;
 		if (isset(sbSession::$aData['cache'][$this->sPrefix.$sKey])) {
@@ -71,7 +71,7 @@ class SessionCache implements sbCache {
 	* @param 
 	* @return 
 	*/
-	public function exists($sKey) {
+	public function exists(string $sKey) {
 		
 		if (isset(sbSession::$aData['cache'][$this->sPrefix.$sKey])) {
 			return (TRUE);
@@ -86,7 +86,7 @@ class SessionCache implements sbCache {
 	* @param 
 	* @return 
 	*/
-	public function clear($sKey = '') {
+	public function clear(string $sKey = '') {
 		
 		if ($sKey == '') {
 			unset(sbSession::$aData['cache']);

@@ -9,8 +9,6 @@
 */
 //------------------------------------------------------------------------------
 
-if (!defined('PRETTYPRINT'))		define('PRETTYPRINT', TRUE);
-
 //------------------------------------------------------------------------------
 /**
 */
@@ -685,7 +683,7 @@ class sbDOMResponse extends sbDOMDocument {
 				//header('Content-type: '.$sMimetype);
 				
 				// TODO: find a way to prettyprint correctly
-				if (PRETTYPRINT) {
+				if (CONFIG::PRETTYPRINT) {
 					$procGenerator->formatOutput = TRUE;
 					//import('sb.tools.xml');
 					//echo pretty_print($procGenerator->transformToXML($this));
@@ -702,13 +700,13 @@ class sbDOMResponse extends sbDOMDocument {
 			case 'debug':
 				$this->formatOutput = TRUE;
 				header('Content-Type: text/html; charset=utf-8');
-				echo '<html><body><pre style="font-family: monospace; font-size:9px;">'.htmlspecialchars($this->saveXML()).'</pre></body></html>';
+				echo '<html><body><pre style="font-family: \'Lucida Console\', Monaco, monospace; font-size: 9px;">'.htmlspecialchars($this->saveXML()).'</pre></body></html>';
 				break;
 				
 			case 'xml':
 				header('X-sbMessageType: sbControllerResponse');
 				header('Content-Type: text/xml; charset=utf-8');
-				if (PRETTYPRINT) {
+				if (CONFIG::PRETTYPRINT) {
 					$this->formatOutput = TRUE;
 				}
 				echo $this->saveXML();

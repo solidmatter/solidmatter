@@ -1274,7 +1274,8 @@ class sbNode extends sbCR_Node {
 						}
 					}
 					$_RESPONSE->addMetadata('md_system', 'displaytype', $this->getProperty('displaytype'));
-					$formCreate->addSubmit('$locale/sbSystem/actions/save');
+					$formCreate->addSubmit('$locale/sbSystem/actions/create');
+					$formCreate->addSubmit('$locale/sbSystem/actions/create_multiple', 'create_multiple');
 					$this->modifyForm($formCreate, 'create');
 					return ($formCreate);
 					
@@ -2125,7 +2126,7 @@ class sbNode extends sbCR_Node {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* FIXME: currently there are bugs in the auth logic, e.g. users/groups seen as local when they are only inherited
 	* @param 
 	* @return 
 	*/

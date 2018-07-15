@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<config>
+	
+	<!-- Site format examples
+		
+	// A site has at least a location and a type, depending on the type additional attributes are available
+	// The location is the part of the URI that is matched against the request URI and must end in a slash (":port" can be omitted)
+	<site location="domain:port/" type="controller" handler="application" subject="demojukebox" theme="black_lime">
+		// storage defines the repository and workspace the site works on and is inherited by the subsites (if applicable)
+		<storage repository="test" workspace="test" user="system" pass="solidbytes" />
+		// I don't even know if this is active...
+		<debug enabled="true" verbose="false" />
+		// A site can have subsites defined, if applicable these use the same repository as the main site and (locations are relative)
+		<subsite location="api" type="controller" handler="api" subject="demojukebox" theme="black_lime" />
+		<subsite location="theme" type="theme" handler="backend" theme="black_lime" theme_override="black_ice" />
+		<subsite location="play" type="controller" handler="jbaudiostream" />
+		<subsite location="rss" type="controller" handler="jbrss" />
+		<subsite location="favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
+	</site> 
+	
+	// Run a PHP script
+	<site location="domain:port/runtests" type="script" handler="test.php" />
+	
+	// Redirect to another URL
+	<site location="domain:port/google" type="redirect" destination="http://www.google.com" />
+	
+	-->
+	
+	<sites>
+		<site location="frontend.localtest.me/" type="controller" handler="frontend" subject="demowebsite">
+			<storage repository="solidmatter" workspace="dev" user="system" pass="solidbytes" />
+			<debug enabled="false" verbose="false" />
+			<subsite location="templates" type="controller" handler="xsl" subject="demotemplates" />
+			<subsite location="mmm" type="controller" handler="frontend" subject="demofiles" />
+		</site>
+		<site location="backend.localtest.me/" type="controller" handler="backend" theme="_admin">
+			<storage repository="solidmatter" workspace="dev" user="system" pass="solidbytes" />
+			<debug enabled="false" verbose="false" />
+			<subsite location="templates" type="controller" handler="xsl" subject="demotemplates" />
+			<subsite location="theme" type="theme" handler="backend" theme="_admin" />
+			<subsite location="favicon.ico" type="passthrough" file="interface/solidmatter.ico" mimetype="" />
+		</site>
+		<site location="jukebox.localtest.me/" type="controller" handler="application" subject="demojukebox">
+			<storage repository="solidmatter" workspace="dev" user="system" pass="solidbytes" />
+			<debug enabled="false" verbose="false" />
+			<subsite location="api" type="controller" handler="api" subject="demojukebox" />
+			<subsite location="theme" type="theme" handler="backend" theme="_default" />
+			<subsite location="play" type="controller" handler="jbaudiostream" />
+			<subsite location="rss" type="controller" handler="jbrss" />
+			<subsite location="favicon.ico" type="passthrough" file="interface/themes/_default/sb_jukebox/jukebox.ico" mimetype="" />
+		</site>
+		
+		<!-- utilities -->
+		<site location="localtest.me/phpinfo" type="script" handler="phpinfo.php" />
+		<site location="localtest.me/opcinfo" type="script" handler="opcinfo.php" />
+		<site location="localtest.me/test" type="script" handler="test.php" />
+		<site location="localtest.me/google" type="redirect" destination="http://www.google.com" />
+		<site location="localtest.me/setup" type="script" handler="setup.php" />
+	
+	</sites>
+	
+	<!-- 
+		
+	// A handler currently only consists of an ID (= node name) and the library/class that should be loaded/called.
+	<HandlerID library="Module:File" class="Classname" />
+	
+	-->
+	<handlers>
+		<backend library="sbSystem:sb.handler.request.backend" class="BackendRequestHandler" />
+		<frontend library="sbSystem:sb.handler.request.frontend" class="FrontendRequestHandler" />
+		<application library="sbSystem:sb.handler.request.application" class="ApplicationRequestHandler" />
+		<api library="sbSystem:sb.handler.request.api" class="APIRequestHandler" />
+		<xsl library="sbSystem:sb.handler.request.xsl" class="XSLRequestHandler" />
+		<jbaudiostream library="sbJukebox:sb.handler.request.audiostream" class="JBAudioStreamHandler" />
+		<jbrss library="sbJukebox:sb.handler.request.rss" class="JBRSSHandler" />
+		<portal library="sbPortal:sb.handler.request.portal" class="PortalHandler" />
+	</handlers>
+	
+	<!-- 
+		
+	Descriptions of available repositories, their workspaces and users. A repository must specify a database where the tables reside in.
+	Repositories and workspaces have prefixes that are prepended to their respective tables in the database. 
+	TODO: Workspace definition and user management should be moved into the repository tables
+	
+	<RepositoryID prefix="RepositoryTablePrefix" db="DatabaseID">
+		<workspace id="WorkspaceID" prefix="WorkspacePrefix">
+			// Workspace user&authorization support is unfinished, currently it is only checked against the site definition, authorization is always "full"
+			<user name="UserName" pass="Password" authorisation="full" />
+		</workspace>
+		<workspace id="AnotherWorkspaceID" prefix="AnotherWorkspacePrefix">
+			<user name="SomeUserName" pass="SomePassword" authorisation="full" />
+			<user name="AnotherUserName" pass="solidbytes" authorisation="full" />
+		</workspace>
+		<debug enabled="false" verbose="false" />
+	</RepositoryID> 
+	
+	-->
+	<repositories>
+		<solidmatter prefix="rep" db="system">
+			<workspace id="dev" prefix="sb">
+				<user name="system" pass="solidbytes" authorisation="full" />
+			</workspace>
+			<debug enabled="false" verbose="false" />
+		</solidmatter>
+	</repositories>
+	
+	<!-- 
+		
+	Definition of the available databases to this solidMatter installation with mostly the usual stuff.
+	A database "system" is mandatory for now, it is used for the global session and cache tables and can also contain additional repositories/workspaces.
+	
+	Log file is relative to configured log directory.
+	
+	<DatabaseID host="localhost" port="3306" user="db_user" pass="user_password" schema="database_schema" charset="utf8">
+		<log enabled="false" verbose="false" file="logfile.txt" size="1024" />
+	</DatabaseID>
+	
+	 -->
+	<databases>
+		<system host="localhost" port="3306" user="solidmatter" pass="solidmatter" schema="solidmatter" charset="utf8">
+			<log enabled="false" verbose="false" file="log_database_sys.txt" size="1024" />
+		</system>
+	</databases>
+	
+</config>

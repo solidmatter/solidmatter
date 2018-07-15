@@ -16,6 +16,17 @@
 */
 class ImageCache {
 	
+	protected $crSession = NULL;
+	
+	//--------------------------------------------------------------------------
+	/**
+	 * Creates an Imagecache for the given Session.
+	 * @param
+	 */
+	public function __construct(sbCR_Session $crSession) {
+		$this->crSession = $crSession;
+	}
+	
 	//--------------------------------------------------------------------------
 	/**
 	* Caches an image along with information on the currently used filterstack.
@@ -28,13 +39,13 @@ class ImageCache {
 	* @param resource the image's binary data in gd2 format 
 	* @return boolean true on success, false otherwise
 	*/
-	public function storeImage($sImageUUID, $sFilterstackUUID, $sMode, $imgData) {
+	public function storeImage(string $sImageUUID, string $sFilterstackUUID, string $sMode, $imgData) {
 		
 		$sTempFile = Registry::getValue('sb.system.temp.dir').'/image_'.uuid().'.gd2';
 		imagegd2($imgData, $sTempFile);
 		$fpImage= fopen($sTempFile, 'rb');
 		
-		$stmtStore = System::getDatabase()->prepareKnown('sb_system/cache/images/store');
+		$stmtStore = $this->crSession->getDatabase()->prepareKnown('sb_system/cache/images/store');
 		$stmtStore->bindValue('image', $sImageUUID, PDO::PARAM_STR);
 		$stmtStore->bindValue('filterstack', $sFilterstackUUID, PDO::PARAM_STR);
 		$stmtStore->bindValue('mode', $sMode, PDO::PARAM_STR);
@@ -62,8 +73,8 @@ class ImageCache {
 	* @return resource the image's binary data in gd2 format if retrieval was 
 	* successful, false otherwise
 	*/
-	public function loadImage($sImageUUID, $sFilterstackUUID, $sMode) {
-		$stmtLoad = System::getDatabase()->prepareKnown('sb_system/cache/images/load');
+	public function loadImage(string $sImageUUID, string $sFilterstackUUID, string $sMode) {
+		$stmtLoad = $this->crSession->getDatabase()->prepareKnown('sb_system/cache/images/load');
 		$stmtLoad->bindValue('image', $sImageUUID, PDO::PARAM_STR);
 		$stmtLoad->bindValue('filterstack', $sFilterstackUUID, PDO::PARAM_STR);
 		$stmtLoad->bindValue('mode', $sMode, PDO::PARAM_STR);
@@ -83,8 +94,8 @@ class ImageCache {
 	* different filterstack is applied. 
 	* @param string the uuid of the image node
 	*/
-	public function clearImage($sSubjectUUID) {
-		$stmtClear = System::getDatabase()->prepareKnown('sb_system/cache/images/clear/byImage');
+	public function clearImage(string $sSubjectUUID) {
+		$stmtClear = $this->crSession->getDatabase()->prepareKnown('sb_system/cache/images/clear/byImage');
 		$stmtClear->bindParam('image', $sSubjectUUID, PDO::PARAM_STR);
 		$stmtClear->execute();
 		$stmtClear->closeCursor();
@@ -97,8 +108,8 @@ class ImageCache {
 	* This method needs to be called when a filterstack has changed.
 	* @param string the uuid of the filterstack node
 	*/
-	public function clearFilterstack($sSubjectUUID) {
-		$stmtClear = System::getDatabase()->prepareKnown('sb_system/cache/images/clear/byFilterstack');
+	public function clearFilterstack(string $sSubjectUUID) {
+		$stmtClear = $this->crSession->getDatabase()->prepareKnown('sb_system/cache/images/clear/byFilterstack');
 		$stmtClear->bindParam('filterstack', $sSubjectUUID, PDO::PARAM_STR);
 		$stmtClear->execute();
 		$stmtClear->closeCursor();
@@ -109,7 +120,7 @@ class ImageCache {
 	* Purges the whole cache, regardless of states.
 	*/
 	public function clearAll() {
-		$stmtClear = System::getDatabase()->prepareKnown('sb_system/cache/images/empty');
+		$stmtClear = $this->crSession->getDatabase()->prepareKnown('sb_system/cache/images/empty');
 		$stmtClear->execute();
 		$stmtClear->closeCursor();
 	}

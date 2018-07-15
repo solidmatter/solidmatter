@@ -34,7 +34,7 @@
 			<div class="form">
 				<xsl:apply-templates select="/response/content/sbform[@id='login_backend']" />
 			</div>
-			<span class="version">0.50.00</span>
+<!-- 			<span class="version">0.50.00</span> -->
 		</div>
 	</body>
 	</html>

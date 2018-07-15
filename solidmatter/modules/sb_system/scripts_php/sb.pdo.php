@@ -11,18 +11,21 @@
 
 import('sb.pdo.statement');
 
-define('LOG_DB_FILE', '_logs/log_database.txt');
-
 //------------------------------------------------------------------------------
 /**
 */
 class sbPDO extends PDO {
 	
-	const FILTER_DATETIME = 1;
-	
+	// contains the current stack of nested transactions
 	private static $aTransactionUIDs = array();
 	
-	public function __construct($sDSN, $sUsername = '', $sPassword = '', $aOptions = array()) {
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function __construct(string $sDSN, string $sUsername = '', string $sPassword = '', array $aOptions = array()) {
 		parent::__construct($sDSN, $sUsername, $sPassword, $aOptions);
 		$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('sbPDOStatement'));
 		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -30,13 +33,13 @@ class sbPDO extends PDO {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	public function beginTransaction($sUID = 'DEFAULT') {
+	 * Begins an (optionally) nested transaction.
+	 * Transactions can be nested and have to be committed in reverse order.
+	 * @param string The transaction ID
+	 */
+	public function beginTransaction(string $sUID = 'DEFAULT') {
 		
-		//echo str_repeat('&nbsp;&nbsp;&nbsp;', count(self::$aTransactionUIDs)).'beginTransaction: '.$sUID.'<br>';
+		DEBUG('PDO: started transaction "'.$sUID.'"', DEBUG::PDO);
 		
 		if (count(self::$aTransactionUIDs) == 0) {
 			parent::beginTransaction();
@@ -48,13 +51,13 @@ class sbPDO extends PDO {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	public function commit($sUID = 'DEFAULT') {
+	 * Commits a transaction.
+	 * If nested transactions are used, it has to be the transaction that was begun last. 
+	 * @param string The transaction ID
+	 */
+	public function commit(string $sUID = 'DEFAULT') {
 		
-		//echo str_repeat('&nbsp;&nbsp;&nbsp;', count(self::$aTransactionUIDs)-1).'commit: '.$sUID.'<br>';
+		DEBUG('PDO: committed transaction "'.$sUID.'"', DEBUG::PDO);
 		
 		$sStackUID = array_pop(self::$aTransactionUIDs);
 		
@@ -71,10 +74,10 @@ class sbPDO extends PDO {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
-	*/
+	 * Rolls back the complete stack of transactions.
+	 * @param
+	 * @return
+	 */
 	public function rollback() {
 		
 		if (count(self::$aTransactionUIDs) == 0) {
@@ -84,13 +87,10 @@ class sbPDO extends PDO {
 		self::$aTransactionUIDs = array();
 		parent::rollback();
 		
+		DEBUG('PDO: rolled back all active transactions', DEBUG::PDO);
+		
 	}
 	
-	
 }
-
-
-
-
 
 ?>

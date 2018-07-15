@@ -3,6 +3,11 @@
 /* standard input styles
 /*----------------------------------------------------------------------------*/
 
+label.required::after {
+	content: " *";
+}
+
+
 form.default {
 	margin:0;
 }
@@ -25,11 +30,52 @@ form.default select {
 	border: 2px solid #FFF;
 	border-radius: 3px;
 	transition: var(--transition-time-default);
+	margin-right: 3px;
 }
 
-/* form.default input[type=checkbox] { */
-/* 	border:5px solid red; */
-/* } */
+form.default div.fancy_checkbox {
+	display: inline-block;
+}
+form.default div.fancy_checkbox input[type=checkbox] {
+	position:absolute; 
+	z-index:-1000; 
+	left:-1000px; 
+	overflow: hidden; 
+	clip: rect(0 0 0 0); 
+	height:1px; 
+	width:1px;	
+	margin:-1px; 
+	padding:0; 
+	border:0;
+}
+form.default div.fancy_checkbox input[type=checkbox] + label {
+	padding: 0px 4px;
+	display: inline-block;
+	vertical-align: middle;
+	cursor: pointer;
+	background-color: white;
+	border: 2px solid #FFF;
+	border-radius: 3px;
+	color: #DDD;
+	transition: var(--transition-time-default);
+	font-size: 1.2em;
+}
+
+form.default div.fancy_checkbox input[type=checkbox]:checked + label {
+	color: black;
+}
+form.default div.fancy_checkbox input[type=checkbox]:focus + label {
+	border: 2px solid var(--highlight-color);
+}
+form.default div.fancy_checkbox label {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
 
 a.button,
 form.default input[type=button], 
