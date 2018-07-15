@@ -156,16 +156,6 @@ CREATE TABLE IF NOT EXISTS `{TABLE_VOTES}` (
   CONSTRAINT `{TABLE_VOTES}_fk_u` FOREIGN KEY (`fk_user`) REFERENCES ``{TABLE_NODES}` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
-CREATE TABLE IF NOT EXISTS `{TABLE_REGISTRY}` (
-  `s_key` varchar(250) NOT NULL,
-  `e_type` enum('string','boolean','integer') NOT NULL DEFAULT 'string',
-  `s_internaltype` varchar(250) DEFAULT NULL,
-  `b_userspecific` enum('TRUE','FALSE') NOT NULL DEFAULT 'FALSE',
-  `s_defaultvalue` varchar(250) NOT NULL,
-  `s_comment` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`s_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=ascii;
-
 CREATE TABLE IF NOT EXISTS `{TABLE_REGVALUES}` (
   `s_key` varchar(250) NOT NULL,
   `fk_user` char(32) NOT NULL,

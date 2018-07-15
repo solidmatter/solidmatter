@@ -20,7 +20,7 @@ $_QUERIES['MAPPING']['{TABLE_MIMETYPES}']	= '{PREFIX_REPOSITORY}_nodetypes_mimet
 $_QUERIES['MAPPING']['{TABLE_MODULES}']		= '{PREFIX_REPOSITORY}_modules';
 
 $_QUERIES['MAPPING']['{TABLE_USERS}']		= '{PREFIX_WORKSPACE}_system_useraccounts';
-$_QUERIES['MAPPING']['{TABLE_REGISTRY}']	= '{PREFIX_WORKSPACE}_system_registry';
+$_QUERIES['MAPPING']['{TABLE_REGISTRY}']	= '{PREFIX_REPOSITORY}_registry';
 $_QUERIES['MAPPING']['{TABLE_REGVALUES}']	= '{PREFIX_WORKSPACE}_system_registry_values';
 
 $_QUERIES['MAPPING']['{TABLE_VOTES}']		= '{PREFIX_WORKSPACE}_system_nodes_votes';
@@ -988,22 +988,20 @@ $_QUERIES['sbSystem/registry/getEntry'] = '
 	WHERE		r.s_key = :key
 ';
 $_QUERIES['sbSystem/registry/getValue'] = '
-	SELECT		rv.fk_user,
+	SELECT		r.s_key,
 				r.e_type,
 				r.s_defaultvalue,
-				rv.s_value
+				rvu.fk_user,
+				rvu.s_value as s_uservalue,
+				rvs.s_value as s_systemvalue
 	FROM		{TABLE_REGISTRY} r
-	LEFT JOIN	{TABLE_REGVALUES} rv
-		ON		r.s_key = rv.s_key
+	LEFT JOIN	{TABLE_REGVALUES} rvu
+		ON		r.s_key = rvu.s_key
+		AND		rvu.fk_user = :user_uuid
+	LEFT JOIN	{TABLE_REGVALUES} rvs
+		ON		r.s_key = rvs.s_key
+		AND		rvs.fk_user = \'00000000000000000000000000000000\'
 	WHERE		r.s_key = :key
-		AND		(
-					fk_user = :user_uuid
-				OR	
-					fk_user = \'SYSTEM\'
-				OR
-					fk_user IS NULL
-				)
-	ORDER BY	fk_user DESC
 ';
 $_QUERIES['sbSystem/registry/setValue'] = '
 	INSERT INTO {TABLE_REGVALUES}
@@ -1018,6 +1016,11 @@ $_QUERIES['sbSystem/registry/setValue'] = '
 				)
 	ON DUPLICATE KEY UPDATE
 				s_value = :value
+';
+$_QUERIES['sbSystem/registry/removeValue'] = '
+	DELETE FROM	{TABLE_REGVALUES}
+	WHERE		s_key = :key
+		AND		fk_user = :user_uuid
 ';
 
 //------------------------------------------------------------------------------

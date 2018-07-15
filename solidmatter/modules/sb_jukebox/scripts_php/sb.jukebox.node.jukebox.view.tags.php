@@ -30,8 +30,7 @@ class sbView_jukebox_jukebox_tags extends sbJukeboxView {
 				$formWeighting = $this->buildWeightingForm();
 				$formWeighting->saveDOM();
 				$_RESPONSE->addData($formWeighting);
-				
-				$_RESPONSE->addData($this->getWeighting(), 'weighting');
+				$_RESPONSE->addData(Registry::getValue('sb.jukebox.tags.weighting.default'), 'weighting');
 				
 				$this->nodeSubject->getBranchTags();
 				
@@ -42,8 +41,7 @@ class sbView_jukebox_jukebox_tags extends sbJukeboxView {
 				$formWeighting = $this->buildWeightingForm();
 				$formWeighting->recieveInputs();
 				if ($formWeighting->checkInputs()) {
-					$sJukeboxUUID = $this->getJukebox()->getProperty('jcr:uuid');
-					sbSession::$aData['sbJukebox'][$sJukeboxUUID]['weighting'] = $formWeighting->getValue('target');
+					Registry::setValue('sb.jukebox.tags.weighting.default', $formWeighting->getValue('target'), User::getUUID(), TRUE);
 					$_RESPONSE->redirect('-', 'tags');
 				} else {
 					throw new sbException('form entries are invalid');
@@ -160,14 +158,7 @@ class sbView_jukebox_jukebox_tags extends sbJukeboxView {
 	* @return 
 	*/
 	protected function getWeighting() {
-		
-		$sJukeboxUUID = $this->getJukebox()->getProperty('jcr:uuid');
-		if (!isset(sbSession::$aData['sbJukebox'][$sJukeboxUUID]['weighting'])) {
-			$sDefault = Registry::getValue('sb.jukebox.tags.weighting.default');
-			sbSession::$aData['sbJukebox'][$sJukeboxUUID]['weighting'] = $sDefault;
-		}
-		return (sbSession::$aData['sbJukebox'][$sJukeboxUUID]['weighting']);
-		
+		return (Registry::getValue('sb.jukebox.tags.weighting.default'));
 	}
 	
 	//--------------------------------------------------------------------------

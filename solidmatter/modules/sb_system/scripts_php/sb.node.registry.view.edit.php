@@ -45,31 +45,27 @@ class sbView_registry_edit extends sbView {
 				
 				if ($formRegistry->checkInputs()) {
 					
-					/*$aData = $formRegistry->getValues();
-					if ($this->nodeSubject->isNodeType('sbSystem:User')) {
-						$sUserUUID = $this->nodeSubject->getProperty('jcr:uuid');
-					} else {
-						$sUserUUID = 'SYSTEM';
-					}
-					
-					//var_dumpp($aData);
-					foreach($aData as $sKey => $sValue) {
-						$sKey = str_replace('_', '.', $sKey);
-						Registry::setValue($sKey, $sValue, $sUserUUID);
-					}*/
-					
 					$stmtWriteData = $this->crSession->prepareKnown('sbSystem/registry/setValue');
 					$sKey = '';
 					$sValue = '';
+					
 					if ($this->nodeSubject->isNodeType('sbSystem:User')) {
 						$sUserUUID = $this->nodeSubject->getProperty('jcr:uuid');	
 					} else {
 						$sUserUUID = 'SYSTEM';
 					}
+					
 					$stmtWriteData->bindParam('key', $sKey, PDO::PARAM_STR);
 					$stmtWriteData->bindParam('value', $sValue, PDO::PARAM_STR);
 					$stmtWriteData->bindParam('user_uuid', $sUserUUID, PDO::PARAM_STR);
+					
+					$stmtDeleteData = $this->crSession->prepareKnown('sbSystem/registry/removeValue');
+					$stmtDeleteData->bindParam('key', $sKey, PDO::PARAM_STR);
+					$stmtDeleteData->bindParam('user_uuid', $sUserUUID, PDO::PARAM_STR);
+					
 					foreach($this->aRegistry as $aRow) {
+						
+						$sKey = $aRow['s_key'];
 						
 						// set to random value for change detection
 						if ($aRow['s_key'] == 'sb.system.cache.registry.changedetection') {
@@ -80,9 +76,14 @@ class sbView_registry_edit extends sbView {
 							$sFormName = str_replace('.', '_', $aRow['s_key']);
 							$sValue = $formRegistry->getValue($sFormName);
 						}
-						$sKey = $aRow['s_key'];
 						
-						$stmtWriteData->execute();
+						// if the new value is the default value, remove the entry as we don't need to save it
+						// but only do this for system values, so that users can override that
+						if ($aRow['s_defaultvalue'] == $sValue && $sUserUUID == 'SYSTEM') {
+							$stmtDeleteData->execute();
+						} else {
+							$stmtWriteData->execute();
+						}
 						
 					}
 					
@@ -178,7 +179,11 @@ class sbView_registry_edit extends sbView {
 			$sConfig = $sFormName.';'.$sConfig;
 			
 			$ifCurrent = $formRegistry->addInput($sConfig);
-			$ifCurrent->setValue($aRow['s_value']);
+			if ($aRow['s_value'] == NULL) {
+				$ifCurrent->setValue($aRow['s_defaultvalue']);
+			} else {
+				$ifCurrent->setValue($aRow['s_value']);
+			}
 			$ifCurrent->setAttribute('defaultvalue', $aRow['s_defaultvalue']);
 			
 		}

@@ -109,7 +109,7 @@ class sbCR_Repository {
 		
 		// credentials and workspace are mandatory
 		if ($crCredentials == NULL || $sWorkspaceName == NULL) {
-			throw new RepositoryException('credentials or workspace missing');	
+			throw new RepositoryException('credentials or workspace missing');
 		}
 		
 		// check if workspace exists
@@ -142,8 +142,6 @@ class sbCR_Repository {
 		} else {
 			$this->DB = new sbPDORepository($sDBID);
 			$this->DB->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
-			// TODO: keep the frickin system db out of here!
-			System::getDatabase()->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
 		}
 		
 		// load and store repository infos if necessary
