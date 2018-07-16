@@ -38,21 +38,11 @@ class sbCR {
 	public static function loadRepositoryDefinitions(string $sDefinitionFile = NULL, bool $bForceReload = FALSE) {
 		if (self::$sxmlRepositoryDefinitions == NULL || $bForceReload) {
 			if ($sDefinitionFile == NULL) {
-				self::$sxmlRepositoryDefinitions = simplexml_load_file(CONFIG::DIR.CONFIG::REPOSITORIES);
+				self::$sxmlRepositoryDefinitions = simplexml_load_file(CONFIG::DIR.CONFIG::FILE);
 			} else {
 				self::$sxmlRepositoryDefinitions = simplexml_load_file($sDefinitionFile);
 			}
 		}
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	 *
-	 * @param
-	 * @return
-	 */
-	public static function getSimpleXML() {
-		self::loadRepositoryDefinitions();
 		return (self::$sxmlRepositoryDefinitions);
 	}
 	

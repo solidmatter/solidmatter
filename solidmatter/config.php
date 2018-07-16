@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------
 /**
  *	@package solidMatter
- *	@author	()((() [Oliver Müller]
+ *	@author	()((() [Oliver Mï¿½ller]
  *	@version 1.00.00
  */
 //------------------------------------------------------------------------------
@@ -83,10 +83,10 @@ class CONFIG {
 	static function getHandlerConfig(string $sHandlerID) {
 		return (sbConfigurationReader::getHandlerConfig($sHandlerID));
 	}
-	static function getRepositoryConfig(string $sRepositoryID) {
+	static function getRepositoryConfig(string $sRepositoryID = NULL) {
 		return (sbConfigurationReader::getRepositoryConfig($sRepositoryID));
 	}
-	static function getDatabaseConfig(string $sDatabaseID) {
+	static function getDatabaseConfig(string $sDatabaseID = NULL) {
 		return (sbConfigurationReader::getDatabaseConfig($sDatabaseID));
 	}
 	

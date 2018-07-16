@@ -114,7 +114,10 @@ class sbConfigurationReader {
 	 * @param string ID of the repository
 	 * @return SimpleXMLElement the repository definition (see configuration.xml)
 	 */
-	static function getRepositoryConfig(string $sRepositoryID) {
+	static function getRepositoryConfig(string $sRepositoryID = NULL) {
+		if ($sRepositoryID == NULL) {
+			return (self::$CONFIGSXML->repositories);
+		}
 		if (!isset(self::$CONFIGSXML->repositories->$sRepositoryID)) {
 			throw new sbException('repository '.$sRepositoryID.' not defined');
 		} else {
@@ -128,7 +131,10 @@ class sbConfigurationReader {
 	 * @param string ID of the database
 	 * @return SimpleXMLElement the database definition (see configuration.xml)
 	 */
-	static function getDatabaseConfig(string $sDatabaseID) {
+	static function getDatabaseConfig(string $sDatabaseID = NULL) {
+		if ($sDatabaseID == NULL) {
+			return (self::$CONFIGSXML->databases);
+		}
 		if (!isset(self::$CONFIGSXML->databases->$sDatabaseID)) {
 			throw new sbException('database '.$sHandlerID.' not defined');
 		} else {

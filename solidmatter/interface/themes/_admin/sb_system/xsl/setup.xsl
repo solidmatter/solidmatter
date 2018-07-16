@@ -32,7 +32,7 @@
 			<div class="logo"><h1><b>solid</b><i>Matter</i></h1><h2>Setup</h2></div>
 			<xsl:apply-templates select="/response/content/sbform[@id='create']" />
 			<ul>
-			<xsl:for-each select="$content/repositories/repository">
+			<xsl:for-each select="$content/config/repositories/*">
 				<xsl:call-template name="renderRepository" />
 			</xsl:for-each>
 			</ul>
@@ -43,8 +43,8 @@
 	
 	<xsl:template name="renderRepository">
 		<li>
-			Repository: "<xsl:value-of select="@id" />" (Prefix: "<xsl:value-of select="@prefix" />")
-			<xsl:for-each select="workspaces/workspace">
+			Repository: "<xsl:value-of select="name()" />" (Prefix: "<xsl:value-of select="@prefix" />")
+			<xsl:for-each select="workspace">
 				<xsl:call-template name="renderWorkspace" />
 			</xsl:for-each>
 		</li>
