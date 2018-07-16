@@ -210,6 +210,50 @@ class sbDOMRequest extends sbDOMDocument {
 	
 	//--------------------------------------------------------------------------
 	/**
+	 * TODO: does not work yet
+	 * @param
+	 * @return
+	 */
+	public function hasParam($sName, $sSource = 'ALL') {
+		
+// 		// TODO: support multiple fields
+// 		switch ($sSource) {
+// 			case 'ALL':
+// 				$mValue = $this->getParam($sName, 'PARAMS');
+// 				if ($mValue === NULL) {
+// 					$mValue = $this->getParam($sName, 'GET');
+// 				}
+// 				if ($mValue === NULL) {
+// 					$mValue = $this->getParam($sName, 'POST');
+// 				}
+// 				if ($mValue === NULL) {
+// 					$mValue = $this->getParam($sName, 'COOKIE');
+// 				}
+// 				if ($mValue === NULL) {
+// 					$mValue = $this->getParam($sName, 'SERVER');
+// 				}
+// 				return ($mValue);
+// 			case 'PARAMS':
+// 			case 'GET':
+// 			case 'POST':
+// 			case 'COOKIE':
+// 			case 'SERVER':
+// 				$elemCurrent = $this->aElementCache[$sSource];
+// 				break;
+// 		}
+		
+// 		// TODO: deal with non-string inputs
+// 		$nlParams = $elemCurrent->getElementsByTagName($sName);
+// 		foreach ($nlParams as $elemParam) {
+// 			return (TRUE);
+// 		}
+		
+// 		return (FALSE);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* 
 	* @param 
 	* @return 

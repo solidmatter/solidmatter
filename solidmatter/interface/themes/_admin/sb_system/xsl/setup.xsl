@@ -30,30 +30,82 @@
 		<xsl:apply-templates select="response/errors" />
 		<div class="setup">
 			<div class="logo"><h1><b>solid</b><i>Matter</i></h1><h2>Setup</h2></div>
+			<div class="layout">
+				<div class="left">
+					<xsl:apply-templates select="/response/content/sbform[@id='create_database']" />
+					<xsl:apply-templates select="/response/content/sbform[@id='create_repository']" />
+					<xsl:apply-templates select="/response/content/sbform[@id='create_workspace']" />
+				</div>
+				<div class="sep" />
+				<div class="right">
+					<table class="default">
+						<thead>
+							<tr><th colspan="4">Databases</th></tr>
+							<tr class="th2">
+								<th>ID</th>
+								<th>Host:Port</th>
+								<th>Schema</th>
+								<th></th>
+							</tr>
+						</thead>
+						<xsl:for-each select="$content/config/databases/*">
+							<xsl:call-template name="renderDatabase" />
+						</xsl:for-each>
+						<tfoot><tr><td colspan="4"></td></tr></tfoot>
+					</table>
+					<table class="default">
+						<thead>
+							<tr><th colspan="4">Repositories &amp; Workspaces</th></tr>
+							<tr class="th2">
+								<th>ID</th>
+								<th>Prefix</th>
+								<th>Debug</th>
+								<th></th>
+							</tr>
+						</thead>
+						<xsl:for-each select="$content/config/repositories/*">
+							<xsl:call-template name="renderRepository" />
+						</xsl:for-each>
+						<tfoot><tr><td colspan="4"></td></tr></tfoot>
+					</table>
+				</div>
+			</div>
+			
 			<xsl:apply-templates select="/response/content/sbform[@id='create']" />
-			<ul>
-			<xsl:for-each select="$content/config/repositories/*">
-				<xsl:call-template name="renderRepository" />
-			</xsl:for-each>
-			</ul>
+			
 		</div>
 	</body>
 	</html>
 	</xsl:template>
 	
+	<xsl:template name="renderDatabase">
+		<tr>
+			<td><xsl:value-of select="name()" /></td>
+			<td><xsl:value-of select="@schema" /></td>
+			<td><xsl:value-of select="@host" />:<xsl:value-of select="@port" /></td>
+			<td>REMOVE</td>
+		</tr>
+	</xsl:template>
+	
 	<xsl:template name="renderRepository">
-		<li>
-			Repository: "<xsl:value-of select="name()" />" (Prefix: "<xsl:value-of select="@prefix" />")
-			<xsl:for-each select="workspace">
-				<xsl:call-template name="renderWorkspace" />
-			</xsl:for-each>
-		</li>
+		<tr>
+			<td><xsl:value-of select="name()" /></td>
+			<td><xsl:value-of select="@prefix" /></td>
+			<td></td>
+			<td>REMOVE</td>			
+		</tr>
+		<xsl:for-each select="workspace">
+			<xsl:call-template name="renderWorkspace" />
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template name="renderWorkspace">
-		<br />
-		Workspace: "<xsl:value-of select="@id" />" (Prefix: "<xsl:value-of select="@prefix" />")
-	
+		<tr>
+			<td><xsl:value-of select="name(..)" />:<xsl:value-of select="@id" /></td>
+			<td><xsl:value-of select="@prefix" /></td>
+			<td></td>
+			<td>REMOVE</td>
+		</tr>
 	</xsl:template>
 
 </xsl:stylesheet>
