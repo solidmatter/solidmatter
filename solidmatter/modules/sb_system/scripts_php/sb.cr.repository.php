@@ -8,7 +8,7 @@
 */
 //------------------------------------------------------------------------------
 
-import('sb.pdo.repository');
+import('sb.pdo.repository.queries');
 import('sb.cr');
 import('sb.cr.propertydefinitioncache');
 
@@ -138,10 +138,10 @@ class sbCR_Repository {
 		// init database
 		if ($sDBID == 'system') {
 			$this->DB = System::getDatabase();
-			$this->DB->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
+			$this->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
 		} else {
-			$this->DB = new sbPDORepository($sDBID);
-			$this->DB->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
+			$this->DB = new sbPDOSystem($sDBID);
+			$this->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
 		}
 		
 		// load and store repository infos if necessary
@@ -156,6 +156,21 @@ class sbCR_Repository {
 		
 		return ($crSession);
 		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	protected function setWorkspace(string $sRepository, string $sWorkspace) {
+// 		$this->sRepositoryPrefix = $sRepository;
+// 		$this->sWorkspacePrefix = $sWorkspace;
+// 		$this->aPrepareRewrites['{PREFIX_REPOSITORY}'] = $sRepository;
+// 		$this->aPrepareRewrites['{PREFIX_WORKSPACE}'] = $sWorkspace;
+		$this->DB->addRewrite('{PREFIX_REPOSITORY}', $sRepository);
+		$this->DB->addRewrite('{PREFIX_WORKSPACE}', $sWorkspace);
 	}
 	
 	//--------------------------------------------------------------------------

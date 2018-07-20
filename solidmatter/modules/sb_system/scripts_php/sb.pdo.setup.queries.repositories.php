@@ -1,5 +1,7 @@
 <?php
 
+import('sb.pdo.repository.queries');
+
 global $_QUERIES;
 
 // repository administration ---------------------------------------------------

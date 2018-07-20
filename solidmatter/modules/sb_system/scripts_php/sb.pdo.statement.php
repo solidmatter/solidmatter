@@ -15,6 +15,8 @@
 */
 class sbPDOStatement extends PDOStatement {
 	
+	private $pdoOrigin = NULL;
+	
 	private $aDebug = array(
 		'statementid' => '',
 		'statement' => '',
@@ -30,9 +32,19 @@ class sbPDOStatement extends PDOStatement {
 	* @param 
 	* @return 
 	*/
-	public function addFilter($sColumn, $eType, $sFormat='') {
+// 	public function addFilter($sColumn, $eType, $sFormat='') {
 		
 		
+// 	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function setPDO(sbPDO $pdoParent) {
+		$this->pdoOrigin = $pdoParent;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -41,7 +53,7 @@ class sbPDOStatement extends PDOStatement {
 	* @param 
 	* @return 
 	*/
-	public function addDebugInfo($sQuery, $sID = '') {
+	public function addDebugInfo(string $sQuery, string $sID = '') {
 		// store query
 		$this->aDebug['statement'] = $sQuery;
 		$this->aDebug['statementid'] = $sID;
@@ -56,7 +68,9 @@ class sbPDOStatement extends PDOStatement {
 	//--------------------------------------------------------------------------
 	/**
 	* 
-	* @param 
+	* @param string 
+	* @param mutliple 
+	* @param int
 	* @return 
 	*/
 	public function bindValue($sParam, $mValue, $eType = PDO::PARAM_STR) {
@@ -64,7 +78,7 @@ class sbPDOStatement extends PDOStatement {
 			$eType = PDO::PARAM_NULL;
 		}
 		if (substr($sParam, 0, 1) != ':') {
-			$sParam = ':'.$sParam;	
+			$sParam = ':'.$sParam;
 		}
 		$this->aDebug['params'][$sParam] = $mValue;
 		parent::bindValue($sParam, $mValue, $eType);
@@ -73,6 +87,10 @@ class sbPDOStatement extends PDOStatement {
 	//--------------------------------------------------------------------------
 	/**
 	* 
+	* @param string
+	* @param 
+	* @param int
+	* @param int 
 	* @param 
 	* @return 
 	*/
@@ -90,7 +108,7 @@ class sbPDOStatement extends PDOStatement {
 	//--------------------------------------------------------------------------
 	/**
 	* 
-	* @param 
+	* @param array 
 	* @return 
 	*/
 	public function execute($aInputParameters = NULL) {
@@ -100,7 +118,7 @@ class sbPDOStatement extends PDOStatement {
 			parent::execute($aInputParameters);
 		} catch (Exception $e) {
 			DEBUG('PDO: statement failed '.$this->aDebug['statementid'].' ('.DEBUG::STOPCLOCK('statement').'ms)', DEBUG::PDO);
-			$this->debug($e);
+			$this->debug();
 			throw $e;
 		}
 		DEBUG('PDO: executed statement '.$this->aDebug['statementid'].' ('.DEBUG::STOPCLOCK('statement').'ms)', DEBUG::PDO);
@@ -109,34 +127,69 @@ class sbPDOStatement extends PDOStatement {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	public function debug($bSaveToLog = FALSE) {
+	 * Outputs debug information for this query.
+	 * @param bool 
+	 * @return
+	 */
+	public function debug(bool $bSaveToLog = FALSE) {
 		if ($bSaveToLog) {
-			DEBUG(var_export($this->aDebug, TRUE));
+			// Todo: extend this to match
+			DEBUG(var_export($this->aDebug, TRUE), TRUE);
 		} else {
-			var_dumpp($this->aDebug);
+			if ($this->aDebug['statementid'] != '') {
+				var_dumpp($this->aDebug['statementid'], 'StatementID');
+			}
+			var_dumpp($this->aDebug['statement'], 'Statement');
+			var_dumpp($this->aDebug['params'], 'Parameters');
+			var_dumpp(parent::errorCode(), 'Error Code');
+			var_dumpp(parent::errorInfo(), 'Error Info');
 		}
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 * Executes an EXPLAIN for the current prepared statement, dumps the details and .
+	 * Relies on an initial call to addDebugInfo and fully bound parameters!
+	 */
+	public function explain() {
+		$stmtExplain = $this->getExplainStatment();
+		$stmtExplain->execute();
+		var_dumpp($stmtExplain);
+		var_dumppp($stmtExplain->fetchAll(PDO::FETCH_ASSOC));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 * Generates an EXPLAIN statement for the current statement.
+	 * Relies on an initial call to addDebugInfo and fully bound parameters!
+	 * @param
+	 * @return
+	 */
+	public function getExplainStatement() {
+		$sQuery = 'EXPLAIN '.$this->queryString;
+		$stmtExplain = $this->pdoOrigin->prepare($sQuery);
+		foreach ($this->aDebug['params'] as $sKey => $sValue) {
+			$stmtExplain->bindValue($sKey, $sValue);
+		}
+		return ($stmtExplain);
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
 	* 
 	* @param string the name of the resultset root element
-	* @param boolean 
-	* @param array a set of mapping instructions for node building
+	* @param array a set of name mapping instructions for node building ('!row' => 'Element' or 'Column' => 'Element')
+	* @param boolean Determines if metadata should be included or not (e.g. affected rows)
 	* @return 
 	*/
-	public function fetchDOM($sRootNodeName = 'resultset', $aMapping = FALSE, $bIncludeMetadata = FALSE) {
+	public function fetchDOM(string $sRootNodeName = 'resultset', array $aMapping = NULL, bool $bIncludeMetadata = FALSE) : DOMElement {
 		
 		$domGlobal = new DOMDocument('1.0', 'UTF-8');
 		$elemResultset = $domGlobal->createElement($sRootNodeName);
 		
 		$sRowElementName = 'row';
-		if (isset($aMapping['!row_element_name'])) {
-			$sRowElementName = $aMapping['!row_element_name'];
+		if (isset($aMapping['!row'])) {
+			$sRowElementName = $aMapping['!row'];
 		}
 		
 		$i = 0;
@@ -182,18 +235,18 @@ class sbPDOStatement extends PDOStatement {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
+	* TODO: fetchDOM and fetchElement server the same purpose and both work on DOMDocuments, eliminate one of them
 	* @param 
 	* @return 
 	*/
-	public function fetchElements($sRootNodeName = 'resultset', $aMapping = FALSE, $bIncludeMetadata = FALSE) {
+	public function fetchElements(string $sRootNodeName = 'resultset', array $aMapping = NULL, bool $bIncludeMetadata = FALSE) {
 		
 		$domGlobal = new DOMDocument('1.0', 'UTF-8');
 		$elemResultset = $domGlobal->createElement($sRootNodeName);
 		
 		$sRowElementName = 'row';
-		if (isset($aMapping['!row_element_name'])) {
-			$sRowElementName = $aMapping['!row_element_name'];
+		if (isset($aMapping['!row'])) {
+			$sRowElementName = $aMapping['!row'];
 		}
 		
 		$i = 0;
@@ -223,8 +276,6 @@ class sbPDOStatement extends PDOStatement {
 		
 	}
 	
-	
 }
-
 
 ?>

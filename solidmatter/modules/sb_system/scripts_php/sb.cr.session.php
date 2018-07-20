@@ -70,10 +70,10 @@ class sbCR_Session {
 	public function setNamespacePrefix($sNewPrefix, $sExistingURI) {
 		$aTemp = array_flip($this->aNamespaceMapping);
 		if (!isset($aTemp[$sExistingURI])) {
-			throw new NamespaceExeption('namespace "'.$sExistingURI.'" does not exist');
+			throw new NamespaceException('namespace "'.$sExistingURI.'" does not exist');
 		}
 		if (isset($this->aNamespaceMapping[$sNewPrefix])) {
-			throw new NamespaceExeption('namespaceprefix "'.$sExistingURI.'" already exists');
+			throw new NamespaceException('namespaceprefix "'.$sExistingURI.'" already exists');
 		}
 		unset($this->aNamespaceMapping[$aTemp[$sExistingURI]]);
 		$this->aNamespaceMapping[$sNewPrefix] = $sExistingURI;
@@ -112,7 +112,7 @@ class sbCR_Session {
 	public function getNamespacePrefix($sExistingURI) {
 		$aTemp = array_flip($this->aNamespaceMapping);
 		if (!isset($aTemp[$sExistingURI])) {
-			throw new NamespaceExeption('namespace "'.$sExistingURI.'" does not exist');
+			throw new NamespaceException('namespace "'.$sExistingURI.'" does not exist');
 		}
 		return ($aTemp[$sExistingURI]);
 	}

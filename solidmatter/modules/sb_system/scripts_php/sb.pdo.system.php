@@ -19,17 +19,6 @@ import('sb.system.errors');
 */
 class sbPDOSystem extends sbPDO {
 	
-	protected static $aQueryCache = array();
-	
-	protected $lgLog			= NULL;
-	protected $bLogEnabled		= FALSE;
-	protected $bLogVerbose		= FALSE;
-	
-	// array of placeholders to rewrite on prepare (search -> replace)
-	protected $aPrepareRewrites = array(
-		'{PREFIX_SYSTEM}' => 'global'
-	);
-	
 	//--------------------------------------------------------------------------
 	/**
 	 *
@@ -62,88 +51,8 @@ class sbPDOSystem extends sbPDO {
 		
 		$this->query('SET NAMES '.$elemDB['charset']);
 		
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	 *
-	 * @param
-	 * @return
-	 */
-	public function prepareKnown(string $sID, array $aDriverOptions = NULL) : sbPDOStatement {
+		$this->addRewrite('{PREFIX_SYSTEM}', 'global');
 		
-		$this->log('prepareKnown: '.$sID);
-		
-		if (isset(self::$aQueryCache[$sID])) { // query is cached
-			
-			return (self::$aQueryCache[$sID]);
-			
-		} else { // not cached, prepare
-			
-			// check if query exists and retrieve it
-			global $_QUERIES;
-			if (!isset($_QUERIES[$sID])) {
-				throw new QueryNotFoundException((string) $sID);
-			}
-			$sQuery = $_QUERIES[$sID];
-			
-			// apply table mapping
-			$aSearch = array_keys($_QUERIES['MAPPING']);
-			$aReplace = $_QUERIES['MAPPING'];
-			$sQuery = str_replace($aSearch, $aReplace, $sQuery);
-			
-			// apply prefixes
-			$sQuery = $this->prepareQuery($sQuery);
-			
-			// create statement object
-			if ($aDriverOptions != NULL) {
-				$stmtPrepared = $this->prepare($sQuery, $aDriverOptions);
-			} else {
-				$stmtPrepared = $this->prepare($sQuery);
-			}
-			$stmtPrepared->addDebugInfo($sQuery, $sID);
-			
-			// store query for later usage
-			self::$aQueryCache[$sID] = $stmtPrepared;
-			
-			return ($stmtPrepared);
-		}
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	 *
-	 * @param
-	 * @return
-	 */
-	public function setWorkspace(string $sRepository, string $sWorkspace) {
-		$this->sRepositoryPrefix = $sRepository;
-		$this->sWorkspacePrefix = $sWorkspace;
-		$this->aPrepareRewrites['{PREFIX_REPOSITORY}'] = $sRepository;
-		$this->aPrepareRewrites['{PREFIX_WORKSPACE}'] = $sWorkspace;
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	* 
-	* @param 
-	* @return 
-	*/
-	protected function prepareQuery(string $sQuery) : string {
-		$sQuery = str_replace(array_keys($this->aPrepareRewrites), array_values($this->aPrepareRewrites), $sQuery);
-		return ($sQuery);
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	 *
-	 * @param
-	 * @return
-	 */
-	protected function log(string $sText) {
-		if ($this->bLogEnabled) {
-			$this->lgLog->addText($sText);
-		}
 	}
 	
 }

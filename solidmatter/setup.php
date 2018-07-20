@@ -50,9 +50,6 @@ import('sb.cr.credentials');
 import('sb.cr.repository');
 import('sb.cr.session');
 
-
-$sxmlConfig = sbCR::loadRepositoryDefinitions();
-
 //------------------------------------------------------------------------------
 // display form
 
@@ -62,47 +59,72 @@ $_REQUEST->includeRequest('NO SESSION SUPPORTED');
 $_RESPONSE = ResponseFactory::getInstance('global');
 $_RESPONSE->setTheme('_admin');
 $_RESPONSE->setRenderMode('RENDERED', 'text/html', "sb_system:setup.xsl");
-
-$_RESPONSE->addData($sxmlConfig);
 $_RESPONSE->addRequestData('SETUP', '', '');
 
-
+$sxmlConfig = CONFIG::getConfigXML();
 
 $formCreateDB = buildForm_Database();
 $formCreateRepo = buildForm_Repository();
 $formCreateWS = buildForm_Workspace();
 
-if ($_REQUEST->hasParam('create_db')) {
-	$formCreateDB->recieveInputs();
-	$formCreateDB->checkInputs();
+switch ($_REQUEST->getParam('action')) {
+	
+	case 'create_db';
+		$formCreateDB->recieveInputs();
+		$formCreateDB->checkInputs();
+		break;
+	
+	case 'create_repo';
+		$formCreateRepo->recieveInputs();
+		if ($formCreateRepo->checkInputs()) {
+			$sDatabaseID = $formCreateRepo->getValue('repository_database');
+			$sRepositoryID = $formCreateRepo->getValue('repository_id');
+			$sPrefix = $formCreateRepo->getValue('repository_prefix');
+			sbCR::createRepository($sRepositoryID, $sPrefix, $sDatabaseID);
+// 			sbCR::initRepository($sRepositoryID);
+		}
+		break;
+	
+// 	case 'create_ws':
+// 		$formCreateWS->recieveInputs();
+// 		if ($formCreateWS->checkInputs()) {
+// 			$sDatabase = $formCreateRepo->getValue('repository_database');
+// 			$sRepositoryID = $formCreateRepo->getValue('repository_id');
+// 			$sPrefix = $formCreateRepo->getValue('repository_prefix');
+// 			sbCR::createRepository($sDatabase, $sRepositoryID, $sPrefix);
+			
+// 		}
+// 		break;
+		
+	case 'init_repo':
+		$sDBID = $_REQUEST->getParam('db_id');
+// 		$sDB = 
+		sbCR::createRepository($sDatabase, $sRepositoryID, $sPrefix);
+// 		$repNew->init();
+// 		sbCR::initRepository($sID);
+		break;
+		
+	
+	
 }
-if ($_REQUEST->hasParam('create_repo')) {
-	$formCreateRepo->recieveInputs();
-	$formCreateRepo->checkInputs();
-}
-if ($_REQUEST->hasParam('create_ws')) {
-	$formCreateWS->recieveInputs();
-	$formCreateWS->checkInputs();
-}
+
+$sxmlConfig = CONFIG::getConfigXML();
+
+$formCreateDB = buildForm_Database();
+$formCreateRepo = buildForm_Repository();
+$formCreateWS = buildForm_Workspace();
 
 $_RESPONSE->addData($formCreateDB);
 $_RESPONSE->addData($formCreateRepo);
 $_RESPONSE->addData($formCreateWS);
 
-
-
+$_RESPONSE->addData(CONFIG::getConfigXML());
 
 if (false) {
 	// $aRepository = $_REQUEST->getRepository();
-	$crCredentials = new sbCR_Credentials($aRepository['user'], $aRepository['pass']);
-	$crRepository = new sbCR_Repository($aRepository['id']);
-	$crSession = $crRepository->login($crCredentials, $aRepository['workspace']);
+	
 }
 
-if ($_REQUEST->getParam('action') == 'init_repository') {
-	$sRepositoryID = $_REQUEST->getParam('repo_id');
-	sbCR::initRepository($sRepositoryID);
-}
 
 //------------------------------------------------------------------------------
 // process request
@@ -126,7 +148,7 @@ $_RESPONSE->saveOutput();
 
 function buildForm_Database() {
 	
-	$formCreateDB = new sbDOMForm('create_database', 'Create Database', $_REQUEST->getLocation().'?create_db');
+	$formCreateDB = new sbDOMForm('create_database', 'Create Database', $_REQUEST->getLocation().'?action=create_db');
 	
 	$formCreateDB->addInput('dbid;string;required=TRUE', 'ID');
 	$formCreateDB->addInput('host;string;required=TRUE', 'Host');
@@ -144,10 +166,10 @@ function buildForm_Database() {
 
 function buildForm_Repository() {
 	
-	$formCreateRepo = new sbDOMForm('create_repository', 'Create Repository', $_REQUEST->getLocation().'?create_repo');
+	$formCreateRepo = new sbDOMForm('create_repository', 'Create Repository', $_REQUEST->getLocation().'?action=create_repo');
 	$formCreateRepo->addInput('repository_database;select;', 'Database');
-	$formCreateRepo->addInput('repository;string;', 'Repository');
-	$formCreateRepo->addInput('repository_prefix;string;', 'Prefix');
+	$formCreateRepo->addInput('repository_id;string;required=TRUE;', 'Repository');
+	$formCreateRepo->addInput('repository_prefix;string;required=TRUE', 'Prefix');
 	$formCreateRepo->addSubmit('Create');
 	
 	global $sxmlConfig;
@@ -165,10 +187,10 @@ function buildForm_Repository() {
 
 function buildForm_Workspace() {
 	
-	$formCreateWS = new sbDOMForm('create_workspace', 'Create Workspace', $_REQUEST->getLocation().'?create_ws');
+	$formCreateWS = new sbDOMForm('create_workspace', 'Create Workspace', $_REQUEST->getLocation().'?action=create_ws');
 	$formCreateWS->addInput('workspace_repository;select;', 'Repository');
-	$formCreateWS->addInput('workspace;string;', 'Workspace');
-	$formCreateWS->addInput('workspace_prefix;string;', 'Prefix');
+	$formCreateWS->addInput('workspace_id;string;required=TRUE', 'Workspace');
+	$formCreateWS->addInput('workspace_prefix;string;required=TRUE', 'Prefix');
 	$formCreateWS->addSubmit('Create');
 	
 	global $sxmlConfig;

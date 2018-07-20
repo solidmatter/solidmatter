@@ -16,7 +16,7 @@
  */
 class sbConfigurationReader {
 		
-	// container member variable for the coniguration as SimpleXMLElement
+	// container member variable for the configuration as SimpleXMLElement
 	static $CONFIGSXML = NULL;
 	
 	//-------------------------------------------------------------------------
@@ -27,6 +27,15 @@ class sbConfigurationReader {
 	static function init() {
 		self::$CONFIGSXML = simplexml_load_file(CONFIG::DIR.CONFIG::FILE);
 	}
+	
+	//-------------------------------------------------------------------------
+	/**
+	 * Returns the complete config SimpleXMLElement
+	 */
+	static function getConfigXML() {
+		return (self::$CONFIGSXML);
+	}
+	
 	
 	//-------------------------------------------------------------------------
 	/**
@@ -143,8 +152,5 @@ class sbConfigurationReader {
 	}
 	
 }
-
-// immediately initialize the configuration class
-CONFIG::init();
 
 ?>

@@ -65,6 +65,7 @@ class CONFIG {
 	
 	// file/class used for configuration reading
 	static $CONFIGURATION_READER_LIBRARY = 'modules/sb_system/scripts_php/sb.system.configuration.reader.default.php';
+	static $CONFIGURATION_WRITER_LIBRARY = 'modules/sb_system/scripts_php/sb.system.configuration.writer.default.php';
 	
 	//-------------------------------------------------------------------------
 	/**
@@ -74,6 +75,10 @@ class CONFIG {
 	static function init() {
 		require_once(self::$CONFIGURATION_READER_LIBRARY);
 		sbConfigurationReader::init();
+	}
+	
+	static function getConfigXML() {
+		return (sbConfigurationReader::getConfigXML());
 	}
 	
 	// wrapped functions
@@ -88,6 +93,21 @@ class CONFIG {
 	}
 	static function getDatabaseConfig(string $sDatabaseID = NULL) {
 		return (sbConfigurationReader::getDatabaseConfig($sDatabaseID));
+	}
+	
+	static function addRepository(string $sRepositoryID, string $sPrefix, string $sDatabaseID) {
+		require_once(self::$CONFIGURATION_WRITER_LIBRARY);
+		$oWriter = new sbConfigurationWriter();
+		$oWriter->addRepository($sRepositoryID, $sPrefix, $sDatabaseID);
+		$oWriter->save();
+		sbConfigurationReader::init();
+	}
+	static function addWorkspace(string $sRepositoryID = NULL) {
+		
+	}
+	
+	static function addDatabase(string $sDatabaseID = NULL) {
+		
 	}
 	
 }

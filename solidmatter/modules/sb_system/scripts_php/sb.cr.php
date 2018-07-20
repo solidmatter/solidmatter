@@ -15,6 +15,7 @@ class sbCR {
 	
 	// basic info about existing repositories 
 	private static $sxmlRepositoryDefinitions = NULL;
+	private static $sDefinitionFile = NULL;
 	
 	// filled with repository ID as key when iterating over the definition 
 	private static $aRepositories = NULL;
@@ -35,29 +36,16 @@ class sbCR {
 	 * @param
 	 * @return
 	 */
-	public static function loadRepositoryDefinitions(string $sDefinitionFile = NULL, bool $bForceReload = FALSE) {
-		if (self::$sxmlRepositoryDefinitions == NULL || $bForceReload) {
-			if ($sDefinitionFile == NULL) {
-				self::$sxmlRepositoryDefinitions = simplexml_load_file(CONFIG::DIR.CONFIG::FILE);
-			} else {
-				self::$sxmlRepositoryDefinitions = simplexml_load_file($sDefinitionFile);
-			}
-		}
-		return (self::$sxmlRepositoryDefinitions);
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	 *
-	 * @param
-	 * @return
-	 */
-	public static function createRepository(string $sRepositoryID, string $sPrefix) {
+	public static function createRepository(string $sRepositoryID, string $sPrefix, string $sDatabaseID) {
 		import('sb.pdo.repository.queries.repositories');
-		$sxmlDefinition = self::getRepositoryDefinition($sRepositoryID);
-		$pdoRepository = new sbPDORepository($sxmlDefinition);
-		$stmtCreate = $pdoRepository->prepareKnown('sbCR/repository/create');
+		$pdoRepository = new sbPDOSystem($sDatabaseID);
+		$pdoRepository->addRewrite('{PREFIX_REPOSITORY}', $sPrefix);
+		$stmtCreate = $pdoRepository->prepareKnown('sbCR/repository/createTables');
 		$stmtCreate->execute();
+		$stmtCreate->closeCursor();
+		$stmtInit = $pdoRepository->prepareKnown('sbCR/repository/createEntries');
+		$stmtInit->execute();
+		CONFIG::addRepository($sRepositoryID, $sPrefix, $sDatabaseID);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -66,17 +54,9 @@ class sbCR {
 	 * @param
 	 * @return
 	 */
-	public static function initRepository(string $sRepositoryID) {
+	public static function createWorkspace(string $sRepositoryID, string $sWorkspaceID, string $sPrefix) {
 		
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	 *
-	 * @param
-	 * @return
-	 */
-	public static function createWorkspace($sID) {
+		
 		
 	}
 	

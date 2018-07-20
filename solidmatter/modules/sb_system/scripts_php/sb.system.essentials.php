@@ -321,14 +321,17 @@ function base64url_decode($sInput) {
 * @param 
 * @return 
 */
-function var_dumpp($mVar) {
+function var_dumpp($mVar, string $sTitle = NULL) {
 	echo '<pre>';
+	if ($sTitle != NULL) {
+		echo '<b>'.$sTitle.':</b> ';
+	}
 	var_dump($mVar);
 	echo '</pre>';
 }
 
-function var_dumppp($mVar) {
-	var_dumpp($mVar);
+function var_dumppp($mVar, string $sTitle = NULL) {
+	var_dumpp($mVar, $sTitle);
 	die();
 }
 

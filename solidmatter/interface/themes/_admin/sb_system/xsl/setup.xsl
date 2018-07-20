@@ -57,9 +57,9 @@
 						<thead>
 							<tr><th colspan="4">Repositories &amp; Workspaces</th></tr>
 							<tr class="th2">
+								<th>DB</th>
 								<th>ID</th>
 								<th>Prefix</th>
-								<th>Debug</th>
 								<th></th>
 							</tr>
 						</thead>
@@ -72,6 +72,8 @@
 			</div>
 			
 			<xsl:apply-templates select="/response/content/sbform[@id='create']" />
+			
+			<xsl:apply-templates select="/response/errors" />
 			
 		</div>
 	</body>
@@ -89,10 +91,10 @@
 	
 	<xsl:template name="renderRepository">
 		<tr>
+			<td><xsl:value-of select="@db" /></td>
 			<td><xsl:value-of select="name()" /></td>
 			<td><xsl:value-of select="@prefix" /></td>
-			<td></td>
-			<td>REMOVE</td>			
+			<td><!-- <a href="/setup?action=init_repo&amp;id={name()}">INIT</a>  -->DELETE</td>			
 		</tr>
 		<xsl:for-each select="workspace">
 			<xsl:call-template name="renderWorkspace" />
@@ -101,9 +103,9 @@
 
 	<xsl:template name="renderWorkspace">
 		<tr>
+			<td></td>
 			<td><xsl:value-of select="name(..)" />:<xsl:value-of select="@id" /></td>
 			<td><xsl:value-of select="@prefix" /></td>
-			<td></td>
 			<td>REMOVE</td>
 		</tr>
 	</xsl:template>
