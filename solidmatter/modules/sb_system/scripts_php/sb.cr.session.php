@@ -641,7 +641,7 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	public function getNode($sQuery) {
+	public function getNode($sQuery) : sbCR_Node {
 		return ($this->getInstance($sQuery));
 	}
 	
@@ -678,11 +678,16 @@ class sbCR_Session {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
+	* Tries to deliver the node for the given Query.
+	* Supported query types are:
+	* -	'/' or '': returns the root node
+	* - '<alpha>:<alpha>': interpreted as UID
+	* - '<aplhanumeric>::<alphanumeric>': 1st match can be UUID or UID, 2nd is determined by 1st node's getNode()
+	* - contains '/': follows the path via getNode()
+	* @param string the node query
 	* @return 
 	*/
-	public function getInstance($sQuery) {
+	public function getInstance(string $sQuery) : sbCR_Node {
 		
 		// helper array
 		$aMatches = array();
@@ -692,6 +697,9 @@ class sbCR_Session {
 			$nodeCurrent = $this->getRootNode();
 		} elseif (preg_match('!^//\*\[@uid="([a-zA-Z_]+:[a-zA-Z_]+)"\]$!', $sQuery, $aMatches)) {
 			$nodeCurrent = $this->getInstanceByUID($aMatches[1]);
+		} elseif (preg_match('!^([a-zA-Z0-9_]+)::([a-zA-Z0-9_]+)$!', $sQuery, $aMatches)) {
+			$nodeParent = $this->getInstance($aMatches[1]);
+			$nodeCurrent = $nodeParent->getNode($aMatches[2]);
 		} elseif (substr_count($sQuery, '/') > 0) {
 			$nodeCurrent = $this->getInstanceByPath($sQuery);
 		} else {
@@ -708,7 +716,7 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	public function getInstanceByUUID($sQuery, $sParentUUID = NULL) {
+	public function getInstanceByUUID(string $sQuery, string $sParentUUID = NULL) {
 		// TODO: needs a thinkover, too many references prevent object destruction
 		/*if (isset($this->aNodeCache[$sQuery])) {
 			if (isset($this->aNodeCache[$sQuery][$sParentUUID])) {
