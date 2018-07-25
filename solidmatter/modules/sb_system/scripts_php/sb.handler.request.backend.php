@@ -31,14 +31,14 @@ class BackendRequestHandler extends RequestHandler {
 		$aURI = $this->parseURI();
 		
 		// process request
-		if ($aURI['node_uuid'] === NULL) {
-			$aURI['node_uuid'] = '/';
+		if ($aURI['node'] === NULL) {
+			$aURI['node'] = '/';
 		}
-		if ($aURI['view'] === NULL && $aURI['node_uuid'] == '/') {
+		if ($aURI['view'] === NULL && $aURI['node'] == '/') {
 			$aURI['view'] = 'backend';
 		}
 		
-		$nodeCurrent = $crSession->getNode($aURI['node_uuid']);
+		$nodeCurrent = $crSession->getNode($aURI['node']);
 		$nodeCurrent->callView($aURI['view'], $aURI['action']);
 		$nodeCurrent->loadAncestors();
 		$nodeCurrent->setAttribute('master', 'true');
