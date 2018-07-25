@@ -27,9 +27,6 @@ class sbPDO extends PDO {
 	// Array of placeholders to rewrite on prepare (search => replace)
 	protected $aPrepareRewrites = array();
 	
-	// Array of prepared queries (Attention: statements can't be redefined)
-	protected $aQueryCache = array();
-	
 	// contains the current stack of nested transactions
 	protected $aTransactionUIDs = array();
 	
@@ -67,49 +64,41 @@ class sbPDO extends PDO {
 	
 	//--------------------------------------------------------------------------
 	/**
-	 *
+	 * Prepares a statement that is defined in the global  
 	 * @param
 	 * @return
 	 */
 	public function prepareKnown(string $sID, array $aDriverOptions = NULL) : sbPDOStatement {
 		
+		// Todo: add rewrite info to log
 		$this->log('prepareKnown: '.$sID);
 		
-		if (isset($this->aQueryCache[$sID])) { // query is cached
-			
-			return ($this->aQueryCache[$sID]);
-			
-		} else { // not cached, prepare
-			
-			// check if query exists and retrieve it
-			global $_QUERIES;
-			if (!isset($_QUERIES[$sID])) {
-				throw new QueryNotFoundException((string) $sID);
-			}
-			$sQuery = $_QUERIES[$sID];
-			
-			// apply table mapping
-			$aSearch = array_keys($_QUERIES['MAPPING']);
-			$aReplace = $_QUERIES['MAPPING'];
-			$sQuery = str_replace($aSearch, $aReplace, $sQuery);
-			
-			// apply prefixes
-			$sQuery = $this->prepareQuery($sQuery);
-			
-			// create statement object
-			if ($aDriverOptions != NULL) {
-				$stmtPrepared = $this->prepare($sQuery, $aDriverOptions);
-			} else {
-				$stmtPrepared = $this->prepare($sQuery);
-			}
-			$stmtPrepared->addDebugInfo($sQuery, $sID);
-			$stmtPrepared->setPDO($this);
-			
-			// store query for later usage
-			$this->aQueryCache[$sID] = $stmtPrepared;
-			
-			return ($stmtPrepared);
+		// check if query exists and retrieve it
+		global $_QUERIES;
+		if (!isset($_QUERIES[$sID])) {
+			throw new QueryNotFoundException((string) $sID);
 		}
+		$sQuery = $_QUERIES[$sID];
+		
+		// apply table mapping
+		$aSearch = array_keys($_QUERIES['MAPPING']);
+		$aReplace = $_QUERIES['MAPPING'];
+		$sQuery = str_replace($aSearch, $aReplace, $sQuery);
+		
+		// apply prefixes
+		$sQuery = $this->rewriteQuery($sQuery);
+		
+		// create statement object
+		if ($aDriverOptions != NULL) {
+			$stmtPrepared = $this->prepare($sQuery, $aDriverOptions);
+		} else {
+			$stmtPrepared = $this->prepare($sQuery);
+		}
+		$stmtPrepared->addDebugInfo($sQuery, $sID);
+		$stmtPrepared->setPDO($this);
+		
+		return ($stmtPrepared);
+		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -118,7 +107,7 @@ class sbPDO extends PDO {
 	 * @param
 	 * @return
 	 */
-	public function addRewrite(string $sSearch, string $sReplace) {
+	public function setRewrite(string $sSearch, string $sReplace) {
 		$this->aPrepareRewrites[$sSearch] = $sReplace;
 	}
 	
@@ -128,9 +117,8 @@ class sbPDO extends PDO {
 	 * @param
 	 * @return
 	 */
-	protected function prepareQuery(string $sQuery) : string {
-		$sQuery = str_replace(array_keys($this->aPrepareRewrites), $this->aPrepareRewrites, $sQuery);
-		return ($sQuery);
+	protected function rewriteQuery(string $sQuery) : string {
+		return (str_replace(array_keys($this->aPrepareRewrites), $this->aPrepareRewrites, $sQuery));
 	}
 	
 	//--------------------------------------------------------------------------

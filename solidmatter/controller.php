@@ -67,12 +67,14 @@ Stopwatch::check('tier2_init', 'php');
 // }
 
 //------------------------------------------------------------------------------
-// log into repository
+// log into repository/workspace, acquire valid sbCR_Session
 
 $aRepository = $_REQUEST->getRepository();
+$crRepository = sbCR::getRepository($aRepository['id']);
 $crCredentials = new sbCR_Credentials($aRepository['user'], $aRepository['pass']);
-$crRepository = new sbCR_Repository($aRepository['id']);
 $crSession = $crRepository->login($crCredentials, $aRepository['workspace']);
+
+// init various system-level objects with acquired sbCR_Session
 System::setSession($crSession);
 Registry::setSession($crSession);
 User::setSession($crSession);
@@ -82,7 +84,6 @@ sbSession::setTimeout(Registry::getValue('sb.system.session.timeout'));
 
 //------------------------------------------------------------------------------
 // check if registry cache is current state
-
 
 if (CONFIG::USE_REGISTRYCACHE) {
 	$sCheck = Registry::getValue('sb.system.cache.registry.changedetection');

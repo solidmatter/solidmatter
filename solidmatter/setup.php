@@ -79,27 +79,27 @@ switch ($_REQUEST->getParam('action')) {
 		if ($formCreateRepo->checkInputs()) {
 			$sDatabaseID = $formCreateRepo->getValue('repository_database');
 			$sRepositoryID = $formCreateRepo->getValue('repository_id');
-			$sPrefix = $formCreateRepo->getValue('repository_prefix');
-			sbCR::createRepository($sRepositoryID, $sPrefix, $sDatabaseID);
-// 			sbCR::initRepository($sRepositoryID);
+			$sRepositoryPrefix = $formCreateRepo->getValue('repository_prefix');
+			sbCR::createRepository($sRepositoryID, $sRepositoryPrefix, $sDatabaseID);
 		}
 		break;
 	
-// 	case 'create_ws':
-// 		$formCreateWS->recieveInputs();
-// 		if ($formCreateWS->checkInputs()) {
-// 			$sDatabase = $formCreateRepo->getValue('repository_database');
-// 			$sRepositoryID = $formCreateRepo->getValue('repository_id');
-// 			$sPrefix = $formCreateRepo->getValue('repository_prefix');
-// 			sbCR::createRepository($sDatabase, $sRepositoryID, $sPrefix);
-			
-// 		}
-// 		break;
+	case 'create_ws':
+		$formCreateWS->recieveInputs();
+		if ($formCreateWS->checkInputs()) {
+			$sRepositoryID = $formCreateWS->getValue('workspace_repository');
+			$sWorkspaceID = $formCreateWS->getValue('workspace_id');
+			$sWorkspacePrefix = $formCreateWS->getValue('workspace_prefix');
+			$crRepository = sbCR::getRepository($sRepositoryID);
+			$crRepository->createWorkspace($sWorkspaceID, $sWorkspacePrefix);
+		}
+		break;
 		
 	case 'init_repo':
-		$sDBID = $_REQUEST->getParam('db_id');
-// 		$sDB = 
-		sbCR::createRepository($sDatabase, $sRepositoryID, $sPrefix);
+// 		$sDatabaseID = $_REQUEST->getParam('db_id');
+// 		$sRepositoryID = $_REQUEST->getParam('repo_id');
+// 		$sPrefix = $_REQUEST->getParam('repo_prefix');
+// 		sbCR::initRepository($sRepositoryID, $sPrefix, $sDatabaseID);
 // 		$repNew->init();
 // 		sbCR::initRepository($sID);
 		break;

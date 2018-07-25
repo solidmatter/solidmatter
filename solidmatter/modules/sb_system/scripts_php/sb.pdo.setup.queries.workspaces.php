@@ -4,7 +4,7 @@ global $_QUERIES;
 
 // repository administration ---------------------------------------------------
 
-$_QUERIES['sbCR/workspace/create'] = "
+$_QUERIES['sbCR/workspace/createTables'] = "
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
@@ -215,7 +215,7 @@ CREATE TABLE IF NOT EXISTS `{TABLE_USERS}` (
 
 ";
 
-$_QUERIES['sbCR/inactive'] = "
+$_QUERIES['sbCR/workspace/inactive'] = "
 
 CREATE TABLE IF NOT EXISTS `sb_system_commands` (
   `fk_user` char(32) NOT NULL DEFAULT '',

@@ -27,6 +27,29 @@ class sbNode_module extends sbNode {
 	
 	//--------------------------------------------------------------------------
 	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	protected function isPrimaryParent($nodeParent) {
+		if ($nodeParent->getNodetype() == 'sbSystem:Modules') {
+			return (TRUE);
+		} else {
+			return (FALSE);
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 * Returns the primary parent of this node, which is always the modules-node.
+	 * @return Node the primary parent
+	 */
+	protected function getPrimaryParent() {
+		return ($this->crSession->getNode('sbSystem:Modules'));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* 
 	* @param 
 	* @return 

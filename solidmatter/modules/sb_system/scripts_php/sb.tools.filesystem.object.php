@@ -31,7 +31,7 @@ class sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function __construct($sRelPath = NULL) {
+	public function __construct(string $sRelPath = NULL) {
 		
 		$this->aInfo['working_dir'] = getcwd();
 		
@@ -60,7 +60,7 @@ class sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	protected function __init($sRelPath) { 
+	protected function __init(string $sRelPath) { 
 		
 		$this->aInfo['rel_path'] = $sRelPath;
 		
@@ -82,7 +82,7 @@ class sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function getInfo() {
+	public function getInfo() : array {
 		return ($this->aInfo);
 	}
 	
@@ -92,7 +92,7 @@ class sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function getName() {
+	public function getName() : string{
 		return ($this->aInfo['object_name']);
 	}
 	
@@ -102,7 +102,7 @@ class sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function getEncoding() {
+	public function getEncoding() : string {
 		return ($this->aInfo['encoding']);
 	}
 	
@@ -111,7 +111,7 @@ class sbFilesystemObject {
 	* Returns the fully qualified path of the object, including the object name itself. 
 	* @return string the absulute object path
 	*/
-	public function getAbsPath() {
+	public function getAbsPath() : string {
 		return ($this->aInfo['abs_path']);
 	}
 	
@@ -124,7 +124,7 @@ class sbFilesystemObject {
 	* @param string absolute path that can be used for calculating a relative path
 	* @return string the relative path
 	*/
-	public function getRelPath($sRelativeToPath = NULL) {
+	public function getRelPath(string $sRelativeToPath = NULL) : string {
 		//echo $sRelativeToPath;
 		if ($sRelativeToPath !== NULL) {
 			$sRelativeToPath = $this->normalize($sRelativeToPath);
@@ -145,7 +145,7 @@ class sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function normalize($sDirectory) {
+	public function normalize(string $sDirectory) : string {
 		return (normalize_path($sDirectory));
 	}
 	
@@ -155,7 +155,7 @@ class sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function getParentDir() {
+	public function getParentDir() : string {
 		if (is_file($this->getAbsPath())) {
 			$aPathInfo = pathinfo($this->getAbsPath());
 			return (normalize_path($aPathInfo['dirname']));
@@ -172,7 +172,7 @@ class sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function rename($sNewName) {
+	public function rename(string $sNewName) : bool {
 		if (is_file($this->getAbsPath()) || is_dir($this->getAbsPath())) {
 			if (rename($this->getAbsPath(), $this->getParentDir().$sNewName)) {
 				$this->aInfo['object_name'] = $sNewName;

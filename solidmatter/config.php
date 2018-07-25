@@ -42,16 +42,18 @@ class CONFIG {
 	const DEBUG = array(
 		'ENABLED' 		=> FALSE,
 		'LOG_ALL' 		=> FALSE,
-		'BASIC'			=> TRUE,
+		'BASIC'			=> FALSE,
 		'CLIENT'		=> FALSE,
 		'IMPORT'		=> FALSE,
 		'SESSION'		=> FALSE,
-		'REQUEST'		=> TRUE,
+		'REQUEST'		=> FALSE,
 		'HANDLER'		=> FALSE,
 		'NODE'			=> FALSE,
 		'REDIRECT'		=> FALSE,
-		'EXCEPTIONS'	=> TRUE,
+		'EXCEPTIONS'	=> FALSE,
 		'PDO'			=> FALSE,
+		'SBCR'			=> FALSE,
+		'CACHES'		=> FALSE,
 	);
 	
 	// output prettyprinted XML

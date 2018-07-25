@@ -24,7 +24,7 @@ abstract class Registry {
 	* @param 
 	* @return 
 	*/
-	public static function setSession($crSession) {
+	public static function setSession(sbCR_Session $crSession) {
 		self::$crSession = $crSession;
 		self::$sSystemUUID = self::$crSession->getRootNode()->getIdentifier();
 	}
@@ -35,7 +35,7 @@ abstract class Registry {
 	* @param 
 	* @return 
 	*/
-	protected static function isUserSpecific($sKey) {
+	protected static function isUserSpecific(string $sKey) : bool {
 		$stmtGetEntry = self::$crSession->prepareKnown('sbSystem/registry/getEntry');
 		$stmtGetEntry->bindValue('key', $sKey, PDO::PARAM_STR);
 		$stmtGetEntry->execute();
@@ -56,9 +56,9 @@ abstract class Registry {
 	* The order in which the possible values are considered is sbSession -> RegistryCache -> user -> system -> default
 	* Throws an exception if the registry entry does not exist.
 	* @param 
-	* @return 
+	* @return multiple Converted Value (e.g. "TRUE" is converted to boolean)
 	*/
-	public static function getValue($sKey, $bForced = FALSE) {
+	public static function getValue(string $sKey, bool $bForced = FALSE) {
 		
 		// check temporary setting first (uses sbSesion storage)
 		if (isset(sbSession::$aData['registry'][$sKey])) {
@@ -136,7 +136,7 @@ abstract class Registry {
 	* @param 
 	* @return 
 	*/
-	public static function setValue($sKey, $mValue, $sUserID = NULL, $bTemporary = FALSE) {
+	public static function setValue(string $sKey, $mValue, string $sUserID = NULL, bool $bTemporary = FALSE) {
 		
 		if ($sUserID == NULL) {
 			$sUserID = self::$sSystemUUID;
@@ -170,9 +170,7 @@ abstract class Registry {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Completely clears the registry cache.
 	*/
 	public static function clearCache() {
 		$cacheRegistry = CacheFactory::getInstance('registry');

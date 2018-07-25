@@ -51,7 +51,7 @@ class sbPDOSystem extends sbPDO {
 		
 		$this->query('SET NAMES '.$elemDB['charset']);
 		
-		$this->addRewrite('{PREFIX_SYSTEM}', 'global');
+		$this->setRewrite('{PREFIX_SYSTEM}', 'global');
 		
 	}
 	

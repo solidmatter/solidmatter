@@ -1,5 +1,7 @@
 <?php
 
+die('file will be deleted');
+
 global $_QUERIES;
 
 // repository administration ---------------------------------------------------
@@ -206,7 +208,7 @@ $_QUERIES['sbCR/repository/createEntries'] = "
 
 /*!40000 ALTER TABLE `{TABLE_MODULES}` DISABLE KEYS */;
 INSERT INTO `{TABLE_MODULES}` (`uuid`, `s_name`, `n_mainversion`, `n_subversion`, `n_bugfixversion`, `s_versioninfo`, `dt_installed`, `dt_updated`, `b_uninstallable`, `b_active`) VALUES
-	('969b3b1e5721c24ff5b48d3cedf52fe4', 'sbSystem', 0, 0, 0, 'alpha', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'FALSE', 'TRUE'),
+	('969b3b1e5721c24ff5b48d3cedf52fe4', 'sbSystem', 0, 0, 0, 'alpha', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'FALSE', 'TRUE');
 /*!40000 ALTER TABLE `{TABLE_MODULES}` ENABLE KEYS */;
 
 /*!40000 ALTER TABLE `{TABLE_NAMESPACES}` DISABLE KEYS */;
@@ -250,7 +252,7 @@ INSERT INTO `{TABLE_NODETYPES}` (`s_type`, `s_class`, `s_classfile`, `e_type`) V
 	('sbSystem:User', 'sbNode_user', 'sbSystem:sb.node.user', 'PRIMARY'),
 	('sbSystem:Useraccounts', 'sbNode_useraccounts', 'sbSystem:sb.node.useraccounts', 'PRIMARY'),
 	('sbSystem:Usergroup', 'sbNode_usergroup', 'sbSystem:sb.node.usergroup', 'PRIMARY'),
-	('sbSystem:Voteable', NULL, NULL, 'ABSTRACT'),
+	('sbSystem:Voteable', NULL, NULL, 'ABSTRACT');
 /*!40000 ALTER TABLE `{TABLE_NODETYPES}` ENABLE KEYS */;
 
 -- Exportiere Daten aus Tabelle solidmatter.rep_nodetypes_inheritance: ~112 rows (ungefähr)
@@ -268,7 +270,7 @@ INSERT INTO `{TABLE_NTHIERARCHY}` (`fk_parentnodetype`, `fk_childnodetype`) VALU
 	('sbSystem:PropertiesView', 'sbSystem:User'),
 	('sbSystem:PropertiesView', 'sbSystem:Usergroup'),
 	('sbSystem:Taggable', 'sbSystem:TestNode'),
-	('sbSystem:Taggable', 'sbSystem:User'),
+	('sbSystem:Taggable', 'sbSystem:User');
 /*!40000 ALTER TABLE `{TABLE_NTHIERARCHY}` ENABLE KEYS */;
 
 /*!40000 ALTER TABLE `{TABLE_MODES}` DISABLE KEYS */;
@@ -308,7 +310,7 @@ INSERT INTO `{TABLE_MODES}` (`s_mode`, `fk_parentnodetype`, `fk_nodetype`, `b_di
 	('create', 'sbSystem:Useraccounts', 'sbSystem:Usergroup', 'TRUE', 'TRUE'),
 	('groups', 'sbSystem:Useraccounts', 'sbSystem:Usergroup', 'TRUE', 'TRUE'),
 	('loadgroups', 'sbSystem:Useraccounts', 'sbSystem:Usergroup', 'TRUE', 'TRUE'),
-	('tree', 'sbSystem:Useraccounts', 'sbSystem:Usergroup', 'TRUE', 'TRUE'),
+	('tree', 'sbSystem:Useraccounts', 'sbSystem:Usergroup', 'TRUE', 'TRUE');
 /*!40000 ALTER TABLE `{TABLE_MODES}` ENABLE KEYS */;
 
 /*!40000 ALTER TABLE `{TABLE_PROPERTYDEFS}` DISABLE KEYS */;
@@ -344,7 +346,7 @@ INSERT INTO `{TABLE_PROPERTYDEFS}` (`fk_nodetype`, `s_attributename`, `e_type`, 
 	('sbSystem:User', 'security_stayloggedin', 'BOOLEAN', 'checkbox', 'TRUE', '$locale/sbSystem/User/security_stayloggedin/@label', 'AUXILIARY', 'b_stayloggedin', 15, 'FALSE', 'FALSE', 'FALSE', NULL, ''),
 	('sbSystem:Usergroup', 'config_default', 'BOOLEAN', 'checkbox', 'TRUE', '$locale/sbSystem/Usergroup/config_default/@label', 'EXTERNAL', NULL, NULL, 'FALSE', 'FALSE', 'FALSE', NULL, ''),
 	('sbSystem:Usergroup', 'config_hidden', 'BOOLEAN', 'checkbox', 'TRUE', '$locale/sbSystem/Usergroup/config_hidden/@label', 'EXTERNAL', NULL, NULL, 'FALSE', 'FALSE', 'FALSE', NULL, ''),
-	('sbSystem:Usergroup', 'properties_description', 'STRING', 'text', 'TRUE', '$locale/sbSystem/Usergroup/properties_description/@label', 'EXTERNAL', NULL, NULL, 'FALSE', 'FALSE', 'FALSE', NULL, ''),
+	('sbSystem:Usergroup', 'properties_description', 'STRING', 'text', 'TRUE', '$locale/sbSystem/Usergroup/properties_description/@label', 'EXTERNAL', NULL, NULL, 'FALSE', 'FALSE', 'FALSE', NULL, '');
 /*!40000 ALTER TABLE `{TABLE_PROPERTYDEFS}` ENABLE KEYS */;
 
 /*!40000 ALTER TABLE `{TABLE_ACTIONS}` DISABLE KEYS */;
@@ -426,7 +428,7 @@ INSERT INTO `{TABLE_ACTIONS}` (`fk_nodetype`, `s_view`, `s_action`, `b_default`,
 	('sbSystem:User', 'registry', 'save', 'FALSE', NULL, NULL, 'RENDERED', 'sb_system:registry.edit.xsl', 'text/html', 'TRUE', 'FALSE'),
 	('sbSystem:Useraccounts', 'gatherdata', 'groups', 'FALSE', NULL, NULL, 'OTHER', NULL, NULL, 'FALSE', 'FALSE'),
 	('sbSystem:Useraccounts', 'gatherdata', 'users', 'FALSE', NULL, NULL, 'OTHER', NULL, NULL, 'FALSE', 'FALSE'),
-	('sbSystem:Usergroup', 'authorisations', 'display', 'TRUE', NULL, NULL, 'RENDERED', 'sb_system:userentity.authorisations.xsl', 'text/html', 'TRUE', 'TRUE'),
+	('sbSystem:Usergroup', 'authorisations', 'display', 'TRUE', NULL, NULL, 'RENDERED', 'sb_system:userentity.authorisations.xsl', 'text/html', 'TRUE', 'TRUE');
 /*!40000 ALTER TABLE `{TABLE_ACTIONS}` ENABLE KEYS */;
 
 /*!40000 ALTER TABLE `{TABLE_VIEWAUTH}` DISABLE KEYS */;
@@ -484,7 +486,7 @@ INSERT INTO `{TABLE_VIEWS}` (`fk_nodetype`, `s_view`, `b_display`, `s_labelpath`
 	('sbSystem:User', 'password', 'TRUE', NULL, 'sbSystem:sb.node.user.view.password', 'sbView_user_password', 100, 0),
 	('sbSystem:User', 'registry', 'TRUE', NULL, 'sbSystem:sb.node.registry.view.edit', 'sbView_registry_edit', 700, 0),
 	('sbSystem:Useraccounts', 'gatherdata', 'FALSE', NULL, 'sbSystem:sb.node.useraccounts.view.gatherdata', 'sbView_useraccounts_gatherdata', NULL, 0),
-	('sbSystem:Usergroup', 'authorisations', 'TRUE', NULL, 'sbSystem:sb.node.userentity.view.authorisations', 'sbView_userentity_authorisations', 600, 0),
+	('sbSystem:Usergroup', 'authorisations', 'TRUE', NULL, 'sbSystem:sb.node.userentity.view.authorisations', 'sbView_userentity_authorisations', 600, 0);
 /*!40000 ALTER TABLE `{TABLE_VIEWS}` ENABLE KEYS */;
 
 /*!40000 ALTER TABLE `{TABLE_REGISTRY}` DISABLE KEYS */;

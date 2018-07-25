@@ -35,7 +35,7 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	protected function __init($sRelPath) {
+	protected function __init(string $sRelPath) {
 		parent::__init($sRelPath);
 		$this->read();
 	}
@@ -46,7 +46,7 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function read($bSkipParents = TRUE) {
+	public function read(bool $bSkipParents = TRUE) {
 		
 		// checks
 		if ($this->aInfo['abs_path'] == NULL) {
@@ -85,7 +85,7 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function readSizes($bIncludeDirs = FALSE) {
+	public function readSizes(bool $bIncludeDirs = FALSE) {
 		
 		// get file sizes
 		foreach ($this->aFiles as $iIndex => $aFile) {
@@ -115,7 +115,7 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function readTimes($bIncludeDirs = FALSE) {
+	public function readTimes(bool $bIncludeDirs = FALSE) {
 		
 		// get file times
 		foreach ($this->aFiles as $iIndex => $aFile) {
@@ -143,7 +143,7 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function readDirectorySpecialTimes($sFilename, $sStorageKey) {
+	public function readDirectorySpecialTimes(string $sFilename, string $sStorageKey) {
 		
 		// get dir special times
 		foreach ($this->aDirectories as $iIndex => $aDirectory) {
@@ -163,7 +163,7 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function getAccumulatedSize() {
+	public function getAccumulatedSize() : int {
 		
 		if (!$this->bSizesRead) {
 			$this->readSizes();
@@ -184,7 +184,7 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function filterFiles($sRegEx, $bExcludeMatches = FALSE) {
+	public function filterFiles(string $sRegEx, bool $bExcludeMatches = FALSE) {
 		
 		foreach ($this->aFiles as $iIndex => $aFile) {
 			if ($bExcludeMatches && preg_match($sRegEx, $aFile['name'])) {
@@ -203,7 +203,7 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function countFiles() {
+	public function countFiles() : int {
 		return (count($this->aFiles));
 	}
 	
@@ -220,10 +220,10 @@ class sbDirectory extends sbFilesystemObject {
 	//--------------------------------------------------------------------------
 	/**
 	* 
-	* @param 
+	* @param boolean If TRUE, delivers an array of sbFile object, otherwise delivers an array of filenames.
 	* @return 
 	*/
-	public function getFiles($bAsFiles = FALSE) {
+	public function getFiles(bool $bAsFiles = FALSE) : array {
 		
 		$aFiles = array();
 		
@@ -247,7 +247,7 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function getFile($sRelPath) {
+	public function getFile(string $sRelPath) : sbFile {
 		
 		// fill search array if necessary
 		$aSearch = array();
@@ -272,7 +272,7 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function hasFile($sRelPath) {
+	public function hasFile(string $sRelPath) : bool {
 		foreach ($this->aFiles as $aFileInfo) {
 			if ($aFileInfo['name'] == $sRelPath) {
 				return (TRUE);
@@ -287,11 +287,11 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function getDirectories($bAsDirectoryReaders = FALSE) {
+	public function getDirectories(bool $bAsDirectoryObjects = FALSE) : array {
 		
 		$aDirectories = array();
 		
-		if (!$bAsDirectoryReaders) {
+		if (!$bAsDirectoryObjects) {
 			foreach ($this->aDirectories as $aDirectory) {
 				$aDirectories[] = $aDirectory['name'];
 			}
@@ -311,7 +311,7 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function sort($sSortcriterium = 'name', $bDescending = FALSE) {
+	public function sort(string $sSortcriterium = 'name', bool $bDescending = FALSE) {
 		import('sb.tools.arrays');
 		ivsort($this->aFiles, $sSortcriterium, TRUE);
 		ivsort($this->aDirectories, $sSortcriterium, TRUE);
@@ -327,7 +327,7 @@ class sbDirectory extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function getElement($sContainerName, $bIncludeDirs = FALSE) {
+	public function getElement(string $sContainerName, bool $bIncludeDirs = FALSE) : DOMElement {
 		
 		$this->aInfo['totalfiles'] = count($this->aFiles);
 		$this->aInfo['totaldirs'] = count($this->aDirectories);

@@ -94,7 +94,7 @@
 			<td><xsl:value-of select="@db" /></td>
 			<td><xsl:value-of select="name()" /></td>
 			<td><xsl:value-of select="@prefix" /></td>
-			<td><!-- <a href="/setup?action=init_repo&amp;id={name()}">INIT</a>  -->DELETE</td>			
+			<td><a href="/setup?action=init_repo&amp;repo_id={name()}&amp;repo_prefix={@prefix}&amp;db_id={@db}">INIT</a> DELETE</td>			
 		</tr>
 		<xsl:for-each select="workspace">
 			<xsl:call-template name="renderWorkspace" />

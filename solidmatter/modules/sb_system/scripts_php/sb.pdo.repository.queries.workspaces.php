@@ -1,5 +1,7 @@
 <?php
 
+die('file will be deleted');
+
 global $_QUERIES;
 
 // repository administration ---------------------------------------------------
@@ -65,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `{TABLE_NODES}` (
   KEY `sb_sn_label` (`s_label`),
   KEY `sb_sn_created` (`dt_created`),
   KEY `sb_sn_modified` (`dt_modified`),
-  CONSTRAINT `{TABLE_NODES}_fk_nt` FOREIGN KEY (`fk_nodetype`) REFERENCES `{TABLE_NODETYPES}` (`s_type`) ON UPDATE CASCADE
+  CONSTRAINT `{TABLE_NODES}_fk_nt` FOREIGN KEY (`fk_nodetype`) REFERENCES `{TABLE_NODETYPES}` (`s_type`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `{TABLE_AUTH}` (
@@ -205,41 +207,45 @@ CREATE TABLE IF NOT EXISTS `{TABLE_USERS}` (
 
 ";
 
-$_QUERIES['sbCR/inactive'] = "
+// $_QUERIES['sbCR/workspace/createTables/inactive'] = "
 
-CREATE TABLE IF NOT EXISTS `sb_system_commands` (
-  `fk_user` char(32) NOT NULL DEFAULT '',
-  `fk_subject` char(32) NOT NULL DEFAULT '',
-  `s_uid` varchar(50) NOT NULL DEFAULT '',
-  `s_command` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`fk_user`,`fk_subject`,`s_uid`),
-  KEY `sb_system_commands_fk_sn` (`fk_subject`),
-  CONSTRAINT `sb_system_commands_fk_sn` FOREIGN KEY (`fk_subject`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sb_system_commands_fk_un` FOREIGN KEY (`fk_user`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=ascii;
+// CREATE TABLE IF NOT EXISTS `sb_system_commands` (
+//   `fk_user` char(32) NOT NULL DEFAULT '',
+//   `fk_subject` char(32) NOT NULL DEFAULT '',
+//   `s_uid` varchar(50) NOT NULL DEFAULT '',
+//   `s_command` varchar(50) DEFAULT NULL,
+//   PRIMARY KEY (`fk_user`,`fk_subject`,`s_uid`),
+//   KEY `sb_system_commands_fk_sn` (`fk_subject`),
+//   CONSTRAINT `sb_system_commands_fk_sn` FOREIGN KEY (`fk_subject`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT `sb_system_commands_fk_un` FOREIGN KEY (`fk_user`) REFERENCES `sb_system_nodes` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+// ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
-CREATE TABLE IF NOT EXISTS `sb_system_progress` (
-  `fk_user` char(32) NOT NULL,
-  `fk_subject` char(32) NOT NULL,
-  `s_uid` varchar(30) NOT NULL,
-  `s_status` varchar(250) DEFAULT NULL,
-  `n_percentage` int(11) DEFAULT NULL,
-  PRIMARY KEY (`fk_user`,`fk_subject`,`s_uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=ascii;
+// CREATE TABLE IF NOT EXISTS `sb_system_progress` (
+//   `fk_user` char(32) NOT NULL,
+//   `fk_subject` char(32) NOT NULL,
+//   `s_uid` varchar(30) NOT NULL,
+//   `s_status` varchar(250) DEFAULT NULL,
+//   `n_percentage` int(11) DEFAULT NULL,
+//   PRIMARY KEY (`fk_user`,`fk_subject`,`s_uid`)
+// ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
-CREATE TABLE IF NOT EXISTS `sb_system_whosonline` (
-  `s_sessionid` varchar(32) NOT NULL DEFAULT '',
-  `fk_user` char(32) NOT NULL DEFAULT '0',
-  `dt_access` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `b_anonymous` enum('TRUE','FALSE') NOT NULL DEFAULT 'TRUE',
-  `s_module` varchar(50) NOT NULL DEFAULT '',
-  `s_action` varchar(50) NOT NULL DEFAULT '',
-  `s_additionalinfo` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`s_sessionid`)
-) ENGINE=MEMORY DEFAULT CHARSET=utf8;
+// CREATE TABLE IF NOT EXISTS `sb_system_whosonline` (
+//   `s_sessionid` varchar(32) NOT NULL DEFAULT '',
+//   `fk_user` char(32) NOT NULL DEFAULT '0',
+//   `dt_access` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+//   `b_anonymous` enum('TRUE','FALSE') NOT NULL DEFAULT 'TRUE',
+//   `s_module` varchar(50) NOT NULL DEFAULT '',
+//   `s_action` varchar(50) NOT NULL DEFAULT '',
+//   `s_additionalinfo` varchar(100) DEFAULT NULL,
+//   PRIMARY KEY (`s_sessionid`)
+// ) ENGINE=MEMORY DEFAULT CHARSET=utf8;
+
+// ";
+
+$_QUERIES['sbCR/workspace/createEntries'] = "
+
+
 
 ";
-
-
 
 ?>

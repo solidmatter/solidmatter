@@ -26,7 +26,7 @@ class sbCR {
 	 * @param
 	 * @return
 	 */
-	public static function getRepositoryDefinition(string $sRepositoryID) {
+	public static function getRepositoryDefinition(string $sRepositoryID) : SimpleXMLElement {
 		return (CONFIG::getRepositoryConfig($sRepositoryID));
 	}
 	
@@ -36,15 +36,41 @@ class sbCR {
 	 * @param
 	 * @return
 	 */
+	public static function getRepository(string $sRepositoryID) : sbCR_Repository {
+		
+		$elemRepositoryDefinition = self::getRepositoryDefinition($sRepositoryID);
+		
+		// init database
+		$sRepositoryPrefix = (string) $elemRepositoryDefinition['prefix'];
+		$sDBID = (string) $elemRepositoryDefinition['db'];
+		
+		if ($sDBID == 'system') {
+			$DB = System::getDatabase();
+		} else {
+			$DB = new sbPDOSystem($sDBID);
+		}
+		
+		return (new sbCR_Repository($DB, $sRepositoryID, $sRepositoryPrefix));
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param
+	 * @return
+	 */
 	public static function createRepository(string $sRepositoryID, string $sPrefix, string $sDatabaseID) {
-		import('sb.pdo.repository.queries.repositories');
+		import('sb.pdo.setup.queries.repositories');
 		$pdoRepository = new sbPDOSystem($sDatabaseID);
-		$pdoRepository->addRewrite('{PREFIX_REPOSITORY}', $sPrefix);
+		$pdoRepository->setRewrite('{PREFIX_REPOSITORY}', $sPrefix);
 		$stmtCreate = $pdoRepository->prepareKnown('sbCR/repository/createTables');
 		$stmtCreate->execute();
 		$stmtCreate->closeCursor();
 		$stmtInit = $pdoRepository->prepareKnown('sbCR/repository/createEntries');
 		$stmtInit->execute();
+// 		$stmtInit->debug();
+		$stmtInit->closeCursor();
 		CONFIG::addRepository($sRepositoryID, $sPrefix, $sDatabaseID);
 	}
 	
@@ -54,22 +80,14 @@ class sbCR {
 	 * @param
 	 * @return
 	 */
-	public static function createWorkspace(string $sRepositoryID, string $sWorkspaceID, string $sPrefix) {
-		
-		
-		
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	 *
-	 * @param
-	 * @return
-	 */
-	public static function initWorkspace($sID) {
-		
-	}
-	
+// 	public static function initRepository(string $sRepositoryID, string $sPrefix, string $sDatabaseID) {
+// 		import('sb.pdo.repository.queries.repositories');
+// 		$pdoRepository = new sbPDOSystem($sDatabaseID);
+// 		$pdoRepository->setRewrite('{PREFIX_REPOSITORY}', $sPrefix);
+// 		$stmtInit = $pdoRepository->prepareKnown('sbCR/repository/createEntries');
+// 		$stmtInit->execute();
+// 		$stmtInit->debug();
+// 	}
 	
 }
 

@@ -87,6 +87,8 @@ abstract class DEBUG {
 	const REDIRECT		= CONFIG::DEBUG['REDIRECT'];
 	const EXCEPTIONS	= CONFIG::DEBUG['EXCEPTIONS'];
 	const PDO			= CONFIG::DEBUG['PDO'];
+	const SBCR			= CONFIG::DEBUG['SBCR'];
+	const CACHES		= CONFIG::DEBUG['CACHES'];
 	
 	protected static $aTimes = array();
 	

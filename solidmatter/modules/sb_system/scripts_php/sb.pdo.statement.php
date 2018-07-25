@@ -58,11 +58,11 @@ class sbPDOStatement extends PDOStatement {
 		$this->aDebug['statement'] = $sQuery;
 		$this->aDebug['statementid'] = $sID;
 		// store expected params
-		$aMatches = array();
-		preg_match_all('/(:[a-z0-9_]+)/', $sQuery, $aMatches);
-		foreach ($aMatches[1] as $sMatch) {
-			$this->aDebug['params'][$sMatch] = '--> NOT BOUND <--';
-		}
+// 		$aMatches = array();
+// 		preg_match_all('/(:[a-z0-9_]+)/', $sQuery, $aMatches);
+// 		foreach ($aMatches[1] as $sMatch) {
+// 			$this->aDebug['params'][$sMatch] = '--> NOT BOUND <--';
+// 		}
 	}
 	
 	//--------------------------------------------------------------------------
@@ -143,6 +143,7 @@ class sbPDOStatement extends PDOStatement {
 			var_dumpp($this->aDebug['params'], 'Parameters');
 			var_dumpp(parent::errorCode(), 'Error Code');
 			var_dumpp(parent::errorInfo(), 'Error Info');
+// 			var_dumpp(parent::debugDumpParams(), 'PDOStatement::debugDumParams()');
 		}
 	}
 	
