@@ -103,28 +103,13 @@ class sbNode_modules extends sbNode {
 	 * @param string the child's name
 	 * @return array contains the info on the found child
 	 */
-	protected function getChildByName($sName) {
+	public function getNode($sName) {
 		
-		$stmtChild = $this->crSession->prepareKnown($this->aQueries['getChild']['byName']);
-		$sUUID = $this->elemSubject->getAttribute('uuid');
-		$stmtChild->bindParam(':parent_uuid', $sUUID, PDO::PARAM_STR);
-		$stmtChild->bindParam(':name', $sName, PDO::PARAM_STR);
-		$stmtChild->execute();
+		$dirModule = new sbDirectory('modules/'.$sName);
 		
-		$iCheck = 0;
-		foreach ($stmtChild as $aRow) {
-			$iCheck++;
-			$aChildNode = $aRow;
-		}
-		$stmtChild->closeCursor();
+		$nodeCurrentChild = $this->crSession->createVirtualNode('sbSystem:Module', $dirModule->getName(), $dirModule->getName(), 'sbSystem:Modules');
 		
-		if ($iCheck > 1) {
-			throw new NodeNotFoundException('multiple results for getChildByName("'.$sName.'")');
-		} elseif ($iCheck == 0) {
-			throw new NodeNotFoundException('no result for getChildByName("'.$sName.'")');
-		}
-		
-		return ($aChildNode);
+		return ($nodeCurrentChild);
 		
 	}
 	

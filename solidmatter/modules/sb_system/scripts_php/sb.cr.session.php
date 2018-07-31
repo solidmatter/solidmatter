@@ -743,7 +743,9 @@ class sbCR_Session {
 			$nodeCurrent = $this->getRootNode();
 		} elseif (preg_match('!^//\*\[@uid="([a-zA-Z_]+:[a-zA-Z_]+)"\]$!', $sQuery, $aMatches)) {
 			$nodeCurrent = $this->getInstanceByUID($aMatches[1]);
-		} elseif (preg_match('!^([a-zA-Z0-9_]+)::([a-zA-Z0-9_]+)$!', $sQuery, $aMatches)) {
+		} elseif (preg_match('!^([a-zA-Z_]+:[a-zA-Z_]+)$!', $sQuery, $aMatches)) {
+			$nodeCurrent = $this->getInstanceByUID($aMatches[1]);
+		} elseif (preg_match('!^([a-zA-Z_]+:[a-zA-Z_]+)::([a-zA-Z_]+)$!', $sQuery, $aMatches)) {
 			$nodeParent = $this->getInstance($aMatches[1]);
 			$nodeCurrent = $nodeParent->getNode($aMatches[2]);
 		} elseif (substr_count($sQuery, '/') > 0) {
