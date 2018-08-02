@@ -144,7 +144,7 @@ class sbPDO extends PDO {
 		DEBUG('PDO: started transaction "'.$sUID.'"', DEBUG::PDO);
 		
 		if (count($this->aTransactionUIDs) == 0) {
-			$this->beginTransaction();
+			parent::beginTransaction();
 		}
 		
 		array_push($this->aTransactionUIDs, $sUID);
@@ -172,6 +172,15 @@ class sbPDO extends PDO {
 			parent::commit();
 		}
 		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 * Returns the currently active transaction ID (the last started level for nested transactions).
+	 * @param string The transaction ID
+	 */
+	public function getActiveTransaction() {
+		return end($this->aTransactionUIDs);
 	}
 	
 	//--------------------------------------------------------------------------

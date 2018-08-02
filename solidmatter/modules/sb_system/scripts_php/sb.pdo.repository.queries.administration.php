@@ -27,7 +27,7 @@ $_QUERIES['sbCR/nodetype/remove'] = '
 	DELETE FROM	{TABLE_NODETYPES}
 	WHERE		s_type = :nodetype
 ';
-$_QUERIES['sbCR/property/add'] = '
+$_QUERIES['sbCR/property/save'] = '
 	INSERT INTO	{TABLE_PROPERTYDEFS}
 				(
 					fk_nodetype,
@@ -60,13 +60,26 @@ $_QUERIES['sbCR/property/add'] = '
 					:defaultvalues,
 					:descriptionpath
 				)
+	ON DUPLICATE KEY UPDATE
+				e_type = :type,
+				s_internaltype = :internaltype,
+				b_showinproperties = :showinproperties,
+				s_labelpath = :labelpath,
+				e_storagetype = :storagetype,
+				s_auxname = :auxname,
+				n_order = :order,
+				b_protected = :protected,
+				b_protectedoncreation = :protectedoncreation,
+				b_multiple = :multiple,
+				s_defaultvalues = :defaultvalues,
+				s_descriptionpath = :descriptionpath
 ';
 $_QUERIES['sbCR/property/remove'] = '
 	DELETE FROM	{TABLE_PROPERTYDEFS}
 	WHERE		fk_nodetype = :nodetype
 		AND		s_attributename = :attributename
 ';
-$_QUERIES['sbCR/view/add'] = '
+$_QUERIES['sbCR/view/save'] = '
 	INSERT INTO	{TABLE_VIEWS}
 				(
 					fk_nodetype,
@@ -87,13 +100,20 @@ $_QUERIES['sbCR/view/add'] = '
 					:order,
 					:priority
 				)
+	ON DUPLICATE KEY UPDATE
+				b_display = :display,
+				s_labelpath = :labelpath,
+				s_classfile = :classfile,
+				s_class = :class,
+				n_order = :order,
+				n_priority = :priority
 ';
 $_QUERIES['sbCR/view/remove'] = '
 	DELETE FROM	{TABLE_VIEWS}
 	WHERE		fk_nodetype = :nodetype
 		AND		s_view = :view
 ';
-$_QUERIES['sbCR/action/add'] = '
+$_QUERIES['sbCR/action/save'] = '
 	INSERT INTO	{TABLE_ACTIONS}
 				(
 					fk_nodetype,
@@ -120,6 +140,15 @@ $_QUERIES['sbCR/action/add'] = '
 					:uselocale,
 					:isrecallable
 				)
+	ON DUPLICATE KEY UPDATE
+				b_default = :default,
+				s_classfile = :classfile,
+				s_class = :class,
+				e_outputtype = :outputtype,
+				s_stylesheet = :stylesheet,
+				s_mimetype = :mimetype,
+				b_uselocale = :uselocale,
+				b_isrecallable = :isrecallable
 ';
 $_QUERIES['sbCR/action/remove'] = '
 	DELETE FROM	{TABLE_ACTIONS}
@@ -127,31 +156,33 @@ $_QUERIES['sbCR/action/remove'] = '
 		AND		s_view = :view
 		AND		s_action = :action
 ';
-$_QUERIES['sbCR/authorisation/add'] = '
-	INSERT INTO	{TABLE_AUTHDEF}
-				(
-					fk_nodetype,
-					s_authorisation,
-					fk_parentauthorisation,
-					b_default,
-					n_order,
-					b_onlyfrontend
-				) VALUES (
-					:nodetype,
-					:authorisation,
-					:parentauthorisation,
-					:default,
-					:order,
-					:onlyfrontend
-				)
-';
-$_QUERIES['sbCR/authorisation/remove'] = '
-	DELETE FROM	{TABLE_AUTHDEF}
-	WHERE		fk_nodetype = :nodetype
-		AND		s_view = :view
-		AND		s_action = :action
-';
-$_QUERIES['sbCR/viewauthorisation/add'] = '
+// $_QUERIES['sbCR/authorisation/save'] = '
+// 	INSERT INTO	{TABLE_AUTHDEF}
+// 				(
+// 					fk_nodetype,
+// 					s_authorisation,
+// 					fk_parentauthorisation,
+// 					b_default,
+// 					n_order,
+// 					b_onlyfrontend
+// 				) VALUES (
+// 					:nodetype,
+// 					:authorisation,
+// 					:parentauthorisation,
+// 					:default,
+// 					:order,
+// 					:onlyfrontend
+// 				)
+// 	ON DUPLICATE KEY UPDATE
+				
+// ';
+// $_QUERIES['sbCR/authorisation/remove'] = '
+// 	DELETE FROM	{TABLE_AUTHDEF}
+// 	WHERE		fk_nodetype = :nodetype
+// 		AND		s_view = :view
+// 		AND		s_action = :action
+// ';
+$_QUERIES['sbCR/viewauthorisation/save'] = '
 	INSERT INTO	{TABLE_VIEWAUTH}
 				(
 					fk_nodetype,
@@ -171,9 +202,83 @@ $_QUERIES['sbCR/viewauthorisation/remove'] = '
 		AND		fk_view = :view
 		AND		fk_action = :action
 ';
+$_QUERIES['sbCR/hierarchy/save'] = '
+	INSERT INTO	{TABLE_NTHIERARCHY}
+				(
+					fk_parentnodetype,
+					fk_childnodetype
+				) VALUES (
+					:parentnodetype,
+					:childnodetype
+				)
+';
+$_QUERIES['sbCR/hierarchy/remove'] = '
+	DELETE FROM	{TABLE_NTHIERARCHY}
+	WHERE		fk_parentnodetype = :parentnodetype
+		AND		fk_childnodetype = :childnodetype
+';
+$_QUERIES['sbCR/mode/save'] = '
+	INSERT INTO	{TABLE_MODES}
+				(
+					s_mode,
+					fk_parentnodetype,
+					fk_nodetype,
+					b_display,
+					b_choosable
+				) VALUES (
+					:mode,
+					:parentnodetype,
+					:childnodetype,
+					:display,
+					:choosable
+				)
+';
+$_QUERIES['sbCR/mode/remove'] = '
+	DELETE FROM	{TABLE_MODES}
+	WHERE		s_mode = :mode
+		AND		fk_parentnodetype = :parentnodetype
+		AND		fk_childnodetype = :childnodetype
+';
 
-?>
-
+$_QUERIES['sbCR/module/installed'] = '
+	INSERT INTO	{TABLE_MODULES}
+				(
+					s_name,
+					s_title,
+					n_mainversion,
+					n_subversion,
+					n_bugfixversion,
+					s_versioninfo,
+					dt_installed,
+					dt_updated,
+					b_uninstallable,
+					b_active
+				) VALUES (
+					:name,
+					:title,
+					:mainversion,
+					:subversion,
+					:bugfixversion,
+					:versioninfo,
+					NOW(),
+					NOW(),
+					:uninstallable,
+					:active
+				)
+	ON DUPLICATE KEY UPDATE
+				s_title = :title,
+				n_mainversion = :mainversion,
+				n_subversion = :subversion,
+				n_bugfixversion = :bugfixversion,
+				s_versioninfo = :versioninfo,
+				dt_updated = NOW(),
+				b_uninstallable = :uninstallable,
+				b_active = :active
+';
+$_QUERIES['sbCR/module/uninstalled'] = '
+	DELETE FROM	{TABLE_MODULES}
+	WHERE		s_name = :name
+';
 
 		
 ?>

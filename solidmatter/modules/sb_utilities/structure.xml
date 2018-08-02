@@ -1,0 +1,243 @@
+<?xml version="1.0" ?>
+<structure>
+	
+	<option type="install" version="1.0.0">
+		
+		<version main="1" sub="0" bugfix="0" info="alpha" />
+		
+		<!-- 
+			If there are modifications to the database necessary, the statements go here.
+			Please note that there may only be modifications in the workspace domain.
+		-->
+		<!-- 
+		<sql>
+			<statement>
+			</statement>
+		</sql>
+		 -->
+		
+		<!-- 
+			class is optional, defaults to "sbNode" on PRIMARY nodetypes or NULL on ABSTRACT nodetypes
+			classfile is optional, defaults to "sbSystem:sb.node" on PRIMARY nodetypes or NULL on ABSTRACT nodetypes
+			type is optional, defaults to PRIMARY
+		-->
+		<nodetypes>
+			<nodetype id="sbUtilities:Imagefilter" type="ABSTRACT" /> <!-- type: PRIMARY/ABSTRACT -->
+			<nodetype id="sbUtilities:Imagefilterstack" class="sbNode_imagefilterstack" classfile="sbUtilities:sb.node.imagefilterstack" type="PRIMARY" />
+			<nodetype id="sbUtilities:Imagefilter_colorize" class="sbNode_imagefilter_colorize" classfile="sbUtilities:sb.node.imagefilter.colorize" type="PRIMARY" />
+			<nodetype id="sbUtilities:Imagefilter_crop" class="sbNode_imagefilter_crop" classfile="sbUtilities:sb.node.imagefilter.crop" type="PRIMARY" />
+			<nodetype id="sbUtilities:Imagefilter_greyscale" class="sbNode_imagefilter_greyscale" classfile="sbUtilities:sb.node.imagefilter.greyscale" type="PRIMARY" />
+			<nodetype id="sbUtilities:Imagefilter_lightness" class="sbNode_imagefilter_lightness" classfile="sbUtilities:sb.node.imagefilter.lightness" type="PRIMARY" />
+			<nodetype id="sbUtilities:Imagefilter_merge" class="sbNode_imagefilter_merge" classfile="sbUtilities:sb.node.imagefilter.merge" type="PRIMARY" />
+			<nodetype id="sbUtilities:Imagefilter_negative" class="sbNode_imagefilter_negative" classfile="sbUtilities:sb.node.imagefilter.negative" type="PRIMARY" />
+			<nodetype id="sbUtilities:Imagefilter_resize" class="sbNode_imagefilter_resize" classfile="sbUtilities:sb.node.imagefilter.resize" type="PRIMARY" />
+			<nodetype id="sbUtilities:Imagefilter_roundededges" class="sbNode_imagefilter_roundededges" classfile="sbUtilities:sb.node.imagefilter.roundededges" type="PRIMARY" />
+			<nodetype id="sbUtilities:Imageprocessing" type="PRIMARY" />
+		</nodetypes>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<nodetypehierarchy>
+			<parent nodetype="sbSystem:PropertiesView">
+				<child nodetype="sbUtilities:Imagefilter" />
+			</parent>
+			<parent nodetype="sbSystem:ListView">
+				<child nodetype="sbUtilities:Imagefilterstack" />
+				<child nodetype="sbUtilities:Imageprocessing" />
+			</parent>
+			<parent nodetype="sbUtilities:Imagefilter">
+				<child nodetype="sbUtilities:Imagefilter_colorize" />
+				<child nodetype="sbUtilities:Imagefilter_crop" />
+				<child nodetype="sbUtilities:Imagefilter_greyscale" />
+				<child nodetype="sbUtilities:Imagefilter_lightness" />
+				<child nodetype="sbUtilities:Imagefilter_merge" />
+				<child nodetype="sbUtilities:Imagefilter_negative" />
+				<child nodetype="sbUtilities:Imagefilter_resize" />
+			</parent>
+		</nodetypehierarchy>
+	
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<!-- 
+			multiple is deactivated for now, omitted 
+			show is optional, defaults to "TRUE"
+			storagetype is optional, defaults to "EXTERNAL"
+			auxname is optional, defaults to NULL
+			protected is optional, defaults to FALSE
+			protectedoncreation is optional, defaults to FALSE
+			defaultvalues is optional, defaults to NULL
+			descriptionpath is optional, defaults to NULL
+			
+		-->
+		<properties>
+			<nodetype id="sbUtilities:Imagefilterstack">
+				<property name="config_reverse" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbUtilities/Imagefilterstack/config_reverse/@label" order="0" />
+			</nodetype>
+			<nodetype id="sbUtilities:Imagefilter_colorize">
+				<property name="config_color" type="STRING" internaltype="color;required=TRUE" labelpath="$locale/sbUtilities/Imagefilter_colorize/config_color/@label" order="0" />
+				<property name="config_strength" type="LONG" internaltype="integer;minvalue=0;maxvalue=100;default=100" labelpath="$locale/sbUtilities/Imagefilter_colorize/config_strength/@label" order="1" />
+			</nodetype>
+			<nodetype id="sbUtilities:Imagefilter_crop">
+				<property name="config_origin" type="STRING" internaltype="select" labelpath="$locale/sbUtilities/Imagefilter_crop/config_origin/@label" order="0" />
+				<property name="config_width" type="LONG" internaltype="integer;minvalue=1;maxvalue=2000;default=100" labelpath="$locale/sbUtilities/Imagefilter_crop/config_width/@label" order="1" />
+				<property name="config_height" type="LONG" internaltype="integer;minvalue=1;maxvalue=2000;default=100" labelpath="$locale/sbUtilities/Imagefilter_crop/config_height/@label" order="2" />
+				<property name="config_offsetx" type="LONG" internaltype="integer;minvalue=-2000;maxvalue=2000;default=0" labelpath="$locale/sbUtilities/Imagefilter_crop/config_offsetx/@label" order="3" />
+				<property name="config_offsety" type="LONG" internaltype="integer;minvalue=-2000;maxvalue=2000;default=0" labelpath="$locale/sbUtilities/Imagefilter_crop/config_offsety/@label" order="4" />
+			</nodetype>
+			<nodetype id="sbUtilities:Imagefilter_greyscale">
+				<property name="config_strength" type="LONG" internaltype="integer;minvalue=0;maxvalue=100;default=100" labelpath="$locale/sbUtilities/Imagefilter_greyscale/config_strength/@label" order="0" />
+			</nodetype>
+			<nodetype id="sbUtilities:Imagefilter_lightness">
+				<property name="config_brightness" type="LONG" internaltype="integer;minvalue=-255;maxvalue=255;default=0" labelpath="$locale/sbUtilities/Imagefilter_lightness/config_brightness/@label" order="0" />
+				<property name="config_contrast" type="LONG" internaltype="integer;minvalue=-255;maxvalue=255;default=0" labelpath="$locale/sbUtilities/Imagefilter_lightness/config_contrast/@label" order="1" />
+				<property name="config_contrastfirst" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbUtilities/Imagefilter_lightness/config_contrastfirst/@label" order="2" />
+			</nodetype>
+			<nodetype id="sbUtilities:Imagefilter_negative">
+				<property name="config_strength" type="LONG" internaltype="integer;minvalue=0;maxvalue=100;default=100" labelpath="$locale/sbUtilities/Imagefilter_negative/config_strength/@label" order="0" />
+			</nodetype>
+			<nodetype id="sbUtilities:Imagefilter_resize">
+				<property name="config_width" type="LONG" internaltype="integer;minvalue=1;maxvalue=2000;required=TRUE" labelpath="$locale/sbUtilities/Imagefilter_resize/config_width/@label" order="0" />
+				<property name="config_height" type="LONG" internaltype="integer;minvalue=1;maxvalue=2000;required=TRUE" labelpath="$locale/sbUtilities/Imagefilter_resize/config_height/@label" order="1" />
+				<property name="config_mode" type="STRING" internaltype="select" labelpath="$locale/sbUtilities/Imagefilter_resize/config_mode/@label" order="2" />
+				<property name="config_direction" type="STRING" internaltype="select" labelpath="$locale/sbUtilities/Imagefilter_resize/config_direction/@label" order="3" />
+			</nodetype>
+		</properties>
+	<!-- 	<properties> -->
+	<!-- 		<nodetype id=""> -->
+	<!-- 			<property name="" type="" internaltype="" show="" labelpath="" storagetype="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalues="" descriptionpath="" /> -->
+	<!-- 		</nodetype> -->
+	<!-- 	</properties> -->
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<lifecycles>
+<!-- 			<transitions nodetype="sbCMS:Page"> -->
+<!-- 				<transition sourcestate="approved" targetstate="published" /> -->
+<!-- 			</transitions> -->
+		</lifecycles>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<!-- 
+			labelpath is optional, defaults to NULL
+			order is optional, defaults to NULL
+			priority is optional, defaults to NULL 
+		-->
+		<views>
+			<view nodetype="sbUtilities:Imagefilter" view="preview" display="TRUE" class="sbView_imagefilter_preview" classfile="sbUtilities:sb.node.imagefilter.view.preview" order="50" priority="1000" />
+			<view nodetype="sbUtilities:Imagefilterstack" view="preview" display="TRUE" class="sbView_imagefilterstack_preview" classfile="sbUtilities:sb.node.imagefilterstack.view.preview" order="50" priority="1000" />
+		</views>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<!-- 
+			class & classfile are deactivated for now, omitted
+			stylesheet is optional, defaults to NULL
+			mimetype is optional, defaults to NULL
+		-->
+		<actions>
+			<action nodetype="sbUtilities:Imagefilter" view="preview" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_utilities:imagefilter.preview.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbUtilities:Imagefilter" view="preview" action="outputoriginal" default="FALSE" outputtype="STREAM" stylesheet="" mimetype="" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbUtilities:Imagefilter" view="preview" action="outputprocessed" default="FALSE" outputtype="STREAM" stylesheet="" mimetype="" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbUtilities:Imagefilterstack" view="preview" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_utilities:imagefilter.preview.xsl" mimetype="" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbUtilities:Imagefilterstack" view="preview" action="outputoriginal" default="FALSE" outputtype="STREAM" stylesheet="" mimetype="" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbUtilities:Imagefilterstack" view="preview" action="outputprocessed" default="FALSE" outputtype="STREAM" stylesheet="" mimetype="" uselocale="FALSE" isrecallable="FALSE" />
+		</actions>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<viewauthorisations>
+			<!-- 
+			<nodetype id="sbJukebox:Album">
+				<authorisation view="" action="" authorisation="" />
+				<authorisation view="" action="" authorisation="" />
+				<authorisation view="" action="" authorisation="" />
+				<authorisation view="" action="" authorisation="" />
+				<authorisation view="" action="" authorisation="" />
+				<authorisation view="" action="" authorisation="" />
+			
+			</nodetype>
+			 -->
+		</viewauthorisations>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<!-- display & choosable is deactivated for now (always TRUE), omitted -->
+		<modes>
+			<mode type="tree">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbUtilities:Imageprocessing" />
+				</parent>
+				<parent nodetype="sbUtilities:Imageprocessing">
+					<child nodetype="sbUtilities:Imagefilterstack" />
+				</parent>
+				<parent nodetype="sbUtilities:Imagefilterstack">
+					<child nodetype="sbUtilities:Imagefilterstack" />
+					<child nodetype="sbUtilities:Imagefilter_colorize" />
+					<child nodetype="sbUtilities:Imagefilter_crop" />
+					<child nodetype="sbUtilities:Imagefilter_greyscale" />
+					<child nodetype="sbUtilities:Imagefilter_lightness" />
+					<child nodetype="sbUtilities:Imagefilter_negative" />
+					<child nodetype="sbUtilities:Imagefilter_resize" />
+					<child nodetype="sbUtilities:Imagefilter_roundededges" />
+				</parent>
+			</mode>
+			<mode type="list">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbUtilities:Imageprocessing" />
+				</parent>
+				<parent nodetype="sbUtilities:Imageprocessing">
+					<child nodetype="sbUtilities:Imagefilterstack" />
+				</parent>
+				<parent nodetype="sbUtilities:Imagefilterstack">
+					<child nodetype="sbUtilities:Imagefilterstack" />
+					<child nodetype="sbUtilities:Imagefilter_colorize" />
+					<child nodetype="sbUtilities:Imagefilter_crop" />
+					<child nodetype="sbUtilities:Imagefilter_greyscale" />
+					<child nodetype="sbUtilities:Imagefilter_lightness" />
+					<child nodetype="sbUtilities:Imagefilter_negative" />
+					<child nodetype="sbUtilities:Imagefilter_resize" />
+					<child nodetype="sbUtilities:Imagefilter_roundededges" />
+				</parent>
+			</mode>
+			<mode type="create">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbUtilities:Imageprocessing" />
+				</parent>
+				<parent nodetype="sbUtilities:Imageprocessing">
+					<child nodetype="sbUtilities:Imagefilterstack" />
+				</parent>
+				<parent nodetype="sbUtilities:Imagefilterstack">
+					<child nodetype="sbUtilities:Imagefilterstack" />
+					<child nodetype="sbUtilities:Imagefilter_colorize" />
+					<child nodetype="sbUtilities:Imagefilter_crop" />
+					<child nodetype="sbUtilities:Imagefilter_greyscale" />
+					<child nodetype="sbUtilities:Imagefilter_lightness" />
+					<child nodetype="sbUtilities:Imagefilter_negative" />
+					<child nodetype="sbUtilities:Imagefilter_resize" />
+					<child nodetype="sbUtilities:Imagefilter_roundededges" />
+				</parent>
+			</mode>
+		</modes>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<ontology>
+	<!-- 		<relation source="" forward="" backward="" destination="" /> -->
+		</ontology>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<registry>
+	<!-- 		<entry key="" type="" internaltype="" userspecific="" defaultvalue="" comment="" /> -->
+		</registry>
+		
+	</option>
+	
+	<option type="update" from="1.0.0" to="1.1.0">
+	
+	<!-- modifications needed for updating from a previous version -->
+	
+	</option>
+	
+</structure>

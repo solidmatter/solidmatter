@@ -228,6 +228,7 @@
 		<type id="sbSystem:User">Benutzer</type>
 		<type id="sbSystem:Inbox">Posteingang</type>
 		<type id="sbSystem:Tasks">Aufgaben</type>
+		<type id="sbSystem:Task">Aufgabe</type>
 		<type id="sbSystem:Modules">Module</type>
 		<type id="sbSystem:Module">Modul</type>
 		<type id="sbSystem:Maintenance">Wartung</type>
@@ -302,6 +303,7 @@
 		<view id="authorisations">Berechtigungen</view>
 		<view id="password">Passwort</view>
 		<view id="scripts">Skripte</view>
+		<view id="installation">Installation</view>
 		<view id="tests">Tests</view>
 		<view id="events">Ereignisse</view>
 		<view id="administration">Administration</view>

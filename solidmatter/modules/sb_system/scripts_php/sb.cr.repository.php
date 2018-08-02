@@ -292,10 +292,20 @@ class sbCR_Repository {
 	 * @param array The definition data for the current aspect, needs to be complete
 	 * @return
 	 */
-	public function changeRepositoryDefinition(string $sType, string $sMode, array $aData) {
+	public function changeRepositoryDefinition(string $sType, string $sMode = 'add', array $aData = NULL) {
+		
+		import("sb.pdo.repository.queries.administration");
 		
 		switch ($sType) {
 			
+			case 'begin';
+				$this->DB->beginTransaction('changeRepository');
+				break;
+				
+			case 'commit':
+				$this->DB->commit('changeRepository');
+				break;
+				
 			case 'nodetype':
 				if ($sMode == 'add' || $sMode == 'modify') {
 					$stmtAdd = $this->DB->prepareKnown('sbCR/nodetype/save');
@@ -318,8 +328,8 @@ class sbCR_Repository {
 					$stmtAdd->bindParam('view', $aData['view']);
 					$stmtAdd->bindParam('display', $aData['display']);
 					$stmtAdd->bindParam('labelpath', $aData['labelpath']);
-					$stmtAdd->bindParam('class', $aData['nodetype']);
-					$stmtAdd->bindParam('classfile', $aData['nodetype']);
+					$stmtAdd->bindParam('class', $aData['class']);
+					$stmtAdd->bindParam('classfile', $aData['classfile']);
 					$stmtAdd->bindParam('order', $aData['order']);
 					$stmtAdd->bindParam('priority', $aData['priority']);
 					$stmtAdd->execute();
@@ -465,6 +475,9 @@ class sbCR_Repository {
 					$stmtRemove->execute();
 				}
 				break;
+			
+			default:
+				throw new sbException(__CLASS__.': change type not supported "'.$sType.'"');
 				
 			
 		}

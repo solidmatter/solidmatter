@@ -111,12 +111,12 @@ abstract class DEBUG {
 * @return 
 */
 function DEBUG(string $sText, bool $bInUse = FALSE) {
+	static $oLogger = NULL;
 	if (DEBUG::ENABLED && ($bInUse || DEBUG::LOG_ALL)) {
-		static $oDebugger = NULL;
-		if (!$oDebugger) {
-			$oDebugger = new Logger($_SERVER['REQUEST_URI'], 'debug.txt');
+		if (!$oLogger) {
+			$oLogger = new Logger($_SERVER['REQUEST_URI'], 'debug.txt');
 		}
-		$oDebugger->addText($sText);
+		$oLogger->addText($sText);
 	}
 }
 

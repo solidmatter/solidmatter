@@ -437,6 +437,9 @@ a.explorercard img {
 *.sbSystem_Module {
 	background-image: url(../icons/type_modules.png);
 }
+*.sbSystem_Module_inactive {
+	background-image: url(../icons/type_module_inactive.png);
+}
 *.sbSystem_Reports {
 	background-image: url(../icons/type_reports.png);
 }
