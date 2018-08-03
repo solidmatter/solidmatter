@@ -156,26 +156,22 @@
 		</modes>
 		
 		<viewauthorisations>
-			
 		</viewauthorisations>
 		
 		<lifecycles>
-
 		</lifecycles>
 
 		<ontology>
-			
 		</ontology>
 		
 		<registry>
-			
 		</registry>
 		
 	</option>
 	
 	<option type="uninstall" version="1.0.0">
 		
-		<version main="1" sub="0" bugfix="0" info="alpha" />
+		<version action="remove" />
 		
 		<nodetypes action="remove">
 			<nodetype id="sbFiles:Filemanager" />

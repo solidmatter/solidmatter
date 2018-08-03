@@ -223,7 +223,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<ontology>
-	<!-- 		<relation source="" forward="" backward="" destination="" /> -->
+	<!-- 		<relation origin="" forward="" backward="" destination="" /> -->
 		</ontology>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -236,7 +236,29 @@
 	
 	<option type="update" from="1.0.0" to="1.1.0">
 	
-	<!-- modifications needed for updating from a previous version -->
+		<!-- modifications needed for updating from a previous version -->
+	
+	</option>
+	
+	<option type="uninstall" version="1.0.0">
+		
+		<!-- modifications needed removing the module -->
+		
+		<version action="remove" />
+		
+		<nodetypes action="remove">
+			<nodetype id="sbUtilities:Imagefilter" />
+			<nodetype id="sbUtilities:Imagefilterstack" />
+			<nodetype id="sbUtilities:Imagefilter_colorize" />
+			<nodetype id="sbUtilities:Imagefilter_crop" />
+			<nodetype id="sbUtilities:Imagefilter_greyscale" />
+			<nodetype id="sbUtilities:Imagefilter_lightness" />
+			<nodetype id="sbUtilities:Imagefilter_merge" />
+			<nodetype id="sbUtilities:Imagefilter_negative" />
+			<nodetype id="sbUtilities:Imagefilter_resize" />
+			<nodetype id="sbUtilities:Imagefilter_roundededges" />
+			<nodetype id="sbUtilities:Imageprocessing" />
+		</nodetypes>
 	
 	</option>
 	

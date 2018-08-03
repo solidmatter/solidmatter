@@ -459,7 +459,7 @@ class sbCR_Repository {
 				}
 				break;
 			
-			case 'ontology':
+			case 'relation':
 				if ($sMode == 'add' || $sMode == 'modify') {
 					$stmtAdd = $this->DB->prepareKnown('sbCR/ontology/save');
 					$stmtAdd->bindParam('relation', $aData['relation']);
@@ -472,6 +472,23 @@ class sbCR_Repository {
 					$stmtRemove->bindParam('relation', $aData['relation']);
 					$stmtRemove->bindParam('sourcenodetype', $aData['sourcenodetype']);
 					$stmtRemove->bindParam('targetnodetype', $aData['targetnodetype']);
+					$stmtRemove->execute();
+				}
+				break;
+				
+			case 'registry':
+				if ($sMode == 'add' || $sMode == 'modify') {
+					$stmtAdd = $this->DB->prepareKnown('sbCR/registry/save');
+					$stmtAdd->bindParam('key', $aData['key']);
+					$stmtAdd->bindParam('type', $aData['type']);
+					$stmtAdd->bindParam('internaltype', $aData['internaltype']);
+					$stmtAdd->bindParam('userspecific', $aData['userspecific']);
+					$stmtAdd->bindParam('defaultvalue', $aData['defaultvalue']);
+					$stmtAdd->bindParam('comment', $aData['comment']);
+					$stmtAdd->execute();
+				} else {
+					$stmtRemove = $this->DB->prepareKnown('sbCR/registry/remove');
+					$stmtRemove->bindParam('key', $aData['key']);
 					$stmtRemove->execute();
 				}
 				break;

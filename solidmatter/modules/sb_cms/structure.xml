@@ -205,4 +205,29 @@
 		
 	</option>
 	
+	<option type="uninstall" version="1.0.0">
+		
+		<version action="remove" />
+		
+		<nodetypes action="remove">
+			<nodetype id="sbCMS:CTN_Container" /> <!-- type: PRIMARY/ABSTRACT -->
+			<nodetype id="sbCMS:CTN_Image" />
+			<nodetype id="sbCMS:CTN_Plaintext" />
+			<nodetype id="sbCMS:CTN_Richtext" />
+			<nodetype id="sbCMS:Layout" />
+			<nodetype id="sbCMS:Page" />
+			<nodetype id="sbCMS:Site" />
+			<nodetype id="sbCMS:Template" />
+			<nodetype id="sbCMS:Templategroup" />
+			<nodetype id="sbCMS:Templatemanager" />
+			<nodetype id="sbCMS:TPL_Container" />
+			<nodetype id="sbCMS:TPL_Image" />
+			<nodetype id="sbCMS:TPL_Menu" />
+			<nodetype id="sbCMS:TPL_Plaintext" />
+			<nodetype id="sbCMS:TPL_Richtext" />
+			<nodetype id="sbCMS:TPL_Script" />
+		</nodetypes>
+		
+	</option>
+	
 </structure>

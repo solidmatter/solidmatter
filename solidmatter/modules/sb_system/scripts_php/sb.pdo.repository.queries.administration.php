@@ -195,6 +195,8 @@ $_QUERIES['sbCR/viewauthorisation/save'] = '
 					:action,
 					:authorisation
 				)
+	ON DUPLICATE KEY UPDATE
+				fk_authorisation = :authorisation
 ';
 $_QUERIES['sbCR/viewauthorisation/remove'] = '
 	DELETE FROM	{TABLE_VIEWAUTH}
@@ -203,7 +205,7 @@ $_QUERIES['sbCR/viewauthorisation/remove'] = '
 		AND		fk_action = :action
 ';
 $_QUERIES['sbCR/hierarchy/save'] = '
-	INSERT INTO	{TABLE_NTHIERARCHY}
+	INSERT IGNORE INTO {TABLE_NTHIERARCHY}
 				(
 					fk_parentnodetype,
 					fk_childnodetype
@@ -232,6 +234,9 @@ $_QUERIES['sbCR/mode/save'] = '
 					:display,
 					:choosable
 				)
+	ON DUPLICATE KEY UPDATE
+				b_display = :display,
+				b_choosable = :choosable
 ';
 $_QUERIES['sbCR/mode/remove'] = '
 	DELETE FROM	{TABLE_MODES}
@@ -239,6 +244,57 @@ $_QUERIES['sbCR/mode/remove'] = '
 		AND		fk_parentnodetype = :parentnodetype
 		AND		fk_childnodetype = :childnodetype
 ';
+$_QUERIES['sbCR/ontology/save'] = '
+	INSERT INTO	{TABLE_ONTOLOGY}
+				(
+					s_relation,
+					fk_sourcenodetype,
+					fk_targetnodetype,
+					s_reverserelation
+				) VALUES (
+					:relation,
+					:sourcenodetype,
+					:targetnodetype,
+					:reverserelation
+				)
+	ON DUPLICATE KEY UPDATE
+				s_reverserelation = :reverserelation
+';
+$_QUERIES['sbCR/ontology/remove'] = '
+	DELETE FROM	{TABLE_ONTOLOGY}
+	WHERE		s_relation = :relation
+		AND		fk_sourcenodetype = :sourcenodetype
+		AND		fk_targetnodetype = :targetnodetype
+';
+$_QUERIES['sbCR/registry/save'] = '
+	INSERT INTO	{TABLE_REGISTRY}
+				(
+					s_key,
+					e_type,
+					s_internaltype,
+					b_userspecific,
+					s_defaultvalue,
+					s_comment
+				) VALUES (
+					:key,
+					:type,
+					:internaltype,
+					:userspecific,
+					:defaultvalue,
+					:comment
+				)
+	ON DUPLICATE KEY UPDATE
+				e_type = :type,
+				s_internaltype = :internaltype,
+				b_userspecific = :userspecific,
+				s_defaultvalue = :defaultvalue,
+				s_comment = :comment
+';
+$_QUERIES['sbCR/registry/remove'] = '
+	DELETE FROM	{TABLE_REGISTRY}
+	WHERE		s_key = :key
+';
+
 
 $_QUERIES['sbCR/module/installed'] = '
 	INSERT INTO	{TABLE_MODULES}

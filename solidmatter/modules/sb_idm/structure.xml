@@ -1,111 +1,268 @@
 <?xml version="1.0" ?>
-<setup>
+<structure>
 	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<nodetypes>
-		<nodetype id="sbIdM:Manager" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
-		<nodetype id="sbIdM:OrgRole" class="sbNode_idm_orgrole" classfile="sbIdM:sb.idm.node.orgrole" type="PRIMARY" />
-		<nodetype id="sbIdM:Person" class="sbNode_idm_person" classfile="sbIdM:sb.idm.node.person" type="PRIMARY" />
-		<nodetype id="sbIdM:System" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
-		<nodetype id="sbIdM:TechRole" class="sbNode_idm_techrole" classfile="sbIdM:sb.idm.node.techrole" type="PRIMARY" />
-		<nodetype id="sbIdM:TechRoleGroup" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
-<!-- 		<nodetype id="sbIdM:Data" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" /> -->
-<!-- 		<nodetype id="sbIdM:DataCategory" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" /> -->
-<!-- 		<nodetype id="sbIdM:DataManagement" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" /> -->
-	</nodetypes>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<nodetypehierarchy>
+	<option type="install" version="0.5.0">
 		
-	</nodetypehierarchy>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<properties>
+		<version main="0" sub="5" bugfix="0" info="alpha" />
 		
-	</properties>
+		<nodetypes>
+			<nodetype id="sbIdM:Manager" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+			<nodetype id="sbIdM:OrgRole" class="sbNode_idm_orgrole" classfile="sbIdM:sb.idm.node.orgrole" type="PRIMARY" />
+			<nodetype id="sbIdM:Person" class="sbNode_idm_person" classfile="sbIdM:sb.idm.node.person" type="PRIMARY" />
+			<nodetype id="sbIdM:System" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+			<nodetype id="sbIdM:TechRole" class="sbNode_idm_techrole" classfile="sbIdM:sb.idm.node.techrole" type="PRIMARY" />
+			<nodetype id="sbIdM:TechRoleGroup" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		</nodetypes>
 	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<nodetypehierarchy>
+			<parent nodetype="sbSystem:PropertiesView">
+				<child nodetype="sbIdM:Manager" />
+				<child nodetype="sbIdM:OrgRole" />
+				<child nodetype="sbIdM:Person" />
+				<child nodetype="sbIdM:TechRole" />
+				<child nodetype="sbIdM:TechRoleGroup" />
+			</parent>
+			<parent nodetype="sbSystem:ListView">
+				<child nodetype="sbIdM:Manager" />
+				<child nodetype="sbIdM:OrgRole" />
+				<child nodetype="sbIdM:System" />
+				<child nodetype="sbIdM:TechRole" />
+				<child nodetype="sbIdM:TechRoleGroup" />
+			</parent>
+			<parent nodetype="sbSystem:Taggable">
+				<child nodetype="sbIdM:OrgRole" />
+				<child nodetype="sbIdM:TechRole" />
+			</parent>
+			<parent nodetype="sbSystem:RelationsView">
+				<child nodetype="sbIdM:TechRole" />
+			</parent>
+		</nodetypehierarchy>
 	
-	<lifecycles>
+		<properties>
+			<nodetype id="sbIdM:OrgRole">
+				<property name="description" type="STRING" internaltype="text" show="TRUE" labelpath="$locale/sbSystem/labels/description" order="0" />
+				<property name="constraints" type="STRING" internaltype="text" show="TRUE" labelpath="$locale/sbSystem/labels/constraints" order="1" />
+				<property name="questions" type="STRING" internaltype="text" show="TRUE" labelpath="$locale/sbSystem/labels/questions" order="2" />
+			</nodetype>
+			<nodetype id="sbIdM:TechRoleGroup">
+				<property name="description" type="STRING" internaltype="text" show="TRUE" labelpath="$locale/sbSystem/labels/description" order="0" />
+			</nodetype>
+			<nodetype id="sbIdM:TechRole">
+				<property name="active" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbSystem/labels/active" order="5" />
+				<property name="priority" type="STRING" internaltype="text" labelpath="$locale/sbSystem/labels/priority" order="6" />
+				<property name="description" type="STRING" internaltype="text" labelpath="$locale/sbSystem/labels/description" order="10" />
+				<property name="questions" type="STRING" internaltype="text" labelpath="$locale/sbSystem/labels/questions" order="11" />
+				<property name="userassignable" type="STRING" internaltype="text" labelpath="$locale/sbIdM/labels/userassignable" order="20" />
+				<property name="mainrole" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbIdM/labels/mainrole" order="21" />
+				<property name="perm_read" type="STRING" internaltype="select;options=UNSPECIFIED|NO|REQUESTED|REQUIRED" labelpath="$locale/sbIdM/labels/permission_read" order="30" />
+				<property name="perm_write" type="STRING" internaltype="select;options=UNSPECIFIED|NO|REQUESTED|REQUIRED" labelpath="$locale/sbIdM/labels/permission_write" order="31" />
+				<property name="perm_datatrans" type="STRING" internaltype="select;options=UNSPECIFIED|NO|REQUESTED|REQUIRED" labelpath="$locale/sbIdM/labels/permission_datatransfer" order="32" />
+				<property name="perm_print" type="STRING" internaltype="select;options=UNSPECIFIED|NO|REQUESTED|REQUIRED" labelpath="$locale/sbIdM/labels/permission_print" order="33" />
+				<property name="access" type="STRING" internaltype="select;options=UNSPECIFIED|EXPOSED|RESTRICTED" labelpath="$locale/sbIdM/labels/access" order="40" />
+				<property name="protreq_availability" type="STRING" internaltype="select;options=UNSPECIFIED|NONE|LOW|MEDIUM|HIGH|VERY HIGH" labelpath="$locale/sbIdM/labels/availability" order="41" />
+				<property name="protreq_confidentiality" type="STRING" internaltype="select;options=UNSPECIFIED|NONE|LOW|MEDIUM|HIGH|VERY HIGH" labelpath="$locale/sbIdM/labels/confidentiality" order="42" />
+				<property name="protreq_integrity" type="STRING" internaltype="select;options=UNSPECIFIED|NONE|LOW|MEDIUM|HIGH|VERY HIGH" labelpath="$locale/sbIdM/labels/integrity" order="43" />
+				<property name="explanation" type="STRING" internaltype="text" labelpath="$locale/sbSystem/labels/explanation" order="50" />
+				<property name="constraints" type="STRING" internaltype="text" labelpath="$locale/sbSystem/labels/implementation" order="60" />
+				<property name="implementation" type="STRING" internaltype="select;options=UNSPECIFIED|SAPGUI|WEBDYNPRO" labelpath="YYYYYYYYYYYYYYYY" order="61" />
+				<property name="implementation_type" type="STRING" internaltype="text" labelpath="$locale/sbIdM/labels/implementation_type" order="62" />
+				<property name="data" type="STRING" internaltype="text" labelpath="$locale/sbIdM/labels/data" order="63" />
+				<property name="data_personal" type="STRING" internaltype="text;rows=15" labelpath="$locale/sbIdM/labels/data_personal" order="64" />
+			</nodetype>
+		</properties>
 	
-	</lifecycles>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<views>
-		<view view=""></view>
+		<lifecycles>
+		</lifecycles>
 		
-	</views>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<actions>
-		<action view="" action="" ></action>
-	
-	</actions>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<viewauthorisations>
-		<action view="" action="" ></action>
-	
-	</viewauthorisations>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<modes>
-	
-		<mode type="create" parent="sbSystem:Root" child="sbIdM:Manager" />
-		<mode type="create" parent="sbIdM:Manager" child="sbIdM:OrgRole" />
-		<mode type="create" parent="sbIdM:OrgRole" child="sbIdM:OrgRole" />
-		<mode type="create" parent="sbIdM:OrgRole" child="sbIdM:Person" />
-		<mode type="create" parent="sbIdM:OrgRole" child="sbIdM:TechRole" /><!-- remove after implementing paste mode -->
-		<mode type="create" parent="sbIdM:Manager" child="sbIdM:System" />
-		<mode type="create" parent="sbIdM:System" child="sbIdM:TechRole" />
-		<mode type="create" parent="sbIdM:System" child="sbIdM:TechRoleGroup" />
-		<mode type="create" parent="sbIdM:TechRole" child="sbIdM:TechRole" />
-		<mode type="create" parent="sbIdM:TechRoleGroup" child="sbIdM:TechRoleGroup" />
-		<mode type="create" parent="sbIdM:TechRoleGroup" child="sbIdM:TechRole" />
+		<views>
+			<view nodetype="sbIdM:Manager" view="details" display="TRUE" labelpath="" class="sbView_idm_manager_details" classfile="sbIdM:sb.idm.manager.details" order="50" priority="1000" />
+			<view nodetype="sbIdM:OrgRole" view="details" display="TRUE" labelpath="" class="sbView_idm_orgrole_details" classfile="sbIdM:sb.idm.orgrole.details" order="50" priority="1000" />
+			<view nodetype="sbIdM:Person" view="details" display="TRUE" labelpath="" class="sbView_idm_person_details" classfile="sbIdM:sb.idm.person.details" order="50" priority="1000" />
+			<view nodetype="sbIdM:System" view="details" display="TRUE" labelpath="" class="sbView_idm_system_details" classfile="sbIdM:sb.idm.system.details" order="50" priority="1000" />
+		</views>
+
+		<actions>
+			<action nodetype="sbIdM:Manager" view="details" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_idm:manager.details.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbIdM:OrgRole" view="details" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_idm:orgrole.details.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbIdM:OrgRole" view="details" action="print" default="FALSE" outputtype="RENDERED" stylesheet="sb_idm:orgrole.details.print.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbIdM:Person" view="details" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_idm:person.details.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbIdM:System" view="details" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_idm:system.details.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbIdM:System" view="details" action="print" default="FALSE" outputtype="RENDERED" stylesheet="sb_idm:system.details.print.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+		</actions>
 		
-		<mode type="list" parent="sbSystem:Root" child="sbIdM:Manager" />
-		<mode type="list" parent="sbIdM:Manager" child="sbIdM:OrgRole" />
-		<mode type="list" parent="sbIdM:OrgRole" child="sbIdM:OrgRole" />
-		<mode type="list" parent="sbIdM:OrgRole" child="sbIdM:Person" />
-		<mode type="list" parent="sbIdM:OrgRole" child="sbIdM:TechRole" />
-		<mode type="list" parent="sbIdM:Manager" child="sbIdM:System" />
-		<mode type="list" parent="sbIdM:System" child="sbIdM:TechRole" />
-		<mode type="list" parent="sbIdM:System" child="sbIdM:TechRoleGroup" />
-		<mode type="list" parent="sbIdM:TechRole" child="sbIdM:TechRole" />
-		<mode type="list" parent="sbIdM:TechRoleGroup" child="sbIdM:TechRoleGroup" />
-		<mode type="list" parent="sbIdM:TechRoleGroup" child="sbIdM:TechRole" />
+		<viewauthorisations>
+		</viewauthorisations>
 		
-		<mode type="tree" parent="sbSystem:Root" child="sbIdM:Manager" />
-		<mode type="tree" parent="sbIdM:Manager" child="sbIdM:OrgRole" />
-		<mode type="tree" parent="sbIdM:OrgRole" child="sbIdM:OrgRole" />
-		<mode type="tree" parent="sbIdM:OrgRole" child="sbIdM:Person" />
-		<mode type="tree" parent="sbIdM:OrgRole" child="sbIdM:TechRole" />
-		<mode type="tree" parent="sbIdM:Manager" child="sbIdM:System" />
-		<mode type="tree" parent="sbIdM:System" child="sbIdM:TechRole" />
-		<mode type="tree" parent="sbIdM:System" child="sbIdM:TechRoleGroup" />
-		<mode type="tree" parent="sbIdM:TechRole" child="sbIdM:TechRole" />
-		<mode type="tree" parent="sbIdM:TechRoleGroup" child="sbIdM:TechRoleGroup" />
-		<mode type="tree" parent="sbIdM:TechRoleGroup" child="sbIdM:TechRole" />
+		<modes>
+			<mode type="tree">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbIdM:Manager" />
+				</parent>
+				<parent nodetype="sbIdM:Manager">
+					<child nodetype="sbIdM:OrgRole" />
+					<child nodetype="sbIdM:System" />
+				</parent>
+				<parent nodetype="sbIdM:OrgRole">
+					<child nodetype="sbIdM:OrgRole" />
+					<child nodetype="sbIdM:Person" />
+					<child nodetype="sbIdM:TechRole" />
+				</parent>
+				<parent nodetype="sbIdM:System">
+					<child nodetype="sbIdM:TechRole" />
+					<child nodetype="sbIdM:TechRoleGroup" />
+				</parent>
+				<parent nodetype="sbIdM:TechRoleGroup">
+					<child nodetype="sbIdM:TechRoleGroup" />
+					<child nodetype="sbIdM:TechRole" />
+				</parent>
+				<parent nodetype="sbIdM:TechRole">
+					<child nodetype="sbIdM:TechRole" />
+				</parent>
+			</mode>
+			<mode type="create">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbIdM:Manager" />
+				</parent>
+				<parent nodetype="sbIdM:Manager">
+					<child nodetype="sbIdM:OrgRole" />
+					<child nodetype="sbIdM:System" />
+				</parent>
+				<parent nodetype="sbIdM:OrgRole">
+					<child nodetype="sbIdM:OrgRole" />
+					<child nodetype="sbIdM:Person" />
+					<child nodetype="sbIdM:TechRole" />
+				</parent>
+				<parent nodetype="sbIdM:System">
+					<child nodetype="sbIdM:TechRole" />
+					<child nodetype="sbIdM:TechRoleGroup" />
+				</parent>
+				<parent nodetype="sbIdM:TechRoleGroup">
+					<child nodetype="sbIdM:TechRoleGroup" />
+					<child nodetype="sbIdM:TechRole" />
+				</parent>
+				<parent nodetype="sbIdM:TechRole">
+					<child nodetype="sbIdM:TechRole" />
+				</parent>
+			</mode>
+			<mode type="list">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbIdM:Manager" />
+				</parent>
+				<parent nodetype="sbIdM:Manager">
+					<child nodetype="sbIdM:OrgRole" />
+					<child nodetype="sbIdM:System" />
+				</parent>
+				<parent nodetype="sbIdM:OrgRole">
+					<child nodetype="sbIdM:OrgRole" />
+					<child nodetype="sbIdM:Person" />
+					<child nodetype="sbIdM:TechRole" />
+				</parent>
+				<parent nodetype="sbIdM:System">
+					<child nodetype="sbIdM:TechRole" />
+					<child nodetype="sbIdM:TechRoleGroup" />
+				</parent>
+				<parent nodetype="sbIdM:TechRoleGroup">
+					<child nodetype="sbIdM:TechRoleGroup" />
+					<child nodetype="sbIdM:TechRole" />
+				</parent>
+				<parent nodetype="sbIdM:TechRole">
+					<child nodetype="sbIdM:TechRole" />
+				</parent>
+			</mode>
+		</modes>
 		
-	</modes>
+		<ontology>
+			<relation origin="sbIdM:TechRole" forward="AlsoRequires" backward="IsRequiredBy" destination="sbIdM:TechRole" />
+			<relation origin="sbIdM:TechRole" forward="MayBeAssignedBy" backward="MayAssign" destination="sbIdM:OrgRole" />
+			<relation origin="sbIdM:TechRole" forward="HasRoleOwner" backward="IsRoleOwner" destination="sbIdM:OrgRole" />
+		</ontology>
+		
+		<registry>
+			<entry key="sb.idm.display.persons.enabled" type="boolean" internaltype="" userspecific="TRUE" defaultvalue="TRUE" comment="" />
+		</registry>
+		
+	</option>
 	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<option type="update" from="0.5.0" to="0.6.0">
+		
+		<version main="0" sub="6" bugfix="0" info="alpha" />
+		
+		<nodetypes>
+			<nodetype id="sbIdM:Data" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+			<nodetype id="sbIdM:DataCategory" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+			<nodetype id="sbIdM:DataManagement" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		</nodetypes>
+		
+		<nodetypehierarchy>
+			<parent nodetype="sbSystem:PropertiesView">
+				<child nodetype="sbIdM:DataManagement" />
+				<child nodetype="sbIdM:DataCategory" />
+				<child nodetype="sbIdM:Data" />
+			</parent>
+			<parent nodetype="sbSystem:ListView">
+				<child nodetype="sbIdM:Data" />
+				<child nodetype="sbIdM:DataCategory" />
+				<child nodetype="sbIdM:DataManagement" />
+			</parent>
+			<parent nodetype="sbSystem:RelationsView">
+				<child nodetype="sbIdM:DataCategory" />
+			</parent>
+		</nodetypehierarchy>
+		
+		<properties>
+			<nodetype id="sbIdM:Data">
+				<property name="description" type="STRING" internaltype="text" show="TRUE" labelpath="$locale/sbSystem/labels/description" order="10" />
+			</nodetype>
+			<nodetype id="sbIdM:DataCategory">
+				<property name="description" type="STRING" internaltype="text" show="TRUE" labelpath="$locale/sbSystem/labels/description" order="10" />
+			</nodetype>
+		</properties>
+		
+		<ontology>
+			<relation origin="sbIdM:DataCategory" forward="HasDataOwner" backward="IsDataOwner" destination="sbIdM:OrgRole" />
+		</ontology>
+		
+	</option>
 	
-	<ontology>
-		<relation source="" forward="" backward="" destination="" />
-	</ontology>
+	<option type="uninstall" version="0.5.0">
+		
+		<version action="remove" />
+		
+		<nodetypes action="remove">
+			<nodetype id="sbIdM:Manager" />
+			<nodetype id="sbIdM:OrgRole" />
+			<nodetype id="sbIdM:Person" />
+			<nodetype id="sbIdM:System" />
+			<nodetype id="sbIdM:TechRole" />
+			<nodetype id="sbIdM:TechRoleGroup" />
+		</nodetypes>
+		
+		<registry action="remove">
+			<entry key="sb.idm.display.persons.enabled" />
+		</registry>
+		
+	</option>
 	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<option type="uninstall" version="0.6.0">
+		
+		<version action="remove" />
+		
+		<nodetypes action="remove">
+			<nodetype id="sbIdM:Manager" />
+			<nodetype id="sbIdM:OrgRole" />
+			<nodetype id="sbIdM:Person" />
+			<nodetype id="sbIdM:System" />
+			<nodetype id="sbIdM:TechRole" />
+			<nodetype id="sbIdM:TechRoleGroup" />
+			<nodetype id="sbIdM:Data" />
+			<nodetype id="sbIdM:DataCategory" />
+			<nodetype id="sbIdM:DataManagement" />
+		</nodetypes>
+		
+		<registry action="remove">
+			<entry key="sb.idm.display.persons.enabled" />
+		</registry>
+		
+	</option>
 	
-	<registry>
-		<entry id="sb.idm.display.persons.enabled" type="boolean" internaltype="" userspecific="TRUE" defaultvalue="TRUE" comment="" />
-	</registry>
-	
-</setup>
+</structure>

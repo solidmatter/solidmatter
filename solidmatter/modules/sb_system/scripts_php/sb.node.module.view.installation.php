@@ -31,24 +31,23 @@ class sbView_module_installation extends sbView {
 				break;
 				
 			case 'install':
-				
-				// check if module is already installed
-				
-				// check dependencies
-				
-				// load structure definition
 				$this->nodeSubject->install($_REQUEST->getParam('version'));
 				$this->logEvent(System::MAINTENANCE, 'MODULE_INSTALLED', $this->nodeSubject->getName());
 				
 				$cacheCurrent = CacheFactory::getInstance('repository');
 				$cacheCurrent->clear();
 				$this->logEvent(System::MAINTENANCE, 'CACHE_CLEARED', 'repository');
+				$_RESPONSE->addCommand('reloadTree');
 				
 				break;
 				
 			case 'uninstall':
 				$this->nodeSubject->uninstall();
 				$this->logEvent(System::MAINTENANCE, 'MODULE_UNINSTALLED', $this->nodeSubject->getName());
+				$cacheCurrent = CacheFactory::getInstance('repository');
+				$cacheCurrent->clear();
+				$this->logEvent(System::MAINTENANCE, 'CACHE_CLEARED', 'repository');
+				$_RESPONSE->addCommand('reloadTree');
 				break;
 				
 			case 'checkUpdates':
@@ -62,6 +61,14 @@ class sbView_module_installation extends sbView {
 				// check dependencies
 				
 				// perform sequential actions
+				$this->nodeSubject->update($_REQUEST->getParam('to'));
+				$this->logEvent(System::MAINTENANCE, 'MODULE_UPDATED', $this->nodeSubject->getName());
+				
+				$cacheCurrent = CacheFactory::getInstance('repository');
+				$cacheCurrent->clear();
+				$this->logEvent(System::MAINTENANCE, 'CACHE_CLEARED', 'repository');
+				$_RESPONSE->addCommand('reloadTree');
+				
 				
 				break;
 			
