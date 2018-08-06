@@ -33,12 +33,10 @@ class sbView_module_installation extends sbView {
 			case 'install':
 				$this->nodeSubject->install($_REQUEST->getParam('version'));
 				$this->logEvent(System::MAINTENANCE, 'MODULE_INSTALLED', $this->nodeSubject->getName());
-				
 				$cacheCurrent = CacheFactory::getInstance('repository');
 				$cacheCurrent->clear();
 				$this->logEvent(System::MAINTENANCE, 'CACHE_CLEARED', 'repository');
 				$_RESPONSE->addCommand('reloadTree');
-				
 				break;
 				
 			case 'uninstall':
@@ -51,25 +49,16 @@ class sbView_module_installation extends sbView {
 				break;
 				
 			case 'checkUpdates':
-				
+				throw new LazyBastardException('checkUpdates not yet implemented');
 				break;
 				
 			case 'update':
-				
-				// gather actions over versions
-				
-				// check dependencies
-				
-				// perform sequential actions
 				$this->nodeSubject->update($_REQUEST->getParam('to'));
 				$this->logEvent(System::MAINTENANCE, 'MODULE_UPDATED', $this->nodeSubject->getName());
-				
 				$cacheCurrent = CacheFactory::getInstance('repository');
 				$cacheCurrent->clear();
 				$this->logEvent(System::MAINTENANCE, 'CACHE_CLEARED', 'repository');
 				$_RESPONSE->addCommand('reloadTree');
-				
-				
 				break;
 			
 			default:
@@ -79,7 +68,7 @@ class sbView_module_installation extends sbView {
 		
 		// node info is already included, always add structure info
 		$_RESPONSE->addData($this->nodeSubject->getStructure());
-				
+		
 	}
 	
 }

@@ -266,6 +266,24 @@ $_QUERIES['sbCR/ontology/remove'] = '
 		AND		fk_sourcenodetype = :sourcenodetype
 		AND		fk_targetnodetype = :targetnodetype
 ';
+$_QUERIES['sbCR/lifecycle/save'] = '
+	INSERT IGNORE INTO {TABLE_LIFECYCLE}
+				(
+					fk_nodetype,
+					s_state,
+					s_statetransition
+				) VALUES (
+					:nodetype,
+					:state,
+					:statetransition
+				)
+';
+$_QUERIES['sbCR/lifecycle/remove'] = '
+	DELETE FROM	{TABLE_LIFECYCLE}
+	WHERE		fk_nodetype = :nodetype
+		AND		s_state = :state
+		AND		s_statetransition = :statetransition
+';
 $_QUERIES['sbCR/registry/save'] = '
 	INSERT INTO	{TABLE_REGISTRY}
 				(

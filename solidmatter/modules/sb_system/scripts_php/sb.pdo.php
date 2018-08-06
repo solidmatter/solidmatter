@@ -81,9 +81,7 @@ class sbPDO extends PDO {
 		$sQuery = $_QUERIES[$sID];
 		
 		// apply table mapping
-		$aSearch = array_keys($_QUERIES['MAPPING']);
-		$aReplace = $_QUERIES['MAPPING'];
-		$sQuery = str_replace($aSearch, $aReplace, $sQuery);
+		$sQuery = str_replace(array_keys($_QUERIES['MAPPING']), $_QUERIES['MAPPING'], $sQuery);
 		
 		// apply prefixes
 		$sQuery = $this->rewriteQuery($sQuery);

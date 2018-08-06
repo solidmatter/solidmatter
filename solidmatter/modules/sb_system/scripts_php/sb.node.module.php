@@ -347,6 +347,7 @@ class sbNode_module extends sbNode {
 			}
 		}
 		
+		// ontology/relations
 		if ($elemAction->nodeName == 'ontology' && $elemAction->getAttribute('action') == '') {
 			foreach ($elemAction->getElementsByTagName('relation') as $elemRelation) {
 				$aData = array();
@@ -357,7 +358,8 @@ class sbNode_module extends sbNode {
 				$crRepository->changeRepositoryDefinition('relation', 'add', $aData);
 			}
 		}
-				
+		
+		// registry entries
 		if ($elemAction->nodeName == 'registry' && $elemAction->getAttribute('action') == '') {
 			foreach ($elemAction->getElementsByTagName('entry') as $elemEntry) {
 				$aData = array();
@@ -378,10 +380,14 @@ class sbNode_module extends sbNode {
 			}
 		}
 		
-		// TODO: not yet implemented
+		// lifecycle transitions
 		if ($elemAction->nodeName == 'lifecycles' && $elemAction->getAttribute('action') == '') {
 			foreach ($elemAction->getElementsByTagName('transition') as $elemTransition) {
-				
+				$aData = array();
+				$aData['nodetype'] = $elemTransition->getAttribute('nodetype');
+				$aData['state'] = $elemTransition->getAttribute('sourcestate');
+				$aData['statetransition'] = $elemTransition->getAttribute('targetstate');
+				$crRepository->changeRepositoryDefinition('lifecycle', 'add', $aData);
 			}
 		}
 		

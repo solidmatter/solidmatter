@@ -476,6 +476,22 @@ class sbCR_Repository {
 				}
 				break;
 				
+			case 'lifecycle':
+				if ($sMode == 'add' || $sMode == 'modify') {
+					$stmtAdd = $this->DB->prepareKnown('sbCR/lifecycle/save');
+					$stmtAdd->bindParam('nodetype', $aData['nodetype']);
+					$stmtAdd->bindParam('state', $aData['state']);
+					$stmtAdd->bindParam('statetransition', $aData['statetransition']);
+					$stmtAdd->execute();
+				} else {
+					$stmtRemove = $this->DB->prepareKnown('sbCR/lifecycle/remove');
+					$stmtRemove->bindParam('nodetype', $aData['nodetype']);
+					$stmtRemove->bindParam('state', $aData['state']);
+					$stmtRemove->bindParam('statetransition', $aData['statetransition']);
+					$stmtRemove->execute();
+				}
+				break;
+				
 			case 'registry':
 				if ($sMode == 'add' || $sMode == 'modify') {
 					$stmtAdd = $this->DB->prepareKnown('sbCR/registry/save');
