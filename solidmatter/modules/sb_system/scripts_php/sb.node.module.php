@@ -225,6 +225,18 @@ class sbNode_module extends sbNode {
 		
 		$crRepository = $this->crSession->getRepository();
 		
+		// general SQL statements (must be standalone, can use repository/workspace prefixes)
+		if ($elemAction->nodeName == 'sql') {
+			foreach ($elemAction->getElementsByTagName('statement') as $elemStatement) {
+				global $_QUERIES;
+				$sStatementID = $elemStatement->getAttribute('id');
+				$_QUERIES[$sStatementID] = $elemStatement->textContent;
+				$stmtQuery = $this->crSession->prepareKnown($sStatementID);
+				$stmtQuery->execute();
+				$stmtQuery->closeCursor();
+			}
+		}
+		
 		// nodetypes
 		if ($elemAction->nodeName == 'nodetypes' && $elemAction->getAttribute('action') == '') {
 			foreach ($elemAction->getElementsByTagName('nodetype') as $elemNodetype) {
@@ -293,6 +305,9 @@ class sbNode_module extends sbNode {
 				}
 			}
 		}
+		if ($elemAction->nodeName == 'properties' && $elemAction->getAttribute('action') == 'remove') {
+			throw new LazyBastardException('properties - remove not implemented');
+		}
 		
 		// views
 		if ($elemAction->nodeName == 'views' && $elemAction->getAttribute('action') == '') {
@@ -308,6 +323,9 @@ class sbNode_module extends sbNode {
 				$aData['priority'] = $elemView->getAttribute('priority') ?: 0;
 				$crRepository->changeRepositoryDefinition('view', 'add', $aData);
 			}
+		}
+		if ($elemAction->nodeName == 'views' && $elemAction->getAttribute('action') == 'remove') {
+			throw new LazyBastardException('views - remove not implemented');
 		}
 		
 		// actions
@@ -329,6 +347,43 @@ class sbNode_module extends sbNode {
 				$crRepository->changeRepositoryDefinition('action', 'add', $aData);
 			}
 		}
+		if ($elemAction->nodeName == 'actions' && $elemAction->getAttribute('action') == 'remove') {
+			throw new LazyBastardException('actions - remove not implemented');
+		}
+		
+		// authorisation
+		if ($elemAction->nodeName == 'authorisations' && $elemAction->getAttribute('action') == '') {
+			foreach ($elemAction->getElementsByTagName('nodetype') as $elemNodetype) {
+				$aData = array();
+				$aData['nodetype'] = $elemNodetype->getAttribute('id');
+				foreach ($elemNodetype->getElementsByTagName('auth') as $elemAuth) {
+					$aData['authorisation'] = $elemAuth->getAttribute('id');
+					$aData['parentauthorisation'] = $elemAuth->getAttribute('parentauth');
+					$aData['default'] = $elemAuth->getAttribute('default') ?: 'FALSE';
+					$aData['order'] = $elemAuth->getAttribute('order') ?: 0;
+					$aData['onlyfrontend'] = $elemAuth->getAttribute('onlyfrontend') ?: 'FALSE';
+					$crRepository->changeRepositoryDefinition('authorisation', 'add', $aData);
+				}
+			}
+		}
+		if ($elemAction->nodeName == 'authorisations' && $elemAction->getAttribute('action') == 'remove') {
+			throw new LazyBastardException('authorisations - remove not implemented');
+		}
+		
+		// viewauthorisations
+		if ($elemAction->nodeName == 'viewauthorisations' && $elemAction->getAttribute('action') == '') {
+			foreach ($elemAction->getElementsByTagName('action') as $elemViewAuth) {
+				$aData = array();
+				$aData['nodetype'] = $elemAction->getAttribute('nodetype');
+				$aData['view'] = $elemAction->getAttribute('outputtype');
+				$aData['action'] = $elemAction->getAttribute('stylesheet') ?: NULL;
+				$aData['authorisation'] = $elemAction->getAttribute('mimetype') ?: NULL;
+				$crRepository->changeRepositoryDefinition('viewauthorisation', 'add', $aData);
+			}
+		}
+		if ($elemAction->nodeName == 'viewauthorisations' && $elemAction->getAttribute('action') == 'remove') {
+			throw new LazyBastardException('viewauthorisations - remove not implemented');
+		}
 		
 		// modes
 		if ($elemAction->nodeName == 'modes' && $elemAction->getAttribute('action') == '') {
@@ -346,6 +401,9 @@ class sbNode_module extends sbNode {
 				}
 			}
 		}
+		if ($elemAction->nodeName == 'modes' && $elemAction->getAttribute('action') == 'remove') {
+			throw new LazyBastardException('modes - remove not implemented');
+		}
 		
 		// ontology/relations
 		if ($elemAction->nodeName == 'ontology' && $elemAction->getAttribute('action') == '') {
@@ -357,6 +415,9 @@ class sbNode_module extends sbNode {
 				$aData['targetnodetype'] = $elemRelation->getAttribute('destination');
 				$crRepository->changeRepositoryDefinition('relation', 'add', $aData);
 			}
+		}
+		if ($elemAction->nodeName == 'ontology' && $elemAction->getAttribute('action') == 'remove') {
+			throw new LazyBastardException('ontology - remove not implemented');
 		}
 		
 		// registry entries
@@ -389,6 +450,9 @@ class sbNode_module extends sbNode {
 				$aData['statetransition'] = $elemTransition->getAttribute('targetstate');
 				$crRepository->changeRepositoryDefinition('lifecycle', 'add', $aData);
 			}
+		}
+		if ($elemAction->nodeName == 'lifecycles' && $elemAction->getAttribute('action') == 'remove') {
+			throw new LazyBastardException('liefcycles - remove not implemented');
 		}
 		
 		// change the module itself

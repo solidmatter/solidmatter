@@ -16,7 +16,7 @@
 		</sql>
 		 -->
 		
-		<!-- 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 			class is optional, defaults to "sbNode" on PRIMARY nodetypes or NULL on ABSTRACT nodetypes
 			classfile is optional, defaults to "sbSystem:sb.node" on PRIMARY nodetypes or NULL on ABSTRACT nodetypes
 			type is optional, defaults to PRIMARY
@@ -35,8 +35,9 @@
 			<nodetype id="sbUtilities:Imageprocessing" type="PRIMARY" />
 		</nodetypes>
 		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+			defines the nodetype inheritance, all child nodetypes are assigned the specified parent nodetypes
+		-->
 		<nodetypehierarchy>
 			<parent nodetype="sbSystem:PropertiesView">
 				<child nodetype="sbUtilities:Imagefilter" />
@@ -56,9 +57,7 @@
 			</parent>
 		</nodetypehierarchy>
 	
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<!-- 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 			multiple is deactivated for now, omitted 
 			show is optional, defaults to "TRUE"
 			storagetype is optional, defaults to "EXTERNAL"
@@ -108,17 +107,18 @@
 	<!-- 		</nodetype> -->
 	<!-- 	</properties> -->
 		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+			Defines the possible lifecycle transitions for nodetypes
+			TODO: not in use, has to be implemented for sbCR nodes
+		-->
 		<lifecycles>
 <!-- 			<transitions nodetype="sbCMS:Page"> -->
+<!-- 				<transition sourcestate="open" targetstate="approved" /> -->
 <!-- 				<transition sourcestate="approved" targetstate="published" /> -->
 <!-- 			</transitions> -->
 		</lifecycles>
 		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<!-- 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			labelpath is optional, defaults to NULL
 			order is optional, defaults to NULL
 			priority is optional, defaults to NULL 
@@ -128,9 +128,7 @@
 			<view nodetype="sbUtilities:Imagefilterstack" view="preview" display="TRUE" class="sbView_imagefilterstack_preview" classfile="sbUtilities:sb.node.imagefilterstack.view.preview" order="50" priority="1000" />
 		</views>
 		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<!-- 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 			class & classfile are deactivated for now, omitted
 			stylesheet is optional, defaults to NULL
 			mimetype is optional, defaults to NULL
@@ -144,25 +142,45 @@
 			<action nodetype="sbUtilities:Imagefilterstack" view="preview" action="outputprocessed" default="FALSE" outputtype="STREAM" stylesheet="" mimetype="" uselocale="FALSE" isrecallable="FALSE" />
 		</actions>
 		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+			Defines additional derived authorisation types for nodes.
+			parentauth must always be one of the standard authorisations
+			default is optional, defaults to 'FALSE'
+			oder is optional, defaults to 0
+			onlyfrontend is optional, defaults to 'FALSE'
+		-->
+		<authorisations>
+			<!-- 
+			<nodetype id="sbJukebox:Album">
+				<auth id="play" parentauth="read" />
+				<auth id="download" parentauth="read" />
+				<auth id="comment" parentauth="special" />
+				<auth id="rate" parentauth="special" />
+				<auth id="relate" parentauth="special" />
+				<auth id="tag" parentauth="special" />
+			</nodetype>
+			-->
+		</authorisations>
 		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+		
+		
+		-->
 		<viewauthorisations>
 			<!-- 
 			<nodetype id="sbJukebox:Album">
-				<authorisation view="" action="" authorisation="" />
-				<authorisation view="" action="" authorisation="" />
-				<authorisation view="" action="" authorisation="" />
-				<authorisation view="" action="" authorisation="" />
-				<authorisation view="" action="" authorisation="" />
-				<authorisation view="" action="" authorisation="" />
-			
+				<authorisation view="details" action="download" authorisation="download" />
+				<authorisation view="details" action="buildQuilt" authorisation="read" />
+				<authorisation view="details" action="display" authorisation="read" />
+				<authorisation view="details" action="getCover" authorisation="read" />
+				<authorisation view="details" action="getM3U" authorisation="read" />
 			</nodetype>
 			 -->
 		</viewauthorisations>
 		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<!-- display & choosable is deactivated for now (always TRUE), omitted -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+			display & choosable is deactivated for now (always TRUE), omitted 
+		-->
 		<modes>
 			<mode type="tree">
 				<parent nodetype="sbSystem:Root">

@@ -156,32 +156,35 @@ $_QUERIES['sbCR/action/remove'] = '
 		AND		s_view = :view
 		AND		s_action = :action
 ';
-// $_QUERIES['sbCR/authorisation/save'] = '
-// 	INSERT INTO	{TABLE_AUTHDEF}
-// 				(
-// 					fk_nodetype,
-// 					s_authorisation,
-// 					fk_parentauthorisation,
-// 					b_default,
-// 					n_order,
-// 					b_onlyfrontend
-// 				) VALUES (
-// 					:nodetype,
-// 					:authorisation,
-// 					:parentauthorisation,
-// 					:default,
-// 					:order,
-// 					:onlyfrontend
-// 				)
-// 	ON DUPLICATE KEY UPDATE
+$_QUERIES['sbCR/authorisation/save'] = '
+	INSERT INTO	{TABLE_AUTHDEF}
+				(
+					fk_nodetype,
+					s_authorisation,
+					fk_parentauthorisation,
+					b_default,
+					n_order,
+					b_onlyfrontend
+				) VALUES (
+					:nodetype,
+					:authorisation,
+					:parentauthorisation,
+					:default,
+					:order,
+					:onlyfrontend
+				)
+	ON DUPLICATE KEY UPDATE
+				fk_parentauthorisation = :parentauthorisation,
+				b_default = :default,
+				n_order = :order,
+				b_onlyfrontend = :onlyfrontend
 				
-// ';
-// $_QUERIES['sbCR/authorisation/remove'] = '
-// 	DELETE FROM	{TABLE_AUTHDEF}
-// 	WHERE		fk_nodetype = :nodetype
-// 		AND		s_view = :view
-// 		AND		s_action = :action
-// ';
+';
+$_QUERIES['sbCR/authorisation/remove'] = '
+	DELETE FROM	{TABLE_AUTHDEF}
+	WHERE		fk_nodetype = :nodetype
+		AND		s_authorisation = :authorisation
+';
 $_QUERIES['sbCR/viewauthorisation/save'] = '
 	INSERT INTO	{TABLE_VIEWAUTH}
 				(

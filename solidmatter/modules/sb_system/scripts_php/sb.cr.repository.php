@@ -417,9 +417,8 @@ class sbCR_Repository {
 					$stmtAdd->execute();
 				} else {
 					$stmtRemove = $this->DB->prepareKnown('sbCR/authorisation/remove');
-					$stmtRemove->bindParam('mode', $aData['mode']);
-					$stmtRemove->bindParam('parentnodetype', $aData['parentnodetype']);
-					$stmtRemove->bindParam('childnodetype', $aData['childnodetype']);
+					$stmtAdd->bindParam('nodetype', $aData['nodetype']);
+					$stmtAdd->bindParam('authorisation', $aData['authorisation']);
 					$stmtRemove->execute();
 				}
 				break;
@@ -430,7 +429,7 @@ class sbCR_Repository {
 					$stmtAdd->bindParam('nodetype', $aData['nodetype']);
 					$stmtAdd->bindParam('view', $aData['view']);
 					$stmtAdd->bindParam('action', $aData['action']);
-					$stmtAdd->bindParam('authorisation', $aData['default']);
+					$stmtAdd->bindParam('authorisation', $aData['authorisation']);
 					$stmtAdd->execute();
 				} else {
 					$stmtRemove = $this->DB->prepareKnown('sbCR/viewauthorisation/remove');
