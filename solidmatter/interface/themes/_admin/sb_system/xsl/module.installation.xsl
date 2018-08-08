@@ -65,7 +65,7 @@
 						<tr><td><a href="/sbSystem:Modules::{$master/@name}/installation/install?version={@version}" class="type install highlighted">Install Version <xsl:value-of select="@version" /></a></td></tr>
 					</xsl:when>
 					<xsl:when test="@type = 'install' and $master/@installed = 'TRUE'">
-						<tr><td><a href="/sbSystem:Modules::{$master/@name}/installation/install?version={@version}" class="type install highlighted">Reinstall Version <xsl:value-of select="@version" /></a></td></tr>
+						<tr><td><a href="/sbSystem:Modules::{$master/@name}/installation/install?version={@version}" class="type install highlighted">Reinstall Version <xsl:value-of select="@version" /> &lt;- only for debugging purposes, option will be removed</a></td></tr>
 					</xsl:when>
 					<xsl:when test="@type = 'update' and @from = $master/@version">
 						<tr><td><a href="/sbSystem:Modules::{$master/@name}/installation/update?to={@to}" class="type update highlighted">Update from Version <xsl:value-of select="@from" /> to Version <xsl:value-of select="@to" /></a></td></tr>
