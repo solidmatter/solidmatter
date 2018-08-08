@@ -197,7 +197,7 @@ class System {
 	* @return string the failsafe name
 	*/
 	public static function getFailsafeModuleName(string $sModule) : string {
-		return(strtolower(preg_replace('/([A-Z])/', '_$1', $sModule)));
+		return(strtolower(preg_replace('/([A-Z])/', '_$1', $sModule, 1)));
 	}
 	
 	//--------------------------------------------------------------------------

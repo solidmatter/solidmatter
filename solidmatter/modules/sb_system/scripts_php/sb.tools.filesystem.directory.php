@@ -244,10 +244,10 @@ class sbDirectory extends sbFilesystemObject {
 	//--------------------------------------------------------------------------
 	/**
 	* 
-	* @param 
+	* @param array/string 
 	* @return 
 	*/
-	public function getFile(string $sRelPath) : sbFile {
+	public function getFile($sRelPath) {
 		
 		// fill search array if necessary
 		$aSearch = array();
