@@ -341,7 +341,7 @@ table.default tr:hover, table.default tr:hover td {
 */
 table.default tr td {
 	vertical-align: middle;
-	padding: 2px;
+	padding: 3px;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -522,7 +522,15 @@ a.explorercard img {
 *.make_primary {
 	background-image: url(../icons/make_primary.png);
 }
-
+*.install {
+	background-image: url(../icons/type_install.png);
+}
+*.uninstall {
+	background-image: url(../icons/type_uninstall.png);
+}
+*.update {
+	background-image: url(../icons/type_update.png);
+}
 
 *.sb_tpl_stats {
 	background-image: url(../icons/type_tpl_stats.png);

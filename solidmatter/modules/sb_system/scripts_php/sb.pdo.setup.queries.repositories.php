@@ -17,17 +17,17 @@ $_QUERIES['sbCR/repository/createTables'] = "
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 	
 CREATE TABLE IF NOT EXISTS `{TABLE_MODULES}` (
-  `uuid` char(32) CHARACTER SET ascii NOT NULL,
-  `s_name` varchar(30) NOT NULL,
-  `n_mainversion` int(11) NOT NULL,
-  `n_subversion` int(11) NOT NULL,
-  `n_bugfixversion` int(11) NOT NULL,
-  `s_versioninfo` varchar(20) DEFAULT NULL,
-  `dt_installed` datetime NOT NULL,
-  `dt_updated` datetime NOT NULL,
-  `b_uninstallable` enum('TRUE','FALSE') CHARACTER SET ascii NOT NULL DEFAULT 'TRUE',
-  `b_active` enum('TRUE','FALSE') CHARACTER SET ascii NOT NULL DEFAULT 'FALSE',
-  PRIMARY KEY (`uuid`)
+	`s_name` varchar(30) NOT NULL,
+	`s_title` varchar(50) NOT NULL,
+	`n_mainversion` int(11) NOT NULL,
+	`n_subversion` int(11) NOT NULL,
+	`n_bugfixversion` int(11) NOT NULL,
+	`s_versioninfo` varchar(20) DEFAULT NULL,
+	`dt_installed` datetime NOT NULL,
+	`dt_updated` datetime NOT NULL,
+	`b_uninstallable` enum('TRUE','FALSE') CHARACTER SET ascii NOT NULL DEFAULT 'TRUE',
+	`b_active` enum('TRUE','FALSE') CHARACTER SET ascii NOT NULL DEFAULT 'FALSE',
+	PRIMARY KEY (`s_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	
 CREATE TABLE IF NOT EXISTS `{TABLE_NAMESPACES}` (

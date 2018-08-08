@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <structure>
 	
-	<option type="install" version="0.5.0">
+	<option type="install" version="1.0.0">
 		
-		<version main="0" sub="5" bugfix="0" info="alpha" />
+		<version main="1" sub="0" bugfix="0" info="alpha" />
 		
 		<nodetypes>
 			<nodetype id="sbIdM:Manager" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
@@ -183,9 +183,9 @@
 		
 	</option>
 	
-	<option type="update" from="0.5.0" to="0.6.0">
+	<option type="update" from="1.0.0" to="1.1.0">
 		
-		<version main="0" sub="6" bugfix="0" info="alpha" />
+		<version main="1" sub="1" bugfix="0" info="alpha" />
 		
 		<nodetypes>
 			<nodetype id="sbIdM:Data" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
@@ -224,7 +224,7 @@
 		
 	</option>
 	
-	<option type="uninstall" version="0.5.0">
+	<option type="uninstall" version="1.0.0">
 		
 		<version action="remove" />
 		
@@ -243,7 +243,7 @@
 		
 	</option>
 	
-		<option type="uninstall" version="0.6.0">
+		<option type="uninstall" version="1.1.0">
 		
 		<version action="remove" />
 		

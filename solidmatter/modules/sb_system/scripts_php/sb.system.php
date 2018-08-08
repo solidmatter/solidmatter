@@ -53,6 +53,9 @@ class System {
 	* @return string the system path
 	*/
 	public static function getDir() : string {
+		if (self::$sSystemDirectory == NULL) {
+			self::init();
+		}
 		return (self::$sSystemDirectory);
 	}
 	

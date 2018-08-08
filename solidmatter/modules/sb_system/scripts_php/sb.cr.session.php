@@ -572,8 +572,8 @@ class sbCR_Session {
 						
 						// update moved branch
 						$stmtMoveBranch = $this->prepareKnown('sbCR/node/moveBranch/updateBranch');
-						$stmtMoveBranch->bindValue('old_mpath', $nodeSubject->getMPath(), PDO::PARAM_INT);
-						$stmtMoveBranch->bindValue('new_mpath', $nodeNewParent->getMPath().substr($nodeSubject->getMPath(), -5), PDO::PARAM_INT);
+						$stmtMoveBranch->bindValue('old_mpath', $nodeSubject->getMPath(), PDO::PARAM_STR);
+						$stmtMoveBranch->bindValue('new_mpath', $nodeNewParent->getMPath().substr($nodeSubject->getMPath(), -5), PDO::PARAM_STR);
 						$stmtMoveBranch->bindValue('offset_level', $iOffsetLevel, PDO::PARAM_INT);
 						$stmtMoveBranch->execute();
 						
@@ -583,7 +583,7 @@ class sbCR_Session {
 						$stmtUpdateLink->bindValue('oldparent_uuid', $sOldParentUUID, PDO::PARAM_STR);
 						$stmtUpdateLink->bindValue('subject_uuid', $sSubjectUUID, PDO::PARAM_STR);
 						$stmtUpdateLink->bindValue('order', $iNewOrder, PDO::PARAM_INT);
-						$stmtUpdateLink->bindValue('mpath', $nodeNewParent->getMPath(), PDO::PARAM_INT);
+						$stmtUpdateLink->bindValue('mpath', $nodeNewParent->getMPath(), PDO::PARAM_STR);
 						$stmtUpdateLink->execute();
 					
 					}
