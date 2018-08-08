@@ -4,7 +4,7 @@ global $_QUERIES;
 
 // repository administration ---------------------------------------------------
 
-$_QUERIES['sbCR/workspace/create'] = "
+$_QUERIES['sbCR/workspace/createTables'] = "
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
@@ -156,6 +156,16 @@ CREATE TABLE IF NOT EXISTS `{TABLE_VOTES}` (
   CONSTRAINT `{TABLE_VOTES}_fk_u` FOREIGN KEY (`fk_user`) REFERENCES ``{TABLE_NODES}` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
+CREATE TABLE IF NOT EXISTS `{TABLE_REGISTRY}` (
+  `s_key` varchar(250) NOT NULL,
+  `e_type` enum('string','boolean','integer') NOT NULL DEFAULT 'string',
+  `s_internaltype` varchar(250) DEFAULT NULL,
+  `b_userspecific` enum('TRUE','FALSE') NOT NULL DEFAULT 'FALSE',
+  `s_defaultvalue` varchar(250) NOT NULL,
+  `s_comment` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`s_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=ascii;
+
 CREATE TABLE IF NOT EXISTS `{TABLE_REGVALUES}` (
   `s_key` varchar(250) NOT NULL,
   `fk_user` char(32) NOT NULL,
@@ -205,7 +215,7 @@ CREATE TABLE IF NOT EXISTS `{TABLE_USERS}` (
 
 ";
 
-$_QUERIES['sbCR/inactive'] = "
+$_QUERIES['sbCR/workspace/inactive'] = "
 
 CREATE TABLE IF NOT EXISTS `sb_system_commands` (
   `fk_user` char(32) NOT NULL DEFAULT '',

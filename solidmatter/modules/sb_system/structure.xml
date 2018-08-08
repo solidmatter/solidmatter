@@ -1,58 +1,56 @@
 <?xml version="1.0" ?>
 <structure>
 	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<nodetypes>
-		<nodetype class="" sourcefile="" type="" /> <!-- type: PRIMARY/ABSTRACT -->
-	</nodetypes>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<nodetypehierarchy>
+	<option type="update" from="1.0.0" to="1.1.0" info="install additional test stuff">
 		
-	</nodetypehierarchy>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<properties>
+		<version main="1" sub="1" bugfix="0" info="alpha" />
 		
-	</properties>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<lifecycles>
-		<transition nodetype="" sourcestate="" targetstate="" />
-	</lifecycles>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<views>
+		<nodetypes>
+			<nodetype id="sbSystem:TestNode" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		</nodetypes>
 		
-	</views>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<actions>
+		<nodetypehierarchy>
+			<parent nodetype="sbSystem:PropertiesView">
+				<child nodetype="sbSystem:TestNode" />
+			</parent>
+			<parent nodetype="sbSystem:ListView">
+				<child nodetype="sbSystem:TestNode" />
+			</parent>
+			<parent nodetype="sbSystem:RelationsView">
+				<child nodetype="sbSystem:TestNode" />
+			</parent>
+			<parent nodetype="sbSystem:Taggable">
+				<child nodetype="sbSystem:TestNode" />
+			</parent>
+		</nodetypehierarchy>
 		
-	</actions>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<viewauthorisations>
+		<modes>
+			<mode type="tree">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbSystem:TestNode" />
+				</parent>
+				<parent nodetype="sbSystem:TestNode">
+					<child nodetype="sbSystem:TestNode" />
+				</parent>
+			</mode>
+			<mode type="create">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbSystem:TestNode" />
+				</parent>
+				<parent nodetype="sbSystem:TestNode">
+					<child nodetype="sbSystem:TestNode" />
+				</parent>
+			</mode>
+			<mode type="list">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbSystem:TestNode" />
+				</parent>
+				<parent nodetype="sbSystem:TestNode">
+					<child nodetype="sbSystem:TestNode" />
+				</parent>
+			</mode>
+		</modes>
 		
-	</viewauthorisations>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<modes>
-		<mode type="" parent="" child="" />
-	</modes>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<ontology>
-		<relation source="" forward="" backward="" destination="" />
-	</ontology>
+	</option>
 	
 </structure>

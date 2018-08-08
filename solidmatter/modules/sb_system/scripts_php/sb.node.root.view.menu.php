@@ -49,6 +49,8 @@ class sbView_root_menu extends sbView {
 			$sParentPath = substr($sQuery, 0, strrpos($sQuery, '/'));
 			$nodePathParent = $this->crSession->getNode($sParentPath);
 			$nodeRealParent = $nodeCurrentRoot->getParent();
+			DEBUG('Parent:'.$nodePathParent->getIdentifier().' Child:'.$nodeRealParent->getIdentifier(), DEBUG::NODE);
+			
 			if (!$nodePathParent->isSame($nodeRealParent)) {
 				$sPrimary = 'FALSE';
 			}

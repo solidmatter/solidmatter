@@ -1,4 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sbProjects>
 	
+	<nodetypes>
+		<type id="sbProjects:Project">Project</type>
+		<type id="sbProjects:TaskGroup">Task Group</type>
+		<type id="sbProjects:RfC">Request for Change</type>
+		<type id="sbProjects:Product">Product</type>
+	</nodetypes>
+	
+	<RfC>
+		<approvement>Genehmigung</approvement>
+		<approvement_details>Details der Genehmigung</approvement_details>
+		<status>Status</status>
+		<classification>Klassifikation</classification>
+		<origin>Ursprung der Änderung</origin>
+		<nature>Art des Änderung</nature>
+		<type>Typ</type>
+		<priority>Prorität</priority>
+		<benefit>Nutzen</benefit>
+		<benefit_remarks>Nutzen (Anmerkungen)</benefit_remarks>
+		<risk>Risiken</risk>
+		<risk_remarks>Risiken (Anmerkungen)</risk_remarks>
+		<effort>Aufwand</effort>
+		<effort_remarks>Aufwand (Anmerkungen)</effort_remarks>
+		<decision_remarks>Entscheidung (Anmerkungen)</decision_remarks>
+		<resubmission>Wiedervorlage</resubmission>
+		<warning>Warnung</warning>
+		<due>Fertigstellung</due>
+		<hyperlink_req>Link zu Anforderungen</hyperlink_req>
+		<hyperlink_spec>Link zur Spezifikation</hyperlink_spec>
+		<hyperlink_other>Weiterer Link</hyperlink_other>
+		<pir>Post Implementation Review</pir>
+	</RfC>
+	
 </sbProjects>

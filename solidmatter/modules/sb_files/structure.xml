@@ -1,0 +1,187 @@
+<?xml version="1.0" ?>
+<structure>
+	
+	<option type="install" version="1.0.0">
+		
+		<version main="1" sub="0" bugfix="0" info="alpha" />
+		
+		<nodetypes>
+			<nodetype id="sbFiles:Filemanager" class="sbNode_filemanager" classfile="sbFiles:sb.node.filemanager" type="PRIMARY" />
+			<nodetype id="sbFiles:AutoFolder" class="sbNode_autofolder" classfile="sbFiles:sb.node.autofolder" type="PRIMARY" />
+			<nodetype id="sbFiles:Folder" class="sbNode_folder" classfile="sbFiles:sb.node.folder" type="PRIMARY" />
+			<nodetype id="sbFiles:Asset" type="PRIMARY" />
+			<nodetype id="sbFiles:Image" type="PRIMARY" />
+			<nodetype id="sbFiles:ThumbnailView" type="ABSTRACT" />
+		</nodetypes>
+				
+		<views>
+			<view nodetype="sbFiles:Asset" view="render" display="FALSE" labelpath="" class="sbView_asset_render" classfile="sbFiles:sb.node.asset.view.render" order="" priority="0" />
+			<view nodetype="sbFiles:AutoFolder" view="maintenance" display="TRUE" labelpath="" class="sbView_autofolder_maintenance" classfile="sbFiles:sb.node.autofolder.view.maintenance" order="" priority="0" />
+			<view nodetype="sbFiles:Folder" view="upload" display="TRUE" labelpath="" class="sbView_folder_upload" classfile="sbFiles:sb.node.folder.view.upload" order="3" priority="100" />
+			<view nodetype="sbFiles:Image" view="preview" display="TRUE" labelpath="" class="sbView_image_preview" classfile="sbFiles:sb.node.image.view.preview" order="1" priority="0" />
+			<view nodetype="sbFiles:Image" view="render" display="FALSE" labelpath="" class="sbView_asset_render" classfile="sbFiles:sb.node.asset.view.render" order="" priority="1000" />
+			<view nodetype="sbFiles:ThumbnailView" view="thumbnails" display="TRUE" labelpath="" class="sbView_list" classfile="sbSystem:sb.node.view.list" order="0" priority="0" />
+		</views>
+		
+		<actions>
+			<action nodetype="sbFiles:Asset" view="render" action="onthefly" default="TRUE" outputtype="STREAM" />
+			<action nodetype="sbFiles:AutoFolder" view="maintenance" action="check" outputtype="RENDERED" stylesheet="sb_files:autofolder.maintenance.xsl" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbFiles:AutoFolder" view="maintenance" action="clear" outputtype="RENDERED" stylesheet="sb_files:autofolder.maintenance.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbFiles:AutoFolder" view="maintenance" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_files:autofolder.maintenance.xsl" mimetype="" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbFiles:AutoFolder" view="maintenance" action="update" outputtype="RENDERED" stylesheet="sb_files:autofolder.maintenance.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbFiles:Folder" view="upload" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_files:folder.upload.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbFiles:Folder" view="upload" action="send" outputtype="RENDERED" stylesheet="sb_files:folder.upload.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbFiles:Image" view="preview" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_files:image.preview.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbFiles:Image" view="preview" action="output" outputtype="STREAM" />
+			<action nodetype="sbFiles:Image" view="preview" action="outputresized" outputtype="STREAM" />
+			<action nodetype="sbFiles:Image" view="render" action="onthefly" default="TRUE" outputtype="STREAM" />
+			<action nodetype="sbFiles:ThumbnailView" view="thumbnails" action="display" default="FALSE" outputtype="RENDERED" stylesheet="sb_system:node.properties.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+		</actions>
+		
+		<properties>
+			<nodetype id="sbFiles:Asset">
+				<property name="properties_content" type="BINARY" internaltype="" show="FALSE" order="0" />
+				<property name="properties_mimetype" type="STRING" internaltype="string" show="TRUE" order="0"/>
+				<property name="properties_size" type="LONG" internaltype="integer" show="FALSE" order="0"/>
+			</nodetype>
+			<nodetype id="sbFiles:AutoFolder">
+				<property name="config_realfolder" type="STRING" internaltype="string;minlength=1;maxlength=250;" show="TRUE" labelpath="$locale/sbFiles/AutoFolder/config_realfolder/@label" order="1" />
+				<property name="last_update" type="DATE" internaltype="datetime" show="TRUE" labelpath="$locale/sbFiles/AutoFolder/last_update/@label" order="0" />
+			</nodetype>
+			<nodetype id="sbFiles:Folder">
+				<property name="properties_description" type="STRING" internaltype="string" show="TRUE" labelpath="$locale/sbSystem/labels/description" order="0" />
+				<property name="security_requireauthorisation" type="BOOLEAN" internaltype="checkbox" show="TRUE" labelpath="$locale/sbFiles/Folder/security_requireauthorisation/@label" order="1" />
+				<property name="security_authuser" type="STRING" internaltype="string" show="TRUE" labelpath="$locale/sbSystem/labels/username" order="2" />
+				<property name="security_authpasswort" type="STRING" internaltype="string" show="TRUE" labelpath="$locale/sbSystem/labels/password" order="3" />
+				<property name="config_types_allowed" type="STRING" internaltype="text;rows=4" show="TRUE" labelpath="$locale/sbFiles/Folder/config_types_allowed/@label" order="5" />
+				<property name="config_listingallowed" type="BOOLEAN" internaltype="checkbox" show="TRUE" labelpath="$locale/sbFiles/Folder/config_listingallowed/@label" order="6" />
+			</nodetype>
+			<nodetype id="sbFiles:Image">
+				<property name="config_filterstack" type="WEAKREFERENCE" internaltype="nodeselector;mode=chooseImagefilterstack;nodetype=sbUtilities:Imagefilterstack" show="TRUE" labelpath="$locale/sbFiles/Image/config_filterstack/@label" order="1" />
+				<property name="properties_mimetype" type="STRING" internaltype="string" show="TRUE" labelpath="$locale/sbSystem/labels/mimetype" order="0" />
+				<property name="properties_size" type="LONG" internaltype="integer" show="FALSE" />
+				<property name="properties_xsize" type="LONG" internaltype="integer" show="FALSE" />
+				<property name="properties_ysize" type="LONG" internaltype="integer" show="FALSE" />
+			</nodetype>
+		</properties>
+		
+		<nodetypehierarchy>
+			<parent nodetype="sbSystem:PropertiesView">
+				<child nodetype="sbFiles:Image" />
+				<child nodetype="sbFiles:Folder" />
+				<child nodetype="sbFiles:Asset" />
+				<child nodetype="sbFiles:Filemanager" />
+				<child nodetype="sbFiles:AutoFolder" />
+			</parent>
+			<parent nodetype="sbSystem:ListView">
+				<child nodetype="sbFiles:Folder" />
+				<child nodetype="sbFiles:Filemanager" />
+				<child nodetype="sbFiles:AutoFolder" />
+			</parent>
+			<parent nodetype="sbSystem:Taggable">
+				<child nodetype="sbFiles:Asset" />
+				<child nodetype="sbFiles:Image" />
+				<child nodetype="sbFiles:Folder" />
+			</parent>
+			<parent nodetype="sbFiles:ThumbnailView">
+				<child nodetype="sbFiles:Folder" />
+				<child nodetype="sbFiles:AutoFolder" />
+			</parent>
+		</nodetypehierarchy>
+		
+		<modes>
+			<mode type="tree">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbFiles:Filemanager" />
+				</parent>
+				<parent nodetype="sbFiles:Filemanager">
+					<child nodetype="sbFiles:AutoFolder" />
+					<child nodetype="sbFiles:Folder" />
+				</parent>
+				<parent nodetype="sbFiles:Folder">
+					<child nodetype="sbFiles:Folder" />
+					<child nodetype="sbFiles:AutoFolder" />
+				</parent>
+				<parent nodetype="sbFiles:AutoFolder">
+					<child nodetype="sbFiles:Folder" />
+				</parent>
+			</mode>
+			<mode type="create">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbFiles:Filemanager" />
+				</parent>
+				<parent nodetype="sbFiles:Filemanager">
+					<child nodetype="sbFiles:AutoFolder" />
+					<child nodetype="sbFiles:Folder" />
+				</parent>
+				<parent nodetype="sbFiles:Folder">
+					<child nodetype="sbFiles:Folder" />
+					<child nodetype="sbFiles:AutoFolder" />
+				</parent>
+				<parent nodetype="sbFiles:AutoFolder">
+					<child nodetype="sbFiles:Folder" />
+				</parent>
+			</mode>
+			<mode type="list">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbFiles:Filemanager" />
+				</parent>
+				<parent nodetype="sbFiles:Filemanager">
+					<child nodetype="sbFiles:AutoFolder" />
+					<child nodetype="sbFiles:Folder" />
+				</parent>
+				<parent nodetype="sbFiles:Folder">
+					<child nodetype="sbFiles:Folder" />
+					<child nodetype="sbFiles:AutoFolder" />
+					<child nodetype="sbFiles:Asset" />
+					<child nodetype="sbFiles:Image" />
+				</parent>
+				<parent nodetype="sbFiles:AutoFolder">
+					<child nodetype="sbFiles:Asset" />
+					<child nodetype="sbFiles:Image" />
+				</parent>
+			</mode>
+			<mode type="chooseImage">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbFiles:Filemanager" />
+				</parent>
+				<parent nodetype="sbFiles:Filemanager">
+					<child nodetype="sbFiles:Folder" />
+				</parent>
+				<parent nodetype="sbFiles:Folder">
+					<child nodetype="sbFiles:Folder" />
+					<child nodetype="sbFiles:Image" />
+				</parent>
+			</mode>
+		</modes>
+		
+		<viewauthorisations>
+		</viewauthorisations>
+		
+		<lifecycles>
+		</lifecycles>
+
+		<ontology>
+		</ontology>
+		
+		<registry>
+		</registry>
+		
+	</option>
+	
+	<option type="uninstall" version="1.0.0">
+		
+		<version action="remove" />
+		
+		<nodetypes action="remove">
+			<nodetype id="sbFiles:Filemanager" />
+			<nodetype id="sbFiles:AutoFolder" />
+			<nodetype id="sbFiles:Folder" />
+			<nodetype id="sbFiles:Asset" />
+			<nodetype id="sbFiles:Image" />
+			<nodetype id="sbFiles:ThumbnailView" />
+		</nodetypes>
+		
+	</option>
+	
+</structure>

@@ -1390,7 +1390,8 @@ $_QUERIES['sbSystem/node/recoverFromTrash'] = '
 //------------------------------------------------------------------------------
 
 $_QUERIES['sbSystem/module/loadProperties/auxiliary'] = '
-	SELECT		n_mainversion,
+	SELECT		s_title,
+				n_mainversion,
 				n_subversion,
 				n_bugfixversion,
 				s_versioninfo,
@@ -1399,12 +1400,14 @@ $_QUERIES['sbSystem/module/loadProperties/auxiliary'] = '
 				b_uninstallable,
 				b_active
 	FROM		{TABLE_MODULES}
-	WHERE		uuid = :node_id
+	WHERE		s_name = :name
 	
 ';
 $_QUERIES['sbSystem/module/saveProperties/auxiliary'] = '
 	INSERT INTO	{TABLE_MODULES}
 				(
+					s_name,
+					s_title,
 					n_mainversion,
 					n_subversion,
 					n_bugfixversion,
@@ -1412,9 +1415,10 @@ $_QUERIES['sbSystem/module/saveProperties/auxiliary'] = '
 					dt_installed,
 					dt_updated,
 					b_uninstallable,
-					b_active,
-					uuid
+					b_active
 				) VALUES (
+					:name,
+					:title,
 					:version_main,
 					:version_sub,
 					:version_bugfix,
@@ -1422,10 +1426,10 @@ $_QUERIES['sbSystem/module/saveProperties/auxiliary'] = '
 					:info_installedon,
 					:info_lastupdate,
 					:info_uninstallable,
-					:config_active,
-					:node_id
+					:config_active
 				)
 	ON DUPLICATE KEY UPDATE
+				s_title = :title
 				n_mainversion = :version_main,
 				n_subversion = :version_sub,
 				n_bugfixversion = :version_bugfix,

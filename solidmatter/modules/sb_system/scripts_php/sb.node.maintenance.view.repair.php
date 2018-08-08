@@ -126,7 +126,7 @@ class sbView_maintenance_repair extends sbView {
 			$stmtSetCoordinates->bindParam('fk_parent', $sCurrentUUID, PDO::PARAM_STR);
 			$stmtSetCoordinates->bindParam('level', $iLevel, PDO::PARAM_INT);
 			$stmtSetCoordinates->bindParam('order', $iOrder, PDO::PARAM_INT);
-			$stmtSetCoordinates->bindParam('mpath', $sMPath, PDO::PARAM_INT);
+			$stmtSetCoordinates->bindParam('mpath', $sMPath, PDO::PARAM_STR);
 			$stmtSetCoordinates->execute();
 			$iOrder++;
 		}

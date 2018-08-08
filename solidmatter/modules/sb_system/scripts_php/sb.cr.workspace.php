@@ -103,7 +103,17 @@ class sbCR_Workspace {
 	public function getName() {
 		return ($this->sWorkspaceName);
 	}
-	      
+	
+	//--------------------------------------------------------------------------
+	/**
+	 * Returns the workspace database table prefix.
+	 * @param
+	 * @return
+	 */
+	public function getPrefix() {
+		return ($this->sWorkspacePrefix);
+	}
+	
 	//--------------------------------------------------------------------------
 	/**
 	*  Returns the NamespaceRegistry object, which is used to access information
@@ -160,11 +170,11 @@ class sbCR_Workspace {
 	* @return 
 	*/
 	public function getQueryManager() {
-		if (is_null($this->crQueryManager)) {
-			import('sb.cr.querymanager');
-			$this->crQueryManager = new sbCR_QueryManager($this->crSession);
-		}
-		return ($this->crQueryManager);
+// 		if (is_null($this->crQueryManager)) {
+// 			import('sb.cr.querymanager');
+// 			$this->crQueryManager = new sbCR_QueryManager($this->crSession);
+// 		}
+// 		return ($this->crQueryManager);
 	}
 	      
 	//--------------------------------------------------------------------------

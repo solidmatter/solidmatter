@@ -87,6 +87,8 @@ abstract class DEBUG {
 	const REDIRECT		= CONFIG::DEBUG['REDIRECT'];
 	const EXCEPTIONS	= CONFIG::DEBUG['EXCEPTIONS'];
 	const PDO			= CONFIG::DEBUG['PDO'];
+	const SBCR			= CONFIG::DEBUG['SBCR'];
+	const CACHES		= CONFIG::DEBUG['CACHES'];
 	
 	protected static $aTimes = array();
 	
@@ -109,12 +111,12 @@ abstract class DEBUG {
 * @return 
 */
 function DEBUG(string $sText, bool $bInUse = FALSE) {
+	static $oLogger = NULL;
 	if (DEBUG::ENABLED && ($bInUse || DEBUG::LOG_ALL)) {
-		static $oDebugger = NULL;
-		if (!$oDebugger) {
-			$oDebugger = new Logger($_SERVER['REQUEST_URI'], 'debug.txt');
+		if (!$oLogger) {
+			$oLogger = new Logger($_SERVER['REQUEST_URI'], 'debug.txt');
 		}
-		$oDebugger->addText($sText);
+		$oLogger->addText($sText);
 	}
 }
 
@@ -321,14 +323,17 @@ function base64url_decode($sInput) {
 * @param 
 * @return 
 */
-function var_dumpp($mVar) {
+function var_dumpp($mVar, string $sTitle = NULL) {
 	echo '<pre>';
+	if ($sTitle != NULL) {
+		echo '<b>'.$sTitle.':</b> ';
+	}
 	var_dump($mVar);
 	echo '</pre>';
 }
 
-function var_dumppp($mVar) {
-	var_dumpp($mVar);
+function var_dumppp($mVar, string $sTitle = NULL) {
+	var_dumpp($mVar, $sTitle);
 	die();
 }
 

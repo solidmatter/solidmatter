@@ -1,0 +1,127 @@
+<?xml version="1.0" ?>
+<structure>
+	
+	<option type="install" version="1.0.0">
+		
+		<version main="1" sub="0" bugfix="0" info="alpha" />
+		
+		<nodetypes>
+			<nodetype id="sbPortal:Portal" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+			<nodetype id="sbPortal:Page" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+			<nodetype id="sbPortal:Content" class="sbNode" classfile="sbSystem:sb.node" type="PRIMARY" />
+		</nodetypes>
+	
+		<nodetypehierarchy>
+			<parent nodetype="sbSystem:PropertiesView">
+				<child nodetype="sbPortal:Portal" />
+				<child nodetype="sbPortal:Page" />
+				<child nodetype="sbPortal:Content" />
+			</parent>
+			<parent nodetype="sbSystem:ListView">
+				<child nodetype="sbPortal:Portal" />
+				<child nodetype="sbPortal:Page" />
+			</parent>
+		</nodetypehierarchy>
+	
+		<properties>
+			<nodetype id="sbPortal:Content">
+				<property name="url" type="STRING" internaltype="string;maxlength=250;" show="TRUE" labelpath="$locale/sbSystem/labels/url" order="0" />
+				<property name="width" type="STRING" internaltype="string;maxlength=10;" show="TRUE" labelpath="$locale/sbSystem/labels/width" order="1" />
+				<property name="height" type="STRING" internaltype="string;maxlength=10;" show="TRUE" labelpath="$locale/sbSystem/labels/height" order="2" />
+				<property name="description" type="STRING" internaltype="text" show="TRUE" labelpath="$locale/sbSystem/labels/description" order="§" />
+			</nodetype>
+		</properties>
+		
+		<views>
+			<view nodetype="sbPortal:Page" view="contents" display="FALSE" labelpath="" class="sbView_portal_portal_contents" classfile="sbPortal:sb.node.portal.view.contents" order="" priority="1000" />
+			<view nodetype="sbPortal:Portal" view="contents" display="FALSE" labelpath="" class="sbView_portal_portal_contents" classfile="sbPortal:sb.node.portal.view.contents" order="" priority="1000" />
+			<view nodetype="sbPortal:Portal" view="login" display="FALSE" labelpath="" class="sbView_root_login" classfile="sbSystem:sb.node.root.view.login" order="" priority="0" />
+		</views>
+		
+		<actions>
+			<action nodetype="sbPortal:Page" view="contents" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_portal:portal.contents.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbPortal:Portal" view="contents" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_portal:portal.contents.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbPortal:Portal" view="login" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_portal:root.login.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbPortal:Portal" view="login" action="getCaptcha" default="FALSE" outputtype="STREAM" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbPortal:Portal" view="login" action="login" default="FALSE" outputtype="RENDERED" stylesheet="sb_portal:root.login.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbPortal:Portal" view="login" action="logout" default="FALSE" outputtype="RENDERED" stylesheet="sb_portal:root.login.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+		</actions>
+		
+		<viewauthorisations>
+		</viewauthorisations>
+		
+		<modes>
+			<mode type="tree">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbPortal:Portal" />
+				</parent>
+				<parent nodetype="sbPortal:Portal">
+					<child nodetype="sbPortal:Page" />
+				</parent>
+				<parent nodetype="sbPortal:Page">
+					<child nodetype="sbPortal:Page" />
+				</parent>
+			</mode>
+			<mode type="create">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbPortal:Portal" />
+				</parent>
+				<parent nodetype="sbPortal:Portal">
+					<child nodetype="sbPortal:Page" />
+				</parent>
+				<parent nodetype="sbPortal:Page">
+					<child nodetype="sbPortal:Page" />
+					<child nodetype="sbPortal:Content" />
+				</parent>
+			</mode>
+			<mode type="list">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbPortal:Portal" />
+				</parent>
+				<parent nodetype="sbPortal:Portal">
+					<child nodetype="sbPortal:Page" />
+				</parent>
+				<parent nodetype="sbPortal:Page">
+					<child nodetype="sbPortal:Page" />
+					<child nodetype="sbPortal:Content" />
+				</parent>
+			</mode>
+			<mode type="menu">
+				<parent nodetype="sbPortal:Portal">
+					<child nodetype="sbPortal:Page" />
+				</parent>
+				<parent nodetype="sbPortal:Page">
+					<child nodetype="sbPortal:Page" />
+				</parent>
+			</mode>
+			<mode type="content">
+				<parent nodetype="sbPortal:Page">
+					<child nodetype="sbPortal:Content" />
+				</parent>
+			</mode>
+		</modes>
+		
+		<lifecycles>
+		</lifecycles>
+		
+		<ontology>
+		</ontology>
+		
+		<registry>
+		</registry>
+		
+	</option>
+	
+	<option type="uninstall" version="1.0.0">
+		
+		<version action="remove" />
+		
+		<nodetypes action="remove">
+			<nodetype id="sbPortal:Portal" />
+			<nodetype id="sbPortal:Page" />
+			<nodetype id="sbPortal:Content" />
+		</nodetypes>
+		
+	</option>
+	
+</structure>

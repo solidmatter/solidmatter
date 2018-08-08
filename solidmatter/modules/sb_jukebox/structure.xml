@@ -1,0 +1,649 @@
+<?xml version="1.0" ?>
+<structure>
+
+	<option type="install" version="1.0.0">
+		
+		<version main="1" sub="0" bugfix="0" info="alpha" />
+		
+		<sql>
+			<statement id="sbJukebox/createTables">
+				
+				CREATE TABLE `{PREFIX_WORKSPACE}_jukebox_albums` (
+					`uuid` CHAR(32) NOT NULL COLLATE 'ascii_general_ci',
+					`s_title` VARCHAR(100) NOT NULL,
+					`fk_artist` CHAR(32) NOT NULL,
+					`fk_albumartist` CHAR(32) NULL DEFAULT NULL COLLATE 'ascii_general_ci',
+					`n_published` SMALLINT(4) NULL DEFAULT NULL,
+					`n_cdsinset` TINYINT(4) NULL DEFAULT NULL,
+					`b_coverexists` ENUM('TRUE','FALSE') NOT NULL DEFAULT 'FALSE' COLLATE 'ascii_general_ci',
+					`s_coverfilename` VARCHAR(50) NULL DEFAULT NULL,
+					`n_coverhue` SMALLINT(6) NULL DEFAULT NULL,
+					`n_coversaturation` SMALLINT(6) NULL DEFAULT NULL,
+					`n_coverlightness` SMALLINT(6) NULL DEFAULT NULL,
+					`n_coverentropy` SMALLINT(6) NULL DEFAULT NULL,
+					`s_relpath` VARCHAR(250) NOT NULL,
+					`s_abspath` VARCHAR(250) NULL DEFAULT NULL,
+					`e_type` ENUM('DEFAULT','LIVE','FAKE','BOOTLEG','SINGLE','MAXI','BESTOF','TRIBUTE','REMIXES') NOT NULL DEFAULT 'DEFAULT' COLLATE 'ascii_general_ci',
+					`e_defects` ENUM('NONE','LOW_BITRATE','BAD_QUALITY','INCOMPLETE','CD_MISSING') NOT NULL DEFAULT 'NONE' COLLATE 'ascii_general_ci',
+					PRIMARY KEY (`uuid`),
+					CONSTRAINT `{PREFIX_WORKSPACE}_jukebox_albums_fk_n` FOREIGN KEY (`uuid`) REFERENCES `{PREFIX_WORKSPACE}_system_nodes` (`uuid`) ON UPDATE CASCADE ON DELETE CASCADE
+				)
+				COLLATE='utf8_general_ci'
+				ENGINE=InnoDB;
+				
+				CREATE TABLE `{PREFIX_WORKSPACE}_jukebox_tracks` (
+					`uuid` CHAR(32) NOT NULL COLLATE 'ascii_general_ci',
+					`s_filename` VARCHAR(250) NOT NULL,
+					`fk_artist` CHAR(32) NULL DEFAULT NULL COLLATE 'ascii_general_ci',
+					`fk_album` CHAR(32) NULL DEFAULT NULL COLLATE 'ascii_general_ci',
+					`s_title` VARCHAR(100) NOT NULL,
+					`n_index` SMALLINT(5) NOT NULL,
+					`n_published` SMALLINT(4) NOT NULL,
+					`s_mode` VARCHAR(10) NOT NULL,
+					`n_playtime` SMALLINT(6) NOT NULL,
+					`s_playtime` VARCHAR(10) NOT NULL,
+					`n_bitrate` MEDIUMINT(6) NOT NULL,
+					PRIMARY KEY (`uuid`),
+					INDEX `fk_artist` (`fk_artist`),
+					CONSTRAINT `{PREFIX_WORKSPACE}_jukebox_tracks_fk_an` FOREIGN KEY (`fk_artist`) REFERENCES `{PREFIX_WORKSPACE}_system_nodes` (`uuid`) ON UPDATE CASCADE ON DELETE SET NULL,
+					CONSTRAINT `{PREFIX_WORKSPACE}_jukebox_tracks_fk_tn` FOREIGN KEY (`uuid`) REFERENCES `{PREFIX_WORKSPACE}_system_nodes` (`uuid`) ON UPDATE CASCADE ON DELETE CASCADE
+				)
+				COLLATE='utf8_general_ci'
+				ENGINE=InnoDB;
+				
+				CREATE TABLE `{PREFIX_WORKSPACE}_jukebox_history_albums` (
+					`fk_user` CHAR(32) NOT NULL,
+					`fk_album` CHAR(32) NOT NULL,
+					`dt_played` DATETIME NOT NULL,
+					PRIMARY KEY (`fk_album`),
+					INDEX `jbtest` (`fk_album`),
+					CONSTRAINT `{PREFIX_WORKSPACE}_jukebox_history_albums_fk_n` FOREIGN KEY (`fk_album`) REFERENCES `{PREFIX_WORKSPACE}_system_nodes` (`uuid`) ON UPDATE CASCADE ON DELETE CASCADE
+				)
+				COLLATE='ascii_general_ci'
+				ENGINE=InnoDB;
+				
+				CREATE TABLE `{PREFIX_WORKSPACE}_jukebox_history_tracks` (
+					`fk_user` CHAR(32) NOT NULL,
+					`fk_track` CHAR(32) NOT NULL,
+					`dt_played` DATETIME NOT NULL,
+					`n_playtime` SMALLINT(6) NOT NULL,
+					PRIMARY KEY (`fk_user`, `fk_track`, `dt_played`),
+					INDEX `{PREFIX_WORKSPACE}_jh_fk1` (`fk_track`),
+					CONSTRAINT `{PREFIX_WORKSPACE}_jukebox_history_tracks_fk_n` FOREIGN KEY (`fk_track`) REFERENCES `{PREFIX_WORKSPACE}_jukebox_tracks` (`uuid`) ON UPDATE CASCADE ON DELETE CASCADE
+				)
+				COLLATE='ascii_general_ci'
+				ENGINE=InnoDB;
+				
+				CREATE TABLE `{PREFIX_WORKSPACE}_jukebox_nowplaying` (
+					`fk_user` CHAR(32) NOT NULL,
+					`fk_track` CHAR(32) NOT NULL,
+					`dt_played` DATETIME NOT NULL,
+					`n_playtime` SMALLINT(6) NOT NULL,
+					PRIMARY KEY (`fk_user`)
+				)
+				COLLATE='ascii_general_ci'
+				ENGINE=MEMORY;
+				
+				CREATE TABLE `{PREFIX_WORKSPACE}_jukebox_tokens` (
+					`fk_user` CHAR(32) NOT NULL COLLATE 'ascii_general_ci',
+					`s_token` CHAR(32) NOT NULL COLLATE 'ascii_general_ci',
+					`dt_activated` DATETIME NOT NULL,
+					`n_lifespan` INT(11) NOT NULL,
+					PRIMARY KEY (`fk_user`),
+					UNIQUE INDEX `{PREFIX_WORKSPACE}_jbt_tokens` (`s_token`),
+					CONSTRAINT `{PREFIX_WORKSPACE}_jukebox_tokens_fk_n` FOREIGN KEY (`fk_user`) REFERENCES `{PREFIX_WORKSPACE}_system_nodes` (`uuid`) ON UPDATE CASCADE ON DELETE CASCADE
+				)
+				COLLATE='latin1_general_ci'
+				ENGINE=InnoDB;
+				
+			</statement>
+		</sql>
+		
+		<nodetypes>
+			
+			<nodetype id="sbJukebox:Jukebox" class="sbNode_jukebox_jukebox" classfile="sbJukebox:sb.jukebox.node.jukebox" type="PRIMARY" />
+			<nodetype id="sbJukebox:Artist" class="sbNode_jukebox_artist" classfile="sbJukebox:sb.jukebox.node.artist" type="PRIMARY" />
+			<nodetype id="sbJukebox:Album" class="sbNode_jukebox_album" classfile="sbJukebox:sb.jukebox.node.album" type="PRIMARY" />
+			<nodetype id="sbJukebox:CD" type="PRIMARY" />
+			<nodetype id="sbJukebox:Track" class="sbNode_jukebox_track" classfile="sbJukebox:sb.jukebox.node.track" type="PRIMARY" />
+			<nodetype id="sbJukebox:Playlist" class="sbNode_jukebox_playlist" classfile="sbJukebox:sb.jukebox.node.playlist" type="PRIMARY" />
+			<nodetype id="sbJukebox:Recommendation" type="PRIMARY" />
+			
+			<nodetype id="sbJukebox:PlaylistView" type="ABSTRACT" />
+			<nodetype id="sbJukebox:MaintenanceView" type="ABSTRACT" />
+			<nodetype id="sbJukebox:FixView" type="ABSTRACT" />
+			<nodetype id="sbJukebox:MusicDimensions" type="ABSTRACT" />
+			<nodetype id="sbJukebox:VotesView" type="ABSTRACT" />
+			<nodetype id="sbJukebox:RecommendView" type="ABSTRACT" />
+			
+<!-- 			<nodetype id="sbJukebox:TPL_Favorites" class="sbNode" sourcefile="sbJukebox:sb.jukebox.node.tpl_favorites" type="PRIMARY" /> -->
+<!-- 			<nodetype id="sbJukebox:TPL_MostHeard" class="sbNode" sourcefile="sbJukebox:sb.jukebox.node.tpl_mostheard" type="PRIMARY" /> -->
+<!-- 			<nodetype id="sbJukebox:TPL_NowPlaying" class="sbNode" sourcefile="sbJukebox:sb.jukebox.node.tpl_nowplaying" type="PRIMARY" /> -->
+<!-- 			<nodetype id="sbJukebox:TPL_TopRated" class="sbNode" sourcefile="sbJukebox:sb.jukebox.node.tpl_toprated" type="PRIMARY" /> -->
+			
+		</nodetypes>
+
+		<nodetypehierarchy>
+			<parent nodetype="sbSystem:PropertiesView">
+				<child nodetype="sbJukebox:Album" />
+				<child nodetype="sbJukebox:Artist" />
+				<child nodetype="sbJukebox:Jukebox" />
+				<child nodetype="sbJukebox:Playlist" />
+				<child nodetype="sbJukebox:Recommendation" />
+				<child nodetype="sbJukebox:Track" />
+			</parent>
+			<parent nodetype="sbJukebox:PlaylistView">
+				<child nodetype="sbJukebox:Jukebox" />
+				<child nodetype="sbJukebox:Artist" />
+				<child nodetype="sbJukebox:Album" />
+				<child nodetype="sbJukebox:Track" />
+				<child nodetype="sbJukebox:Playlist" />
+			</parent>
+			<parent nodetype="sbJukebox:FixView">
+				<child nodetype="sbJukebox:Album" />
+				<child nodetype="sbJukebox:Artist" />
+				<child nodetype="sbJukebox:Track" />
+			</parent>
+			<parent nodetype="sbJukebox:RecommendView">
+				<child nodetype="sbJukebox:Album" />
+				<child nodetype="sbJukebox:Artist" />
+				<child nodetype="sbJukebox:Track" />
+			</parent>
+			<parent nodetype="sbJukebox:VotesView">
+				<child nodetype="sbJukebox:Album" />
+				<child nodetype="sbJukebox:Artist" />
+				<child nodetype="sbJukebox:Playlist" />
+				<child nodetype="sbJukebox:Track" />
+			</parent>
+			<parent nodetype="sbSystem:Taggable">
+				<child nodetype="sbJukebox:Album" />
+				<child nodetype="sbJukebox:Artist" />
+				<child nodetype="sbJukebox:Playlist" />
+				<child nodetype="sbJukebox:Track" />
+			</parent>
+<!-- 			<parent nodetype="sbSystem:RelationsView"> -->
+<!-- 				<child nodetype="xxxxxxxxxxx" /> -->
+<!-- 			</parent> -->
+		</nodetypehierarchy>
+		
+		<properties>
+			<nodetype id="sbJukebox:Jukebox">
+				<property order="100" name="config_islocked" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbJukebox/Jukebox/config_islocked" />
+				<property order="200" name="config_description" type="STRING" internaltype="text" labelpath="$locale/sbJukebox/Jukebox/config_description" />
+				<property order="300" name="config_sourcepath" type="STRING" internaltype="string;minlength=1;maxlength=250" labelpath="$locale/sbJukebox/Jukebox/config_sourcepath" />
+				<property order="400" name="config_checkpath" type="STRING" internaltype="string;minlength=1;maxlength=250" labelpath="$locale/sbJukebox/Jukebox/config_checkpath" />
+				<property order="500" name="config_userealpath" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbJukebox/Jukebox/config_userealpath" />
+				<property order="600" name="config_realpath" type="STRING" internaltype="string;minlength=1;maxlength=250" labelpath="$locale/sbJukebox/Jukebox/config_realpath" />
+				<property order="700" name="config_relyonmp3year" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbJukebox/Jukebox/config_relyonmp3year" />
+			</nodetype>
+			<nodetype id="sbJukebox:Album">
+				<property order="100" name="info_title" type="STRING" internaltype="string" labelpath="$locale/sbJukebox/Album/info_title" storagetype="AUXILIARY" auxname="s_title" />
+				<property order="200" name="info_artist" type="REFERENCE" internaltype="select" labelpath="$locale/sbJukebox/Album/info_artist" storagetype="AUXILIARY" auxname="fk_artist" />
+				<property order="300" name="info_published" type="LONG" internaltype="integer;minvalue=1000;maxvalue=3000" labelpath="$locale/sbJukebox/Album/info_published" storagetype="AUXILIARY" auxname="n_published" />
+				<property order="400" name="info_type" type="STRING" internaltype="select;options=DEFAULT|LIVE|SINGLE|MAXI|BESTOF|BOOTLEG|REMIXES|TRIBUTE" labelpath="$locale/sbJukebox/Album/info_type" storagetype="AUXILIARY" auxname="e_type" />
+				<property order="500" name="info_relpath" type="STRING" internaltype="string;minlength=1;maxlength=250;size=100" labelpath="$locale/sbJukebox/Album/info_relpath" storagetype="AUXILIARY" auxname="s_relpath" />
+				<property order="600" name="info_abspath" type="STRING" internaltype="string;minlength=1;maxlength=250;size=100" labelpath="$locale/sbJukebox/Album/info_abspath" storagetype="AUXILIARY" auxname="s_abspath" />
+				<property order="700" name="info_coverexists" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbJukebox/Album/info_coverexists" storagetype="AUXILIARY" auxname="b_coverexists" />
+				<property order="750" name="info_coverfilename" type="STRING" internaltype="string;minlength=0;maxlength=250" labelpath="$locale/sbJukebox/Album/info_coverfilename" storagetype="AUXILIARY" auxname="s_coverfilename" />
+				<property name="ext_coverhue" type="LONG" internaltype="integer" labelpath="$locale/sbJukebox/Album/ext_coverhue" show="FALSE" storagetype="AUXILIARY" auxname="n_coverhue" />
+				<property name="ext_coverentropy" type="LONG" internaltype="integer" labelpath="$locale/sbJukebox/Album/ext_coverentropy" show="FALSE" storagetype="AUXILIARY" auxname="n_coverentropy" />
+				<property name="ext_coverlightness" type="LONG" internaltype="integer" labelpath="$locale/sbJukebox/Album/ext_coverlightness" show="FALSE" storagetype="AUXILIARY" auxname="n_coverlightness" />
+				<property name="ext_coversaturation" type="LONG" internaltype="integer" labelpath="$locale/sbJukebox/Album/ext_coversaturation" show="FALSE" storagetype="AUXILIARY" auxname="n_coversaturation" />
+			</nodetype>
+			<nodetype id="sbJukebox:Track">
+				<property order="100" name="info_title" type="STRING" internaltype="string" labelpath="$locale/sbJukebox/Track/info_title" storagetype="AUXILIARY" auxname="s_title" />
+				<property order="200" name="info_artist" type="REFERENCE" internaltype="select" labelpath="$locale/sbJukebox/Track/info_artist" storagetype="AUXILIARY" auxname="fk_artist" />
+				<property order="300" name="info_index" type="LONG" internaltype="integer;minvalue=0;maxvalue=500" labelpath="$locale/sbJukebox/Track/info_index" storagetype="AUXILIARY" auxname="n_index" />
+				<property order="400" name="info_filename" type="STRING" internaltype="string;minlength=1;maxlength=250" labelpath="$locale/sbJukebox/Track/info_filename" storagetype="AUXILIARY" auxname="s_filename" />
+				<property order="500" name="info_fullpath" type="STRING" internaltype="string" labelpath="$locale/sbJukebox/Track/info_fullpath" storagetype="AUXILIARY" auxname="s_fullpath" />
+				<property order="600" name="info_playtime" type="STRING" internaltype="string;minlength=4;maxlength=8" labelpath="$locale/sbJukebox/Track/info_playtime" storagetype="AUXILIARY" auxname="s_playtime" />
+				<property order="700" name="info_published" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbJukebox/Track/info_published" storagetype="AUXILIARY" auxname="n_published" />
+				<property order="800" name="enc_mode" type="STRING" internaltype="string;minlength=3;maxlength=3" labelpath="$locale/sbJukebox/Track/enc_mode" storagetype="AUXILIARY" auxname="s_mode" />
+				<property order="810" name="enc_bitrate" type="LONG" internaltype="string" labelpath="$locale/sbJukebox/Track/enc_bitrate" storagetype="AUXILIARY" auxname="n_bitrate" />
+				<property order="820" name="enc_playtime" type="LONG" internaltype="integer;minvalue=1;maxvalue=18000" labelpath="$locale/sbJukebox/Track/enc_playtime" storagetype="AUXILIARY" auxname="n_playtime" />
+				<property order="900" name="info_lyrics" type="STRING" internaltype="text;rows=30;maxlength=10000" labelpath="$locale/sbJukebox/Track/info_lyrics" />
+			</nodetype>
+			<nodetype id="sbJukebox:Artist">
+				<property order="100" name="songkick_id" type="STRING" internaltype="string;minlength=0;maxlength=20" labelpath="$locale/sbJukebox/Artist/songkick_id" />
+			</nodetype>
+			<nodetype id="sbJukebox:Recommendation">
+				<property order="100" name="subject" type="WEAKREFERENCE" internaltype="string" labelpath="$locale/sbJukebox/Recommendation/subject" />
+				<property order="200" name="comment" type="STRING" internaltype="text" labelpath="$locale/system/general/labels/comment" />
+			</nodetype>
+		</properties>
+		
+		<lifecycles>
+			<transition nodetype="sbJukebox:Album" sourcestate="default" targetstate="review" />
+			<transition nodetype="sbJukebox:Album" sourcestate="review" targetstate="default" />
+		</lifecycles>
+		
+		<views>
+			<view nodetype="sbJukebox:Album" view="details" display="TRUE" labelpath="" class="sbView_jukebox_album_details" classfile="sbJukebox:sb.jukebox.node.album.view.details" priority="1000" />
+			<view nodetype="sbJukebox:Artist" view="concerts" display="TRUE" labelpath="" class="sbView_jukebox_artist_concerts" classfile="sbJukebox:sb.jukebox.node.artist.view.concerts" order="60" priority="100" />
+			<view nodetype="sbJukebox:Artist" view="details" display="TRUE" labelpath="" class="sbView_jukebox_artist_details" classfile="sbJukebox:sb.jukebox.node.artist.view.details" order="50" priority="1000" />
+			<view nodetype="sbJukebox:FixView" view="fix" display="FALSE" labelpath="" class="sbView_jukebox_various_fix" classfile="sbJukebox:sb.jukebox.node.various.view.fix" priority="0" />
+			<view nodetype="sbJukebox:Jukebox" view="administration" display="TRUE" labelpath="" class="sbView_jukebox_jukebox_administration" classfile="sbJukebox:sb.jukebox.node.jukebox.view.administration" order="50" priority="0" />
+			<view nodetype="sbJukebox:Jukebox" view="albums" display="FALSE" labelpath="" class="sbView_jukebox_jukebox_albums" classfile="sbJukebox:sb.jukebox.node.jukebox.view.albums" order="0" priority="0" />
+			<view nodetype="sbJukebox:Jukebox" view="artists" display="FALSE" labelpath="" class="sbView_jukebox_jukebox_artists" classfile="sbJukebox:sb.jukebox.node.jukebox.view.artists" order="0" priority="0" />
+<!-- 			<view nodetype="sbJukebox:Jukebox" view="blacklist" display="FALSE" labelpath="" class="sbView_jukebox_jukebox_blacklist" classfile="sbJukebox:sb.jukebox.node.jukebox.view.blacklist" order="0" priority="0" /> -->
+			<view nodetype="sbJukebox:Jukebox" view="charts" display="FALSE" labelpath="" class="sbView_jukebox_jukebox_charts" classfile="sbJukebox:sb.jukebox.node.jukebox.view.charts" order="0" priority="0" />
+			<view nodetype="sbJukebox:Jukebox" view="config" display="FALSE" labelpath="" class="sbView_jukebox_jukebox_config" classfile="sbJukebox:sb.jukebox.node.jukebox.view.config" order="0" priority="0" />
+			<view nodetype="sbJukebox:Jukebox" view="favorites" display="FALSE" labelpath="" class="sbView_jukebox_jukebox_favorites" classfile="sbJukebox:sb.jukebox.node.jukebox.view.favorites" order="0" priority="0" />
+			<view nodetype="sbJukebox:Jukebox" view="library" display="FALSE" labelpath="" class="sbView_jukebox_jukebox_library" classfile="sbJukebox:sb.jukebox.node.jukebox.view.library" order="50" priority="1000" />
+			<view nodetype="sbJukebox:Jukebox" view="login" display="FALSE" labelpath="" class="sbView_root_login" classfile="sbSystem:sb.node.root.view.login" order="0" priority="0" />
+			<view nodetype="sbJukebox:Jukebox" view="playlists" display="FALSE" labelpath="" class="sbView_jukebox_jukebox_playlists" classfile="sbJukebox:sb.jukebox.node.jukebox.view.playlists" order="0" priority="0" />
+			<view nodetype="sbJukebox:Jukebox" view="tags" display="FALSE" labelpath="" class="sbView_jukebox_jukebox_tags" classfile="sbJukebox:sb.jukebox.node.jukebox.view.tags" order="0" priority="0" />
+			<view nodetype="sbJukebox:Playlist" view="details" display="TRUE" labelpath="" class="sbView_jukebox_playlist_details" classfile="sbJukebox:sb.jukebox.node.playlist.view.details" order="0" priority="1000" />
+			<view nodetype="sbJukebox:Track" view="details" display="TRUE" labelpath="" class="sbView_jukebox_track_details" classfile="sbJukebox:sb.jukebox.node.track.view.details" order="50" priority="1000" />
+			<view nodetype="sbJukebox:Recommendation" view="actions" display="FALSE" labelpath="" class="sbView_message_actions" classfile="sbSystem:sb.node.message.view.actions" order="0" priority="0" />
+			<view nodetype="sbJukebox:MaintenanceView" view="maintenance" display="FALSE" labelpath="" class="sbView_jukebox_various_fix" classfile="sbJukebox:sb.jukebox.node.various.view.fix" order="0" priority="0" />
+			<view nodetype="sbJukebox:PlaylistView" view="playlist" display="FALSE" labelpath="" class="sbView_jukebox_various_playlist" classfile="sbJukebox:sb.jukebox.node.various.view.playlist" order="0" priority="0" />
+			<view nodetype="sbJukebox:RecommendView" view="recommend" display="FALSE" labelpath="" class="sbView_jukebox_various_communication" classfile="sbJukebox:sb.jukebox.node.various.view.communication" order="0" priority="0" />
+			<view nodetype="sbJukebox:VotesView" view="votes" display="FALSE" labelpath="" class="sbView_jukebox_various_votes" classfile="sbJukebox:sb.jukebox.node.various.view.votes" order="0" priority="0" />
+		</views>
+		
+		<actions>
+			
+			<action nodetype="sbJukebox:Album" view="details" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:album.details.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Album" view="details" action="buildQuilt" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:album.details.quilt.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Album" view="details" action="displayInline" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:album.details.display_inline.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Album" view="details" action="download" default="FALSE" outputtype="STREAM" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Album" view="details" action="getCover" default="FALSE" outputtype="STREAM" uselocale="FALSE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:Artist" view="concerts" action="linkToSongkick" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Artist" view="concerts" action="overview" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:artist.concerts.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Artist" view="concerts" action="searchArtistOnSongkick" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:artist.concerts.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Artist" view="concerts" action="searchConcertsOnSongkick" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:artist.concerts.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Artist" view="details" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:artist.details.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			
+			<action nodetype="sbJukebox:Jukebox" view="administration" action="info" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.administration.info.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Jukebox" view="administration" action="clearLibrary" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.administration.info.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Jukebox" view="administration" action="clearQuilts" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.administration.info.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Jukebox" view="administration" action="clearSongkickIDs" default="FALSE" outputtype="STREAM" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Jukebox" view="administration" action="findSongkickIDs" default="FALSE" outputtype="STREAM" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Jukebox" view="administration" action="removeUGC" default="FALSE" outputtype="STREAM" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Jukebox" view="administration" action="startImport" default="FALSE" outputtype="STREAM" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Jukebox" view="administration" action="storeUGC" default="FALSE" outputtype="STREAM" uselocale="FALSE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:Jukebox" view="albums" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.albums.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Jukebox" view="albums" action="search" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.albums.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			
+			<action nodetype="sbJukebox:Jukebox" view="artists" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.artists.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Jukebox" view="artists" action="search" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.artists.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			
+<!-- 			<action nodetype="sbJukebox:Jukebox" view="blacklist" action="addItem" default="FALSE" outputtype="RENDERED" stylesheet="sb_system:node.properties.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" /> -->
+<!-- 			<action nodetype="sbJukebox:Jukebox" view="blacklist" action="display" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.blacklist.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" /> -->
+			
+			<action nodetype="sbJukebox:Jukebox" view="charts" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.charts.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Jukebox" view="charts" action="changePivot" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:Jukebox" view="config" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.config.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Jukebox" view="config" action="savePassword" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.config.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Jukebox" view="config" action="saveSettings" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.config.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:Jukebox" view="favorites" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.favorites.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Jukebox" view="favorites" action="addItem" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.favorites.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Jukebox" view="favorites" action="removeItem" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.favorites.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:Jukebox" view="library" action="info" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.library.info.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Jukebox" view="library" action="displayCoverWall" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.library.displayCoverWall.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Jukebox" view="library" action="openPlayer" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.library.openPlayer.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Jukebox" view="library" action="search" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.library.search.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			
+			<action nodetype="sbJukebox:Jukebox" view="login" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:root.login.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Jukebox" view="login" action="getCaptcha" default="FALSE" outputtype="STREAM" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Jukebox" view="login" action="login" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:root.login.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Jukebox" view="login" action="logout" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:root.login.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Jukebox" view="login" action="success" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:root.login.success.xsl" mimetype="text/html" uselocale="FALSE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:Jukebox" view="playlists" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.playlists.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Jukebox" view="playlists" action="create" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.playlists.create.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:Jukebox" view="tags" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.tags.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Jukebox" view="tags" action="changeWeighting" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Jukebox" view="tags" action="listItems" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:jukebox.tags.listItems.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:Playlist" view="details" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:playlist.details.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Playlist" view="details" action="activate" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Playlist" view="details" action="addItem" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Playlist" view="details" action="clear" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Playlist" view="details" action="copyItems" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Playlist" view="details" action="importM3U" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Playlist" view="details" action="moveItems" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Playlist" view="details" action="orderBefore" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Playlist" view="details" action="remove" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Playlist" view="details" action="removeItem" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Playlist" view="details" action="removeItems" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:Playlist" view="details" action="download" default="FALSE" outputtype="STREAM" uselocale="FALSE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:FixView" view="fix" action="showOptions" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:various.fix.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:FixView" view="fix" action="delete" default="FALSE" outputtype="HEADERS" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:FixView" view="fix" action="fix" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:various.fix.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:MaintenanceView" view="maintenance" action="details" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:various.maintenance.details.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:PlaylistView" view="playlist" action="getM3U" default="FALSE" outputtype="STREAM" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:PlaylistView" view="playlist" action="openPlayer" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:various.playlist.openPlayer.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:Recommendation" view="actions" action="remove" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:RecommendView" view="recommend" action="newRecommendation" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:various.communication.recommend.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:RecommendView" view="recommend" action="sendRecommendation" default="FALSE" outputtype="HEADERS" uselocale="TRUE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:Track" view="details" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_jukebox:track.details.display.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbJukebox:Track" view="details" action="getCover" default="FALSE" outputtype="STREAM" uselocale="FALSE" isrecallable="FALSE" />
+			
+			<action nodetype="sbJukebox:VotesView" view="votes" action="showDetails" default="FALSE" outputtype="RENDERED" stylesheet="sb_jukebox:various.votes.details.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:VotesView" view="votes" action="addComment" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:VotesView" view="votes" action="addRelation" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:VotesView" view="votes" action="addTag" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:VotesView" view="votes" action="getTags" default="FALSE" outputtype="STREAM" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:VotesView" view="votes" action="getTargets" default="FALSE" outputtype="STREAM" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:VotesView" view="votes" action="placeVote" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:VotesView" view="votes" action="removeAllVotes" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:VotesView" view="votes" action="removeComment" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:VotesView" view="votes" action="removeRelation" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:VotesView" view="votes" action="removeTag" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:VotesView" view="votes" action="removeVote" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+			<action nodetype="sbJukebox:VotesView" view="votes" action="saveLyrics" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" />
+<!-- 			<action nodetype="sbJukebox:VotesView" view="votes" action="addToBlacklist" default="FALSE" outputtype="HEADERS" uselocale="FALSE" isrecallable="FALSE" /> -->
+			
+		</actions>
+		
+		<authorisations>
+			<nodetype id="sbJukebox:Album">
+				<auth id="play" parentauth="read" />
+				<auth id="download" parentauth="read" />
+				<auth id="comment" parentauth="special" />
+				<auth id="rate" parentauth="special" />
+				<auth id="relate" parentauth="special" />
+				<auth id="tag" parentauth="special" />
+			</nodetype>
+			<nodetype id="sbJukebox:Artist">
+				<auth id="download" parentauth="read" />
+				<auth id="comment" parentauth="special" />
+				<auth id="rate" parentauth="special" />
+				<auth id="relate" parentauth="special" />
+				<auth id="tag" parentauth="special" />
+			</nodetype>
+			<nodetype id="sbJukebox:Jukebox">
+				<auth id="add_playlists" parentauth="write" />
+				<auth id="clear_library" parentauth="write" />
+				<auth id="comment" parentauth="special" />
+				<auth id="download" parentauth="write" />
+				<auth id="edit_lyrics" parentauth="special" />
+				<auth id="play" parentauth="read" />
+				<auth id="rate" parentauth="special" />
+				<auth id="relate" parentauth="special" />
+				<auth id="start_import" parentauth="write" />
+				<auth id="tag" parentauth="special" />
+			</nodetype>
+			<nodetype id="sbJukebox:Playlist">
+				<auth id="add_titles" parentauth="write" />
+				<auth id="comment" parentauth="special" />
+				<auth id="download" parentauth="read" />
+				<auth id="play" parentauth="read" />
+				<auth id="rate" parentauth="special" />
+				<auth id="tag" parentauth="special" />
+			</nodetype>
+			<nodetype id="sbJukebox:Track">
+				<auth id="comment" parentauth="special" />
+				<auth id="edit_lyrics" parentauth="special" />
+				<auth id="play" parentauth="read" />
+				<auth id="rate" parentauth="special" />
+				<auth id="relate" parentauth="special" />
+				<auth id="tag" parentauth="special" />
+			</nodetype>
+		</authorisations>
+		
+		<viewauthorisations>
+			<nodetype id="sbJukebox:Album">
+				<authorisation view="details" action="download" authorisation="download" />
+				<authorisation view="details" action="buildQuilt" authorisation="read" />
+				<authorisation view="details" action="display" authorisation="read" />
+				<authorisation view="details" action="getCover" authorisation="read" />
+				<authorisation view="details" action="getM3U" authorisation="read" />
+			</nodetype>
+			<nodetype id="sbJukebox:Artist">
+				<authorisation view="details" action="display" authorisation="read" />
+				<authorisation view="details" action="getM3U" authorisation="read" />
+			</nodetype>
+			<nodetype id="sbJukebox:Jukebox">
+				<authorisation view="albums" action="display" authorisation="read" />
+				<authorisation view="albums" action="search" authorisation="read" />
+				<authorisation view="artists" action="display" authorisation="read" />
+				<authorisation view="artists" action="search" authorisation="read" />
+				<authorisation view="charts" action="display" authorisation="read" />
+				<authorisation view="charts" action="changePivot" authorisation="read" />
+				<authorisation view="library" action="display" authorisation="read" />
+				<authorisation view="administration" action="clearLibrary" authorisation="write" />
+				<authorisation view="administration" action="clearQuilts" authorisation="write" />
+				<authorisation view="administration" action="info" authorisation="write" />
+				<authorisation view="administration" action="startImport" authorisation="write" />
+			</nodetype>
+			<nodetype id="sbJukebox:Playlist">
+				<authorisation view="details" action="activate" authorisation="add_titles" />
+				<authorisation view="details" action="addItem" authorisation="add_titles" />
+				<authorisation view="details" action="display" authorisation="read" />
+				<authorisation view="details" action="getM3U" authorisation="read" />
+				<authorisation view="details" action="orderBefore" authorisation="write" />
+				<authorisation view="details" action="removeItem" authorisation="write" />
+			</nodetype>
+		</viewauthorisations>
+		
+		<modes>
+			<mode type="tree">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbJukebox:Jukebox" />
+				</parent>
+				<parent nodetype="sbJukebox:Jukebox">
+					<child nodetype="sbJukebox:Playlist" />
+				</parent>
+			</mode>
+			<mode type="list">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbJukebox:Jukebox" />
+				</parent>
+				<parent nodetype="sbJukebox:Jukebox">
+					<child nodetype="sbJukebox:Album" />
+				</parent>
+				<parent nodetype="sbJukebox:Album">
+					<child nodetype="sbJukebox:Track" />
+				</parent>
+				<parent nodetype="sbJukebox:Playlist">
+					<child nodetype="sbJukebox:Track" />
+				</parent>
+			</mode>
+			<mode type="create">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbJukebox:Jukebox" />
+				</parent>
+				<parent nodetype="sbJukebox:Jukebox">
+					<child nodetype="sbJukebox:Playlist" />
+				</parent>
+<!-- 				<parent nodetype="sbCMS:Site"> -->
+<!-- 					<child nodetype="sbJukebox:Jukebox" /> -->
+<!-- 				</parent> -->
+<!-- 				<parent nodetype="sbCMS:Layout"> -->
+<!-- 					<child nodetype="sbJukebox:TPL_Favorites" /> -->
+<!-- 					<child nodetype="sbJukebox:TPL_MostHeard" /> -->
+<!-- 					<child nodetype="sbJukebox:TPL_NowPlaying" /> -->
+<!-- 					<child nodetype="sbJukebox:TPL_TopRated" /> -->
+<!-- 				</parent> -->
+			</mode>
+			<mode type="playlist">
+				<parent nodetype="sbJukebox:Artist">
+					<child nodetype="sbJukebox:Album" />
+				</parent>
+				<parent nodetype="sbJukebox:Album">
+					<child nodetype="sbJukebox:Track" />
+				</parent>
+				<parent nodetype="sbJukebox:Playlist">
+					<child nodetype="sbJukebox:Artist" />
+					<child nodetype="sbJukebox:Album" />
+					<child nodetype="sbJukebox:Track" />
+					<child nodetype="sbJukebox:Playlist" />
+				</parent>
+			</mode>
+			<mode type="playlists">
+				<parent nodetype="sbJukebox:Jukebox">
+					<child nodetype="sbJukebox:Playlist" />
+				</parent>
+			</mode>
+			<mode type="storeUGC">
+				<parent nodetype="sbJukebox:Jukebox">
+					<child nodetype="sbJukebox:Artist" />
+				</parent>
+				<parent nodetype="sbJukebox:Artist">
+					<child nodetype="sbJukebox:Album" />
+				</parent>
+				<parent nodetype="sbJukebox:Album">
+					<child nodetype="sbJukebox:Track" />
+				</parent>
+			</mode>
+			<mode type="chooseArtist">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbJukebox:Jukebox" />
+				</parent>
+				<parent nodetype="sbJukebox:Jukebox">
+					<child nodetype="sbJukebox:Artist" />
+				</parent>
+			</mode>
+		</modes>
+		
+<!-- "albums"	"sbJukebox:Artist"	"sbJukebox:Album"	"TRUE"	"TRUE" -->
+<!-- "artists"	"sbJukebox:Jukebox"	"sbJukebox:Artist"	"TRUE"	"TRUE" -->
+<!-- "play"	"sbJukebox:Album"	"sbJukebox:Track"	"TRUE"	"TRUE" -->
+<!-- "play"	"sbJukebox:Playlist"	"sbJukebox:Track"	"TRUE"	"TRUE" -->
+<!-- "recommendations"	"sbSystem:Inbox"	"sbJukebox:Recommendation"	"TRUE"	"TRUE" -->
+<!-- "tracks"	"sbJukebox:Album"	"sbJukebox:Track"	"TRUE"	"TRUE" -->
+<!-- "tracks"	"sbJukebox:Playlist"	"sbJukebox:Track"	"TRUE"	"TRUE" -->
+
+		<ontology>
+			<relation origin="sbJukebox:Album" forward="YouMightAlsoLike" destination="sbJukebox:Album" backward="YouMightAlsoLike" />
+			<relation origin="sbJukebox:Album" forward="IsRemixOf" destination="sbJukebox:Album" backward="IsOriginalTo" />
+			<relation origin="sbJukebox:Album" forward="CouldBeFrom" destination="sbJukebox:Artist" backward="CouldHaveDone"/>
+			<relation origin="sbJukebox:Artist" forward="YouMightAlsoLike" destination="sbJukebox:Artist" backward="YouMightAlsoLike" />
+			<relation origin="sbJukebox:Artist" forward="YouMightAlsoLike" destination="sbJukebox:Album" backward="YouMightAlsoLike" />
+			<relation origin="sbJukebox:Artist" forward="SoundsLike" destination="sbJukebox:Artist" backward="SoundsLike" />
+			<relation origin="sbJukebox:Artist" forward="SharesMembersWith" destination="sbJukebox:Artist" backward="SharesMembersWith" />
+			<relation origin="sbJukebox:Artist" forward="HasMixed" destination="sbJukebox:Album" backward="MixedBy" />
+			<relation origin="sbJukebox:Artist" forward="IsSynonymOf" destination="sbJukebox:Artist" backward="IsSynonymOf" />
+			<relation origin="sbJukebox:Artist" forward="IsSuccessorOf" destination="sbJukebox:Artist" backward="IsPredecessorTo" />
+			<relation origin="sbJukebox:Artist" forward="HasRemixed" destination="sbJukebox:Track" backward="RemixedBy" />
+			<relation origin="sbJukebox:Artist" forward="IsPseudonymOf" destination="sbJukebox:Artist" backward="IsRealNameOf" />
+			<relation origin="sbJukebox:Artist" forward="IsMemberOf" destination="sbJukebox:Artist" backward="HasMember" />
+			<relation origin="sbJukebox:Track" forward="IsRemixOf" destination="sbJukebox:Track" backward="IsOriginalTo" />
+			<relation origin="sbJukebox:Track" forward="IsCoverOf" destination="sbJukebox:Track" backward="IsReferenceTo" />
+		</ontology>
+		
+		<registry>
+			<entry key="sb.jukebox.adminmode.enabled" 				type="boolean" internaltype="" userspecific="TRUE" defaultvalue="FALSE" comment="" />
+			<entry key="sb.jukebox.api.enabled" 					type="boolean" internaltype="" userspecific="FALSE" defaultvalue="FALSE" comment="" />
+			<entry key="sb.jukebox.cache.images.enabled" 			type="boolean" internaltype="" userspecific="FALSE" defaultvalue="TRUE" comment="" />
+			<entry key="sb.jukebox.charts.amount.default" 			type="integer" internaltype="integer;minvalue=1;maxvalue=100" userspecific="TRUE" defaultvalue="5" comment="how many entries should be displayed for the various chart lists" />
+			<entry key="sb.jukebox.charts.amount.expanded" 			type="integer" internaltype="integer;minvalue=10;maxvalue=1000" userspecific="TRUE" defaultvalue="100" comment="" />
+			<entry key="sb.jukebox.charts.pivot.default" 			type="string" internaltype="select;options=SELF|AVERAGE" userspecific="TRUE" defaultvalue="AVERAGE" comment="determines if a user sees the own or the average votes after login" />
+			<entry key="sb.jukebox.comments.enabled" 				type="boolean" internaltype="" userspecific="FALSE" defaultvalue="TRUE" comment="" />
+			<entry key="sb.jukebox.comments.perpage" 				type="integer" internaltype="" userspecific="TRUE" defaultvalue="10" comment="unused" />
+			<entry key="sb.jukebox.downloads.maxbandwidth" 			type="integer" internaltype="integer;minvalue=1;maxvalue=10000" userspecific="FALSE" defaultvalue="100" comment="KiloBYTE/s" />
+			<entry key="sb.jukebox.history.albums.threshold" 		type="integer" internaltype="integer;minvalue=1;maxvalue=40320" userspecific="FALSE" defaultvalue="1440" comment="minutes that an album ist prevented from being refreshed in recently played albums" />
+			<entry key="sb.jukebox.history.tracks.threshold" 		type="integer" internaltype="integer;minvalue=1;maxvalue=3600" userspecific="FALSE" defaultvalue="60" comment="seconds that a track must have played to be played" />
+			<entry key="sb.jukebox.latestalbums.amount.default" 	type="integer" internaltype="integer;minvalue=1;maxvalue=100" userspecific="TRUE" defaultvalue="8" comment="" />
+			<entry key="sb.jukebox.latestalbums.amount.expanded" 	type="integer" internaltype="integer;minvalue=10;maxvalue=1000" userspecific="TRUE" defaultvalue="32" comment="" />
+			<entry key="sb.jukebox.latestcomments.amount.default" 	type="integer" internaltype="integer;minvalue=1;maxvalue=100" userspecific="TRUE" defaultvalue="5" comment="" />
+			<entry key="sb.jukebox.latestcomments.amount.expanded" 	type="integer" internaltype="integer;minvalue=10;maxvalue=1000" userspecific="TRUE" defaultvalue="50" comment="" />
+			<entry key="sb.jukebox.nowplaying.refresh" 				type="integer" internaltype="" userspecific="FALSE" defaultvalue="30" comment="unused" />
+			<entry key="sb.jukebox.paths.albums.useabspath" 		type="boolean" internaltype="" userspecific="FALSE" defaultvalue="FALSE" comment="" />
+			<entry key="sb.jukebox.player.type" 					type="string" internaltype="select;options=HTML5|EXTERNAL" userspecific="TRUE" defaultvalue="HTML5" comment="" />
+			<entry key="sb.jukebox.quilts.coveramount" 				type="integer" internaltype="integer;minvalue=2;maxvalue=100" userspecific="FALSE" defaultvalue="15" comment="" />
+			<entry key="sb.jukebox.quilts.coversize" 				type="integer" internaltype="integer;minvalue=10;maxvalue=100" userspecific="FALSE" defaultvalue="32" comment="" />
+			<entry key="sb.jukebox.quilts.numsamples" 				type="integer" internaltype="integer;minvalue=10;maxvalue=2000" userspecific="FALSE" defaultvalue="500" comment="" />
+			<entry key="sb.jukebox.randomalbums.amount.default" 	type="integer" internaltype="integer;minvalue=1;maxvalue=100" userspecific="TRUE" defaultvalue="10" comment="" />
+			<entry key="sb.jukebox.randomartists.amount.default" 	type="integer" internaltype="integer;minvalue=1;maxvalue=100" userspecific="TRUE" defaultvalue="25" comment="" />
+			<entry key="sb.jukebox.search.defaultconstraint" 		type="string" internaltype="select;options=ARTISTS|ALBUMS|TRACKS" userspecific="FALSE" defaultvalue="ALBUMS" comment="unused" />
+			<entry key="sb.jukebox.songkick.enabled" 				type="boolean" internaltype="" userspecific="FALSE" defaultvalue="TRUE" comment="" />
+			<entry key="sb.jukebox.tags.popularity.timeout" 		type="integer" internaltype="" userspecific="FALSE" defaultvalue="120" comment="" />
+			<entry key="sb.jukebox.tags.weighting.default" 			type="string" internaltype="select;options=popularity|numfiles" userspecific="TRUE" defaultvalue="popularity" comment="unused" />
+			<entry key="sb.jukebox.validation.missingfiles.indicate" type="boolean" internaltype="" userspecific="FALSE" defaultvalue="TRUE" comment="" />
+			<entry key="sb.jukebox.voting.enabled" 					type="boolean" internaltype="" userspecific="FALSE" defaultvalue="FALSE" comment="unused" />
+			<entry key="sb.jukebox.voting.scale.max" 				type="integer" internaltype="integer;minvalue=1;maxvalue=5" userspecific="TRUE" defaultvalue="2" comment="" />
+			<entry key="sb.jukebox.voting.scale.min" 				type="integer" internaltype="integer;minvalue=-5;maxvalue=-1" userspecific="TRUE" defaultvalue="-2" comment="" />
+			<entry key="sb.jukebox.voting.style" 					type="string" internaltype="select;options=HOTEL|MARKED|RELATIVE" userspecific="TRUE" defaultvalue="MARKED" comment="" />
+		</registry>
+		
+	</option>
+	
+	<option type="uninstall" version="1.0.0">
+		
+		<version action="remove" />
+		
+		<nodetypes action="remove">
+			<nodetype id="sbJukebox:Jukebox" />
+			<nodetype id="sbJukebox:Artist" />
+			<nodetype id="sbJukebox:Album" />
+			<nodetype id="sbJukebox:CD" />
+			<nodetype id="sbJukebox:Track" />
+			<nodetype id="sbJukebox:Playlist" />
+			<nodetype id="sbJukebox:Recommendation" />
+			<nodetype id="sbJukebox:PlaylistView" />
+			<nodetype id="sbJukebox:MaintenanceView" />
+			<nodetype id="sbJukebox:FixView" />
+			<nodetype id="sbJukebox:MusicDimensions" />
+			<nodetype id="sbJukebox:VotesView" />
+			<nodetype id="sbJukebox:RecommendView" />
+		</nodetypes>
+		
+		<registry action="remove">
+			<entry key="sb.jukebox.adminmode.enabled" />
+			<entry key="sb.jukebox.api.enabled" />
+			<entry key="sb.jukebox.cache.images.enabled" />
+			<entry key="sb.jukebox.charts.amount.default" />
+			<entry key="sb.jukebox.charts.amount.expanded" />
+			<entry key="sb.jukebox.charts.pivot.default" />
+			<entry key="sb.jukebox.comments.enabled" />
+			<entry key="sb.jukebox.comments.perpage" />
+			<entry key="sb.jukebox.downloads.maxbandwidth" />
+			<entry key="sb.jukebox.history.albums.threshold" />
+			<entry key="sb.jukebox.history.tracks.threshold" />
+			<entry key="sb.jukebox.latestalbums.amount.default" />
+			<entry key="sb.jukebox.latestalbums.amount.expanded" />
+			<entry key="sb.jukebox.latestcomments.amount.default" />
+			<entry key="sb.jukebox.latestcomments.amount.expanded" />
+			<entry key="sb.jukebox.nowplaying.refresh" />
+			<entry key="sb.jukebox.paths.albums.useabspath" />
+			<entry key="sb.jukebox.player.type" />
+			<entry key="sb.jukebox.quilts.coveramount" />
+			<entry key="sb.jukebox.quilts.coversize" />
+			<entry key="sb.jukebox.quilts.numsamples" />
+			<entry key="sb.jukebox.randomalbums.amount.default" />
+			<entry key="sb.jukebox.randomartists.amount.default" />
+			<entry key="sb.jukebox.search.defaultconstraint" />
+			<entry key="sb.jukebox.songkick.enabled" />
+			<entry key="sb.jukebox.tags.popularity.timeout" />
+			<entry key="sb.jukebox.tags.weighting.default" />
+			<entry key="sb.jukebox.validation.missingfiles.indicate" />
+			<entry key="sb.jukebox.voting.enabled" />
+			<entry key="sb.jukebox.voting.scale.max" />
+			<entry key="sb.jukebox.voting.scale.min" />
+			<entry key="sb.jukebox.voting.style" />
+		</registry>
+		
+		<sql>
+			<statement id="sbJukebox/removeTables">
+				
+				DROP TABLE IF EXISTS 
+					`{PREFIX_WORKSPACE}_jukebox_nowplaying`,
+					`{PREFIX_WORKSPACE}_jukebox_history_tracks`,
+					`{PREFIX_WORKSPACE}_jukebox_history_albums`,
+					`{PREFIX_WORKSPACE}_jukebox_tokens`,
+					`{PREFIX_WORKSPACE}_jukebox_tracks`,
+					`{PREFIX_WORKSPACE}_jukebox_albums`
+				;
+				
+			</statement>
+		</sql>
+		
+	</option>
+	
+</structure>

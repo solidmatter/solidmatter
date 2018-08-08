@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------
 /**
  *	@package solidMatter
- *	@author	()((() [Oliver Müller]
+ *	@author	()((() [Oliver Mï¿½ller]
  *	@version 1.00.00
  */
 //------------------------------------------------------------------------------
@@ -42,16 +42,18 @@ class CONFIG {
 	const DEBUG = array(
 		'ENABLED' 		=> FALSE,
 		'LOG_ALL' 		=> FALSE,
-		'BASIC'			=> TRUE,
+		'BASIC'			=> FALSE,
 		'CLIENT'		=> FALSE,
 		'IMPORT'		=> FALSE,
 		'SESSION'		=> FALSE,
-		'REQUEST'		=> TRUE,
+		'REQUEST'		=> FALSE,
 		'HANDLER'		=> FALSE,
 		'NODE'			=> FALSE,
 		'REDIRECT'		=> FALSE,
-		'EXCEPTIONS'	=> TRUE,
+		'EXCEPTIONS'	=> FALSE,
 		'PDO'			=> FALSE,
+		'SBCR'			=> FALSE,
+		'CACHES'		=> FALSE,
 	);
 	
 	// output prettyprinted XML
@@ -65,6 +67,7 @@ class CONFIG {
 	
 	// file/class used for configuration reading
 	static $CONFIGURATION_READER_LIBRARY = 'modules/sb_system/scripts_php/sb.system.configuration.reader.default.php';
+	static $CONFIGURATION_WRITER_LIBRARY = 'modules/sb_system/scripts_php/sb.system.configuration.writer.default.php';
 	
 	//-------------------------------------------------------------------------
 	/**
@@ -76,6 +79,10 @@ class CONFIG {
 		sbConfigurationReader::init();
 	}
 	
+	static function getConfigXML() {
+		return (sbConfigurationReader::getConfigXML());
+	}
+	
 	// wrapped functions
 	static function getSiteConfig(string $sSitePath) {
 		return (sbConfigurationReader::getSiteConfig($sSitePath));
@@ -83,11 +90,26 @@ class CONFIG {
 	static function getHandlerConfig(string $sHandlerID) {
 		return (sbConfigurationReader::getHandlerConfig($sHandlerID));
 	}
-	static function getRepositoryConfig(string $sRepositoryID) {
+	static function getRepositoryConfig(string $sRepositoryID = NULL) {
 		return (sbConfigurationReader::getRepositoryConfig($sRepositoryID));
 	}
-	static function getDatabaseConfig(string $sDatabaseID) {
+	static function getDatabaseConfig(string $sDatabaseID = NULL) {
 		return (sbConfigurationReader::getDatabaseConfig($sDatabaseID));
+	}
+	
+	static function addRepository(string $sRepositoryID, string $sPrefix, string $sDatabaseID) {
+		require_once(self::$CONFIGURATION_WRITER_LIBRARY);
+		$oWriter = new sbConfigurationWriter();
+		$oWriter->addRepository($sRepositoryID, $sPrefix, $sDatabaseID);
+		$oWriter->save();
+		sbConfigurationReader::init();
+	}
+	static function addWorkspace(string $sRepositoryID = NULL) {
+		
+	}
+	
+	static function addDatabase(string $sDatabaseID = NULL) {
+		
 	}
 	
 }
