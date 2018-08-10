@@ -25,7 +25,7 @@ class APIRequestHandler extends ApplicationRequestHandler {
 		
 		global $_RESPONSE;
 		
-		DEBUG('PassthroughHandler: Request Path = '.$_REQUEST->getURI(), DEBUG::HANDLER);
+		DEBUG('APIRequestHandler: Request Path = '.$_REQUEST->getURI(), DEBUG::HANDLER);
 		
 		parent::handleRequest($crSession);
 		

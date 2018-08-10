@@ -18,6 +18,38 @@ div.setup {
 	padding: 15px;
 	position: relative;
 }
+div.setup div.layout {
+	display: flex;
+	flex-direction: row;
+}
+div.setup div.left {
+/* 	background-color: red; */
+	width: 300px;
+}
+div.setup div.right {
+/* 	background-color: red; */
+	width: 485px;
+}
+div.setup div.sep {
+/* 	background-color: blue; */
+	width: 15px;
+}
+
+/* div.setup div.layout { */
+/* 	display: grid; */
+/* 	grid-template-rows: 200px 1fr 100px;  */
+/* 	grid-template-columns: 25% 25% 25% 25%; */
+/* 	grid-column-gap: 50px; */
+/* } */
+/* div.setup div.layout div.left { */
+/* 	grid-column: 1;  */
+/* 	grid-row: 1; */
+/* } */
+/* div.setup div.layout div.right { */
+/* 	grid-column: 2; */
+/* 	grid-row: 1; */
+/* } */
+
 
 div.login span.version {
 	position: absolute;

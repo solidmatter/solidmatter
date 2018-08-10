@@ -15,6 +15,7 @@ class sbCR {
 	
 	// basic info about existing repositories 
 	private static $sxmlRepositoryDefinitions = NULL;
+	private static $sDefinitionFile = NULL;
 	
 	// filled with repository ID as key when iterating over the definition 
 	private static $aRepositories = NULL;
@@ -25,7 +26,7 @@ class sbCR {
 	 * @param
 	 * @return
 	 */
-	public static function getRepositoryDefinition(string $sRepositoryID) {
+	public static function getRepositoryDefinition(string $sRepositoryID) : SimpleXMLElement {
 		return (CONFIG::getRepositoryConfig($sRepositoryID));
 	}
 	
@@ -35,14 +36,22 @@ class sbCR {
 	 * @param
 	 * @return
 	 */
-	public static function loadRepositoryDefinitions(string $sDefinitionFile = NULL, bool $bForceReload = FALSE) {
-		if (self::$sxmlRepositoryDefinitions == NULL || $bForceReload) {
-			if ($sDefinitionFile == NULL) {
-				self::$sxmlRepositoryDefinitions = simplexml_load_file(CONFIG::DIR.CONFIG::REPOSITORIES);
-			} else {
-				self::$sxmlRepositoryDefinitions = simplexml_load_file($sDefinitionFile);
-			}
+	public static function getRepository(string $sRepositoryID) : sbCR_Repository {
+		
+		$elemRepositoryDefinition = self::getRepositoryDefinition($sRepositoryID);
+		
+		// init database
+		$sRepositoryPrefix = (string) $elemRepositoryDefinition['prefix'];
+		$sDBID = (string) $elemRepositoryDefinition['db'];
+		
+		if ($sDBID == 'system') {
+			$DB = System::getDatabase();
+		} else {
+			$DB = new sbPDOSystem($sDBID);
 		}
+		
+		return (new sbCR_Repository($DB, $sRepositoryID, $sRepositoryPrefix));
+		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -51,23 +60,18 @@ class sbCR {
 	 * @param
 	 * @return
 	 */
-	public static function getSimpleXML() {
-		self::loadRepositoryDefinitions();
-		return (self::$sxmlRepositoryDefinitions);
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	 *
-	 * @param
-	 * @return
-	 */
-	public static function createRepository(string $sRepositoryID, string $sPrefix) {
-		import('sb.pdo.repository.queries.repositories');
-		$sxmlDefinition = self::getRepositoryDefinition($sRepositoryID);
-		$pdoRepository = new sbPDORepository($sxmlDefinition);
-		$stmtCreate = $pdoRepository->prepareKnown('sbCR/repository/create');
+	public static function createRepository(string $sRepositoryID, string $sPrefix, string $sDatabaseID) {
+		import('sb.pdo.setup.queries.repositories');
+		$pdoRepository = new sbPDOSystem($sDatabaseID);
+		$pdoRepository->setRewrite('{PREFIX_REPOSITORY}', $sPrefix);
+		$stmtCreate = $pdoRepository->prepareKnown('sbCR/repository/createTables');
 		$stmtCreate->execute();
+		$stmtCreate->closeCursor();
+		$stmtInit = $pdoRepository->prepareKnown('sbCR/repository/createEntries');
+		$stmtInit->execute();
+// 		$stmtInit->debug();
+		$stmtInit->closeCursor();
+		CONFIG::addRepository($sRepositoryID, $sPrefix, $sDatabaseID);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -76,30 +80,14 @@ class sbCR {
 	 * @param
 	 * @return
 	 */
-	public static function initRepository(string $sRepositoryID) {
-		
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	 *
-	 * @param
-	 * @return
-	 */
-	public static function createWorkspace($sID) {
-		
-	}
-	
-	//--------------------------------------------------------------------------
-	/**
-	 *
-	 * @param
-	 * @return
-	 */
-	public static function initWorkspace($sID) {
-		
-	}
-	
+// 	public static function initRepository(string $sRepositoryID, string $sPrefix, string $sDatabaseID) {
+// 		import('sb.pdo.repository.queries.repositories');
+// 		$pdoRepository = new sbPDOSystem($sDatabaseID);
+// 		$pdoRepository->setRewrite('{PREFIX_REPOSITORY}', $sPrefix);
+// 		$stmtInit = $pdoRepository->prepareKnown('sbCR/repository/createEntries');
+// 		$stmtInit->execute();
+// 		$stmtInit->debug();
+// 	}
 	
 }
 

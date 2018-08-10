@@ -16,27 +16,29 @@ import('sb.cr.workspace');
 class sbCR_Session {
 	
 	// sbCR objects
-	private $crRepository			= NULL;
-	private $crWorkspace			= NULL;
-	private $crCredentials			= NULL;
-	private $crNodetypeManager		= NULL;
-	private $crNamespaceRegistry	= NULL;
+	protected $crRepository			= NULL;
+	protected $crWorkspace			= NULL;
+	protected $crCredentials		= NULL;
+	protected $crNodetypeManager	= NULL;
+	protected $crNamespaceRegistry	= NULL;
 	
 	// temporary namespaces
-	private $aNamespaceMapping		= array();
+	protected $aNamespaceMapping	= array();
 	
 	// database connection
-	private $DB;
+	protected $DB;
+	// Array of prepared queries
+	protected $aPreparedStatements	= array();
 	
 	// fingerprint created on init
-	private $sFingerprint			= NULL;
+	protected $sFingerprint			= NULL;
 	
 	// things to do on save
-	private $aSaveTasks				= array();
+	protected $aSaveTasks			= array();
 	
 	// caching
-	private $aNodetypes				= NULL;
-	private	$aNodeCache				= array();
+	protected $aNodetypes			= NULL;
+	protected $aNodeCache			= array();
 	
 	//--------------------------------------------------------------------------
 	/**
@@ -44,17 +46,25 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	public function __construct($DB, $crCredentials, $crRepository, $sWorkspaceName, $sWorkspacePrefix) {
+	public function __construct(
+			sbPDO $DB, 
+			sbCR_Credentials $crCredentials, 
+			sbCR_Repository $crRepository, 
+			string $sWorkspaceID = NULL, 
+			string $sWorkspacePrefix = NULL) {
 		
 		$this->crRepository = $crRepository;
 		$this->crCredentials = $crCredentials;
-		$this->crWorkspace = new sbCR_Workspace($sWorkspaceName, $sWorkspacePrefix, $this);
+		if ($sWorkspaceID != NULL) {
+			$this->crWorkspace = new sbCR_Workspace($sWorkspaceID, $sWorkspacePrefix, $this);
+		}
 		$this->DB = $DB;
 		
 		$this->sFingerprint = md5(mt_rand().$crCredentials->getUserId());
 		
 		// TODO: implement namespacemapping
 		//$this->aNamespaceMapping = $aNamespaceMapping;
+		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -67,13 +77,13 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	public function setNamespacePrefix($sNewPrefix, $sExistingURI) {
+	public function setNamespacePrefix(string $sNewPrefix, string $sExistingURI) {
 		$aTemp = array_flip($this->aNamespaceMapping);
 		if (!isset($aTemp[$sExistingURI])) {
-			throw new NamespaceExeption('namespace "'.$sExistingURI.'" does not exist');
+			throw new NamespaceException('namespace "'.$sExistingURI.'" does not exist');
 		}
 		if (isset($this->aNamespaceMapping[$sNewPrefix])) {
-			throw new NamespaceExeption('namespaceprefix "'.$sExistingURI.'" already exists');
+			throw new NamespaceException('namespaceprefix "'.$sExistingURI.'" already exists');
 		}
 		unset($this->aNamespaceMapping[$aTemp[$sExistingURI]]);
 		$this->aNamespaceMapping[$sNewPrefix] = $sExistingURI;
@@ -85,7 +95,7 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	public function getNamespacePrefixes() {
+	public function getNamespacePrefixes() : array {
 		return (array_keys($this->aNamespaceMapping));
 	}
 	
@@ -96,7 +106,7 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	public function getNamespaceURI($sPrefix) {
+	public function getNamespaceURI(string $sPrefix) : string {
 		if (!isset($this->aNamespaceMapping[$sPrefix])) {
 			throw new NamespaceException('namespace "'.$sPrefix.'" does not exist');	
 		}
@@ -109,10 +119,10 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	public function getNamespacePrefix($sExistingURI) {
+	public function getNamespacePrefix(string $sExistingURI) : string {
 		$aTemp = array_flip($this->aNamespaceMapping);
 		if (!isset($aTemp[$sExistingURI])) {
-			throw new NamespaceExeption('namespace "'.$sExistingURI.'" does not exist');
+			throw new NamespaceException('namespace "'.$sExistingURI.'" does not exist');
 		}
 		return ($aTemp[$sExistingURI]);
 	}
@@ -129,7 +139,7 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	public function addLockToken($sLockToken) {
+	public function addLockToken(string $sLockToken) {
 		throw new LazyBastardException();
 	}
 	
@@ -140,7 +150,7 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	public function getLockTokens() {
+	public function getLockTokens() : array {
 		throw new LazyBastardException();
 	}
 	
@@ -150,7 +160,7 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	public function removeLockToken($sLockToken) {
+	public function removeLockToken(string $sLockToken) {
 		throw new LazyBastardException();
 	}
 	
@@ -167,7 +177,7 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	public function getAttribute($sName) {
+	public function getAttribute(string $sName) {
 		return ($this->crLoginCredentials->getAttribute($sName));
 	}
 	
@@ -275,7 +285,7 @@ class sbCR_Session {
 	*/
 	public function getRootNode() {
 		if (empty($this->aNodeCache['ROOT'])) {
-			$stmtInfo = $this->DB->prepareKnown('sbCR/getNode/root');
+			$stmtInfo = $this->prepareKnown('sbCR/getNode/root');
 			$stmtInfo->execute();
 			$this->aNodeCache['ROOT'] = $this->generateInstance($stmtInfo, '/');
 		}
@@ -410,6 +420,7 @@ class sbCR_Session {
 	//------------------------------------------------------------------------------
 	/**
 	* 
+	* TODO: $this->crSession 
 	* @param 
 	* @return 
 	*/
@@ -641,7 +652,7 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	public function getNode($sQuery) {
+	public function getNode($sQuery) : sbCR_Node {
 		return ($this->getInstance($sQuery));
 	}
 	
@@ -651,7 +662,10 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	public function createNode($sNodetype, $sName = '', $sLabel = '', $sParentUUID = NULL) {
+	public function createNode(string $sNodetype,
+			string $sName = '',
+			string $sLabel = '',
+			string $sParentUUID = NULL) : sbCR_Node {
 		
 		$this->loadNodetypes();
 		if (!isset($this->aNodetypes[$sNodetype])) {
@@ -678,11 +692,48 @@ class sbCR_Session {
 	
 	//--------------------------------------------------------------------------
 	/**
+	 * Creates a virtual node that only exists at runtime.
+	 * The node my only be accessed via it's parent by using the id <parent_identifier>::<virtual_node_name>
+	 * May only be called from nodes!
+	 * @param
+	 * @return
+	 */
+	public function createVirtualNode(string $sNodetype, 
+			string $sName, 
+			string $sLabel,
+			$sParentIdentifier) : sbCR_Node {
+		
+		$this->loadNodetypes();
+		if (!isset($this->aNodetypes[$sNodetype])) {
+			throw new UnknownNodetypeException('invalid nodetype: '.$sNodetype);
+		}
+		
+		$aNode['uuid'] = $sParentIdentifier.'::'.$sName;
+		$aNode['fk_nodetype'] = $sNodetype;
+		$aNode['s_name'] = $sName;
+		$aNode['s_label'] = $sLabel;
+		$aNode['s_uid'] = NULL;
+		if (isset($this->aNodetypes[$sNodetype]['s_displaytype'])) {
+			$aNode['s_displaytype'] = $this->aNodetypes[$sNodetype]['s_displaytype'];
+		}
+		$aNode['fk_parent'] = $sParentIdentifier;
+		$aNode['b_primary'] = 'TRUE';
+		// for now always set full inheritance on virtual nodes
+		$aNode['b_inheritrights'] = 'TRUE';
+		$aNode['b_bequeathrights'] = 'TRUE';
+		$aNode['b_bequeathlocalrights'] = 'TRUE';
+		$aNode['s_currentlifecyclestate'] = NULL;
+		
+		return ($this->generateInstanceFromRow($aNode, 'virtual'));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* 
 	* @param 
 	* @return 
 	*/
-	public function getInstance($sQuery) {
+	public function getInstance(string $sQuery) : sbCR_Node {
 		
 		// helper array
 		$aMatches = array();
@@ -692,6 +743,11 @@ class sbCR_Session {
 			$nodeCurrent = $this->getRootNode();
 		} elseif (preg_match('!^//\*\[@uid="([a-zA-Z_]+:[a-zA-Z_]+)"\]$!', $sQuery, $aMatches)) {
 			$nodeCurrent = $this->getInstanceByUID($aMatches[1]);
+		} elseif (preg_match('!^([a-zA-Z_]+:[a-zA-Z_]+)$!', $sQuery, $aMatches)) {
+			$nodeCurrent = $this->getInstanceByUID($aMatches[1]);
+		} elseif (preg_match('!^([a-zA-Z_]+:[a-zA-Z_]+)::([a-zA-Z_]+)$!', $sQuery, $aMatches)) {
+			$nodeParent = $this->getInstance($aMatches[1]);
+			$nodeCurrent = $nodeParent->getNode($aMatches[2]);
 		} elseif (substr_count($sQuery, '/') > 0) {
 			$nodeCurrent = $this->getInstanceByPath($sQuery);
 		} else {
@@ -708,7 +764,7 @@ class sbCR_Session {
 	* @param 
 	* @return 
 	*/
-	public function getInstanceByUUID($sQuery, $sParentUUID = NULL) {
+	public function getInstanceByUUID(string $sQuery, string $sParentUUID = NULL) {
 		// TODO: needs a thinkover, too many references prevent object destruction
 		/*if (isset($this->aNodeCache[$sQuery])) {
 			if (isset($this->aNodeCache[$sQuery][$sParentUUID])) {
@@ -906,12 +962,29 @@ class sbCR_Session {
 	
 	//--------------------------------------------------------------------------
 	/**
-	* 
-	* @param 
-	* @return 
+	* Prepares a statement valid for this session.
+	* As the Session knows the database as well as the repository and workspace, prepared statements can be cached.
+	* @param string The id of the query (id = key in global $_QUERIES[])
+	* @return sbPDOStatement The prepared statement including all defined rewrites.
 	*/
-	public function prepareKnown($sID) {
-		return ($this->DB->prepareKnown($sID));
+	public function prepareKnown(string $sID) : sbPDOStatement {
+		
+		if (isset($this->aPreparedStatements[$sID])) { // query is cached
+			DEBUG(__CLASS__.': cache hit for query '.$sID, DEBUG::CACHES && DEBUG::SBCR);
+			return ($this->aPreparedStatements[$sID]);
+		} else { // not cached, prepare
+			$sRepositoryPrefix = $this->crRepository->getPrefix();
+			$sWorkspacePrefix = $this->crWorkspace->getPrefix();
+			$this->DB->setRewrite('{PREFIX_REPOSITORY}', $sRepositoryPrefix);
+			if ($this->crWorkspace != NULL) {
+				$this->DB->setRewrite('{PREFIX_WORKSPACE}', $sWorkspacePrefix);
+			}
+			$stmtCurrent = $this->DB->prepareKnown($sID);
+			DEBUG(__CLASS__.': prepareKnown '.$sID.' in '.$sRepositoryPrefix.':'.$sWorkspacePrefix, DEBUG::SBCR);
+			$this->aPreparedStatements[$sID] = $stmtCurrent;
+			return ($stmtCurrent);
+		}
+		
 	}
 	
 	//--------------------------------------------------------------------------

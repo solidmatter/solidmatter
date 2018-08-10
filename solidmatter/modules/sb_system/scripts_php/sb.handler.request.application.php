@@ -30,10 +30,10 @@ class ApplicationRequestHandler extends RequestHandler {
 		$aURI = $this->parseURI();
 		
 		// process request
-		if ($aURI['node_uuid'] === NULL) {
+		if ($aURI['node'] === NULL) {
 			$nodeCurrent = $crSession->getRootNode()->getNode($_REQUEST->getSubject());
 		} else {
-			$nodeCurrent = $crSession->getNode($aURI['node_uuid']);
+			$nodeCurrent = $crSession->getNode($aURI['node']);
 		}
 		
 		$nodeCurrent->callView($aURI['view'], $aURI['action']);

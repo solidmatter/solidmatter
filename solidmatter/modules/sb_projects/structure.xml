@@ -1,147 +1,174 @@
 <?xml version="1.0" ?>
-<structure namespace="sbProjects">
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<nodetypes>
-		<nodetype id="sbProjects:Project" class="sbNode" sourcefile="sbSystem:sb.node" type="PRIMARY" />
-		<nodetype id="sbProjects:TaskGroup" class="sbNode" sourcefile="sbSystem:sb.node" type="PRIMARY" />
-		<nodetype id="sbProjects:RfC" class="sbNode" sourcefile="sbSystem:sb.node" type="PRIMARY">
-			<authorisation order="1" id="" parentauth="" default="" />
-			<authorisation order="" name="" parentauth="" default="" />
-			<authorisation order="" name="" parentauth="" default="" />
-			<authorisation order="" name="" parentauth="" default="" />
-		</nodetype>
-		<nodetype id="sbProjects:Product" class="sbNode" sourcefile="sbSystem:sb.node" type="PRIMARY" />
-		<nodetype id="sbProjects:Note" class="sbNode" sourcefile="sbSystem:sb.node" type="PRIMARY" />
-	</nodetypes>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<nodetypehierarchy>
-		<relation parent="sbSystem:Root" child="sbProjects:Project" />
-		<relation parent="sbProjects:Project" child="sbProjects:TaskGroup" />
-		<relation parent="sbProjects:TaskGroup" child="sbSystem:Task" />
-		<relation parent="sbProjects:Project" child="sbProjects:TaskGroup" />
-		<relation parent="sbProjects:Project" child="sbProjects:TaskGroup" />
-		<relation parent="sbProjects:Project" child="sbProjects:TaskGroup" />
-		<relation parent="sbProjects:Project" child="sbProjects:TaskGroup" />
-		<relation parent="sbProjects:Project" child="sbProjects:TaskGroup" />
+<structure>
+
+	<option type="install" version="1.0.0">
 		
+		<version main="1" sub="0" bugfix="0" info="alpha" />
 		
-	</nodetypehierarchy>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<ontology>
-		<relation source_nodetype="sbSystem:User" title="IsResponsibleFor" target_nodetype="sbProjects:RfC" title_reversed="HasOwner" />
-		<relation source_nodetype="sbSystem:User" title="HasRaised" target_nodetype="sbProjects:RfC" title_reversed="WasRaisedBy" />
-		<relation source_nodetype="sbSystem:User" title="IsProfessionallyResponsibleFor" target_nodetype="sbProjects:RfC" title_reversed="HasProfessionalOwner"/>
-		<relation source_nodetype="sbSystem:User" title="IsTesterFor" target_nodetype="sbProjects:RfC" title_reversed="WillBeTestedBy" />
-		<relation source_nodetype="sbSystem:User" title="HasApproved" target_nodetype="sbProjects:RfC" title_reversed="WasApprovedBy" />
-		<relation source_nodetype="sbSystem:User" title="HasRejected" target_nodetype="sbProjects:RfC" title_reversed="WasRejectedBy" />
-		<relation source_nodetype="sbProjects:RfC" title="IsDependentOn" target_nodetype="sbProjects:RfC" title_reversed="IsPrerequisiteFor" />
-		<relation source_nodetype="sbProjects:RfC" title="IsConnectedTo" target_nodetype="sbProjects:RfC" title_reversed="IsConnectedTo" />
-		<relation source_nodetype="sbProjects:RfC" title="IsDuplicateOf" target_nodetype="sbProjects:RfC" title_reversed="IsDuplicateOf" />
-		<relation source_nodetype="sbProjects:RfC" title="MustByRolledOutWith" target_nodetype="sbProjects:RfC" title_reversed="MustByRolledOutWith" />
-		<relation source_nodetype="" title="" target_nodetype="" title_reversed="" />
-		<relation source_nodetype="" title="" target_nodetype="" title_reversed="" />
+<!-- 		<sql> -->
+<!-- 			<statement> -->
+<!-- 				CREATE TABLE `{PREFIX_WORKSPACE}_projects_rfcs` ( -->
+<!-- 					`uuid` CHAR(32) NOT NULL COLLATE 'ascii_general_ci', -->
+<!-- 					`s_id` VARCHAR(100) NOT NULL, -->
+<!-- 					`s_title` VARCHAR(100) NOT NULL, -->
+<!-- 					`fk_owner` CHAR(32) NOT NULL, -->
+<!-- 					`fk_raise` CHAR(32) NULL DEFAULT NULL COLLATE 'ascii_general_ci', -->
+<!-- 					`fk_responsible` CHAR(32) NULL DEFAULT NULL, -->
+<!-- 					`b_state` ENUM('TRUE','FALSE') NOT NULL DEFAULT 'FALSE' COLLATE 'ascii_general_ci', -->
+<!-- 					`e_state` ENUM('TRUE','FALSE') NOT NULL DEFAULT 'FALSE' COLLATE 'ascii_general_ci', -->
+<!-- 					`s_coverfilename` VARCHAR(50) NULL DEFAULT NULL, -->
+<!-- 					`e_type` ENUM('DEFAULT','FIX','IMPROVEMENT') NOT NULL DEFAULT 'DEFAULT' COLLATE 'ascii_general_ci', -->
+<!-- 					PRIMARY KEY (`uuid`), -->
+<!-- 					CONSTRAINT `{PREFIX_WORKSPACE}_projects_rfcs_ibfk_1` FOREIGN KEY (`uuid`) REFERENCES `{PREFIX_WORKSPACE}_system_nodes` (`uuid`) ON UPDATE CASCADE ON DELETE CASCADE -->
+<!-- 				) -->
+<!-- 				COLLATE='utf8_general_ci' -->
+<!-- 				ENGINE=InnoDB -->
+<!-- 				ROW_FORMAT=COMPACT; -->
+<!-- 			</statement> -->
+<!-- 		</sql> -->
 		
-	</ontology>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<properties>
-		<nodetype id="">
-			<property name="group" type="STRING" internaltype="string" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="seqnr" type="LONG" internaltype="integer" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="description" type="STRING" internaltype="text" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="approvement" type="STRING" internaltype="select;options=PENDING|APPROVED|REJECTED|OBSOLETE" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="approvement_details" type="STRING" internaltype="select;options=PENDING|APPROVED|REJECTED|OBSOLETE" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="status" type="STRING" internaltype="select;options=OPEN|SPECIFICATION|REALIZATION|TESTING|ROLLOUT|PRODUCTIVE|COMPLETED" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="classification" type="STRING" internaltype="select;options=UNSPECIFIED|MINOR|SIGNIFICANT|MAJOR" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="origin" type="STRING" internaltype="string" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="nature" type="STRING" internaltype="select;options=UNSPECIFIED|PROFESSIONAL|TECHNICAL" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="type" type="STRING" internaltype="select;options=UNSPECIFIED|ERROR|OPTIMIZATION|REQUEST" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="priority" type="STRING" internaltype="select;options=UNSPECIFIED|VERYHIGH|OPTIMIZATION|REQUEST" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="benefit" type="STRING" internaltype="select;options=UNSPECIFIED|VERYLOW|LOW|AVERAGE|HIGH|VERYHIGH" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="benefit_remarks" type="STRING" internaltype="select;options=UNSPECIFIED|VERYLOW|LOW|AVERAGE|HIGH|VERYHIGH" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="risk" type="STRING" internaltype="select;options=UNSPECIFIED|VERYLOW|LOW|AVERAGE|HIGH|VERYHIGH" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="risk_remarks" type="STRING" internaltype="select;options=UNSPECIFIED|VERYLOW|LOW|AVERAGE|HIGH|VERYHIGH" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="effort" type="STRING" internaltype="select;options=UNSPECIFIED|VERYLOW|LOW|AVERAGE|HIGH|VERYHIGH" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="effort_remarks" type="STRING" internaltype="select;options=UNSPECIFIED|VERYLOW|LOW|AVERAGE|HIGH|VERYHIGH" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="decision_remarks" type="STRING" internaltype="select;options=UNSPECIFIED|VERYLOW|LOW|AVERAGE|HIGH|VERYHIGH" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="resubmission" type="DATE" internaltype="" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="warning" type="DATE" internaltype="" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="due" type="DATE" internaltype="" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			
-			<property name="hyperlink1" type="STRING" internaltype="string" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="hyperlink2" type="STRING" internaltype="string" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="hyperlink3" type="STRING" internaltype="string" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="pir" type="STRING" internaltype="text" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="" type="" internaltype="" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="" type="" internaltype="" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="" type="" internaltype="" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="" type="" internaltype="" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="" type="" internaltype="" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="" type="" internaltype="" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			<property name="" type="" internaltype="" showinproperties="" labelpath="" storage="" auxname="" order="" protected="" protectedoncreation="" multiple="" defaultvalue="" />
-			
-		</nodetype>
-	</properties>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<lifecycles>
-		<transition nodetype="sbProjects:Project" sourcestate="default" targetstate="approved" />
-		<transition nodetype="sbProjects:Project" sourcestate="approved" targetstate="planned" />
-		<transition nodetype="sbProjects:Project" sourcestate="planned" targetstate="wip" />
-		<transition nodetype="sbProjects:Project" sourcestate="wip" targetstate="closing" />
-		<transition nodetype="sbProjects:Project" sourcestate="closing" targetstate="done" />
-		<transition nodetype="sbProjects:RfC" sourcestate="default" targetstate="SU" />
-		<transition nodetype="sbProjects:RfC" sourcestate="default" targetstate="SU" />
-		<transition nodetype="sbProjects:RfC" sourcestate="default" targetstate="SU" />
-		<transition nodetype="sbProjects:RfC" sourcestate="default" targetstate="SU" />
-		<transition nodetype="sbProjects:RfC" sourcestate="default" targetstate="SU" />
-		<transition nodetype="sbProjects:RfC" sourcestate="default" targetstate="SU" />
-		<transition nodetype="sbProjects:RfC" sourcestate="default" targetstate="SU" />
+		<nodetypes>
+			<nodetype id="sbProjects:Project" class="sbNode" sourcefile="sbSystem:sb.node" type="PRIMARY" />
+			<nodetype id="sbProjects:TaskGroup" class="sbNode" sourcefile="sbSystem:sb.node" type="PRIMARY" />
+			<nodetype id="sbProjects:RfC" class="sbNode" sourcefile="sbSystem:sb.node" type="PRIMARY" />
+			<nodetype id="sbProjects:Product" class="sbNode" sourcefile="sbSystem:sb.node" type="PRIMARY" />
+<!-- 			<nodetype id="sbProjects:Note" class="sbNode" sourcefile="sbSystem:sb.node" type="PRIMARY" /> -->
+		</nodetypes>
 		
-	</lifecycles>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<views>
+		<nodetypehierarchy>
+			<parent nodetype="sbSystem:PropertiesView">
+				<child nodetype="sbProjects:Project" />
+				<child nodetype="sbProjects:TaskGroup" />
+				<child nodetype="sbProjects:RfC" />
+				<child nodetype="sbProjects:Product" />
+			</parent>
+			<parent nodetype="sbSystem:ListView">
+				<child nodetype="sbProjects:Project" />
+				<child nodetype="sbProjects:TaskGroup" />
+				<child nodetype="sbProjects:Product" />
+			</parent>
+			<parent nodetype="sbSystem:Taggable">
+				<child nodetype="sbProjects:Project" />
+				<child nodetype="sbProjects:RfC" />
+			</parent>
+			<parent nodetype="sbSystem:RelationsView">
+				<child nodetype="sbProjects:RfC" />
+			</parent>
+		</nodetypehierarchy>
 		
-	</views>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<actions>
+		<properties>
+			<nodetype id="sbProjects:RfC">
+				<property order="0" name="description" type="STRING" internaltype="text" labelpath="$locale/sbSystem/labels/description" />
+				<property order="1" name="status" type="STRING" internaltype="select;options=OPEN|SPECIFICATION|IMPLEMENTATION|TESTING|ROLLOUT|PRODUCTIVE|DOCUMENTATION|COMPLETED" labelpath="$locale/sbProjects/RfC/status" />
+				<property order="2" name="classification" type="STRING" internaltype="select;options=UNSPECIFIED|MINOR|SIGNIFICANT|MAJOR" labelpath="$locale/sbProjects/RfC/classification"  />
+				<property order="3" name="origin" type="STRING" internaltype="string" labelpath="$locale/sbProjects/RfC/origin" />
+				<property order="4" name="nature" type="STRING" internaltype="select;options=UNSPECIFIED|PROFESSIONAL|TECHNICAL" labelpath="$locale/sbProjects/RfC/nature" />
+				<property order="5" name="type" type="STRING" internaltype="select;options=UNSPECIFIED|ERROR|OPTIMIZATION|REQUEST" labelpath="$locale/sbProjects/RfC/type" />
+				<property order="6" name="priority" type="STRING" internaltype="select;options=UNSPECIFIED|VERYHIGH|OPTIMIZATION|REQUEST" labelpath="$locale/sbProjects/RfC/priority" />
+				<property order="7" name="resubmission" type="DATE" internaltype="datetime" labelpath="$locale/sbProjects/RfC/resubmission" />
+				<property order="8" name="warning" type="DATE" internaltype="datetime" labelpath="$locale/sbProjects/RfC/warning" />
+				<property order="9" name="due" type="DATE" internaltype="datetime" labelpath="$locale/sbProjects/RfC/due" />
+				<property order="10" name="benefit" type="STRING" internaltype="select;options=UNSPECIFIED|VERYLOW|LOW|AVERAGE|HIGH|VERYHIGH" labelpath="$locale/sbProjects/RfC/benefit" />
+				<property order="11" name="benefit_remarks" type="STRING" internaltype="text" labelpath="$locale/sbProjects/RfC/benefit_remarks" />
+				<property order="12" name="risk" type="STRING" internaltype="select;options=UNSPECIFIED|VERYLOW|LOW|AVERAGE|HIGH|VERYHIGH" labelpath="$locale/sbProjects/RfC/risk" />
+				<property order="13" name="risk_remarks" type="STRING" internaltype="text" labelpath="$locale/sbProjects/RfC/risk_remarks" />
+				<property order="14" name="effort" type="STRING" internaltype="select;options=UNSPECIFIED|VERYLOW|LOW|AVERAGE|HIGH|VERYHIGH" labelpath="$locale/sbProjects/RfC/effort" />
+				<property order="15" name="effort_remarks" type="STRING" internaltype="text" labelpath="$locale/sbProjects/RfC/effort_remarks" />
+				<property order="16" name="approvement" type="STRING" internaltype="select;options=PENDING|APPROVED|REJECTED|OBSOLETE" labelpath="$locale/sbProjects/RfC/approvement" />
+				<property order="17" name="approvement_details" type="STRING" internaltype="text" labelpath="$locale/sbProjects/RfC/approvement_details" />
+				<property order="18" name="pir" type="STRING" internaltype="text" labelpath="$locale/sbProjects/RfC/pir" />
+				<property order="19" name="hyperlink_req" type="STRING" internaltype="string" labelpath="$locale/sbProjects/RfC/hyperlink_req" />
+				<property order="20" name="hyperlink_spec" type="STRING" internaltype="string" labelpath="$locale/sbProjects/RfC/hyperlink_spec" />
+				<property order="21" name="hyperlink_other" type="STRING" internaltype="string" labelpath="$locale/sbProjects/RfC/hyperlink_other" />
+			</nodetype>
+		</properties>
 		
-	</actions>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<viewauthorisations>
+		<lifecycles>
+			<transition nodetype="sbProjects:Project" sourcestate="default" targetstate="approved" />
+			<transition nodetype="sbProjects:Project" sourcestate="approved" targetstate="planned" />
+			<transition nodetype="sbProjects:Project" sourcestate="planned" targetstate="wip" />
+			<transition nodetype="sbProjects:Project" sourcestate="wip" targetstate="closing" />
+			<transition nodetype="sbProjects:Project" sourcestate="closing" targetstate="done" />
+			<transition nodetype="sbProjects:RfC" sourcestate="default" targetstate="SU" />
+		</lifecycles>
 		
-	</viewauthorisations>
+		<views>
+		</views>
+		
+		<actions>
+		</actions>
+		
+		<viewauthorisations>
+		</viewauthorisations>
+		
+		<modes>
+			<mode type="tree">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbProjects:Project" />
+				</parent>
+				<parent nodetype="sbProjects:Project">
+					<child nodetype="sbProjects:TaskGroup" />
+				</parent>
+				<parent nodetype="sbProjects:TaskGroup">
+					<child nodetype="sbSystem:Task" />
+				</parent>
+			</mode>
+			<mode type="list">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbProjects:Project" />
+				</parent>
+				<parent nodetype="sbProjects:Project">
+					<child nodetype="sbProjects:TaskGroup" />
+					<child nodetype="sbProjects:RfC" />
+				</parent>
+				<parent nodetype="sbProjects:TaskGroup">
+					<child nodetype="sbSystem:Task" />
+					<child nodetype="sbProjects:RfC" />
+				</parent>
+			</mode>
+			<mode type="create">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbProjects:Project" />
+				</parent>
+				<parent nodetype="sbProjects:Project">
+					<child nodetype="sbProjects:TaskGroup" />
+					<child nodetype="sbProjects:RfC" />
+				</parent>
+				<parent nodetype="sbProjects:TaskGroup">
+					<child nodetype="sbProjects:RfC" />
+				</parent>
+			</mode>
+		</modes>
+		
+		<ontology>
+			<relation origin="sbSystem:User" forward="IsResponsibleFor" destination="sbProjects:RfC" backward="HasOwner" />
+			<relation origin="sbSystem:User" forward="HasRaised" destination="sbProjects:RfC" backward="WasRaisedBy" />
+			<relation origin="sbSystem:User" forward="IsProfessionallyResponsibleFor" destination="sbProjects:RfC" backward="HasProfessionalOwner"/>
+			<relation origin="sbSystem:User" forward="IsTesterFor" destination="sbProjects:RfC" backward="WillBeTestedBy" />
+			<relation origin="sbSystem:User" forward="HasApproved" destination="sbProjects:RfC" backward="WasApprovedBy" />
+			<relation origin="sbSystem:User" forward="HasRejected" destination="sbProjects:RfC" backward="WasRejectedBy" />
+			<relation origin="sbProjects:RfC" forward="IsDependentOn" destination="sbProjects:RfC" backward="IsPrerequisiteFor" />
+			<relation origin="sbProjects:RfC" forward="IsConnectedTo" destination="sbProjects:RfC" backward="IsConnectedTo" />
+			<relation origin="sbProjects:RfC" forward="IsDuplicateOf" destination="sbProjects:RfC" backward="IsDuplicateOf" />
+			<relation origin="sbProjects:RfC" forward="MustByRolledOutWith" destination="sbProjects:RfC" backward="MustByRolledOutWith" />
+		</ontology>
+		
+		<ontology>
+		</ontology>
+		
+	</option>
 	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<option type="uninstall" version="1.0.0">
+		
+		<version action="remove" />
+		
+		<nodetypes action="remove">
+			<nodetype id="sbProjects:Project" class="sbNode" sourcefile="sbSystem:sb.node" type="PRIMARY" />
+			<nodetype id="sbProjects:TaskGroup" class="sbNode" sourcefile="sbSystem:sb.node" type="PRIMARY" />
+			<nodetype id="sbProjects:RfC" class="sbNode" sourcefile="sbSystem:sb.node" type="PRIMARY" />
+			<nodetype id="sbProjects:Product" class="sbNode" sourcefile="sbSystem:sb.node" type="PRIMARY" />
+		</nodetypes>
 	
-	<modes>
-		<mode type="create" parent="sbSystem:Root" child="sbProjects:Project" />
-		<mode type="create" parent="sbProjects:Project" child="sbProjects:TaskGroup" />
-		<mode type="create" parent="sbProjects:Project" child="sbProjects:Product" />
-		<mode type="create" parent="" child="" />
-		<mode type="create" parent="" child="" />
-		<mode type="create" parent="" child="" />
-		<mode type="create" parent="" child="" />
-	</modes>
-	
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-	<ontology>
-		<relation source="" forward="" backward="" destination="" />
-	</ontology>
+	</option>
 	
 </structure>

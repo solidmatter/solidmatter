@@ -752,7 +752,7 @@ class sbCR_Node {
 				$stmtChild->bindValue('is_primary', $sIsPrimary, PDO::PARAM_STR);
 				$stmtChild->bindValue('order', $iPosition, PDO::PARAM_INT);
 				$stmtChild->bindValue('level', $iLevel+1, PDO::PARAM_INT);
-				$stmtChild->bindValue('mpath', $this->getMPath(), PDO::PARAM_INT);
+				$stmtChild->bindValue('mpath', $this->getMPath(), PDO::PARAM_STR);
 				$stmtChild->execute();
 				
 				$nodeChild->save();

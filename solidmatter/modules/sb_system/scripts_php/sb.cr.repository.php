@@ -8,7 +8,7 @@
 */
 //------------------------------------------------------------------------------
 
-import('sb.pdo.repository');
+import('sb.pdo.repository.queries');
 import('sb.cr');
 import('sb.cr.propertydefinitioncache');
 
@@ -20,9 +20,10 @@ if (!defined('REPOSITORY_DEFINITION_FILE')) {	define('REPOSITORY_DEFINITION_FILE
 */
 class sbCR_Repository {
 	
-	private $sID = NULL;
+	protected $sID = NULL;
+	protected $sPrefix = NULL;
 	
-	private $aDescriptors = array(
+	protected $aDescriptors = array(
 		'SPEC_VERSION_DESC' => '1.0',
 		'SPEC_NAME_DESC' => 'solidbytes Content Repository for PHP Technology API',
 		'REP_VENDOR_DESC' => 'solidbytes',
@@ -55,10 +56,14 @@ class sbCR_Repository {
 	* @param 
 	* @return 
 	*/
-	public function __construct(string $sRepositoryID) {
+	public function __construct(sbPDO $DB, string $sRepositoryID, string $sRepositoryPrefix) {
 		
 		// store ID for later use
 		$this->sID = $sRepositoryID;
+		$this->sPrefix = $sRepositoryPrefix;
+		$this->DB = $DB;
+		$this->DB->setRewrite('{PREFIX_REPOSITORY}', $sRepositoryPrefix);
+		
 		$this->elemRepositoryDefinition = CONFIG::getRepositoryConfig($sRepositoryID);
 		
 	}
@@ -75,11 +80,21 @@ class sbCR_Repository {
 	
 	//--------------------------------------------------------------------------
 	/**
+	 *
+	 * @param
+	 * @return
+	 */
+	public function getPrefix() {
+		return ($this->sPrefix);
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* 
 	* @param 
 	* @return 
 	*/
-	public function getDescriptor($sKey) {
+	public function getDescriptor(string $sKey) {
 		if (isset($this->aDescriptors[$sKey])) {
 			return ($this->aDescriptors[$sKey]);
 		} else {
@@ -90,56 +105,47 @@ class sbCR_Repository {
 	//--------------------------------------------------------------------------
 	/**
 	* 
-	* @param 
 	* @return 
 	*/
-	public function getDescriptorKeys() {
+	public function getDescriptorKeys() : array {
 		return (array_keys($this->aDescriptors));
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
 	* 
-	* @param 
+	* @param sbCR_Credentials 
 	* @return 
 	*/
-	public function login($crCredentials = NULL, $sWorkspaceName = NULL) {
+	public function login(sbCR_Credentials $crCredentials = NULL, string $sWorkspaceID = NULL) : sbCR_Session {
 		
-		// credentials and workspace are mandatory
-		if ($crCredentials == NULL || $sWorkspaceName == NULL) {
-			throw new RepositoryException('credentials or workspace missing');
-		}
+		// credentials are mandatory - but checks are disabled for now
+// 		if ($crCredentials == NULL) {
+// 			throw new RepositoryException('credentials missing');
+// 		}
 		
-		// check if workspace exists
-		$elemWorkspace = NULL;
-		foreach ($this->elemRepositoryDefinition->xpath('workspace') as $elemCurrentWorkspace) {
-			if ($elemCurrentWorkspace['id'] == $sWorkspaceName) {
-				$elemWorkspace = $elemCurrentWorkspace;
-				$sWorkspacePrefix = (string) $elemCurrentWorkspace['prefix'];
+		if ($sWorkspaceID != NULL) {
+		
+			// check if workspace exists
+			$elemWorkspace = NULL;
+			foreach ($this->elemRepositoryDefinition->xpath('workspace') as $elemCurrentWorkspace) {
+				if ($elemCurrentWorkspace['id'] == $sWorkspaceID) {
+					$elemWorkspace = $elemCurrentWorkspace;
+					$sWorkspacePrefix = (string) $elemCurrentWorkspace['prefix'];
+				}
 			}
-		}
-		if ($elemWorkspace == NULL) {
-			throw new NoSuchWorkspaceException('workspace "'.$sWorkspaceName.'" not in repository "'.$this->elemRepositoryDefinition['id'].'"');
-		}
-		
-		// check authorisation
-		foreach ($elemWorkspace->user as $elemUser) {
-			// TODO: really check permissions, not only user existence!
-			if ($elemUser['name'] != $crCredentials->getUserID() || $elemUser['pass'] != $crCredentials->getPassword()) {
-				throw new AccessDeniedException('provided user is not authorised to access workspace "'.$sWorkspaceName.'" in repository "'.$this->elemRepositoryDefinition['id'].'"');
+			if ($elemWorkspace == NULL) {
+				throw new NoSuchWorkspaceException('workspace "'.$sWorkspaceID.'" not in repository "'.$this->elemRepositoryDefinition['id'].'"');
 			}
-		}
-		
-		$sRepositoryPrefix = (string) $this->elemRepositoryDefinition['prefix'];
-		$sDBID = (string) $this->elemRepositoryDefinition['db'];
-		
-		// init database
-		if ($sDBID == 'system') {
-			$this->DB = System::getDatabase();
-			$this->DB->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
-		} else {
-			$this->DB = new sbPDORepository($sDBID);
-			$this->DB->setWorkspace($sRepositoryPrefix, $sWorkspacePrefix);
+			
+// 			// check authorisation - disabled for now
+// 			foreach ($elemWorkspace->user as $elemUser) {
+// 				// TODO: really check permissions, not only user existence!
+// 				if ($elemUser['name'] != $crCredentials->getUserID() || $elemUser['pass'] != $crCredentials->getPassword()) {
+// 					throw new AccessDeniedException('provided user is not authorised to access workspace "'.$sWorkspaceID.'" in repository "'.$this->elemRepositoryDefinition['id'].'"');
+// 				}
+// 			}
+			
 		}
 		
 		// load and store repository infos if necessary
@@ -150,9 +156,31 @@ class sbCR_Repository {
 			$this->gatherRepositoryInformation();
 		}*/
 		
-		$crSession = new sbCR_Session($this->DB, $crCredentials, $this, $sWorkspaceName, $sWorkspacePrefix);
+		$crSession = new sbCR_Session($this->DB, $crCredentials, $this, $sWorkspaceID, $sWorkspacePrefix);
 		
 		return ($crSession);
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 *
+	 * @param 
+	 * @return
+	 */
+	public function createWorkspace(string $sWorkspaceID, string $sWorkspacePrefix) {
+		
+		import('sb.pdo.setup.queries.workspaces');
+		
+		$this->DB->setRewrite('{PREFIX_WORKSPACE}', $sWorkspacePrefix);
+		$stmtCreate = $this->DB->prepareKnown('sbCR/workspace/createTables');
+		$stmtCreate->execute();
+		$stmtCreate->closeCursor();
+		$stmtInit = $pdoRepository->prepareKnown('sbCR/workspace/createEntries');
+		$stmtInit->execute();
+		$stmtInit->debug();
+		$stmtInit->closeCursor();
+// 		CONFIG::addWorkspace($sRepositoryID, $sWorkspaceID, $sWorkspacePrefix);
 		
 	}
 	
@@ -162,7 +190,7 @@ class sbCR_Repository {
 	* @param 
 	* @return 
 	*/
-	public function gatherRepositoryInformation() {
+	public function gatherRepositoryInformation() : DOMDocument {
 		
 		$sRepository = (string) $this->elemRepositoryDefinition['id'];
 		$aRepositoryInfo = array();
@@ -172,7 +200,6 @@ class sbCR_Repository {
 		$stmtNodetypes->execute();
 		$stmtNodetypes = $stmtNodetypes->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($stmtNodetypes as $aRow) {
-			//var_dumpp($aRow);
 			$aRepositoryInfo[$aRow['s_type']]['details'] = $aRow;
 		}
 		
@@ -199,8 +226,6 @@ class sbCR_Repository {
 		$stmtHierarchy = $this->DB->prepareKnown('sbCR/repository/getNodeTypeHierarchy');
 		$stmtHierarchy->execute();
 		$aHierarchy = $stmtHierarchy->fetchAll(PDO::FETCH_ASSOC);
-		
-		//var_dumpp($aRepositoryInfo);
 		
 		// create DOM and store XML 
 		$domReposInfo = new sbDOMDocument('1.0');
@@ -253,8 +278,6 @@ class sbCR_Repository {
 		$elemRoot->appendChild($elemNodetypes);
 		$domReposInfo->appendChild($elemRoot);
 		
-		//var_dumpp ($domReposInfo->saveXML());
-		//$domReposInfo->save('repository_structure_'.$sRepository.'.xml');
 		return ($domReposInfo);
 	}
 	
@@ -267,10 +290,20 @@ class sbCR_Repository {
 	 * @param array The definition data for the current aspect, needs to be complete
 	 * @return
 	 */
-	public function changeRepositoryDefinition($sType, $sMode, $aData) {
+	public function changeRepositoryDefinition(string $sType, string $sMode = 'add', array $aData = NULL) {
+		
+		import("sb.pdo.repository.queries.administration");
 		
 		switch ($sType) {
 			
+			case 'begin';
+				$this->DB->beginTransaction('changeRepository');
+				break;
+				
+			case 'commit':
+				$this->DB->commit('changeRepository');
+				break;
+				
 			case 'nodetype':
 				if ($sMode == 'add' || $sMode == 'modify') {
 					$stmtAdd = $this->DB->prepareKnown('sbCR/nodetype/save');
@@ -293,8 +326,8 @@ class sbCR_Repository {
 					$stmtAdd->bindParam('view', $aData['view']);
 					$stmtAdd->bindParam('display', $aData['display']);
 					$stmtAdd->bindParam('labelpath', $aData['labelpath']);
-					$stmtAdd->bindParam('class', $aData['nodetype']);
-					$stmtAdd->bindParam('classfile', $aData['nodetype']);
+					$stmtAdd->bindParam('class', $aData['class']);
+					$stmtAdd->bindParam('classfile', $aData['classfile']);
 					$stmtAdd->bindParam('order', $aData['order']);
 					$stmtAdd->bindParam('priority', $aData['priority']);
 					$stmtAdd->execute();
@@ -382,9 +415,8 @@ class sbCR_Repository {
 					$stmtAdd->execute();
 				} else {
 					$stmtRemove = $this->DB->prepareKnown('sbCR/authorisation/remove');
-					$stmtRemove->bindParam('mode', $aData['mode']);
-					$stmtRemove->bindParam('parentnodetype', $aData['parentnodetype']);
-					$stmtRemove->bindParam('childnodetype', $aData['childnodetype']);
+					$stmtAdd->bindParam('nodetype', $aData['nodetype']);
+					$stmtAdd->bindParam('authorisation', $aData['authorisation']);
 					$stmtRemove->execute();
 				}
 				break;
@@ -395,7 +427,7 @@ class sbCR_Repository {
 					$stmtAdd->bindParam('nodetype', $aData['nodetype']);
 					$stmtAdd->bindParam('view', $aData['view']);
 					$stmtAdd->bindParam('action', $aData['action']);
-					$stmtAdd->bindParam('authorisation', $aData['default']);
+					$stmtAdd->bindParam('authorisation', $aData['authorisation']);
 					$stmtAdd->execute();
 				} else {
 					$stmtRemove = $this->DB->prepareKnown('sbCR/viewauthorisation/remove');
@@ -424,7 +456,7 @@ class sbCR_Repository {
 				}
 				break;
 			
-			case 'ontology':
+			case 'relation':
 				if ($sMode == 'add' || $sMode == 'modify') {
 					$stmtAdd = $this->DB->prepareKnown('sbCR/ontology/save');
 					$stmtAdd->bindParam('relation', $aData['relation']);
@@ -440,6 +472,42 @@ class sbCR_Repository {
 					$stmtRemove->execute();
 				}
 				break;
+				
+			case 'lifecycle':
+				if ($sMode == 'add' || $sMode == 'modify') {
+					$stmtAdd = $this->DB->prepareKnown('sbCR/lifecycle/save');
+					$stmtAdd->bindParam('nodetype', $aData['nodetype']);
+					$stmtAdd->bindParam('state', $aData['state']);
+					$stmtAdd->bindParam('statetransition', $aData['statetransition']);
+					$stmtAdd->execute();
+				} else {
+					$stmtRemove = $this->DB->prepareKnown('sbCR/lifecycle/remove');
+					$stmtRemove->bindParam('nodetype', $aData['nodetype']);
+					$stmtRemove->bindParam('state', $aData['state']);
+					$stmtRemove->bindParam('statetransition', $aData['statetransition']);
+					$stmtRemove->execute();
+				}
+				break;
+				
+			case 'registry':
+				if ($sMode == 'add' || $sMode == 'modify') {
+					$stmtAdd = $this->DB->prepareKnown('sbCR/registry/save');
+					$stmtAdd->bindParam('key', $aData['key']);
+					$stmtAdd->bindParam('type', $aData['type']);
+					$stmtAdd->bindParam('internaltype', $aData['internaltype']);
+					$stmtAdd->bindParam('userspecific', $aData['userspecific']);
+					$stmtAdd->bindParam('defaultvalue', $aData['defaultvalue']);
+					$stmtAdd->bindParam('comment', $aData['comment']);
+					$stmtAdd->execute();
+				} else {
+					$stmtRemove = $this->DB->prepareKnown('sbCR/registry/remove');
+					$stmtRemove->bindParam('key', $aData['key']);
+					$stmtRemove->execute();
+				}
+				break;
+			
+			default:
+				throw new sbException(__CLASS__.': change type not supported "'.$sType.'"');
 				
 			
 		}

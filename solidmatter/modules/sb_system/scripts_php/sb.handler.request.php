@@ -24,22 +24,25 @@ abstract class RequestHandler {
 	//--------------------------------------------------------------------------
 	/**
 	* Returns the parsed request URI.
+	* URIs are expected to have the format <node>/<view>/<action> followed by the query part.
+	* The resulting array contains the following keys/values:
+	* -	'node': the node identifier (can currently be <UUID>, <UID> or <UUID/UID>::<ChildNodeName>
+	* - 'view': the view that should be called (NULL or '-' = default view)
+	* - 'action': the view action that should be called (NULL or '-' = default action)
 	* @param 
 	* @return 
 	*/
 	public function parseURI() {
 		
 		// init
-		$aRequest['node_uuid'] = NULL;
+		$aRequest['node'] = NULL;
 		$aRequest['view'] = NULL;
 		$aRequest['action'] = NULL;
-		
-		$aURI = parse_url($_REQUEST->getURI());
 		
 		// compute requested node / view / action / (rest of path ignored)
 		$aPath = explode('/', $_REQUEST->getRelevantPath());
 		if (isset($aPath[1]) && $aPath[1] != '-' && $aPath[1] != '') {
-			$aRequest['node_uuid'] = $aPath[1];
+			$aRequest['node'] = $aPath[1];
 		}
 		if (isset($aPath[2]) && $aPath[2] != '-' && $aPath[2] != '') {
 			$aRequest['view'] = $aPath[2];

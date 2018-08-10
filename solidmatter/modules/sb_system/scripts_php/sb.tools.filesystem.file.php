@@ -24,7 +24,7 @@ class sbFile extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function __construct($sRelPath = NULL) {
+	public function __construct(string $sRelPath = NULL) {
 		parent::__construct($sRelPath);
 		$this->aInfo['abs_path'] = substr($this->aInfo['abs_path'], 0, strlen($this->aInfo['abs_path'])-1);
 	}
@@ -35,7 +35,7 @@ class sbFile extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function getElement($sContainerName, $bIncludeDirs = FALSE) {
+	public function getElement(string $sContainerName, bool $bIncludeDirs = FALSE) : DOMElement {
 		
 		$domFiles = new DOMDocument();
 		$elemContainer = $domFiles->createElement($sContainerName);
@@ -52,7 +52,7 @@ class sbFile extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function getContents() {
+	public function getContents() : string {
 		return (file_get_contents($this->aInfo['abs_path']));
 	}
 	
@@ -62,7 +62,7 @@ class sbFile extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function getSize() {
+	public function getSize() : string {
 		return (filesize($this->aInfo['abs_path']));
 	}
 	
@@ -72,7 +72,7 @@ class sbFile extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function getMimetype() {
+	public function getMimetype() : string {
 		return (get_mimetype($this->aInfo['abs_path']));
 	}
 	
@@ -82,7 +82,7 @@ class sbFile extends sbFilesystemObject {
 	* @param 
 	* @return 
 	*/
-	public function delete() {
+	public function delete() : bool {
 		return (unlink($this->aInfo['abs_path']));
 	}
 	

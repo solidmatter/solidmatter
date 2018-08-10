@@ -1,0 +1,133 @@
+<?xml version="1.0" ?>
+<structure>
+	
+	<option type="install" version="1.0.0">
+		
+		<version main="1" sub="0" bugfix="0" info="alpha" />
+		
+		<nodetypes>
+			<nodetype id="sbForum:Category" type="PRIMARY" />
+			<nodetype id="sbForum:Forum" type="PRIMARY" />
+			<nodetype id="sbForum:Post" type="PRIMARY" />
+			<nodetype id="sbForum:Thread" type="PRIMARY" />
+		</nodetypes>
+
+		<nodetypehierarchy>
+			<parent nodetype="sbSystem:PropertiesView">
+				<child nodetype="sbForum:Category" />
+				<child nodetype="sbForum:Forum" />
+				<child nodetype="sbForum:Thread" />
+			</parent>
+		</nodetypehierarchy>
+
+		<properties>
+			<nodetype id="sbForum:Forum">
+				<property order="10" name="maintenance_forumclosed" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbForum/Forum/maintenance_forumclosed" />
+				<property order="20" name="attachments_allowed" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbForum/Forum/attachments_allowed" />
+				<property order="30" name="attachments_maxfilesize" type="LONG" internaltype="integer;minvalue=1;maxvalue=32000" labelpath="$locale/sbForum/Forum/attachments_maxfilesize" />
+				<property order="40" name="attachments_allowedmimetypes" type="STRING" internaltype="text" labelpath="$locale/sbForum/Forum/attachments_allowedmimetypes" />
+				<property order="50" name="attachments_maxnumallowed" type="LONG" internaltype="integer;minvalue=1;maxvalue=100" labelpath="$locale/sbForum/Forum/attachments_maxnumallowed" />
+				<property order="60" name="avatars_allow" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbCMS/Page/config_active/@label" />
+				<property order="70" name="avatars_maxfilesize" type="LONG" internaltype="integer;minvalue=1;maxvalue=500" labelpath="$locale/sbForum/Forum/avatars_maxfilesize" />
+				<property order="80" name="avatars_maxxsize" type="LONG" internaltype="integer;minvalue=8;maxvalue=512" labelpath="$locale/sbForum/Forum/avatars_maxxsize" />
+				<property order="90" name="avatars_maxysize" type="LONG" internaltype="integer;minvalue=8;maxvalue=512" labelpath="$locale/sbForum/Forum/avatars_maxysize" />
+				<property order="100" name="security_hideurlsfromguests" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbForum/Forum/security_hideurlsfromguests" />
+				<property order="110" name="security_requireregistration" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbForum/Forum/security_requireregistration" />
+				<property order="120" name="security_saveips" type="BOOLEAN" internaltype="checkbox" labelpath="$locale/sbForum/Forum/security_saveips" />
+				<property order="130" name="threads_perpage" type="LONG" internaltype="integer;minvalue=5;maxvalue=500" labelpath="$locale/sbForum/Forum/threads_perpage" />
+				<property order="140" name="threads_sortcriteria" type="STRING" internaltype="string" labelpath="$locale/sbForum/Forum/threads_sortcriteria" />
+				<property order="150" name="threads_sortdirection" type="STRING" internaltype="string" labelpath="$locale/sbForum/Forum/threads_sortdirection" />
+				<property order="160" name="messages_perpage" type="LONG" internaltype="integer;minvalue=5;maxvalue=500" labelpath="$locale/sbForum/Forum/messages_perpage" />
+			</nodetype>
+		</properties>
+		
+		<lifecycles>
+		</lifecycles>
+		
+		<views>
+			<view nodetype="sbForum:Category" view="preview" display="TRUE" labelpath="" class="sbView_preview" classfile="sbCMS:sb.node.view.preview" order="0" priority="0" />
+			<view nodetype="sbForum:Forum" view="preview" display="TRUE" labelpath="" class="sbView_preview" classfile="sbCMS:sb.node.view.preview" order="0" priority="0" />
+		</views>
+		
+		<actions>
+			<action nodetype="sbForum:Category" view="preview" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_system:node.preview.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbForum:Category" view="preview" action="render" default="FALSE" outputtype="RENDERED" stylesheet="" mimetype="" uselocale="TRUE" isrecallable="FALSE" />
+			<action nodetype="sbForum:Forum" view="preview" action="display" default="TRUE" outputtype="RENDERED" stylesheet="sb_system:node.preview.xsl" mimetype="text/html" uselocale="TRUE" isrecallable="TRUE" />
+			<action nodetype="sbForum:Forum" view="preview" action="render" default="FALSE" outputtype="RENDERED" stylesheet="" mimetype="" uselocale="TRUE" isrecallable="FALSE" />
+		</actions>
+		
+		<viewauthorisations>
+		</viewauthorisations>
+		
+		<modes>
+			<mode type="tree">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbForum:Forum" />
+				</parent>
+				<parent nodetype="sbForum:Forum">
+					<child nodetype="sbForum:Category" />
+				</parent>
+<!-- 				<parent nodetype="sbCMS:Site"> -->
+<!-- 					<child nodetype="sbForum:Forum" /> -->
+<!-- 				</parent> -->
+			</mode>
+			<mode type="create">
+				<parent nodetype="sbSystem:Root">
+					<child nodetype="sbForum:Forum" />
+				</parent>
+				<parent nodetype="sbForum:Forum">
+					<child nodetype="sbForum:Category" />
+				</parent>
+				<parent nodetype="sbForum:Category">
+					<child nodetype="sbForum:Category" />
+					<child nodetype="sbForum:Thread" />
+				</parent>
+<!-- 				<parent nodetype="sbCMS:Site"> -->
+<!-- 					<child nodetype="sbForum:Forum" /> -->
+<!-- 				</parent> -->
+<!-- 				<parent nodetype="sbCMS:Page"> -->
+<!-- 					<child nodetype="sbForum:Forum" /> -->
+<!-- 				</parent> -->
+			</mode>
+			<mode type="list">
+				<parent nodetype="sbForum:Category">
+					<child nodetype="sbForum:Thread" />
+				</parent>
+<!-- 				<parent nodetype="sbCMS:Site"> -->
+<!-- 					<child nodetype="sbForum:Forum" /> -->
+<!-- 				</parent> -->
+			</mode>
+			<mode type="gatherContent">
+				<parent nodetype="sbForum:Forum">
+					<child nodetype="sbForum:Category" />
+				</parent>
+				<parent nodetype="sbForum:Category">
+					<child nodetype="sbForum:Category" />
+				</parent>
+			</mode>
+<!-- 			<mode type="choosePage"> -->
+<!-- 				<parent nodetype="sbCMS:Site"> -->
+<!-- 					<child nodetype="sbForum:Forum" /> -->
+<!-- 				</parent> -->
+<!-- 				<parent nodetype="sbCMS:Page"> -->
+<!-- 					<child nodetype="sbForum:Forum" /> -->
+<!-- 				</parent> -->
+<!-- 			</mode> -->
+		</modes>
+		
+	</option>
+	
+	<option type="uninstall" version="1.0.0">
+		
+		<version action="remove" />
+		
+		<nodetypes action="remove">
+			<nodetype id="sbForum:Category" />
+			<nodetype id="sbForum:Forum" />
+			<nodetype id="sbForum:Post" />
+			<nodetype id="sbForum:Thread" />
+		</nodetypes>
+		
+	</option>
+	
+</structure>

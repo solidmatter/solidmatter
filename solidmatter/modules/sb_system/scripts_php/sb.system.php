@@ -39,7 +39,7 @@ class System {
 	/**
 	* Initializes the class, should be called early in request processing.
 	*/
-	public static function init() {
+	public static function init() : void {
 		
 		if (self::$sSystemDirectory == NULL) {
 			self::$sSystemDirectory = getcwd().'/';
@@ -52,7 +52,10 @@ class System {
 	* Returns the full system path of the current solidMatter installation.
 	* @return string the system path
 	*/
-	public static function getDir() {
+	public static function getDir() : string {
+		if (self::$sSystemDirectory == NULL) {
+			self::init();
+		}
 		return (self::$sSystemDirectory);
 	}
 	
@@ -63,7 +66,7 @@ class System {
 	* things like session storage and caching.
 	* @return 
 	*/
-	public static function getDatabase() {
+	public static function getDatabase() : sbPDO {
 		if (self::$dbSystem === NULL) {
 			import('sb.pdo.system');
 			self::$dbSystem = new sbPDOSystem('system');
@@ -79,7 +82,7 @@ class System {
 	* @param 
 	* @return 
 	*/
-	public static function setSession($crSession) {
+	public static function setSession(sbCR_Session $crSession) : void {
 		self::$crSession = $crSession;	
 	}
 	
@@ -89,7 +92,7 @@ class System {
 	* @param 
 	* @return 
 	*/
-	public static function setLogLevel($iLevel) {
+	public static function setLogLevel(int $iLevel) : void {
 		self::$iLogLevel = $iLevel;
 	}
 	
@@ -102,7 +105,7 @@ class System {
 	* @param string a text with additional details (optional)
 	* @param string the subject node UUID
 	*/
-	public static function logEvent($eType, $sModule, $sUID, $sText, $sSubjectUUID) {
+	public static function logEvent(int $eType, string $sModule, string $sUID, string $sText, string $sSubjectUUID) : bool {
 		if (!(self::$iLogLevel & $eType)) {
 			return (FALSE);
 		}
@@ -126,6 +129,8 @@ class System {
 			$stmtLog->bindValue('user', User::getUUID(), PDO::PARAM_STR);	
 		}
 		$stmtLog->execute();
+		return (TRUE);
+		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -134,7 +139,7 @@ class System {
 	* @param 
 	* @return 
 	*/
-	public static function LOGG($sText, $eType = System::INFO, $eContext = System::SYSTEM, $bIncludeHeader = FALSE) {
+	public static function LOGG(string $sText, int $eType = System::INFO, int $eContext = System::SYSTEM, bool $bIncludeHeader = FALSE) : bool {
 		if (!(self::$iLogLevel & $eType)) {
 			return (FALSE);
 		}
@@ -157,14 +162,17 @@ class System {
 		
 		error_log($sText."\r\n", 3, self::getDir().$sFile);
 		
+		return (TRUE);
+		
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
 	* Returns an array with info on all installed modules in this solidMatter instance.
+	* FIXME: needs to be changed to only consider installed modules, I think.
 	* @return 
 	*/
-	public static function getModules() {
+	public static function getModules() : array {
 		
 		// FIXME: hm, sb_system has to be first, otherwise css rendering does not work correctly... why?  
 		$aModuleInfos	= array('sb_system' => array());
@@ -179,7 +187,6 @@ class System {
 			}
 		}
 		closedir($hModules);
-		//var_dump($aModuleInfos);
 		return ($aModuleInfos);
 		
 	}
@@ -187,33 +194,20 @@ class System {
 	//--------------------------------------------------------------------------
 	/**
 	* Returns the failsafe (lowercase, filesystem friendly) name of the given module.
-	* TODO: make obsolete and remove if possible (problem: namespaces may contain invalid characters)
+	* Replaces uppercase letters with "_<lowercase letter>", which is the current convention.
+	* Does not regard if the module exists or is installed.
+	* TODO: make obsolete and remove if possible (problem: namespaces may contain invalid characters - maybe just restrict)
 	* @return string the failsafe name
 	*/
-	public static function getFailsafeModuleName($sModule) {
-		$aModules = array(
-			'sbSystem' => 'sb_system',
-			'sbCMS' => 'sb_cms',
-			'sbFiles' => 'sb_files',
-			'sbNews' => 'sb_news',
-			'sbUtilities' => 'sb_utilities',
-			'sbForum' => 'sb_forum',
-			'sbGuestbook' => 'sb_guestbook',
-			'sbJukebox' => 'sb_jukebox',
-			'sbPortal' => 'sb_portal',
-			'sbIdM' => 'sb_idm',
-		);
-		if (isset($aModules[$sModule])) {
-			return ($aModules[$sModule]);
-		}
-		return ($sModule);
+	public static function getFailsafeModuleName(string $sModule) : string {
+		return(strtolower(preg_replace('/([A-Z])/', '_$1', $sModule, 1)));
 	}
 	
 	//--------------------------------------------------------------------------
 	/**
 	* Sets the handler processing the current request.
 	*/
-	public static function setRequestHandler($hndProcessor) {
+	public static function setRequestHandler(RequestHandler $hndProcessor) : void {
 		self::$hndRequest = $hndProcessor;
 	}
 	
@@ -221,7 +215,7 @@ class System {
 	/**
 	* Returns the handler processing the current request.
 	*/
-	public static function getRequestHandler() {
+	public static function getRequestHandler() : RequestHandler {
 		return (self::$hndRequest);
 	}
 	
@@ -231,7 +225,7 @@ class System {
 	* @param 
 	* @return 
 	*/
-	public static function getRequestURL($mSubject = NULL, $sView = NULL, $sAction = NULL, $aParameters = NULL) {
+	public static function getRequestURL($mSubject = NULL, string $sView = NULL, string $sAction = NULL, array $aParameters = NULL) : string {
 		return(self::getRequestHandler()->generateRequestURL($mSubject, $sView, $sAction, $aParameters));
 	}
 	
@@ -241,7 +235,7 @@ class System {
 	* @param 
 	* @return 
 	*/
-	public static function getRequestPath($mSubject = NULL, $sView = NULL, $sAction = NULL, $aParameters = NULL) {
+	public static function getRequestPath($mSubject = NULL, string $sView = NULL, string $sAction = NULL, array $aParameters = NULL) {
 		return(self::getRequestHandler()->generateRequestPath($mSubject, $sView, $sAction, $aParameters));
 	}
 	
@@ -250,7 +244,7 @@ class System {
 	* Returns the operating system solidMatter is running on.
 	* @return string identifier of the os
 	*/
-	public static function getEnvironment() {
+	public static function getEnvironment() : string {
 		
 		// $_ENV['OS']???
 		if (substr( PHP_OS, 0, 3 ) == 'WIN') {
@@ -258,7 +252,6 @@ class System {
 		} else {
 			return ('linux');	
 		}
-
 		
 	}
 	
@@ -267,7 +260,7 @@ class System {
 	* Returns the character encoding used by the operating system.
 	* @return string the encoding in a format ready for iconv()
 	*/
-	public static function getFilesystemEncoding() {
+	public static function getFilesystemEncoding() : string {
 		
 		// TODO: actually check the server environment
 		if (self::getEnvironment() == 'windows') {
