@@ -56,7 +56,7 @@ class sbCR_Node {
 	/**
 	* cache for the materialized path of this node
 	*/
-	protected $sMPath				= '';
+	protected $sMPath				= NULL;
 	/**
 	* 
 	*/
@@ -520,11 +520,11 @@ class sbCR_Node {
 	* @return string the full materialized path
 	*/
 	public function getMPath($bJustThisNode = FALSE) {
-		if ($this->sMPath != '') {
+		if ($this->sMPath !== NULL) {
 			return ($this->sMPath);
 		}
 		// use last 5 chars
-		$sMPath = substr(sha1($this->getIdentifier()), -REPOSITORY_MPHASH_SIZE);
+		$sMPath = sbUUID::generateMPath($this->getIdentifier());
 		if ($this->isNodeType('sbSystem:Root') || $bJustThisNode) {
 			return ($sMPath);
 		} else {

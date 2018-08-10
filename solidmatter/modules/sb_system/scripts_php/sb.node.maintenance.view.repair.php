@@ -65,56 +65,73 @@ class sbView_maintenance_repair extends sbView {
 				
 			case 'optimizeUUIDs':
 				
+				import('sb.pdo.repository.queries.sbuuid');
+				import('sbJukebox:sb.pdo.queries');
+				
 // 				$this->logEvent(System::MAINTENANCE, 'UUID_OPTIMIZATION_STARTED', 'started to convert to sbUUIDs');
-				$stmtSelect = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/getAllUUIDs');
+				$stmtSelect = $this->crSession->prepareKnown('sbSystem/sbUUID/getAllUUIDs');
 				$stmtSelect->execute();
 				$aResultset = $stmtSelect->fetchALL(PDO::FETCH_ASSOC);
 				
-				$stmtUpdate = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/updateUUID');
+				$stmtUpdateRoot = $this->crSession->prepareKnown('sbSystem/sbUUID/updateRoot');
+				
+				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateUUID');
+				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateEventlog/subject');
+				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateEventlog/user');
+				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateNodes/created');
+				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateNodes/modified');
+				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateProperties');
+				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateRegistry');
+				
+				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateAlbums/artist');
+				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateAlbums/albumartist');
+				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateTracks');
+				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateAlbumhistory/user');
+				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateTrackhistory/user');
+				
+				$this->crSession->beginTransaction('sbUUID');
+				
+				$stmtUpdateRoot->execute();
+				$stmtUpdateRoot->closeCursor();
 				
 				foreach ($aResultset as $aRow) {
-					if ($aRow['uuid'] != '00000000000000000000000000000000') {
+					
+					if ($aRow['uuid'] == '00000000000000000000000000000000') {
+						$sNewUUID = '0000000000000000000000';
+					} else {
 						$sNewUUID = sbUUID::create();
-						$stmtUpdate->bindParam('uuid_old', $aRow['uuid'], PDO::PARAM_STR);
-						$stmtUpdate->bindParam('uuid_new', $sNewUUID, PDO::PARAM_STR);
-// 						echo $aRow['uuid'] . ' -> ' . $sNewUUID . '<br/>';
-// 						$stmtUpdate->debug();
-						$stmtUpdate->execute();
 					}
 					
-					
-					/* TODO: missing updates 
-					
-					update root id
-					
-					sb_system_eventlog
-					fk_user
-					fk_subject
-					
-					sb_system_nodes
-					fk_creadedby
-					fk_modifiedby
-					
-					sb_system_properties <- maybe in values!
-					
-					sb_system_registry_values
-					
-					sb_jukebox_albums
-					fk_artist
-					fk_albumartist?
-					
-					sb_jukebox_historya_albums
-					fk_user
-					
-					sb_jukebox_history_tracks
-					fk_user
-					
-					sb_jukebox_tracks
-					
-					*/
+					foreach ($aUpdates as $stmtUpdate) {
+						$stmtUpdate->bindParam('uuid_old', $aRow['uuid'], PDO::PARAM_STR);
+						$stmtUpdate->bindParam('uuid_new', $sNewUUID, PDO::PARAM_STR);
+						$stmtUpdate->execute();
+// 						$stmtUpdate->debug();
+					}
+						
 				}
 				
-// 				$this->logEvent(System::MAINTENANCE, 'UUID_OPTIMIZATION_ENDED', 'Conversion to sbUUIDs finished');
+				$this->crSession->commit('sbUUID');
+				
+				$this->logEvent(System::MAINTENANCE, 'UUID_OPTIMIZATION_ENDED', 'Conversion to sbUUIDs finished');
+				
+				// clear all caches
+				$aCaches = array(
+					'system',
+					'paths',
+					'registry',
+					'images',
+					'authorisations',
+					'repository',
+					'misc',
+				);
+				foreach ($aCaches as $sCurrentCache) {
+					$cacheCurrent = CacheFactory::getInstance($sCurrentCache);
+					$cacheCurrent->clear();
+					$this->logEvent(System::MAINTENANCE, 'CACHE_CLEARED', $sCurrentCache);
+				}
+				sbSession::destroy();
+				
 				break;
 			
 		}
@@ -129,38 +146,46 @@ class sbView_maintenance_repair extends sbView {
 	* @param 
 	* @return 
 	*/
-	private function rebuildMaterializedPaths($sCurrentUUID = NULL, $sMPath = '', $iLevel = 0) {
+	private function rebuildMaterializedPaths($sParentUUID = NULL, $sMPath = NULL, $iLevel = 0) {
 		
-		if ($sCurrentUUID == NULL) {
+		static $stmtSetCoordinates = NULL;
+		if ($stmtSetCoordinates == NULL) {
+			$stmtSetCoordinates = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/setCoordinates/MPath');
+		}
+		
+		if ($sParentUUID === NULL) {
 			$stmtLoadChildren = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/loadRoot');
 		} else {
 			$stmtLoadChildren = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/loadChildren');
-			$stmtLoadChildren->bindParam('fk_parent', $sCurrentUUID, PDO::PARAM_STR);
+			$stmtLoadChildren->bindValue('fk_parent', $sParentUUID, PDO::PARAM_STR);
 		}
 		$stmtLoadChildren->execute();
 		$aResultset = $stmtLoadChildren->fetchALL(PDO::FETCH_ASSOC);
 		$stmtLoadChildren->closeCursor();
-		
-		if ($sCurrentUUID == NULL) {
+// 		var_dumppp($aResultset);
+		if ($iLevel == 0 || $iLevel == 1) {
 			$sMPath = '';
 		} else {
-			$sMPath = $sMPath.substr(sha1($sCurrentUUID), -REPOSITORY_MPHASH_SIZE);
+			$sMPath = $sMPath.sbUUID::generateMPath($sParentUUID);
 		}
 		
 		$iOrder = 0;
 		foreach ($aResultset as $aRow) {
+			
+			$stmtSetCoordinates->bindValue('fk_child', $aRow['uuid'], PDO::PARAM_STR);
+			$stmtSetCoordinates->bindValue('fk_parent', $sParentUUID, PDO::PARAM_STR);
+			$stmtSetCoordinates->bindValue('level', $iLevel, PDO::PARAM_INT);
+			$stmtSetCoordinates->bindValue('order', $iOrder, PDO::PARAM_INT);
+			$stmtSetCoordinates->bindValue('mpath', $sMPath, PDO::PARAM_STR);
+			$stmtSetCoordinates->execute();
+			$stmtSetCoordinates->closeCursor();
+			$iOrder++;
+			
 			// FIX: there are logical problems with non-primary links, the "true" is a quick workaround (which means the last link will "win")
 			if (true || !isset($aRow['b_primary']) || $aRow['b_primary'] == 'TRUE') {
 				$this->rebuildMaterializedPaths($aRow['uuid'], $sMPath, $iLevel+1);
 			}
-			$stmtSetCoordinates = $this->crSession->prepareKnown('sbSystem/maintenance/view/repair/setCoordinates/MPath');
-			$stmtSetCoordinates->bindParam('fk_child', $aRow['uuid'], PDO::PARAM_STR);
-			$stmtSetCoordinates->bindParam('fk_parent', $sCurrentUUID, PDO::PARAM_STR);
-			$stmtSetCoordinates->bindParam('level', $iLevel, PDO::PARAM_INT);
-			$stmtSetCoordinates->bindParam('order', $iOrder, PDO::PARAM_INT);
-			$stmtSetCoordinates->bindParam('mpath', $sMPath, PDO::PARAM_INT);
-			$stmtSetCoordinates->execute();
-			$iOrder++;
+			
 		}
 		
 	}

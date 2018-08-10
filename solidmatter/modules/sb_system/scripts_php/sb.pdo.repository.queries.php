@@ -1552,7 +1552,7 @@ $_QUERIES['sbSystem/maintenance/view/repair/loadChildren'] = '
 				b_primary
 	FROM		{TABLE_HIERARCHY}
 	WHERE		fk_parent = :fk_parent
-		AND		fk_child <> \'00000000000000000000000000000000\'
+		AND		fk_child <> fk_parent
 		AND		fk_deletedby IS NULL
 	ORDER BY	n_order
 ';
@@ -1634,16 +1634,6 @@ $_QUERIES['sbSystem/maintenance/view/repair/removeAbandonedNodes/normal'] = '
  :node_id
  )
  ';*/
-$_QUERIES['sbSystem/maintenance/view/repair/getAllUUIDs'] = '
-	SELECT		uuid
-	FROM		{TABLE_NODES}
-';
-$_QUERIES['sbSystem/maintenance/view/repair/updateUUID'] = '
-	UPDATE		{TABLE_NODES}
-	SET			uuid = :uuid_new
-	WHERE		uuid = :uuid_old
-';
-
 
 //------------------------------------------------------------------------------
 // node:folder
@@ -1930,6 +1920,7 @@ $_QUERIES['sbSystem/debug/gatherTree'] = '
 		ON		h.fk_parent = n2.uuid*/
 	WHERE		h.fk_parent = :parent_uuid
 		AND		h.fk_child <> \'00000000000000000000000000000000\'
+		AND		h.fk_child <> \'0000000000000000000000\'
 	ORDER BY	h.n_order ASC
 ';
 

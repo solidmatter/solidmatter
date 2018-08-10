@@ -8,7 +8,7 @@
 */
 //---------------------------------------------------------
 
-$TEST = 'UUIDSTUFF';
+$TEST = 'DATETIME';
 if (isset($_REQUEST['test'])) {
 	$TEST = $_REQUEST['test'];
 }
@@ -520,7 +520,7 @@ if ($TEST == 'UUIDSTUFF') {
 		$sUUID64b = sbUUID::convertBase16to64($sUUID16b, FALSE);
 		
 // 		echo microtime(TRUE).'|'.microtime().'|';
-		echo $sUUID64.'|'.$sUUID16a.'|'.$sUUID16b.'|'.$sUUID64a.'|'.$sUUID64b;
+		echo $sUUID64.'|'.$sUUID16a.'|'.$sUUID16b.'|'.$sUUID64a.'|'.$sUUID64b.'|'.(string)sbUUID::issbUUID($sUUID64);
 		
 		
 		echo '<br>';
@@ -546,6 +546,29 @@ if ($TEST == 'MICROTIME') {
 		echo $fTime.'|';
 		
 
+		echo '<br>';
+		
+		// 		for ($j=0;$j<100000;$j++) {
+		
+		// 		}
+		
+	}
+	
+	echo '</body>';
+	
+}
+
+if ($TEST == 'DATETIME') {
+	
+	echo '<body style="font-family: Andale Mono, monospace;">';
+	
+	$dtStart = new DateTime();
+	
+	for ($i=0; $i<10000; $i++) {
+		$dtNow = new DateTime();
+		$diDifference = $dtNow->diff($dtStart, TRUE);
+		echo $dtNow->format('H-m-d H:i:s.u');
+		
 		echo '<br>';
 		
 		// 		for ($j=0;$j<100000;$j++) {

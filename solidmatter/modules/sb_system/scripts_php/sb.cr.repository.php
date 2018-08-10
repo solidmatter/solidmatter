@@ -14,8 +14,6 @@ import('sb.cr.propertydefinitioncache');
 
 // xml file containing all information on repositories this sbCR instance supports
 if (!defined('REPOSITORY_DEFINITION_FILE')) {	define('REPOSITORY_DEFINITION_FILE', 'repositories.xml'); }
-// number of characters to use for the pseudo-materialized path on each level
-if (!defined('REPOSITORY_MPHASH_SIZE')) {		define('REPOSITORY_MPHASH_SIZE', 5); }
 
 //------------------------------------------------------------------------------
 /**

@@ -15,6 +15,12 @@
 */
 abstract class sbUUID {
 	
+	public const CHARS_BASE64 = '+/';
+	public const CHARS_SBUUID = '-_';
+	
+	private const CHARS_SBUUID_PCRE = '\-\_';
+	private const MPHASH_SIZE = 4;
+	
 	private static $sLastUUID = NULL;
 	
 	//--------------------------------------------------------------------------
@@ -22,7 +28,7 @@ abstract class sbUUID {
 	 * Generates a sbUUID 
 	 * @return string a 16 byte UUID (in web-safe Base64)
 	 */
-	public static function create() {
+	public static function create() : string {
 		self::$sLastUUID = self::base64url_encode(hex2bin(self::getOrderedUUID()));
 		return (self::$sLastUUID);
 	}
@@ -32,7 +38,7 @@ abstract class sbUUID {
 	 * Generates a UUID after the old model
 	 * @return string a 16 byte UUID (
 	 */
-	public static function createOldUUID($bWithHyphens = FALSE) {
+	public static function createOldUUID(bool $bWithHyphens = FALSE) : string {
 		if ($bWithHyphens) {
 			$sFormat = '%04x%04x-%04x-%04x-%04x-%04x%04x%04x';
 		} else {
@@ -51,7 +57,7 @@ abstract class sbUUID {
 	 * 
 	 * @return string a 16 byte UUID
 	 */
-	public static function getLastUUID() {
+	public static function getLastUUID() : string {
 		return (self::$sLastUUID);
 	}
 	
@@ -60,7 +66,7 @@ abstract class sbUUID {
 	 *
 	 * @return
 	 */
-	protected static function getOrderedUUID() {
+	protected static function getOrderedUUID() : string {
 		
 		static $iCounter = 0;
 		static $mtLast = 0;
@@ -96,7 +102,7 @@ abstract class sbUUID {
 	 * @param boolean TRUE if the UUID includes hyphens
 	 * @return 
 	 */
-	public static function convertBase16to64($sUUID, $bUsesHyphens = TRUE) {
+	public static function convertBase16to64(string $sUUID, bool $bUsesHyphens = TRUE) : string {
 		if ($bUsesHyphens) {
 			$sUUID = str_replace('-', '', $sUUID);
 		}
@@ -105,11 +111,11 @@ abstract class sbUUID {
 	
 	//--------------------------------------------------------------------------
 	/**
-	 * Converts a base 64 UUID to a base 16 UUID
+	 * Converts a base 64 UUID to a base 16 UUID.
 	 * @param 
 	 * @return
 	 */
-	public static function convertBase64to16($sUUID, $bUseHyphens = TRUE) {
+	public static function convertBase64to16(string $sUUID, bool $bUseHyphens = TRUE) : string {
 		$sUUID = bin2hex(self::base64url_decode($sUUID));
 		if ($bUseHyphens) {
 			$sUUID = substr_replace($sUUID, '-', 20, 0);
@@ -120,22 +126,43 @@ abstract class sbUUID {
 		return ($sUUID);
 	}
 	
-	//------------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
 	/**
-	 * Converts a binary String to URL-Safe Base64 (without filler '==' at the end)
-	 * @return string a 16 byte UUID
+	 * Checks if a given string is (potentially!) an abUUID.
+	 * @param
+	 * @return
 	 */
-	protected static function base64url_encode($sInput) {
-		return substr(strtr(base64_encode($sInput), '+/', '-.'), 0, -2);
+	public static function issbUUID(string $sUUID) : bool {
+		return ((bool) preg_match('/^[a-zA-z0-9'.sbUUID::CHARS_SBUUID_PCRE.']{22}$/', $sUUID));
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
+	 * Generates a component of a materialized path based on a given UUID/sbUUID.
+	 * @param
+	 * @return
+	 */
+	public static function generateMPath(string $sUUID) : string {
+		return (substr(self::base64url_encode(hex2bin(md5($sUUID))), -sbUUID::MPHASH_SIZE));
+// 		return (substr($sUUID, -sbUUID::MPHASH_SIZE));
 	}
 	
 	//------------------------------------------------------------------------------
 	/**
-	 * Converts a sbUUID to a binary string
+	 * Converts a binary String to URL-Safe Base64 (without filler '==' at the end).
+	 * @return string a 16 byte UUID
+	 */
+	protected static function base64url_encode(string $sInput) : string {
+		return substr(strtr(base64_encode($sInput), sbUUID::CHARS_BASE64, sbUUID::CHARS_SBUUID), 0, -2);
+	}
+	
+	//------------------------------------------------------------------------------
+	/**
+	 * Converts a sbUUID to a binary string.
 	 * @return
 	 */
-	protected static function base64url_decode($sInput) {
-		return base64_decode(strtr($sInput.'==', '-.', '+/'));
+	protected static function base64url_decode(string $sInput) : string {
+		return base64_decode(strtr($sInput.'==', sbUUID::CHARS_SBUUID, sbUUID::CHARS_BASE64));
 	}
 	
 }

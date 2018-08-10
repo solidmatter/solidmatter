@@ -65,6 +65,14 @@ class sbNode_root extends sbNode {
 	
 	//--------------------------------------------------------------------------
 	/**
+	 * @return 
+	 */
+	public function getMPath($bJustThisNode = FALSE) {
+		return ('');
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* 
 	* @param 
 	* @return 

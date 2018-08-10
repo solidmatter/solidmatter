@@ -29,7 +29,7 @@ class sbView_debug_tree extends sbView {
 			
 			case 'display':
 				// TODO: integrate tree building in this view
-				$aStructure = $this->getTreeStructure(NULL, NULL, 0);
+				$aStructure = $this->getTreeStructure();
 				$_RESPONSE->addData($aStructure);
 				break;
 				
@@ -45,19 +45,14 @@ class sbView_debug_tree extends sbView {
 	* @param 
 	* @return 
 	*/
-	private function getTreeStructure($sParentUUID = NULL, $elemParent = NULL, $iLevel) {
-		
-		// for debugging
-		if ($iLevel > 200) {
-			return;
-		}
+	private function getTreeStructure(string $sParentUUID = NULL, DOMElement $elemParent = NULL, int $iLevel = 0) {
 		
 		global $_RESPONSE;
 		
 		if ($sParentUUID == NULL) {
 		
 			$nodeRoot = $this->crSession->getRootNode();
-			$sParentUUID = $nodeRoot->getProperty('jcr:uuid');
+			$sParentUUID = $nodeRoot->getProperty('uuid');
 			$elemRoot = $_RESPONSE->createElement('root');
 			$this->getTreeStructure($sParentUUID, $elemRoot, ++$iLevel);
 			return($elemRoot);
