@@ -67,6 +67,19 @@ class sbPDOStatement extends PDOStatement {
 	
 	//--------------------------------------------------------------------------
 	/**
+	 *
+	 * @return
+	 */
+	public function getStatementID() : string {
+		if (isset($this->aDebug['statementid'])) {
+			return ($this->aDebug['statementid']);
+		} else {
+			return ('Query has no ID');
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	/**
 	* 
 	* @param string 
 	* @param mutliple 

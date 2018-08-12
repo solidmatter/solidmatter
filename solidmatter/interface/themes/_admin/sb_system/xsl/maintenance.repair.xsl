@@ -32,7 +32,7 @@
 			<a href="/{$subjectid}/repair/removeAbandonedProperties">remove abandoned Properties</a><br/>
 			<a href="/{$subjectid}/repair/removeAbandonedNodes">remove abandoned Nodes</a><br/>
 			<br/>
-			<a href="/{$subjectid}/repair/optimizeUUIDs">optimize UUIDs (convert to sbUUIds)</a>
+			<a href="/{$subjectid}/repair/optimizeUUIDs" target="_blank">optimize UUIDs (convert to sbUUIds)</a>
 		</div>
 	</body>
 	</html>

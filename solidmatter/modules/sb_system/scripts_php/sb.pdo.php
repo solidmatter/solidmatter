@@ -139,10 +139,11 @@ class sbPDO extends PDO {
 	 */
 	public function beginTransaction(string $sUID = 'DEFAULT') {
 		
-		DEBUG('PDO: started transaction "'.$sUID.'"', DEBUG::PDO);
+		DEBUG('PDO: started LOGICAL transaction "'.$sUID.'"', DEBUG::PDO);
 		
 		if (count($this->aTransactionUIDs) == 0) {
 			parent::beginTransaction();
+			DEBUG('PDO: started REAL transaction "'.$sUID.'"', DEBUG::PDO);
 		}
 		
 		array_push($this->aTransactionUIDs, $sUID);
@@ -157,7 +158,7 @@ class sbPDO extends PDO {
 	 */
 	public function commit(string $sUID = 'DEFAULT') {
 		
-		DEBUG('PDO: committed transaction "'.$sUID.'"', DEBUG::PDO);
+		DEBUG('PDO: committed LOGICAL transaction "'.$sUID.'"', DEBUG::PDO);
 		
 		$sStackUID = array_pop($this->aTransactionUIDs);
 		
@@ -168,6 +169,7 @@ class sbPDO extends PDO {
 		
 		if (count($this->aTransactionUIDs) == 0) {
 			parent::commit();
+			DEBUG('PDO: committed REAL transaction "'.$sUID.'"', DEBUG::PDO);
 		}
 		
 	}

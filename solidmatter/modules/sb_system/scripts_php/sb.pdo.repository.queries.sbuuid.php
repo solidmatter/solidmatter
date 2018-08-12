@@ -11,8 +11,10 @@
 global $_QUERIES;
 
 $_QUERIES['sbSystem/sbUUID/getAllUUIDs'] = '
-	SELECT		uuid
+	SELECT		uuid,
+				fk_nodetype
 	FROM		{TABLE_NODES}
+	ORDER BY	dt_created
 ';
 
 $_QUERIES['sbSystem/sbUUID/updateRoot'] = '
@@ -95,6 +97,13 @@ $_QUERIES['sbSystem/sbUUID/updateTrackhistory/user'] = '
 	SET			fk_user = :uuid_new
 	WHERE		fk_user = :uuid_old
 ';
+
+$_QUERIES['sbSystem/sbUUID/alterTables'] = '
+	UPDATE		{TABLE_JB_HISTORY_TRACKS}
+	SET			fk_user = :uuid_new
+	WHERE		fk_user = :uuid_old
+';
+
 
 
 ?>

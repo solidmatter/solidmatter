@@ -1010,6 +1010,7 @@ class sbCR_Session {
 	*/
 	public function beginTransaction($sUID) {
 		$this->DB->beginTransaction($sUID);
+		DEBUG(__CLASS__.': logical transaction '.$sUID.' started', DEBUG::SBCR);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -1020,6 +1021,7 @@ class sbCR_Session {
 	*/
 	public function commit($sUID) {
 		$this->DB->commit($sUID);
+		DEBUG(__CLASS__.': logical transaction '.$sUID.' committed', DEBUG::SBCR);
 	}
 	
 	//--------------------------------------------------------------------------

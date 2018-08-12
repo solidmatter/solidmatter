@@ -16,5 +16,5 @@ php_flag session.use_only_cookies on
 php_value max_input_time 60
 php_value post_max_size 16M
 php_value upload_max_filesize 16M
-php_value max_execution_time 6000
-php_value memory_limit 64M
+php_value max_execution_time 10000
+php_value memory_limit 128M

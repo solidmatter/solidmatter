@@ -68,6 +68,8 @@ class sbView_maintenance_repair extends sbView {
 				import('sb.pdo.repository.queries.sbuuid');
 				import('sbJukebox:sb.pdo.queries');
 				
+				ob_end_clean();
+				
 // 				$this->logEvent(System::MAINTENANCE, 'UUID_OPTIMIZATION_STARTED', 'started to convert to sbUUIDs');
 				$stmtSelect = $this->crSession->prepareKnown('sbSystem/sbUUID/getAllUUIDs');
 				$stmtSelect->execute();
@@ -75,43 +77,65 @@ class sbView_maintenance_repair extends sbView {
 				
 				$stmtUpdateRoot = $this->crSession->prepareKnown('sbSystem/sbUUID/updateRoot');
 				
-				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateUUID');
-				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateEventlog/subject');
-				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateEventlog/user');
-				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateNodes/created');
-				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateNodes/modified');
-				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateProperties');
-				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateRegistry');
+				// always update these
+				$aUpdates['All'][] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateUUID');
+				$aUpdates['All'][] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateEventlog/subject');
+				$aUpdates['All'][] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateProperties');
 				
-				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateAlbums/artist');
-				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateAlbums/albumartist');
-				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateTracks');
-				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateAlbumhistory/user');
-				$aUpdates[] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateTrackhistory/user');
+				// system nodes
+				$aUpdates['sbSystem:Root'][] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateRegistry');
+				$aUpdates['sbSystem:Root'][] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateEventlog/user');
+				$aUpdates['sbSystem:User'][] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateRegistry');
+				$aUpdates['sbSystem:User'][] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateEventlog/user');
+				$aUpdates['sbSystem:User'][] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateNodes/created');
+				$aUpdates['sbSystem:User'][] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateNodes/modified');
 				
-				$this->crSession->beginTransaction('sbUUID');
+				// jukebox stuff
+				$aUpdates['sbJukebox:Artist'][] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateAlbums/artist');
+				$aUpdates['sbJukebox:Artist'][] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateAlbums/albumartist');
+				$aUpdates['sbJukebox:Album'][] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateTracks');
+				$aUpdates['sbSystem:User'][] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateAlbumhistory/user');
+				$aUpdates['sbSystem:User'][] = $this->crSession->prepareKnown('sbSystem/sbUUID/updateTrackhistory/user');
 				
-				$stmtUpdateRoot->execute();
-				$stmtUpdateRoot->closeCursor();
+				echo '<body style="font-family: Andale Mono, monospace;">';
 				
 				foreach ($aResultset as $aRow) {
 					
+					$this->crSession->beginTransaction('sbUUID');
+					
 					if ($aRow['uuid'] == '00000000000000000000000000000000') {
 						$sNewUUID = '0000000000000000000000';
+						$stmtUpdateRoot->execute();
+						$stmtUpdateRoot->closeCursor();
 					} else {
 						$sNewUUID = sbUUID::create();
 					}
 					
-					foreach ($aUpdates as $stmtUpdate) {
-						$stmtUpdate->bindParam('uuid_old', $aRow['uuid'], PDO::PARAM_STR);
-						$stmtUpdate->bindParam('uuid_new', $sNewUUID, PDO::PARAM_STR);
-						$stmtUpdate->execute();
-// 						$stmtUpdate->debug();
+					$iQueries = 0;
+					if (sbUUID::issbUUID($aRow['uuid'])) {
+						echo 'Skipped '.$aRow['uuid'].', already sbUUID<br/>';
+					} else {
+						foreach ($aUpdates as $sNodetype => $aStatements) {
+							if ($sNodetype == $aRow['fk_nodetype'] || $sNodetype == 'All') {
+								foreach ($aStatements as $stmtUpdate) {
+// 									echo 'Nodetype '.$aRow['nodetype'].' Query '.$stmtUpdate->getStatementID().'<br/>';
+									$stmtUpdate->bindParam('uuid_old', $aRow['uuid'], PDO::PARAM_STR);
+									$stmtUpdate->bindParam('uuid_new', $sNewUUID, PDO::PARAM_STR);
+									$stmtUpdate->execute();
+									//$stmtUpdate->debug();
+									$iQueries++;
+								}
+							}
+						}
 					}
-						
+					
+					$this->crSession->commit('sbUUID');
+					if ($iQueries > 0) {
+						echo 'Updated '.$aRow['fk_nodetype'].' - '.$aRow['uuid'].' => '.$sNewUUID.' ('.$iQueries.' queries)<br/>';
+					}
 				}
 				
-				$this->crSession->commit('sbUUID');
+// 				
 				
 				$this->logEvent(System::MAINTENANCE, 'UUID_OPTIMIZATION_ENDED', 'Conversion to sbUUIDs finished');
 				
@@ -131,6 +155,8 @@ class sbView_maintenance_repair extends sbView {
 					$this->logEvent(System::MAINTENANCE, 'CACHE_CLEARED', $sCurrentCache);
 				}
 				sbSession::destroy();
+				
+				exit();
 				
 				break;
 			
