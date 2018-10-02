@@ -1,6 +1,8 @@
 
 # solidMatter
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4fa264358538412bb04c23e6a7bd15c3)](https://www.codacy.com/app/hthiery/solidmatter?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=solidmatter/solidmatter&amp;utm_campaign=Badge_Grade)
+
 ## So what is it?
 
 solidMatter is a content repository and application framework written in PHP (and XSL if you will). The API is based on the JCR specification (not fully implemented and with some deviations), where the content nodes are extended by node-specific views and actions.
