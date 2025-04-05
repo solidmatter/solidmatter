@@ -7,12 +7,12 @@
 	<formats>
 		<decimal_separator>,</decimal_separator>
 		<decimal_point>.</decimal_point>
-		<datetime_long>%a, %d. %b %Y, %H:%M:%S</datetime_long>
-		<datetime_middle>%d.%m.%Y, %H:%M:%S</datetime_middle>
-		<datetime_short>%d.%m.%y, %H:%M:%S</datetime_short>
-		<date_long>%a, %d. %b %Y</date_long>
-		<date_middle>%d.%m.%Y</date_middle>
-		<date_short>%d.%m.%y</date_short>
+		<datetime_long>F j, Y, g:i</datetime_long>
+		<datetime_middle>d.m.Y H:i:s</datetime_middle>
+		<datetime_short>d.m.y H:i:s</datetime_short>
+		<date_long>D, d. F Y</date_long>
+		<date_middle>d.m.Y</date_middle>
+		<date_short>d.m.y</date_short>
 	</formats>
 	<date>
 		<short>d.m.y</short>
@@ -22,7 +22,7 @@
 	<datetime>
 		<short>d.m.y, H:i:s</short>
 		<middle>d.m.Y, H:i:s</middle>
-		<long>a, d. b Y, H:i:s</long>
+		<long>D, d M y H:i:s</long>
 	</datetime>
 	
 	<actions>

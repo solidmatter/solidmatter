@@ -417,7 +417,7 @@ class sbNode extends sbCR_Node {
 				// TODO: find cleaner way to distinct non-display views
 				if ($aView['visible']) {
 					$elemView->setAttribute('name', $aView['name']);
-					$elemView->setAttribute('order', $aView['order']);
+					!isset($aView['order']) ?: $elemView->setAttribute('order', $aView['order']);
 					$elemView->setAttribute('priority', $aView['priority']);
 					$elemViews->appendChild($elemView);
 				}
@@ -1327,7 +1327,7 @@ class sbNode extends sbCR_Node {
 		if ($this->crPropertyDefinitionCache->hasProperty($sName)) {
 			parent::setProperty($sName, $mValue);
 		} else {
-			$this->elemSubject->setAttribute($sName, $mValue);
+			$this->elemSubject->setAttribute($sName, strval($mValue));
 		}
 	}
 	
@@ -1441,7 +1441,7 @@ class sbNode extends sbCR_Node {
 	* @param 
 	* @return 
 	*/
-	public function placeVote($sUserUUID = NULL, $iVote) {
+	public function placeVote($sUserUUID, $iVote) {
 		if ($sUserUUID == NULL) {
 			throw new sbException('voting needs user uuid');
 		}

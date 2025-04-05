@@ -65,7 +65,7 @@
 							<td>
 								<xsl:value-of select="@user" />
 							</td>
-							<td width="38">
+							<td width="45">
 								<xsl:choose>
 									<xsl:when test="$jukebox/playertype = 'HTML5'">
 										<a class="type play icononly" href="javascript:open_player('/{@uuid}/playlist/openPlayer?sid={$sessionid}')"><img src="/theme/sb_jukebox/icons/blank.gif" alt="Dummy" /></a>

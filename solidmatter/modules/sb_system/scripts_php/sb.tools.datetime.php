@@ -39,11 +39,10 @@ function datetime_convert($sInputString, $sFormatIn, $sFormatOut) {
 * @param integer the result's format, as explained above
 * @return string the localized result
 */
-function datetime_mysql2local($sMySQLDateTime, $sFormat='%a, %d. %B %Y, %H:%M') {
+function datetime_mysql2local($sMySQLDateTime, $sFormat=RFC822) {
 	
 	$tsDateTime = datetime_mysql2timestamp($sMySQLDateTime);
-	
-	$sDateTime = strftime($sFormat, $tsDateTime);
+	$sDateTime = date($sFormat, $tsDateTime);
 	$sDateTime = iconv('ISO-8859-1', 'UTF-8', $sDateTime);
 	
 	return ($sDateTime);

@@ -13,8 +13,6 @@
 */
 class sbView_modules_overview extends sbView {
 	
-	private $aQueries = array();
-	
 	//--------------------------------------------------------------------------
 	/**
 	* 

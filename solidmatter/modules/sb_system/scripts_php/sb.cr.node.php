@@ -29,7 +29,7 @@ class sbCR_Node {
 	/**
 	* @var 
 	*/
-	protected $crNodetype 			= NULL;
+	protected $crNodeType 			= NULL;
 	/**
 	* @var
 	*/
@@ -135,7 +135,7 @@ class sbCR_Node {
 	* @param cbCR_Session the repository session object that retrieved this node
 	* @param string the UUID of the parent that acquired this node, if given
 	*/
-	public function __construct($elemSubject = NULL, $crSession, $sParentUUID = NULL) {
+	public function __construct($elemSubject, $crSession, $sParentUUID = NULL) {
 		
 		// store mandatory objects
 		$this->elemSubject = $elemSubject;
@@ -2472,15 +2472,17 @@ class sbCR_Node {
 			// TODO: $aProperties != null because of a bug when reading newly saved nodes (investigate!!!)
 			if ($sType == 'EXTENDED' && $aProperties != NULL) {
 				foreach ($this->crPropertyDefinitionCache as $sName => $aDetails) {
-					if (!isset($this->aModifiedAttributes[$sName]) && $aDetails['e_storagetype'] == 'EXTENDED') {
-						$this->elemSubject->setAttribute($sName, $aProperties[$aDetails['s_auxname']]);
+					if (!isset($this->aModifiedAttributes[$sName]) 
+						&& $aDetails['e_storagetype'] == 'EXTENDED') {
+						$this->elemSubject->setAttribute($sName, strval($aProperties[$aDetails['s_auxname']]));
 					}
 				}
 			} elseif ($sType == 'AUXILIARY') {
 				foreach ($this->crPropertyDefinitionCache as $sName => $aDetails) {
-					if (!isset($this->aModifiedAttributes[$sName]) && $aDetails['e_storagetype'] == 'AUXILIARY') {
-						$this->elemSubject->setAttribute($sName, $aProperties[$aDetails['s_auxname']]);
-					}
+					if (!isset($this->aModifiedAttributes[$sName]) 
+						&& $aDetails['e_storagetype'] == 'AUXILIARY') {
+							$this->elemSubject->setAttribute($sName, strval($aProperties[$aDetails['s_auxname']]));	
+					}	
 				}
 			}
 		}

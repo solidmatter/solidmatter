@@ -53,6 +53,8 @@ class sbCR_RepositoryStructure {
 	
 	private $crSession = NULL;
 	
+	private array $aNodeTypes;
+	
 	private $aNodeTypeHierarchy = array(
 		'nt:base' => array(),
 		'mix:created' => array(),
@@ -379,6 +381,8 @@ class sbCR_RepositoryStructure {
 	private $aPropertyData		= array();
 	private $aViewData			= array();
 	
+	private $aViewCache			= array();
+	
 	private $aPropertyDefinitionCache	= array();
 	
 	private $aViewDefinitionCache	= array();
@@ -396,7 +400,8 @@ class sbCR_RepositoryStructure {
 		$this->crSession = $crSession;
 		
 		// check cache
-		if (Registry::getValue('sb.system.cache.nodetypes.enabled')) {
+		// FIXME: Cache klappt irgendwie nicht, oder wurde falsch befüllt?
+		if (FALSE && Registry::getValue('sb.system.cache.nodetypes.enabled')) {
 			$cacheRepos = CacheFactory::getInstance('repository');
 			if ($cacheRepos->exists('NodeTypeHierarchy')) {
 				$this->aNodeTypeHierarchy = $cacheRepos->loadData('NodeTypeHierarchy');

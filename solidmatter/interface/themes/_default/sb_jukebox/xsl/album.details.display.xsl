@@ -175,7 +175,7 @@
 							<td width="10" style="text-align: right;">
 								<xsl:value-of select="@info_playtime" />
 							</td>
-							<td width="120" style="text-align: right;">
+							<td width="150" style="text-align: right;">
 								<xsl:call-template name="render_buttons" />
 							</td>
 						</tr>

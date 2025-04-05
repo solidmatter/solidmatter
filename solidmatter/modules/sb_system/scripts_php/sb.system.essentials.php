@@ -129,6 +129,7 @@ function DEBUG(string $sText, bool $bInUse = FALSE) {
 class Logger {
 	protected $sLogfile;
 	protected $sContent;
+	protected $sCWD;
 	public function __construct(string $sSubject, string $sLogFile) {
 		// TODO: improve timezone handling (dirty hack to avoid strict warning below)
 		date_default_timezone_set('Europe/Berlin');
@@ -140,7 +141,7 @@ class Logger {
 		}
 		// TODO: use this info?
 		//$this->sLogSize
-		$this->sContent .= '----- [ '.strftime('%y-%m-%d %H:%M:%S', time()).' ] ----- [ '.$_SERVER['REQUEST_URI']." ] -----\r\n";
+		$this->sContent .= '----- [ '.date('Y-m-d H:i:s', time()).' ] ----- [ '.$_SERVER['REQUEST_URI']." ] -----\r\n";
 	}
 	public function __destruct() {
 		error_log($this->sContent."\r\n", 3, $this->sLogfile);

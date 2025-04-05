@@ -137,6 +137,7 @@ class sbPDO extends PDO {
 	 * Transactions can be nested and have to be committed in reverse order.
 	 * @param string The transaction ID
 	 */
+	#[\ReturnTypeWillChange]
 	public function beginTransaction(string $sUID = 'DEFAULT') {
 		
 		DEBUG('PDO: started transaction "'.$sUID.'"', DEBUG::PDO);
@@ -155,6 +156,7 @@ class sbPDO extends PDO {
 	 * If nested transactions are used, it has to be the transaction that was begun last. 
 	 * @param string The transaction ID
 	 */
+	#[\ReturnTypeWillChange]
 	public function commit(string $sUID = 'DEFAULT') {
 		
 		DEBUG('PDO: committed transaction "'.$sUID.'"', DEBUG::PDO);
@@ -187,6 +189,7 @@ class sbPDO extends PDO {
 	 * @param
 	 * @return
 	 */
+	#[\ReturnTypeWillChange]
 	public function rollback() {
 		
 		if (count($this->aTransactionUIDs) == 0) {

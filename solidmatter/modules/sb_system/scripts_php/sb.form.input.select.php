@@ -84,7 +84,7 @@ class sbInput_select extends sbInput {
 		$elemInput = $this->domForm->createElement('sbinput');
 		$elemInput->setAttribute('name', $this->sName);
 		$elemInput->setAttribute('type', $this->sType);
-		$elemInput->setAttribute('value', $this->mValue);
+		!isset($this->mValue) ?: $elemInput->setAttribute('value', $this->mValue);
 		$elemInput->setAttribute('label', $this->sLabelPath);
 		$elemInput->setAttribute('size', $this->sLabelPath);
 		if ($this->bDisabled) {

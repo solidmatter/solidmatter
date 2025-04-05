@@ -56,7 +56,7 @@ class sbCR_PropertyDefinitionCache implements Iterator {
 	* @param 
 	* @return 
 	*/
-	public function rewind() {
+	public function rewind() : void {
 		reset($this->aPropertyDefinitions);
 	}
 	
@@ -66,7 +66,7 @@ class sbCR_PropertyDefinitionCache implements Iterator {
 	* @param 
 	* @return 
 	*/
-	public function current() {
+	public function current() : mixed {
 		return (current($this->aPropertyDefinitions));
 	}
 	
@@ -76,7 +76,7 @@ class sbCR_PropertyDefinitionCache implements Iterator {
 	* @param 
 	* @return 
 	*/
-	public function key() {
+	public function key() : mixed {
 		return (key($this->aPropertyDefinitions));
 	}
 	
@@ -86,6 +86,7 @@ class sbCR_PropertyDefinitionCache implements Iterator {
 	* @param 
 	* @return 
 	*/
+	#[\ReturnTypeWillChange]
 	public function next() {
 		return (next($this->aPropertyDefinitions));
 	}
@@ -96,7 +97,7 @@ class sbCR_PropertyDefinitionCache implements Iterator {
 	* @param 
 	* @return 
 	*/
-	public function valid() {
+	public function valid() : bool {
 		if (is_null(key($this->aPropertyDefinitions))) {
 			reset($this->aPropertyDefinitions);
 			return (FALSE);

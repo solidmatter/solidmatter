@@ -196,7 +196,8 @@ class sbNode_module extends sbNode {
 		foreach ($this->crPropertyDefinitionCache as $sName => $aDetails) {
 			if (!isset($this->aModifiedAttributes[$sName]) && $aDetails['e_storagetype'] == 'AUXILIARY') {
 				// TODO: skip s_name for now, gives a warning - more elegant way needed
-				if ($aDetails['s_auxname'] != 's_name') {
+				if ($aDetails['s_auxname'] != 's_name'
+					&& isset($aProperties[$aDetails['s_auxname']])) {
 					$this->elemSubject->setAttribute($sName, $aProperties[$aDetails['s_auxname']]);
 				}
 				if (!isset($aProperties['b_active'])) {

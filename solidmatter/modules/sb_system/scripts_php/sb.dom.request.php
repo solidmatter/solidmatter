@@ -636,7 +636,7 @@ class sbDOMRequest extends sbDOMDocument {
 	public function getRelativePath() {
 		$sFullPath = $this->getServerValue('HTTP_HOST').$this->getServerValue('REQUEST_URI');
 		$sRelativePath = str_replace($this->getLocation(), '', $sFullPath);
-		if ($sRelativePath{0} != '/') {
+		if ($sRelativePath[0] != '/') {
 			$sRelativePath = '/'.$sRelativePath;
 		}
 		return ($sRelativePath);

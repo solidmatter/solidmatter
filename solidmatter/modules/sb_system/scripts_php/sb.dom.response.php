@@ -18,6 +18,8 @@ class sbDOMResponse extends sbDOMDocument {
 	private $aNodeCache = array();
 	private $aModules = array();
 	
+	public bool $formatOutput;
+	
 	public static $aAccessiblePHPFunctions = array(
 		'datetime_mysql2local',
 		'datetime_convert',
@@ -684,7 +686,7 @@ class sbDOMResponse extends sbDOMDocument {
 				
 				// TODO: find a way to prettyprint correctly
 				if (CONFIG::PRETTYPRINT) {
-					$procGenerator->formatOutput = TRUE;
+// 					$procGenerator->formatOutput = TRUE;
 					//import('sb.tools.xml');
 					//echo pretty_print($procGenerator->transformToXML($this));
 					$sOutput = $procGenerator->transformToXML($this);

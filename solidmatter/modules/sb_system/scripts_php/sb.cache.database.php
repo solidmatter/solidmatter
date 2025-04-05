@@ -13,7 +13,8 @@
 */
 class DatabaseCache implements sbCache {
 	
-	protected $sPrefix = '';
+	protected string $sPrefix = '';
+	protected sbPDO $DB;
 	
 	//--------------------------------------------------------------------------
 	/**

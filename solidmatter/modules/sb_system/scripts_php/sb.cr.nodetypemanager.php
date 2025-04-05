@@ -49,6 +49,7 @@ class sbCR_NodeTypeManager {
 	*/
 	public function getNodeType($sNodeTypeName) {
 		if (!$this->hasNodeType($sNodeTypeName)) {
+// 			print(json_encode($this->aNodeTypes));
 			throw new NoSuchNodeTypeException($sNodeTypeName);
 		}
 		if (!isset($this->aNodeTypes[$sNodeTypeName])) {

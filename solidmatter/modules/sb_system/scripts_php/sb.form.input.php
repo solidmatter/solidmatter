@@ -151,7 +151,7 @@ abstract class sbInput {
 		}
 		// TODO: strange backwards dependency, remove
 		if (isset($this->aConfig['trim']) && $this->aConfig['trim'] == 'TRUE') {
-			$this->mValue = trim($this->mValue);
+			$this->mValue = isset($this->mValue) ? trim($this->mValue) : "";
 		}
 	}
 	
@@ -193,7 +193,11 @@ abstract class sbInput {
 		$elemInput = $this->domForm->createElement('sbinput');
 		$elemInput->setAttribute('name', $this->sName);
 		$elemInput->setAttribute('type', $this->sType);
-		$elemInput->setAttribute('value', $this->mValue);
+		
+		!isset($this->mValue) ?: $elemInput->setAttribute('value', $this->mValue);
+// 		if (isset($this->mValue)) {
+// 			$elemInput->setAttribute('value', $this->mValue);
+// 		}
 		$elemInput->setAttribute('label', $this->sLabelPath);
 		if ($this->bDisabled) {
 			$elemInput->setAttribute('disabled', 'TRUE');

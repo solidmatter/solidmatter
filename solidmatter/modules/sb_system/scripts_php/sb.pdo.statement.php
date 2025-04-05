@@ -73,7 +73,7 @@ class sbPDOStatement extends PDOStatement {
 	* @param int
 	* @return 
 	*/
-	public function bindValue($sParam, $mValue, $eType = PDO::PARAM_STR) {
+	public function bindValue($sParam, $mValue, $eType = PDO::PARAM_STR) : bool {
 		if ($mValue === NULL) {
 			$eType = PDO::PARAM_NULL;
 		}
@@ -81,7 +81,7 @@ class sbPDOStatement extends PDOStatement {
 			$sParam = ':'.$sParam;
 		}
 		$this->aDebug['params'][$sParam] = $mValue;
-		parent::bindValue($sParam, $mValue, $eType);
+		return parent::bindValue($sParam, $mValue, $eType);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -94,7 +94,7 @@ class sbPDOStatement extends PDOStatement {
 	* @param 
 	* @return 
 	*/
-	public function bindParam($sParam, &$mValue, $eType = PDO::PARAM_STR, $iLength = NULL, $mDriverOptions = NULL) {
+	public function bindParam($sParam, &$mValue, $eType = PDO::PARAM_STR, $iLength = 0, $mDriverOptions = NULL) : bool {
 		if ($mValue === NULL) {
 			$eType = PDO::PARAM_NULL;
 		}
@@ -102,7 +102,7 @@ class sbPDOStatement extends PDOStatement {
 			$sParam = ':'.$sParam;	
 		}
 		$this->aDebug['params'][$sParam] = $mValue;
-		parent::bindParam($sParam, $mValue, $eType, $iLength, $mDriverOptions);
+		return parent::bindParam($sParam, $mValue, $eType, $iLength, $mDriverOptions);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -111,7 +111,7 @@ class sbPDOStatement extends PDOStatement {
 	* @param array 
 	* @return 
 	*/
-	public function execute($aInputParameters = NULL) {
+	public function execute($aInputParameters = NULL) : bool {
 		Stopwatch::checkGroup('php');
 		DEBUG::STARTCLOCK('statement');
 		try {
@@ -123,6 +123,7 @@ class sbPDOStatement extends PDOStatement {
 		}
 		DEBUG('PDO: executed statement '.$this->aDebug['statementid'].' ('.DEBUG::STOPCLOCK('statement').'ms)', DEBUG::PDO);
 		Stopwatch::checkGroup('pdo');
+		return TRUE;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -261,7 +262,8 @@ class sbPDOStatement extends PDOStatement {
 					$sName = $aMapping[$sName];	
 				}
 				//htmlspecialchars($sData)
-				$elemRow->setAttribute($sName, $sData);
+				$sDataPrepared = is_null($sData) ? '' : $sData;
+				$elemRow->setAttribute($sName, $sDataPrepared);
 			}
 			$elemResultset->appendChild($elemRow);
 		}

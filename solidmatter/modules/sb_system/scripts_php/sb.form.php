@@ -43,6 +43,7 @@ class sbDOMForm extends sbDOMDocument {
 	private $crSession = NULL;
 	
 	private $sErrorLabel = '';
+	private $sChosenSubmit = '';
 	
 	//--------------------------------------------------------------------------
 	//##########################################################################
@@ -334,7 +335,7 @@ class sbDOMForm extends sbDOMDocument {
 		//$elemForm = ResponseFactory::createElement('sbform');
 		$elemForm->setAttribute('id', $this->sID);
 		$elemForm->setAttribute('action', $this->sAction);
-		$elemForm->setAttribute('label', $this->sLabel);
+		$elemForm->setAttribute('label', strval($this->sLabel));
 		if ($this->bDisabled) {
 			$elemForm->setAttribute('disabled', 'TRUE');
 		}

@@ -54,7 +54,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function rewind() {
+	public function rewind() : void {
 		$this->iPosition = 0;
 		reset($this->aNodeArray);
 	}
@@ -65,7 +65,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function current() {
+	public function current() : mixed {
 		return (current($this->aNodeArray));
 	}
 	
@@ -75,7 +75,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function key() {
+	public function key() : mixed {
 		return (key($this->aNodeArray));
 	}
 	
@@ -85,7 +85,8 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function next() {
+	#[\ReturnTypeWillChange]
+	public function next() { 
 		$this->iPosition++;
 		return (next($this->aNodeArray));
 	}
@@ -96,7 +97,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function valid() {
+	public function valid() : bool {
 		//return(!is_null(key($this->aNodeArray)));
 		return(isset($this->aNodeArray[$this->iPosition]));
 	}
@@ -107,7 +108,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function offsetExists($mOffset) {
+	public function offsetExists($mOffset) : bool {
 		return (isset($this->aNodeArray[$mOffset]));
 	}
 	
@@ -117,7 +118,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function offsetGet($mOffset) {
+	public function offsetGet($mOffset) : mixed {
 		return ($this->aNodeArray[$mOffset]);
 	}
 	
@@ -127,7 +128,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function offsetSet($mOffset, $nodeValue) {
+	public function offsetSet($mOffset, $nodeValue) : void {
 		$this->aNodeArray[$mOffset] = $nodeValue;
 	}
 	
@@ -137,7 +138,7 @@ class sbCR_NodeIterator implements Iterator, ArrayAccess {
 	* @param 
 	* @return 
 	*/
-	public function offsetUnset($mOffset) {
+	public function offsetUnset($mOffset) : void {
 		unset($this->aNodeArray[$mOffset]);
 	}
 	

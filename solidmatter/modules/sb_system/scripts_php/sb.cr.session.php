@@ -857,10 +857,12 @@ class sbCR_Session {
 		$elemSubject->setAttribute('uuid', $aRow['uuid']);
 		$elemSubject->setAttribute('name', $aRow['s_name']);
 		$elemSubject->setAttribute('label', $aRow['s_label']);
-		$elemSubject->setAttribute('uid', $aRow['s_uid']);
+		!isset($aRow['s_uid']) ?: $elemSubject->setAttribute('uid', $aRow['s_uid']);
 		$elemSubject->setAttribute('query', $sQuery);
 		$elemSubject->setAttribute('displaytype', str_replace(':', '_', $aRow['fk_nodetype']));
-		$elemSubject->setAttribute('parent', $aRow['fk_parent']);
+		if (isset($aRow['fk_parent'])) {
+			$elemSubject->setAttribute('parent', $aRow['fk_parent']);
+		}
 		if (isset($aRow['b_primary'])) {
 			$elemSubject->setAttribute('primary', $aRow['b_primary']);
 		}

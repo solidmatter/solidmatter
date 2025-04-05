@@ -8,15 +8,23 @@
 */
 //---------------------------------------------------------
 
-$TEST = 'UUIDSTUFF';
+$TEST = 'STRVAL';
 if (isset($_REQUEST['test'])) {
 	$TEST = $_REQUEST['test'];
 }
+
+
 
 require_once('modules/sb_system/scripts_php/sb.system.essentials.php');
 // require_once('modules/sb_system/scripts_php/sb.tools.stopwatch.php');
 
 
+//---------------------------------------------
+
+if ($TEST == 'STRVAL') {
+	echo(strval(null));
+}
+	
 
 //---------------------------------------------
 
@@ -365,7 +373,7 @@ function unfucked_base_convert ($numstring, $frombase, $tobase) {
    $length = strlen($numstring);
    $result = '';
    for ($i = 0; $i < $length; $i++) {
-       $number[$i] = strpos($chars, $numstring{$i});
+       $number[$i] = strpos($chars, $numstring[$i]);
    }
    do {
        $divide = 0;
@@ -380,7 +388,7 @@ function unfucked_base_convert ($numstring, $frombase, $tobase) {
            }
        }
        $length = $newlen;
-       $result = $tostring{$divide} . $result;
+       $result = $tostring[$divide] . $result;
    }
    while ($newlen != 0);
    return $result;

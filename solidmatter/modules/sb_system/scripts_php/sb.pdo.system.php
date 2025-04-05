@@ -19,6 +19,9 @@ import('sb.system.errors');
 */
 class sbPDOSystem extends sbPDO {
 	
+	protected string $sLogFile;
+	protected string $sLogSize; 
+	
 	//--------------------------------------------------------------------------
 	/**
 	 *

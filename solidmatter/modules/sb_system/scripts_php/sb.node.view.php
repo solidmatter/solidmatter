@@ -22,6 +22,8 @@ abstract class sbView {
 	protected $nodeSubject = NULL;
 	protected $crSession = NULL;
 	
+	protected $aQueries = array();
+	
 	//--------------------------------------------------------------------------
 	/**
 	* the constructor expects the 
@@ -43,9 +45,9 @@ abstract class sbView {
 	* @return 
 	*/
 	protected function __init() {
-		if (__CLASS__ != 'sbView') {
-			parent::__init();
-		}
+// 		if (__CLASS__ != 'sbView') {
+// 			parent::__init();
+// 		}
 	}
 	
 	//--------------------------------------------------------------------------
