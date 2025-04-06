@@ -1,11 +1,11 @@
 <?php
+
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-//          also https://github.com/JamesHeinrich/getID3       //
-/////////////////////////////////////////////////////////////////
-// See readme.txt for more details                             //
+//  available at https://github.com/JamesHeinrich/getID3       //
+//            or https://www.getid3.org                        //
+//            or http://getid3.sourceforge.net                 //
+//  see readme.txt for more details                            //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // module.audio.midi.php                                       //
@@ -14,13 +14,25 @@
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 
+if (!defined('GETID3_INCLUDEPATH')) { // prevent path-exposing attacks that access modules directly on public webservers
+	exit;
+}
+
 define('GETID3_MIDI_MAGIC_MTHD', 'MThd'); // MIDI file header magic
 define('GETID3_MIDI_MAGIC_MTRK', 'MTrk'); // MIDI track header magic
 
 class getid3_midi extends getid3_handler
 {
+	/**
+	 * if false only parse most basic information, much faster for some files but may be inaccurate
+	 *
+	 * @var bool
+	 */
 	public $scanwholefile = true;
 
+	/**
+	 * @return bool
+	 */
 	public function Analyze() {
 		$info = &$this->getid3->info;
 
@@ -51,6 +63,7 @@ class getid3_midi extends getid3_handler
 		$thisfile_midi_raw['ticksperqnote'] = getid3_lib::BigEndian2Int(substr($MIDIdata, $offset, 2));
 		$offset += 2;
 
+		$trackdataarray = array();
 		for ($i = 0; $i < $thisfile_midi_raw['tracks']; $i++) {
 			while ((strlen($MIDIdata) - $offset) < 8) {
 				if ($buffer = $this->fread($this->getid3->fread_buffer_size())) {
@@ -75,7 +88,7 @@ class getid3_midi extends getid3_handler
 			}
 		}
 
-		if (!isset($trackdataarray) || !is_array($trackdataarray)) {
+		if (!is_array($trackdataarray) || count($trackdataarray) === 0) {
 			$this->error('Cannot find MIDI track information');
 			unset($thisfile_midi);
 			unset($info['fileformat']);
@@ -86,8 +99,8 @@ class getid3_midi extends getid3_handler
 			$thisfile_midi['totalticks']      = 0;
 			$info['playtime_seconds'] = 0;
 			$CurrentMicroSecondsPerBeat       = 500000; // 120 beats per minute;  60,000,000 microseconds per minute -> 500,000 microseconds per beat
-			$CurrentBeatsPerMinute            = 120;    // 120 beats per minute;  60,000,000 microseconds per minute -> 500,000 microseconds per beat
 			$MicroSecondsPerQuarterNoteAfter  = array ();
+			$MIDIevents                       = array();
 
 			foreach ($trackdataarray as $tracknumber => $trackdata) {
 
@@ -98,7 +111,7 @@ class getid3_midi extends getid3_handler
 				$TicksAtCurrentBPM = 0;
 				while ($eventsoffset < strlen($trackdata)) {
 					$eventid = 0;
-					if (isset($MIDIevents[$tracknumber]) && is_array($MIDIevents[$tracknumber])) {
+					if (isset($MIDIevents[$tracknumber])) {
 						$eventid = count($MIDIevents[$tracknumber]);
 					}
 					$deltatime = 0;
@@ -230,15 +243,14 @@ class getid3_midi extends getid3_handler
 									return false;
 								}
 								$thisfile_midi_raw['events'][$tracknumber][$CumulativeDeltaTime]['us_qnote'] = $CurrentMicroSecondsPerBeat;
-								$CurrentBeatsPerMinute = (1000000 / $CurrentMicroSecondsPerBeat) * 60;
 								$MicroSecondsPerQuarterNoteAfter[$CumulativeDeltaTime] = $CurrentMicroSecondsPerBeat;
 								$TicksAtCurrentBPM = 0;
 								break;
 
 							case 0x58: // Time signature
-								$timesig_numerator   = getid3_lib::BigEndian2Int($METAeventData{0});
-								$timesig_denominator = pow(2, getid3_lib::BigEndian2Int($METAeventData{1})); // $02 -> x/4, $03 -> x/8, etc
-								$timesig_32inqnote   = getid3_lib::BigEndian2Int($METAeventData{2});         // number of 32nd notes to the quarter note
+								$timesig_numerator   = getid3_lib::BigEndian2Int($METAeventData[0]);
+								$timesig_denominator = pow(2, getid3_lib::BigEndian2Int($METAeventData[1])); // $02 -> x/4, $03 -> x/8, etc
+								$timesig_32inqnote   = getid3_lib::BigEndian2Int($METAeventData[2]);         // number of 32nd notes to the quarter note
 								//$thisfile_midi_raw['events'][$tracknumber][$eventid]['timesig_32inqnote']   = $timesig_32inqnote;
 								//$thisfile_midi_raw['events'][$tracknumber][$eventid]['timesig_numerator']   = $timesig_numerator;
 								//$thisfile_midi_raw['events'][$tracknumber][$eventid]['timesig_denominator'] = $timesig_denominator;
@@ -247,13 +259,13 @@ class getid3_midi extends getid3_handler
 								break;
 
 							case 0x59: // Keysignature
-								$keysig_sharpsflats = getid3_lib::BigEndian2Int($METAeventData{0});
+								$keysig_sharpsflats = getid3_lib::BigEndian2Int($METAeventData[0]);
 								if ($keysig_sharpsflats & 0x80) {
 									// (-7 -> 7 flats, 0 ->key of C, 7 -> 7 sharps)
 									$keysig_sharpsflats -= 256;
 								}
 
-								$keysig_majorminor  = getid3_lib::BigEndian2Int($METAeventData{1}); // 0 -> major, 1 -> minor
+								$keysig_majorminor  = getid3_lib::BigEndian2Int($METAeventData[1]); // 0 -> major, 1 -> minor
 								$keysigs = array(-7=>'Cb', -6=>'Gb', -5=>'Db', -4=>'Ab', -3=>'Eb', -2=>'Bb', -1=>'F', 0=>'C', 1=>'G', 2=>'D', 3=>'A', 4=>'E', 5=>'B', 6=>'F#', 7=>'C#');
 								//$thisfile_midi_raw['events'][$tracknumber][$eventid]['keysig_sharps'] = (($keysig_sharpsflats > 0) ? abs($keysig_sharpsflats) : 0);
 								//$thisfile_midi_raw['events'][$tracknumber][$eventid]['keysig_flats']  = (($keysig_sharpsflats < 0) ? abs($keysig_sharpsflats) : 0);
@@ -283,7 +295,8 @@ class getid3_midi extends getid3_handler
 					$thisfile_midi['totalticks'] = max($thisfile_midi['totalticks'], $CumulativeDeltaTime);
 				}
 			}
-			$previoustickoffset = null;
+			$previoustickoffset      = null;
+			$prevmicrosecondsperbeat = null;
 
 			ksort($MicroSecondsPerQuarterNoteAfter);
 			foreach ($MicroSecondsPerQuarterNoteAfter as $tickoffset => $microsecondsperbeat) {
@@ -312,7 +325,7 @@ class getid3_midi extends getid3_handler
 					return false;
 				}
 
-				$info['playtime_seconds'] += (($thisfile_midi['totalticks'] - $previoustickoffset) / $thisfile_midi_raw['ticksperqnote']) * ($microsecondsperbeat / 1000000);
+				$info['playtime_seconds'] += (($thisfile_midi['totalticks'] - $previoustickoffset) / $thisfile_midi_raw['ticksperqnote']) * ($prevmicrosecondsperbeat / 1000000);
 
 			}
 		}
@@ -329,6 +342,11 @@ class getid3_midi extends getid3_handler
 		return true;
 	}
 
+	/**
+	 * @param int $instrumentid
+	 *
+	 * @return string
+	 */
 	public function GeneralMIDIinstrumentLookup($instrumentid) {
 
 		$begin = __LINE__;
@@ -469,6 +487,11 @@ class getid3_midi extends getid3_handler
 		return getid3_lib::EmbeddedLookup($instrumentid, $begin, __LINE__, __FILE__, 'GeneralMIDIinstrument');
 	}
 
+	/**
+	 * @param int $instrumentid
+	 *
+	 * @return string
+	 */
 	public function GeneralMIDIpercussionLookup($instrumentid) {
 
 		$begin = __LINE__;

@@ -1,11 +1,11 @@
 <?php
+
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-//          also https://github.com/JamesHeinrich/getID3       //
-/////////////////////////////////////////////////////////////////
-// See readme.txt for more details                             //
+//  available at https://github.com/JamesHeinrich/getID3       //
+//            or https://www.getid3.org                        //
+//            or http://getid3.sourceforge.net                 //
+//  see readme.txt for more details                            //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // module.audio.avr.php                                        //
@@ -14,10 +14,15 @@
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 
+if (!defined('GETID3_INCLUDEPATH')) { // prevent path-exposing attacks that access modules directly on public webservers
+	exit;
+}
 
 class getid3_avr extends getid3_handler
 {
-
+	/**
+	 * @return bool
+	 */
 	public function Analyze() {
 		$info = &$this->getid3->info;
 
@@ -115,9 +120,9 @@ class getid3_avr extends getid3_handler
 		$info['audio']['bits_per_sample'] = $info['avr']['bits_per_sample'];
 		$info['audio']['sample_rate']     = $info['avr']['sample_rate'];
 		$info['audio']['channels']        = ($info['avr']['flags']['stereo'] ? 2 : 1);
-		$info['playtime_seconds']         = ($info['avr']['sample_length'] / $info['audio']['channels']) / $info['avr']['sample_rate'];
-		$info['audio']['bitrate']         = ($info['avr']['sample_length'] * (($info['avr']['bits_per_sample'] == 8) ? 8 : 16)) / $info['playtime_seconds'];
-
+		$bits_per_sample                  = ($info['avr']['bits_per_sample'] == 8) ? 8 : 16;
+		$info['audio']['bitrate']         = $bits_per_sample * $info['audio']['channels'] * $info['avr']['sample_rate'];
+		$info['playtime_seconds']         = getid3_lib::SafeDiv($info['avr']['sample_length'] * $bits_per_sample, $info['audio']['bitrate']);
 
 		return true;
 	}

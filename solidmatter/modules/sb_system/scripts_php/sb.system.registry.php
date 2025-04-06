@@ -56,7 +56,7 @@ abstract class Registry {
 	* The order in which the possible values are considered is sbSession -> RegistryCache -> user -> system -> default
 	* Throws an exception if the registry entry does not exist.
 	* @param 
-	* @return multiple Converted Value (e.g. "TRUE" is converted to boolean)
+	* @return mixed Converted Value (e.g. "TRUE" is converted to boolean)
 	*/
 	public static function getValue(string $sKey, bool $bForced = FALSE) {
 		
@@ -70,7 +70,7 @@ abstract class Registry {
 			$cacheRegistry = CacheFactory::getInstance('registry');
 			if (!$bForced) {
 				$mValue = $cacheRegistry->loadData($sKey);
-				if ($mValue != NULL) {
+				if ($mValue !== NULL) {
 					return $mValue;
 				}
 			}
@@ -81,9 +81,6 @@ abstract class Registry {
 		$stmtGetValue->bindValue('key', $sKey, PDO::PARAM_STR);
 		$stmtGetValue->bindValue('user_uuid', User::getUUID(), PDO::PARAM_STR);
 		$stmtGetValue->execute();
-
-		// 		$stmtGetValue->debug();
-// 		var_dumpp($stmtGetValue->fetchAll());
 
 		$mValue = NULL;
 		$sType= NULL;

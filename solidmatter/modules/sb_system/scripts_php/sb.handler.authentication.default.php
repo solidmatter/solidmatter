@@ -20,9 +20,9 @@ class DefaultAuthenticationHandler extends AuthenticationHandler {
 	protected $crSession;
 	protected $nodeUser;
 	
-	/*protected $sUserName;
+	protected $sUserName;
 	protected $sUserUUID;
-	protected $aUserInfo;*/
+	protected $aUserInfo;
 	
 	//--------------------------------------------------------------------------
 	/**
