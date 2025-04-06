@@ -45,7 +45,7 @@ class sbView_debug_tree extends sbView {
 	* @param 
 	* @return 
 	*/
-	private function getTreeStructure($sParentUUID = NULL, $elemParent = NULL, $iLevel) {
+	private function getTreeStructure($sParentUUID = NULL, $elemParent = NULL, $iLevel = 0) {
 		
 		// for debugging
 		if ($iLevel > 200) {

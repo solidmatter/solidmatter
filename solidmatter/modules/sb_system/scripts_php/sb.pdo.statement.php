@@ -202,10 +202,14 @@ class sbPDOStatement extends PDOStatement {
 			foreach ($aRow as $sName => $sData) {
 				// don't use db-columname if a mapping is provided
 				if (isset($aMapping[$sName])) {
-					$sName = $aMapping[$sName];	
+					$sName = $aMapping[$sName];
 				}
-				$sData = htmlspecialchars($sData);
-				$elemColumn = $domGlobal->createElement($sName, $sData);
+				if (isset($sData)) {
+					$sData = htmlspecialchars($sData);
+					$elemColumn = $domGlobal->createElement($sName, $sData);
+				} else {
+					$elemColumn = $domGlobal->createElement($sName, '');
+				}
 				$elemRow->appendChild($elemColumn);
 			}
 			$elemResultset->appendChild($elemRow);

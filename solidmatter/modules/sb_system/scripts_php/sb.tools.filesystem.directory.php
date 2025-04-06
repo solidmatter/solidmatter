@@ -18,6 +18,9 @@ import('sb.tools.filesystem.file');
 */
 class sbDirectory extends sbFilesystemObject {
 	
+	// current directory
+	protected $aDirectory = array();
+	
 	// child directories
 	protected $aDirectories = array();
 	protected $aDirectoriesBackup = array();

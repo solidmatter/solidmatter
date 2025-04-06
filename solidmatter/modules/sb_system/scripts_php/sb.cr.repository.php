@@ -240,6 +240,7 @@ class sbCR_Repository {
 			}
 			$elemNodetype = $domReposInfo->createElement('nodetype');
 			foreach ($aNodetype['details'] as $sKey => $sValue) {
+				$sValue = isset($sValue) ? $sValue : '';
 				$elemNodetype->setAttribute($sKey, $sValue);
 			}
 			foreach ($aHierarchy as $aEntry) {
@@ -257,6 +258,7 @@ class sbCR_Repository {
 					}
 					$elemView = $domReposInfo->createElement('view');
 					foreach ($aView['details'] as $sKey => $sValue) {
+						$sValue = isset($sValue) ? $sValue : '';
 						$elemView->setAttribute($sKey, $sValue);
 					}
 					$elemActions = $domReposInfo->createElement('actions');
@@ -264,6 +266,7 @@ class sbCR_Repository {
 						foreach ($aView['actions'] as $aAction) {
 							$elemAction = $domReposInfo->createElement('action');
 							foreach ($aAction['details'] as $sKey => $sValue) {
+								$sValue = isset($sValue) ? $sValue : '';
 								$elemAction->setAttribute($sKey, $sValue);
 							}
 							$elemActions->appendChild($elemAction);

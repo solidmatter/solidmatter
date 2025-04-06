@@ -61,7 +61,7 @@ class TokenBasedHandler extends RequestHandler {
 	/**
 	* Determines the token's user's UUID.
 	* @param sTokenID the token ID retrieved from the requested URL
-	* @return sUserUUID the UUID of the user who owns the token
+	* @return string sUserUUID the UUID of the user who owns the token
 	*/
 	protected function getTokenOwner($sTokenID) {
 		$stmtClear = $this->crSession->prepareKnown('sbJukebox/tokens/clear');

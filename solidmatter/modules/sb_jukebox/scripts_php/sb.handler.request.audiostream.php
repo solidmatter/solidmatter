@@ -47,7 +47,7 @@ class JBAudioStreamHandler extends TokenBasedHandler {
 	//--------------------------------------------------------------------------
 	/**
 	* Send the MP3's data depending on the request headers, directly reading from disk.
-	* @return nothing, only passthrough the data and exit
+	* @return void, only passthrough the data and exit
 	*/
 	protected function playTrack() {
 		

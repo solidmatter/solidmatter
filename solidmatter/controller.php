@@ -118,7 +118,7 @@ if ($_REQUEST->getHandler() == 'backend' && User::isLoggedIn() && User::getNode(
 if (Registry::getValue('sb.system.log.access.enabled')) {
 	date_default_timezone_set('GMT');
 	// TODO: save extracted info instead of global vars
-	$sLog = "\r\n".str_repeat('#', 80)."\r\n".strftime('%y-%m-%d %H:%M:%S', time())."\r\n";
+	$sLog = "\r\n".str_repeat('#', 80)."\r\n".date('Y-m-d H:i:s', time())."\r\n";
 	if (Registry::getValue('sb.system.log.access.request')) {
 		$sLog .= 'REQUEST:'.var_export($_REQUEST, TRUE)."\r\n";
 	}
